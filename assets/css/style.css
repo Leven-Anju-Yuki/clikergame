@@ -214,15 +214,31 @@ body.sdb {
 /* Media Queries pour le responsive */
 @media only screen and (max-width: 768px) {
     #rabbitImage {
-        margin-top: 25vh;
+        margin-top: 24vh;
+        width: 150px;
+        height: auto;
+        display: block;
     }
     .boutonavecimg {
-        top: 65vh;
+        top: 55vh;
         width: 20%;
     }
-
+    .regle {
+        top: 13vh;
+        position: fixed;
+        left: 5px;
+        width: 100px;
+        z-index: 1000;
+    }
+    #statusBars {
+        top: 13vh;
+        position: fixed;
+        right: 10px;
+        width: 200px;
+        z-index: 1000;
+    }
     .difzone {
-        top: 85vh;
+        top: 75vh;
         left: 2%;
         transform: translateX(-2%);
         z-index: 1000;
