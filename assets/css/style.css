@@ -51,6 +51,8 @@ button {
     position: fixed;
     top: 77vh;
     width: 10%;
+    display: flex;
+    align-items: center;
 }
 .imgdansbtn {
     width: 100%;
@@ -66,7 +68,9 @@ button {
 }
 
 .feed-buttons {
-    text-align: center;
+    display: flex;
+    gap: 10px; /* Espace entre les boutons */
+    flex-wrap: wrap; /* Permet de revenir à la ligne si l'espace est insuffisant */
 }
 
 /* ============================================= */
@@ -239,8 +243,8 @@ body.sdb {
     }
     .difzone {
         top: 75vh;
-        left: 2%;
-        transform: translateX(-2%);
+        left: 1%;
+        transform: translateX(-1%);
         z-index: 1000;
         padding: 15px;
         border-radius: 10px;

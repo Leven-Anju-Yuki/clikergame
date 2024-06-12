@@ -1,124 +1,148 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Lapinous</title>
         <link rel="stylesheet" href="./assets/css/style.css" />
         <link rel="stylesheet" href="./assets/css/bootstrap.min.css" />
         <link class="icone" rel="shortcut icon" type="image/png" href="./assets/img/heureux.gif" />
-
-        <title>Lapinous</title>
     </head>
     <body class="default">
-        <div id="friendshipBarContainer" class="ttbar status-bar-amitié">
-            <center><span>Amitié :</span></center>
-            <div class="bar">
-                <div id="friendshipBar" class="fill"></div>
-            </div>
-            <div id="levelDisplay">Niveau : <span id="level">1</span></div>
-        </div>
-        <br /><br />
-        <button type="button" class="btn regle" data-toggle="modal" data-target="#myModal">
-            <img  src="./assets/img/regle.png" alt="" />
-        </button>
-        <div
-            class="modal fade"
-            id="myModal"
-            tabindex="-1"
-            role="dialog"
-            aria-labelledby="exampleModalLabel"
-            aria-hidden="true"
-        >
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Règles du jeu</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div id="friendshipBarContainer" class="ttbar status-bar-amitié">
+                        <center><span>Amitié :</span></center>
+                        <div class="bar">
+                            <div id="friendshipBar" class="fill"></div>
+                        </div>
+                        <div id="levelDisplay">Niveau : <span id="level">1</span></div>
                     </div>
-                    <div class="modal-body">
-                        <p>Bienvenue dans "Mon Lapin Virtuel" ! </p>
-                        <ol>
-                            <li>
-                                Veillez à nourrir votre lapin régulièrement en cliquant sur le
-                                bouton "Nourrir le lapin".
-                            </li>
-                            <li>
-                                Assurez-vous que votre lapin reste propre en le nettoyant dans la
-                                salle de bain avec le bouton "Nettoyer le lapin".
-                            </li>
-                            <li>
-                                Offrez-lui un environnement agréable en jouant avec lui dans le
-                                jardin en utilisant le bouton "Jouer avec le lapin".
-                            </li>
-                            <li>
-                                Veillez à ce que votre lapin ait suffisamment d'énergie en le
-                                mettant au lit avec le bouton "Mettre le lapin au lit".
-                            </li>
-                            <li>
-                                Le niveau d'amitié de votre lapin augmentera au fur et à mesure que
-                                vous interagissez avec lui. Essayez de maintenir un bon niveau
-                                d'amitié en interagissant régulièrement.
-                            </li>
-                            <li>
-                                Lorsque le niveau d'amitié atteint certaines étapes, de nouveaux
-                                besoins peuvent se débloquer. Assurez-vous de garder un œil sur les
-                                niveaux de statut de votre lapin et répondez à ses besoins en
-                                conséquence.
-                            </li>
-                        </ol>
-                        <p>Amusez-vous bien en prenant soin de votre lapin virtuel !</p>
+                    <br /><br />
+                    <button
+                        type="button"
+                        class="btn regle"
+                        data-toggle="modal"
+                        data-target="#myModal"
+                    >
+                        <img src="./assets/img/regle.png" alt="" />
+                    </button>
+                    <div
+                        class="modal fade"
+                        id="myModal"
+                        tabindex="-1"
+                        role="dialog"
+                        aria-labelledby="exampleModalLabel"
+                        aria-hidden="true"
+                    >
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">
+                                        Règles du jeu
+                                    </h5>
+                                    <button
+                                        type="button"
+                                        class="close"
+                                        data-dismiss="modal"
+                                        aria-label="Close"
+                                    >
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Bienvenue dans "Mon Lapin Virtuel" !</p>
+                                    <ol>
+                                        <li>
+                                            Veillez à nourrir votre lapin régulièrement en cliquant
+                                            sur le bouton "Nourrir le lapin".
+                                        </li>
+                                        <li>
+                                            Assurez-vous que votre lapin reste propre en le
+                                            nettoyant dans la salle de bain avec le bouton "Nettoyer
+                                            le lapin".
+                                        </li>
+                                        <li>
+                                            Offrez-lui un environnement agréable en jouant avec lui
+                                            dans le jardin en utilisant le bouton "Jouer avec le
+                                            lapin".
+                                        </li>
+                                        <li>
+                                            Veillez à ce que votre lapin ait suffisamment d'énergie
+                                            en le mettant au lit avec le bouton "Mettre le lapin au
+                                            lit".
+                                        </li>
+                                        <li>
+                                            Le niveau d'amitié de votre lapin augmentera au fur et à
+                                            mesure que vous interagissez avec lui. Essayez de
+                                            maintenir un bon niveau d'amitié en interagissant
+                                            régulièrement.
+                                        </li>
+                                        <li>
+                                            Lorsque le niveau d'amitié atteint certaines étapes, de
+                                            nouveaux besoins peuvent se débloquer. Assurez-vous de
+                                            garder un œil sur les niveaux de statut de votre lapin
+                                            et répondez à ses besoins en conséquence.
+                                        </li>
+                                    </ol>
+                                    <p>Amusez-vous bien en prenant soin de votre lapin virtuel !</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- Game Area -->
-        <div id="gameArea">
-            <!-- <h2>Bienvenue dans le jeu du lapin!</h2> -->
-            <!-- <p>Cliquez sur un bouton pour explorer une zone.</p> -->
-            <img id="rabbitImage" src="./assets/img/heureux.gif" alt="Lapin" />
-        </div>
-        <!-- Status Bars -->
 
-        <div id="statusBars" class="ttbar">
-            <div class="status-bar">
-                <span>Nourriture:</span>
-                <div class="bar">
-                    <div id="foodBar" class="fill"></div>
+            <div class="row">
+                <div class="col-12">
+                    <div id="gameArea">
+                        <img id="rabbitImage" src="./assets/img/heureux.gif" alt="Lapin" />
+                    </div>
                 </div>
             </div>
-            <div class="status-bar">
-                <span>Énergie :</span>
-                <div class="bar">
-                    <div id="energyBar" class="fill"></div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div id="statusBars" class="ttbar">
+                        <div class="status-bar">
+                            <span>Nourriture:</span>
+                            <div class="bar">
+                                <div id="foodBar" class="fill"></div>
+                            </div>
+                        </div>
+                        <div class="status-bar">
+                            <span>Énergie :</span>
+                            <div class="bar">
+                                <div id="energyBar" class="fill"></div>
+                            </div>
+                        </div>
+                        <div class="status-bar">
+                            <span>Propreté :</span>
+                            <div class="bar">
+                                <div id="cleanlinessBar" class="fill"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="status-bar">
-                <span>Propreté :</span>
-                <div class="bar">
-                    <div id="cleanlinessBar" class="fill"></div>
+            <div class="row">
+                <div class="col-12 text-center">
+                    <div class="difzone">
+                        <button id="cuisineBtn" class="btn">Cuisine</button>
+                        <button id="chambreBtn" class="btn">Chambre</button>
+                        <button id="sdbBtn" class="btn">Salle de Bain</button>
+                        <button id="jardinBtn" class="btn">Jardin</button>
+                    </div>
                 </div>
             </div>
         </div>
-        <div id="feedButtons" class="feed-buttons">
-            <!-- Boutons pour nourrir le lapin -->
-        </div>
-        <!-- PARTIE POUR ALLER DANS LES DIFFÉRENTES ZONES -->
-        <center>
-            <div class="difzone">
-                <button id="cuisineBtn">Cuisine</button>
-                <button id="chambreBtn">Chambre</button>
-                <button id="sdbBtn">Salle de Bain</button>
-                <button id="jardinBtn">Jardin</button>
-            </div>
-        </center>
-        <!-- PARTIE POUR ALLER DANS LES DIFFÉRENTES ZONES -->
-        <script src="./assets/js/script.js"></script>
-        <script src="./assets/js/bootstrap.min.js"></script>
+
         <script src="./assets/js/jquery-3.6.1.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script src="./assets/js/bootstrap.min.js"></script>
+        <script src="./assets/js/script.js"></script>
     </body>
 </html>
