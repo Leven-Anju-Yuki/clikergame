@@ -4,15 +4,61 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="./assets/css/style.css" />
-        <title>Document</title>
+        <link rel="stylesheet" href="./assets/css/bootstrap.min.css" />
+        <link class="icone" rel="shortcut icon" type="image/png" href="./assets/img/heureux.gif" />
+
+        <title>Lapinous</title>
     </head>
-    <body>
-        <div>
-            <button>cuisine</button>
-            <button>chambre</button>
-            <button>jardin</button>
-            <button>salle de bain</button>
+    <body class="default">
+        <div id="friendshipBarContainer" class="status-bar-amitié">
+            <center><span>Amitié :</span></center>
+            <div class="bar">
+                <div id="friendshipBar" class="fill"></div>
+            </div>
+            <div id="levelDisplay">Niveau : <span id="level">1</span></div>
         </div>
+        <br /><br />
+        <!-- Game Area -->
+        <div id="gameArea">
+            <h2>Bienvenue dans le jeu du lapin!</h2>
+            <!-- <p>Cliquez sur un bouton pour explorer une zone.</p> -->
+            <img id="rabbitImage" src="./assets/img/heureux.gif" alt="Lapin" />
+        </div>
+        <!-- Status Bars -->
+
+        <div id="statusBars" class="ttbar">
+            <div class="status-bar">
+                <span>Nourriture:</span>
+                <div class="bar">
+                    <div id="foodBar" class="fill"></div>
+                </div>
+            </div>
+            <div class="status-bar">
+                <span>Énergie :</span>
+                <div class="bar">
+                    <div id="energyBar" class="fill"></div>
+                </div>
+            </div>
+            <div class="status-bar">
+                <span>Propreté :</span>
+                <div class="bar">
+                    <div id="cleanlinessBar" class="fill"></div>
+                </div>
+            </div>
+        </div>
+        <div id="feedButtons" class="feed-buttons">
+            <!-- Boutons pour nourrir le lapin -->
+        </div>
+        <!-- PARTIE POUR ALLER DANS LES DIFFÉRENTES ZONES -->
+        <div class="difzone">
+            <button id="cuisineBtn">Cuisine</button>
+            <button id="chambreBtn">Chambre</button>
+            <button id="sdbBtn">Salle de Bain</button>
+            <button id="jardinBtn">Jardin</button>
+        </div>
+        <!-- PARTIE POUR ALLER DANS LES DIFFÉRENTES ZONES -->
         <script src="./assets/js/script.js"></script>
+        <script src="./assets/js/bootstrap.min.js"></script>
+        <script src="./assets/js/jquery-3.6.1.min.js"></script>
     </body>
 </html>
