@@ -160,7 +160,16 @@ body.sdb {
     width: 200px;
     z-index: 1000;
 }
-
+.regle {
+    top: 11vh;
+    position: fixed;
+    left: 10px;
+    width: 150px;
+    z-index: 1000;
+}
+.regle img {
+    width: 40%;
+}
 .status-bar {
     margin: 10px 0;
     width: 100%;
