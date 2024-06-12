@@ -27,6 +27,7 @@ button {
     box-shadow: 3px 3px var(--dragon);
     cursor: pointer;
     margin: 5px 0;
+    font-family: "titre", "serif";
 }
 button:active {
     box-shadow: none;
@@ -39,13 +40,6 @@ button a {
     font-size: 1.4em;
     color: var(--dragon);
     text-shadow: 1px 1px #fafafad8;
-}
-button a:hover {
-    color: black;
-    text-shadow: 1px 1px #fafafad8;
-}
-button {
-    font-family: "titre", "serif";
 }
 .boutonavecimg {
     position: fixed;
@@ -248,5 +242,8 @@ body.sdb {
         z-index: 1000;
         padding: 15px;
         border-radius: 10px;
+    }
+    button {
+        font-size: 1em;
     }
 }
