@@ -26,7 +26,7 @@ button {
     background: var(--bouton);
     box-shadow: 3px 3px var(--dragon);
     cursor: pointer;
-    margin: 15px 0;
+    margin: 5px 0;
 }
 button:active {
     box-shadow: none;
@@ -154,8 +154,8 @@ body.sdb {
     color: #000;
 }
 #statusBars {
+    top: 10vh;
     position: fixed;
-    top: 50px;
     right: 10px;
     width: 200px;
     z-index: 1000;
@@ -201,4 +201,23 @@ body.sdb {
     max-width: 400px;
     z-index: 1000;
     padding-bottom: 5px;
+}
+/* Media Queries pour le responsive */
+@media only screen and (max-width: 768px) {
+    #rabbitImage {
+        margin-top: 25vh;
+    }
+    .boutonavecimg {
+        top: 65vh;
+        width: 20%;
+    }
+
+    .difzone {
+        top: 85vh;
+        left: 2%;
+        transform: translateX(-2%);
+        z-index: 1000;
+        padding: 15px;
+        border-radius: 10px;
+    }
 }
