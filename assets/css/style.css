@@ -168,6 +168,17 @@ body.sdb {
 .regle img {
     width: 40%;
 }
+.achat {
+    top: 19vh;
+    position: fixed;
+    left: 10px;
+    width: 150px;
+    z-index: 1000;
+}
+.achat img {
+    width: 40%;
+}
+
 .status-bar {
     margin: 10px 0;
     width: 100%;

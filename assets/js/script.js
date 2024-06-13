@@ -124,6 +124,17 @@ document.addEventListener("DOMContentLoaded", () => {
             displayAdditionalFeedButtons();
             updateStatusBars();
         }
+         else if (status.friendship >= 100 && currentLevel === 4
+         ) {
+            currentLevel = 5;
+            status.food = Math.min(status.food + 25, currentLevel * 25); // Augmente la nourriture
+            status.energy = Math.min(status.energy + 25, currentLevel * 25); // Augmente l'énergie
+            status.cleanliness = Math.min(status.cleanliness + 25, currentLevel * 25); // Augmente la propreté
+            document.getElementById("level").innerText = currentLevel; // Met à jour le niveau affiché
+            alert(`Niveau ${currentLevel} atteint ! Les statuts augmentent à ${currentLevel * 25}%.`);
+            displayAdditionalFeedButtons();
+            updateStatusBars();
+        }
     }
 
     // Écouteurs d'événements pour les boutons
