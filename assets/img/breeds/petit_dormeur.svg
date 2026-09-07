@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <ellipse cx="100" cy="140" rx="55" ry="42" fill="#cfe4ff" stroke="#5a4034" stroke-width="4"/>
+  <circle cx="100" cy="95" r="40" fill="#cfe4ff" stroke="#5a4034" stroke-width="4"/>
+  <ellipse cx="72" cy="40" rx="14" ry="38" fill="#cfe4ff" stroke="#5a4034" stroke-width="4"/>
+  <ellipse cx="128" cy="40" rx="14" ry="38" fill="#cfe4ff" stroke="#5a4034" stroke-width="4"/>
+  <ellipse cx="72" cy="42" rx="6" ry="24" fill="#ffffff"/>
+  <ellipse cx="128" cy="42" rx="6" ry="24" fill="#ffffff"/>
+  <circle cx="84" cy="92" r="5" fill="#5a4034"/>
+  <circle cx="116" cy="92" r="5" fill="#5a4034"/>
+  <ellipse cx="75" cy="106" rx="8" ry="6" fill="#ffb5c8" opacity="0.8"/>
+  <ellipse cx="125" cy="106" rx="8" ry="6" fill="#ffb5c8" opacity="0.8"/>
+  <path d="M92 108 Q100 114 108 108" stroke="#5a4034" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <circle cx="150" cy="60" r="22" fill="#7fc8ff" stroke="#5a4034" stroke-width="3"/>
+  <text x="150" y="69" font-size="22" text-anchor="middle">⭐</text>
+</svg>

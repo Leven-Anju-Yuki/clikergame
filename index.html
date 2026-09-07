@@ -1,185 +1,461 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Lapinous</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Quicksand:wght@500;600;700&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        />
         <link rel="stylesheet" href="./assets/css/style.css" />
-        <link rel="stylesheet" href="./assets/css/bootstrap.min.css" />
-        <link class="icone" rel="shortcut icon" type="image/png" href="./assets/img/heureux.gif" />
+        <link
+            class="icone"
+            rel="shortcut icon"
+            type="image/png"
+            href="./assets/img/az/az_assis_de_face.png"
+        />
     </head>
     <body class="default">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <div id="friendshipBarContainer" class="ttbar status-bar-amitié">
-                        <center><span>Amitié :</span></center>
-                        <div class="bar">
-                            <div id="friendshipBar" class="fill"></div>
-                        </div>
-                        <div id="levelDisplay">Niveau : <span id="level">1</span></div>
-                        <!-- <span>Points de bonheur: <span id="happinessPoints">0</span></span> -->
-                    </div>
-                    <br /><br />
+        <!-- ===================== ÉCRAN D'ADOPTION ===================== -->
+        <div id="adoptionScreen" class="adoption-screen">
+            <div class="adoption-halo"></div>
+            <div class="adoption-content">
+                <h1 class="adoption-title">🐰 Choisis ton compagnon</h1>
+                <p class="adoption-subtitle">
+                    Fais défiler les lapins communs, ou tente ta chance avec un œuf pour espérer un
+                    rare, épique ou légendaire !
+                </p>
+
+                <div class="single-carousel">
                     <button
+                        id="prevBreedBtn"
+                        class="carousel-arrow"
                         type="button"
-                        class="btn regle"
-                        data-toggle="modal"
-                        data-target="#myModal"
+                        aria-label="Précédent"
                     >
-                        <img src="./assets/img/regle.png" alt="" />
+                        ‹
                     </button>
-                    <div
-                        class="modal fade"
-                        id="myModal"
-                        tabindex="-1"
-                        role="dialog"
-                        aria-labelledby="exampleModalLabel"
-                        aria-hidden="true"
-                    >
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">
-                                        Règles du jeu
-                                    </h5>
-                                    <button
-                                        type="button"
-                                        class="close"
-                                        data-dismiss="modal"
-                                        aria-label="Close"
-                                    >
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <p>Bienvenue dans "Mon Lapin Virtuel" !</p>
-                                    <ol>
-                                        <li>
-                                            Veillez à nourrir votre lapin régulièrement en cliquant
-                                            sur le bouton "Nourrir le lapin".
-                                        </li>
-                                        <li>
-                                            Assurez-vous que votre lapin reste propre en le
-                                            nettoyant dans la salle de bain avec le bouton "Nettoyer
-                                            le lapin".
-                                        </li>
-                                        <li>
-                                            Offrez-lui un environnement agréable en jouant avec lui
-                                            dans le jardin en utilisant le bouton "Jouer avec le
-                                            lapin".
-                                        </li>
-                                        <li>
-                                            Veillez à ce que votre lapin ait suffisamment d'énergie
-                                            en le mettant au lit avec le bouton "Mettre le lapin au
-                                            lit".
-                                        </li>
-                                        <li>
-                                            Le niveau d'amitié de votre lapin augmentera au fur et à
-                                            mesure que vous interagissez avec lui. Essayez de
-                                            maintenir un bon niveau d'amitié en interagissant
-                                            régulièrement.
-                                        </li>
-                                        <li>
-                                            Lorsque le niveau d'amitié atteint certaines étapes, de
-                                            nouveaux besoins peuvent se débloquer. Assurez-vous de
-                                            garder un œil sur les niveaux de statut de votre lapin
-                                            et répondez à ses besoins en conséquence.
-                                        </li>
-                                    </ol>
-                                    <p>Amusez-vous bien en prenant soin de votre lapin virtuel !</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- <button
+                    <div id="adoptionCard" class="adoption-card"></div>
+                    <button
+                        id="nextBreedBtn"
+                        class="carousel-arrow"
                         type="button"
-                        class="btn achat"
-                        data-toggle="modal"
-                        data-target="#myModal1"
+                        aria-label="Suivant"
                     >
-                        <img src="./assets/img/regle.png" alt="" />
+                        ›
                     </button>
-                    <div
-                        class="modal fade"
-                        id="myModal1"
-                        tabindex="-1"
-                        role="dialog"
-                        aria-labelledby="exampleModalLabel1"
-                        aria-hidden="true"
-                    >
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel1">
-                                        Amélioration des objets
-                                    </h5>
-                                    <button
-                                        type="button"
-                                        class="close"
-                                        data-dismiss="modal"
-                                        aria-label="Close"
-                                    >
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
-            </div>
-
-            <div class="row">
-                <div class="col-12">
-                    <div id="gameArea">
-                        <img id="rabbitImage" src="./assets/img/heureux.gif" alt="Lapin" />
-                    </div>
                 </div>
-            </div>
 
-            <div class="row">
-                <div class="col-12">
-                    <div id="statusBars" class="ttbar">
-                        <div class="status-bar">
-                            <span>Nourriture:</span>
-                            <div class="bar">
-                                <div id="foodBar" class="fill"></div>
-                            </div>
-                        </div>
-                        <div class="status-bar">
-                            <span>Énergie :</span>
-                            <div class="bar">
-                                <div id="energyBar" class="fill"></div>
-   s                         </div>
-                        </div>
-                        <div class="status-bar">
-                            <span>Propreté :</span>
-                            <div class="bar">
-                                <div id="cleanlinessBar" class="fill"></div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="adoption-controls-row">
+                    <button id="rerollTraitBtn" class="ghost-btn" type="button">
+                        🎲 Relancer les caractéristiques
+                    </button>
                 </div>
+                <p class="adoption-hint">
+                    Les lapins rares, épiques et légendaires s'obtiennent en ouvrant des œufs, une
+                    fois chez toi (dans le Salon).
+                </p>
+
+                <div class="adoption-name-row">
+                    <input
+                        type="text"
+                        id="rabbitNameInput"
+                        class="name-input"
+                        placeholder="Nom de ton lapin"
+                        maxlength="18"
+                    />
+                </div>
+
+                <button id="adoptBtn" class="action-btn adopt-btn" type="button">
+                    <span>Adopter ✨</span>
+                </button>
+                <button id="loadInsteadBtn" class="ghost-btn" type="button">
+                    J'ai déjà une sauvegarde à importer →
+                </button>
             </div>
-            <div class="row">
-                <div class="col-12 text-center">
-                    <div class="difzone">
-                        <button id="cuisineBtn" class="btn">Cuisine</button>
-                        <button id="chambreBtn" class="btn">Chambre</button>
-                        <button id="sdbBtn" class="btn">Salle de Bain</button>
-                        <button id="jardinBtn" class="btn">Jardin</button>
+        </div>
+
+        <!-- ===================== TOASTS ===================== -->
+        <div id="toastContainer" class="toast-container"></div>
+
+        <!-- ===================== BOUTONS FLOTTANTS ===================== -->
+        <button
+            type="button"
+            class="rules-btn"
+            data-toggle="modal"
+            data-target="#myModal"
+            aria-label="Règles du jeu"
+        >
+            <img src="./assets/img/regle.png" alt="" />
+        </button>
+        <button
+            type="button"
+            class="encyclopedia-btn"
+            id="encyclopediaBtn"
+            aria-label="Encyclopédie"
+        >
+            📖
+        </button>
+        <button type="button" class="dashboard-btn" id="dashboardBtn" aria-label="Dashboard">
+            ⚙️
+        </button>
+        <button
+            type="button"
+            class="save-btn"
+            data-toggle="modal"
+            data-target="#saveModal"
+            aria-label="Sauvegardes"
+        >
+            💾
+        </button>
+
+        <!-- ===================== MODALE RÈGLES ===================== -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Règles du jeu</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <ol>
+                            <li>
+                                Nourris, nettoie et fais dormir ton lapin depuis les pièces en bas.
+                            </li>
+                            <li>
+                                L'amitié augmente en t'occupant de lui et fait monter son niveau.
+                            </li>
+                            <li>
+                                Chaque niveau débloque une amélioration dans une pièce : elle coûte
+                                de l'amitié et remplace définitivement l'objet de base. Une seule
+                                amélioration à la fois.
+                            </li>
+                            <li>
+                                Dans le jardin, le mini-jeu d'agilité te demande de cliquer "Sauter"
+                                au bon moment. Un échec fait un peu baisser l'amitié et la propreté.
+                            </li>
+                            <li>
+                                Ouvre des œufs à l'adoption pour espérer un lapin rare, épique ou
+                                légendaire.
+                            </li>
+                            <li>
+                                📖 = Encyclopédie, 💾 = Sauvegardes, ⚙️ = Dashboard (contenu
+                                personnalisé).
+                            </li>
+                        </ol>
                     </div>
                 </div>
             </div>
         </div>
 
-        <script src="./assets/js/jquery-3.6.1.min.js"></script>
+        <!-- ===================== MODALE SAUVEGARDE ===================== -->
+        <div class="modal fade" id="saveModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Sauvegardes</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="saveSlots" class="save-slots"></div>
+                        <hr />
+                        <div class="save-io-row">
+                            <button id="exportBtn" class="io-btn" type="button">
+                                ⬇️ Exporter en JSON
+                            </button>
+                            <label class="io-btn io-btn-file"
+                                >⬆️ Importer un JSON<input
+                                    type="file"
+                                    id="importInput"
+                                    accept="application/json"
+                                    hidden
+                            /></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== MODALE RENOMMER ===================== -->
+        <div class="modal fade" id="renameModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Renommer ton lapin</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" id="renameInput" class="name-input" maxlength="18" />
+                        <button
+                            id="renameConfirmBtn"
+                            class="action-btn"
+                            type="button"
+                            style="margin-top: 14px; width: 100%"
+                        >
+                            <span>Valider</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== MODALE ENCYCLOPÉDIE ===================== -->
+        <div
+            class="modal fade"
+            id="encyclopediaModal"
+            tabindex="-1"
+            role="dialog"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">📖 Encyclopédie des lapins</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="encyclopediaGrid" class="encyclopedia-grid"></div>
+                        <div id="encyclopediaRelations" class="encyclopedia-relations"></div>
+                        <div id="encyclopediaDetail" class="encyclopedia-detail">
+                            <button class="back-btn" id="encyclopediaBackBtn" type="button">
+                                ← Retour à la liste
+                            </button>
+                            <div id="encyclopediaDetailCard"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== MODALE DASHBOARD ===================== -->
+        <div class="modal fade" id="dashboardModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">⚙️ Dashboard</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <h6>Taux d'apparition des œufs (%, doit faire 100)</h6>
+                        <div class="rate-row">
+                            <label
+                                >Commun <input type="number" id="rate-commun" min="0" max="100"
+                            /></label>
+                            <label
+                                >Rare <input type="number" id="rate-rare" min="0" max="100"
+                            /></label>
+                            <label
+                                >Épique <input type="number" id="rate-epique" min="0" max="100"
+                            /></label>
+                            <label
+                                >Légendaire
+                                <input type="number" id="rate-legendaire" min="0" max="100"
+                            /></label>
+                        </div>
+                        <button
+                            id="saveEggRatesBtn"
+                            class="io-btn"
+                            type="button"
+                            style="margin-top: 8px"
+                        >
+                            Enregistrer les taux
+                        </button>
+
+                        <hr />
+                        <h6>Lapins existants</h6>
+                        <div id="dashSpeciesList" class="dash-list"></div>
+                        <details class="dash-details">
+                            <summary>➕ Ajouter un lapin</summary>
+                            <form id="addSpeciesForm" class="dash-form">
+                                <input
+                                    name="speciesKey"
+                                    placeholder="Identifiant unique (ex: fraise)"
+                                    required
+                                />
+                                <input name="speciesName" placeholder="Nom (ex: Fraise)" />
+                                <input
+                                    name="speciesNickname"
+                                    placeholder="Surnom (ex: le Lapin Fraise)"
+                                />
+                                <select name="speciesRarity">
+                                    <option value="commun">Commun</option>
+                                    <option value="rare">Rare</option>
+                                    <option value="epique">Épique</option>
+                                    <option value="legendaire">Légendaire</option>
+                                </select>
+                                <textarea
+                                    name="speciesPersonality"
+                                    placeholder="Personnalité"
+                                ></textarea>
+                                <textarea name="speciesStory" placeholder="Histoire"></textarea>
+                                <input name="speciesAccessory" placeholder="Accessoire" />
+                                <input
+                                    name="speciesLikes"
+                                    placeholder="Aime (séparé par des virgules)"
+                                />
+                                <input
+                                    name="speciesDislikes"
+                                    placeholder="N'aime pas (séparé par des virgules)"
+                                />
+                                <input name="speciesQuote" placeholder="Citation" />
+                                <input name="speciesPower" placeholder="Pouvoir" />
+                                <label class="file-label"
+                                    >Photo de face
+                                    <input type="file" name="faceFile" accept="image/*"
+                                /></label>
+                                <label class="file-label"
+                                    >Photo 3/4 (encyclopédie)
+                                    <input type="file" name="coteFile" accept="image/*"
+                                /></label>
+                                <button type="submit" class="io-btn">Ajouter ce lapin</button>
+                            </form>
+                        </details>
+
+                        <hr />
+                        <h6>Boss légumes (puissance)</h6>
+                        <div id="dashBossList" class="dash-list"></div>
+                        <details class="dash-details">
+                            <summary>➕ Ajouter un boss</summary>
+                            <form id="addBossForm" class="dash-form">
+                                <input
+                                    name="bossKey"
+                                    placeholder="Identifiant unique (ex: oignon)"
+                                    required
+                                />
+                                <input name="bossName" placeholder="Nom (ex: Oignon Grincheux)" />
+                                <input
+                                    type="number"
+                                    name="bossPower"
+                                    placeholder="Puissance (ex: 15)"
+                                    min="1"
+                                />
+                                <textarea name="bossDesc" placeholder="Description"></textarea>
+                                <label class="file-label"
+                                    >Image <input type="file" name="bossFile" accept="image/*"
+                                /></label>
+                                <button type="submit" class="io-btn">Ajouter ce boss</button>
+                            </form>
+                        </details>
+
+                        <hr />
+                        <h6>Contenu (lapins + boss + taux) — séparé de la sauvegarde du joueur</h6>
+                        <div class="save-io-row">
+                            <button id="exportContentBtn" class="io-btn" type="button">
+                                ⬇️ Exporter le contenu (JSON)
+                            </button>
+                            <label class="io-btn io-btn-file"
+                                >⬆️ Importer un contenu (JSON)<input
+                                    type="file"
+                                    id="importContentInput"
+                                    accept="application/json"
+                                    hidden
+                            /></label>
+                        </div>
+
+                        <hr />
+                        <h6>🔒 Sécurité — changer le code du Dashboard</h6>
+                        <form id="changeCodeForm" class="dash-form">
+                            <input
+                                type="password"
+                                name="newCode"
+                                placeholder="Nouveau code (4 caractères min.)"
+                                required
+                            />
+                            <input
+                                type="password"
+                                name="newCode2"
+                                placeholder="Confirme le nouveau code"
+                                required
+                            />
+                            <button type="submit" class="io-btn">Changer le code</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== JEU ===================== -->
+        <div class="container" id="gameRoot" style="display: none">
+            <div class="brand">
+                <span class="brand-title" id="brandTitle">🐰 Lapinous</span>
+                <button id="renameBtn" class="rename-btn" type="button" aria-label="Renommer">
+                    ✏️
+                </button>
+                <button id="logoutBtn" class="rename-btn" type="button" aria-label="Se déconnecter">
+                    🚪
+                </button>
+            </div>
+
+            <div id="friendshipBarContainer">
+                <div class="friendship-top">
+                    <span class="friendship-label">💛 Amitié</span>
+                    <div id="levelDisplay">Niveau <span id="level">1</span></div>
+                </div>
+                <div class="bar"><div id="friendshipBar" class="fill"></div></div>
+            </div>
+
+            <div class="scene-card">
+                <div class="scene-label" id="sceneLabel">🏡 Salon</div>
+                <div id="gameArea">
+                    <img id="rabbitImage" src="./assets/img/az/az_assis_de_face.png" alt="Lapin" />
+                </div>
+            </div>
+
+            <div id="statusBars">
+                <div class="status-bar">
+                    <span>🥕 Nourriture</span>
+                    <div class="bar"><div id="foodBar" class="fill"></div></div>
+                </div>
+                <div class="status-bar">
+                    <span>⚡ Énergie</span>
+                    <div class="bar"><div id="energyBar" class="fill"></div></div>
+                </div>
+                <div class="status-bar">
+                    <span>🫧 Propreté</span>
+                    <div class="bar"><div id="cleanlinessBar" class="fill"></div></div>
+                </div>
+            </div>
+        </div>
+
+        <nav class="difzone" id="mainNav" style="display: none">
+            <button id="salonBtn" class="room-tab" data-zone="default">
+                <span class="tab-emoji">🏡</span><span>Salon</span>
+            </button>
+            <button id="cuisineBtn" class="room-tab" data-zone="cuisine">
+                <span class="tab-emoji">🥕</span><span>Cuisine</span>
+            </button>
+            <button id="chambreBtn" class="room-tab" data-zone="chambre">
+                <span class="tab-emoji">🛏️</span><span>Chambre</span>
+            </button>
+            <button id="sdbBtn" class="room-tab" data-zone="sdb">
+                <span class="tab-emoji">🛁</span><span>Bain</span>
+            </button>
+            <button id="jardinBtn" class="room-tab" data-zone="jardin">
+                <span class="tab-emoji">🌿</span><span>Jardin</span>
+            </button>
+        </nav>
+
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-        <script src="./assets/js/bootstrap.min.js"></script>
+        <script src="./assets/js/dashboard-access.js"></script>
         <script src="./assets/js/script.js"></script>
     </body>
 </html>

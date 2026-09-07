@@ -1,0 +1,63 @@
+<style>.battle-arena {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    border-radius: 16px;
+    overflow: hidden;
+    /* Ciel d'affrontement : dégradé orange/pourpre dramatique */
+    background: linear-gradient(180deg, #2b1055 0%, #75225b 50%, #b54536 80%, #d97438 100%);
+    box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.5);
+}
+
+/* Sol du potager avec de la terre et des sillons */
+.battle-ground {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 35%;
+    background: repeating-linear-gradient(
+        90deg,
+        #4a2a0c,
+        #4a2a0c 40px,
+        #3b2007 40px,
+        #3b2007 80px
+    );
+    border-top: 6px solid #2d1804;
+}
+
+/* Poussière d'affrontement à la base de l'arène */
+.battle-dust {
+    position: absolute;
+    bottom: 25%;
+    width: 100%;
+    height: 40px;
+    background: radial-gradient(ellipse at center, rgba(235, 178, 122, 0.4) 0%, rgba(0, 0, 0, 0) 70%);
+}
+.battle-arena-speed {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    border-radius: 16px;
+    overflow: hidden;
+    /* Effet de lignes de vitesse radiales */
+    background: 
+        radial-gradient(circle at 50% 40%, rgba(255, 255, 255, 0.15) 0%, transparent 60%),
+        repeating-conic-gradient(from 0deg, #c0392b 0deg 15deg, #a93226 15deg 30deg);
+}
+
+/* Herbe piétinée du potager au premier plan */
+.battle-ground-grass {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 30%;
+    background: linear-gradient(180deg, #27ae60 0%, #1e8449 100%);
+    border-top: 5px solid #196f3d;
+}</style>
+<div class="battle-arena">
+    <div class="battle-ground"></div>
+    <div class="battle-dust"></div>
+</div>
+<div class="battle-arena-speed">
+    <div class="battle-ground-grass"></div>
+</div>
