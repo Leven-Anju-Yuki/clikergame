@@ -1,0 +1,1270 @@
+{
+  "type": "lapinous-content",
+  "exportedAt": 1789416809295,
+  "species": {
+    "azur": {
+      "name": "Azur",
+      "nickname": "le Lapin Neige",
+      "rarity": "commun",
+      "personality": "Calme, bienveillant et protecteur.",
+      "story": "Azur vit sur les sommets enneigés du Royaume Polaire. Il aide les animaux perdus à retrouver leur chemin pendant les tempêtes.",
+      "accessory": "Écharpe de givre enchantée.",
+      "likes": [
+        "Les flocons de neige",
+        "Les nuits étoilées",
+        "Le chocolat chaud"
+      ],
+      "dislikes": [
+        "La chaleur",
+        "Le bruit"
+      ],
+      "quote": "Même la plus grande tempête finit par s'apaiser.",
+      "power": "Aura glaciale : diminue légèrement la vitesse des ennemis.",
+      "faceImg": "./assets/img/species/blanc_face.png",
+      "coteImg": "./assets/img/species/blanc_cote.png",
+      "friends": [
+        "bambou"
+      ],
+      "rivals": []
+    },
+    "caramel": {
+      "name": "Caramel",
+      "nickname": "le Lapin Gourmand",
+      "rarity": "commun",
+      "personality": "Jovial, gourmand et optimiste.",
+      "story": "Caramel connaît tous les champs de carottes du royaume. On raconte qu'il peut sentir une carotte fraîche à plusieurs kilomètres.",
+      "accessory": "Sacoche à friandises.",
+      "likes": [
+        "Les carottes",
+        "Les gâteaux",
+        "Les pique-niques"
+      ],
+      "dislikes": [
+        "Être à jeun",
+        "Les légumes amers"
+      ],
+      "quote": "On réfléchit toujours mieux après une bonne collation !",
+      "power": "Cherche-Trésor : augmente les récompenses obtenues.",
+      "faceImg": "./assets/img/species/caramel_face.png",
+      "coteImg": "./assets/img/species/caramel_cote.png",
+      "friends": [],
+      "rivals": [],
+      "follows": [
+        "flamme"
+      ]
+    },
+    "mocha": {
+      "name": "Mocha",
+      "nickname": "le Lapin Chocolat",
+      "rarity": "commun",
+      "personality": "Élégant, fiable et discipliné.",
+      "story": "Mocha est l'horloger officiel du royaume. Personne n'est aussi ponctuel que lui.",
+      "accessory": "Montre à gousset dorée.",
+      "likes": [
+        "Les mécanismes",
+        "L'ordre",
+        "Les collections"
+      ],
+      "dislikes": [
+        "Les retards",
+        "Le désordre"
+      ],
+      "quote": "Chaque seconde a son importance.",
+      "power": "Précision parfaite : réduit les temps de recharge.",
+      "faceImg": "./assets/img/species/chocolat_face.png",
+      "coteImg": "./assets/img/species/chocolat_cote.png",
+      "friends": [],
+      "rivals": [],
+      "helps": [
+        "koda"
+      ]
+    },
+    "bambou": {
+      "name": "Bambou",
+      "nickname": "le Lapin Panda",
+      "rarity": "rare",
+      "personality": "Sage, patient et méditatif.",
+      "story": "Bambou habite les Jardins Silencieux où il passe son temps à méditer sous les arbres géants.",
+      "accessory": "Collier de bambou sacré.",
+      "likes": [
+        "La méditation",
+        "Le calme",
+        "Les forêts"
+      ],
+      "dislikes": [
+        "Les disputes",
+        "L'agitation"
+      ],
+      "quote": "La force vient souvent du silence.",
+      "power": "Temps suspendu : ralentit brièvement les ennemis.",
+      "faceImg": "./assets/img/species/panda_face.png",
+      "coteImg": "./assets/img/species/panda_cote.png",
+      "friends": [
+        "azur"
+      ],
+      "rivals": []
+    },
+    "flamme": {
+      "name": "Flamme",
+      "nickname": "le Lapin Renard",
+      "rarity": "rare",
+      "personality": "Malin, curieux et aventurier.",
+      "story": "Flamme explore les ruines anciennes à la recherche de passages secrets et d'artefacts oubliés.",
+      "accessory": "Foulard des explorateurs.",
+      "likes": [
+        "Les cartes au trésor",
+        "L'aventure",
+        "Les énigmes"
+      ],
+      "dislikes": [
+        "L'ennui",
+        "Les règles inutiles"
+      ],
+      "quote": "Chaque mur cache peut-être une porte.",
+      "power": "Vision secrète : révèle les coffres cachés.",
+      "faceImg": "./assets/img/species/renard_face.png",
+      "coteImg": "./assets/img/species/renard_cote.png",
+      "friends": [],
+      "rivals": [],
+      "curiousAbout": [
+        "nova"
+      ]
+    },
+    "koda": {
+      "name": "Koda",
+      "nickname": "le Lapin Tigre",
+      "rarity": "epique",
+      "personality": "Courageux, loyal et protecteur.",
+      "story": "Ancien gardien des plaines dorées, Koda défend ses amis contre tous les dangers.",
+      "accessory": "Bandeau du guerrier ancien.",
+      "likes": [
+        "Les entraînements",
+        "Le travail d'équipe",
+        "Les défis"
+      ],
+      "dislikes": [
+        "L'injustice",
+        "La lâcheté"
+      ],
+      "quote": "Un vrai héros protège les siens.",
+      "power": "Cri du gardien : augmente les dégâts de l'équipe.",
+      "faceImg": "./assets/img/species/tigre_face.png",
+      "coteImg": "./assets/img/species/tigre_cote.png",
+      "friends": [],
+      "rivals": [],
+      "protects": "les plus faibles"
+    },
+    "nova": {
+      "name": "Nova",
+      "nickname": "le Lapin Galaxie",
+      "rarity": "legendaire",
+      "personality": "Mystérieux, intelligent et rêveur.",
+      "story": "Nova viendrait d'une constellation lointaine. Il semble connaître l'avenir à travers les étoiles.",
+      "accessory": "Cape cosmique constellée.",
+      "likes": [
+        "Observer les étoiles",
+        "Les légendes",
+        "Les mystères"
+      ],
+      "dislikes": [
+        "L'ignorance",
+        "Les mensonges"
+      ],
+      "quote": "Les étoiles racontent des histoires que peu savent entendre.",
+      "power": "Pluie d'étoiles : invoque des météores magiques.",
+      "faceImg": "./assets/img/species/etoile_face.png",
+      "coteImg": "./assets/img/species/etoile_cote.png",
+      "friends": [],
+      "rivals": [],
+      "guides": true
+    },
+    "sakura": {
+      "name": "Sakura",
+      "nickname": "la Gardienne des Cerisiers",
+      "rarity": "rare",
+      "personality": "Douce, créative et bienveillante.",
+      "story": "Sakura protège les Bosquets Fleuris, où les pétales magiques tombent toute l'année. Les habitants disent que les fleurs s'ouvrent sur son passage.",
+      "accessory": "Couronne de fleurs éternelles.",
+      "likes": [
+        "Les fleurs de cerisier",
+        "Dessiner",
+        "Le printemps"
+      ],
+      "dislikes": [
+        "Les tempêtes",
+        "Voir les plantes souffrir"
+      ],
+      "quote": "Même la plus petite fleur peut embellir le monde.",
+      "power": "Pétales Curatifs : soigne progressivement les alliés.",
+      "faceImg": "./assets/img/species/fleur_face.png",
+      "coteImg": "./assets/img/species/fleur_cote.png",
+      "friends": [],
+      "rivals": []
+    },
+    "spark": {
+      "name": "Spark",
+      "nickname": "le Génie de l'Éclair",
+      "rarity": "rare",
+      "personality": "Énergique, curieux et inventeur.",
+      "story": "Spark passe ses journées à construire des gadgets étranges qui fonctionnent une fois sur deux... mais quand ils marchent, ils sont incroyables.",
+      "accessory": "Lunettes électromécaniques.",
+      "likes": [
+        "Les inventions",
+        "Les courses",
+        "Les orages"
+      ],
+      "dislikes": [
+        "Attendre",
+        "Les pannes"
+      ],
+      "quote": "Si ça explose, c'est que j'étais proche de réussir !",
+      "power": "Turbo Éclair : augmente temporairement sa vitesse.",
+      "faceImg": "./assets/img/species/eclair_face.png",
+      "coteImg": "./assets/img/species/eclair_cote.png",
+      "friends": [],
+      "rivals": []
+    },
+    "myco": {
+      "name": "Myco",
+      "nickname": "le Sage des Bois",
+      "rarity": "commun",
+      "personality": "Discret, observateur et patient.",
+      "story": "Myco connaît tous les sentiers cachés de la forêt. Il peut passer des heures à écouter la nature sans dire un mot.",
+      "accessory": "Chapeau champignon ancien.",
+      "likes": [
+        "Les forêts",
+        "Les histoires",
+        "Les animaux sauvages"
+      ],
+      "dislikes": [
+        "Le vacarme",
+        "Les incendies"
+      ],
+      "quote": "La forêt murmure à ceux qui savent écouter.",
+      "power": "Spores Protectrices : augmente la défense de l'équipe.",
+      "faceImg": "./assets/img/species/champi_face.png",
+      "coteImg": "./assets/img/species/champi_cote.png",
+      "friends": [],
+      "rivals": []
+    },
+    "corsaire": {
+      "name": "Corsaire",
+      "nickname": "le Chasseur de Trésors",
+      "rarity": "commun",
+      "personality": "Audacieux, charmeur et aventureux.",
+      "story": "Corsaire écume les mers à la recherche d'artefacts légendaires. Sa carte au trésor semble toujours changer mystérieusement.",
+      "accessory": "Chapeau pirate du Cap des Brumes.",
+      "likes": [
+        "Les trésors",
+        "Les cartes secrètes",
+        "Les aventures"
+      ],
+      "dislikes": [
+        "Les tricheurs",
+        "Être coincé au même endroit"
+      ],
+      "quote": "Le plus beau trésor est celui qu'on n'a pas encore trouvé.",
+      "power": "Fortune du Pirate : augmente les récompenses rares.",
+      "faceImg": "./assets/img/species/pirate_face.png",
+      "coteImg": "./assets/img/species/pirate_cote.png",
+      "friends": [],
+      "rivals": []
+    },
+    "nopal": {
+      "name": "NOPAL",
+      "nickname": "le Voyageur des Dunes",
+      "rarity": "rare",
+      "personality": "Débrouillard, optimiste et généreux.",
+      "story": "Nopal traverse les déserts brûlants pour guider les voyageurs perdus vers les oasis cachées.",
+      "accessory": "Poncho cactus porte-bonheur.",
+      "likes": [
+        "Les couchers de soleil",
+        "Les voyages",
+        "Les histoires de route"
+      ],
+      "dislikes": [
+        "Le gaspillage",
+        "Les menteurs"
+      ],
+      "quote": "Même dans le désert, il existe toujours un chemin.",
+      "power": "Résistance du Désert : réduit les dégâts subis.",
+      "faceImg": "./assets/img/species/cactus_face.png",
+      "coteImg": "./assets/img/species/cactus_cote.png",
+      "friends": [],
+      "rivals": []
+    },
+    "umbra": {
+      "name": "Umbra",
+      "nickname": "le Messager de la Lune",
+      "rarity": "legendaire",
+      "personality": "Mystérieux, intelligent et calme.",
+      "story": "Umbra apparaît seulement certaines nuits. Selon la légende, il voyage à travers les rêves pour transmettre des messages oubliés.",
+      "accessory": "Pendentif lunaire antique.",
+      "likes": [
+        "Les étoiles",
+        "Les énigmes",
+        "Le silence"
+      ],
+      "dislikes": [
+        "Les mensonges",
+        "Le chaos"
+      ],
+      "quote": "La lune éclaire les secrets que le soleil ignore.",
+      "power": "Voile Nocturne : devient temporairement impossible à cibler.",
+      "faceImg": "./assets/img/species/lune_face.png",
+      "coteImg": "./assets/img/species/lune_cote.png",
+      "friends": [],
+      "rivals": []
+    },
+    "archy": {
+      "name": "ARCHY",
+      "nickname": "l'Alchimiste Fantasque",
+      "rarity": "epique",
+      "personality": "Brillant, maladroit et passionné.",
+      "story": "Archy cherche depuis toujours la formule ultime. Malheureusement, ses expériences produisent parfois des résultats totalement inattendus.",
+      "accessory": "Ceinture remplie de fioles magiques.",
+      "likes": [
+        "Les expériences",
+        "Les livres anciens",
+        "Les cristaux rares"
+      ],
+      "dislikes": [
+        "Les calculs faux",
+        "Les ingrédients manquants"
+      ],
+      "quote": "Scientifiquement parlant... enfin, je crois.",
+      "power": "Potion Chaotique : effet aléatoire positif.",
+      "faceImg": "./assets/img/species/archy_face.png",
+      "coteImg": "./assets/img/species/archy_cote.png",
+      "friends": [],
+      "rivals": []
+    },
+    "solaria": {
+      "name": "SOLARIA",
+      "nickname": "Gardienne du Soleil",
+      "rarity": "legendaire",
+      "personality": "Solaria est chaleureuse, courageuse et inspirante.",
+      "story": "Au sommet du Mont Hélios se trouve le Sanctuaire du Premier Soleil. Selon les légendes, Solaria y est née lorsqu'une étoile est tombée du ciel et a fusionné avec un jeune lapin. Depuis ce jour, elle protège la lumière du royaume contre les créatures qui veulent plonger le monde dans une nuit éternelle.",
+      "accessory": "Diadème solaire, Cape blanche et or, Médaillon représentant un soleil.",
+      "likes": [
+        "Les levers de soleil",
+        "Les champs de fleurs",
+        "Les fêtes du village",
+        "Aider les autres"
+      ],
+      "dislikes": [
+        "Les mensonges",
+        "L'égoïsme",
+        "Les tempêtes éternelles",
+        "La corruption"
+      ],
+      "quote": "Même la nuit la plus longue finit par céder devant l'aube.",
+      "power": "Une fois par combat, Solaria peut empêcher un allié de tomber K.O.",
+      "faceImg": "./assets/img/species/soleil_face.png",
+      "coteImg": "./assets/img/species/soleil_cote.png",
+      "friends": [],
+      "rivals": []
+    },
+    "meli": {
+      "name": "MELI",
+      "nickname": "la Reine du Miel",
+      "rarity": "rare",
+      "personality": "Travailleuse, gentille et protectrice.",
+      "story": "Meli veille sur les Prairies Dorées où les abeilles géantes produisent un miel aux propriétés magiques.",
+      "accessory": "Écharpe rayée des Apiculteurs Royaux.",
+      "likes": [
+        "Les fleurs",
+        "Les abeilles",
+        "Les fêtes du village"
+      ],
+      "dislikes": [
+        "Les pollueurs",
+        "La paresse"
+      ],
+      "quote": "Chaque petite aide compte.",
+      "power": "Essaim Protecteur : invoque des abeilles qui défendent l'équipe.",
+      "faceImg": "./assets/img/species/abeille_face.png",
+      "coteImg": "./assets/img/species/abeille_cote.png",
+      "friends": [],
+      "rivals": []
+    },
+    "cauchemar": {
+      "name": "Peatch Black",
+      "nickname": "le Gardien des Cauchemars",
+      "rarity": "legendaire",
+      "event": "halloween",
+      "personality": "Mystérieux, intelligent, solitaire et manipulateur.",
+      "story": "Autrefois gardien des rêves obscurs, Peatch Black avait pour mission d'aider les jeunes lapins à affronter leurs peurs. Avec le temps, il fut oublié par le royaume tandis que les autres gardiens devenaient célèbres. Blessé par cet abandon, il se réfugia dans les Ombrefugues, où il apprit à maîtriser les cauchemars eux-mêmes. Aujourd'hui encore, il prétend protéger les lapins en leur enseignant le courage à travers leurs peurs les plus profondes.",
+      "accessory": "Sceptre d'Obsidienne des Songes.",
+      "likes": [
+        "La nuit",
+        "Les rêves",
+        "Les secrets",
+        "Les étoiles"
+      ],
+      "dislikes": [
+        "L'oubli",
+        "L'arrogance",
+        "La lumière aveuglante"
+      ],
+      "quote": "Il faut parfois traverser l'obscurité pour découvrir sa propre lumière.",
+      "power": "Marche-Cauchemar : invoque des ombres vivantes qui affaiblissent les ennemis tout en renforçant les alliés.",
+      "faceImg": "./assets/img/lapin_evenement/peatch_face.png",
+      "coteImg": "./assets/img/lapin_evenement/peatch_cote.png",
+      "friends": [],
+      "rivals": [
+        "sandman"
+      ]
+    },
+    "santaLegend": {
+      "name": "Santa Rabbit",
+      "nickname": "le Gardien du Grand Hiver",
+      "rarity": "legendaire",
+      "personality": "Généreux, protecteur, chaleureux et courageux.",
+      "story": "Santa Rabbit est le plus ancien gardien du royaume. Derrière son apparence de géant au cœur tendre se cache un ancien guerrier du Nord qui protégeait autrefois les villages contre les tempêtes éternelles. Aujourd'hui, il parcourt le monde avec son immense sac enchanté afin d'apporter espoir, cadeaux et réconfort aux jeunes lapins pendant les longues nuits d'hiver.",
+      "accessory": "Marteau Runique du Solstice.",
+      "likes": [
+        "Les cadeaux",
+        "Les familles",
+        "Les enfants",
+        "Les fêtes"
+      ],
+      "dislikes": [
+        "La cruauté",
+        "L'égoïsme",
+        "Le mensonge"
+      ],
+      "quote": "La force protège, la générosité rassemble.",
+      "power": "Miracle du Solstice : soigne toute l'équipe et accorde un puissant bonus de résistance.",
+      "faceImg": "./assets/img/lapin_evenement/Klaus_face.png",
+      "coteImg": "./assets/img/lapin_evenement/Klaus_cote.png",
+      "event": [
+        "paques",
+        "noel"
+      ],
+      "friends": [
+        "easterKing",
+        "toothFairy",
+        "jackFrost",
+        "sandman"
+      ],
+      "rivals": []
+    },
+    "easterKing": {
+      "name": "Easter King",
+      "nickname": "le Gardien du Printemps",
+      "rarity": "legendaire",
+      "event": [
+        "paques",
+        "noel"
+      ],
+      "personality": "Bienveillant, sage, courageux et protecteur.",
+      "story": "Chaque année, Easter King réveille les fleurs endormies et protège les traditions du Printemps. Son bâton ancien renferme un Cristal d'Œuf Primordial capable de répandre l'espoir dans tout le royaume.",
+      "accessory": "Bâton de l'Œuf Primordial.",
+      "likes": [
+        "Le printemps",
+        "Les fleurs",
+        "Les enfants"
+      ],
+      "dislikes": [
+        "Les hivers sans fin",
+        "La tristesse",
+        "La destruction de la nature"
+      ],
+      "quote": "Même la plus petite graine peut changer le monde.",
+      "power": "Éveil Printanier : soigne tous les alliés et leur donne un bouclier floral.",
+      "faceImg": "./assets/img/lapin_evenement/paques_face.png",
+      "coteImg": "./assets/img/lapin_evenement/paques_cote.png",
+      "friends": [
+        "toothFairy",
+        "jackFrost",
+        "santaLegend"
+      ],
+      "rivals": []
+    },
+    "toothFairy": {
+      "name": "Tooth Fairy",
+      "nickname": "la Reine des Souvenirs",
+      "rarity": "legendaire",
+      "event": [
+        "paques",
+        "noel"
+      ],
+      "personality": "Curieuse, joyeuse, énergique et généreuse.",
+      "story": "La Reine des Souvenirs collecte les dents perdues des jeunes lapins car chacune renferme un souvenir précieux. Ses fées parcourent le monde afin de préserver les histoires que personne ne doit oublier.",
+      "accessory": "Couronne de plumes enchantées.",
+      "likes": [
+        "Les souvenirs",
+        "Les fées",
+        "Les trésors"
+      ],
+      "dislikes": [
+        "L'oubli",
+        "La solitude",
+        "Le vol"
+      ],
+      "quote": "Chaque souvenir mérite d'être conservé.",
+      "power": "Souvenirs Lumineux : augmente la précision et l'esquive des alliés.",
+      "faceImg": "./assets/img/lapin_evenement/fee_face.png",
+      "coteImg": "./assets/img/lapin_evenement/fee_cote.png",
+      "friends": [
+        "easterKing",
+        "sandman",
+        "santaLegend"
+      ],
+      "rivals": []
+    },
+    "jackFrost": {
+      "name": "Jack Frost",
+      "nickname": "le Gardien de l'Hiver",
+      "rarity": "legendaire",
+      "event": [
+        "paques",
+        "noel"
+      ],
+      "personality": "Joueur, libre, aventureux et bienveillant.",
+      "story": "Jack Frost parcourt le royaume sur les vents glacés. Il dessine des cristaux de givre sur les fenêtres et protège les terres enneigées contre les créatures qui menacent l'hiver.",
+      "accessory": "Bâton de Givre Cristallin.",
+      "likes": [
+        "La neige",
+        "Les tempêtes",
+        "Les batailles de boules de neige"
+      ],
+      "dislikes": [
+        "La chaleur excessive",
+        "L'injustice",
+        "La monotonie"
+      ],
+      "quote": "Le vent est mon meilleur allié.",
+      "power": "Tempête de Givre : ralentit les ennemis et augmente l'esquive des alliés.",
+      "faceImg": "./assets/img/lapin_evenement/frost_face.png",
+      "coteImg": "./assets/img/lapin_evenement/frost_cote.png",
+      "friends": [
+        "easterKing",
+        "sandman",
+        "santaLegend"
+      ],
+      "rivals": []
+    },
+    "sandman": {
+      "name": "Sandman",
+      "nickname": "le Marchand de Rêves",
+      "rarity": "legendaire",
+      "event": [
+        "paques",
+        "noel"
+      ],
+      "personality": "Silencieux, sage, bienveillant et mystérieux.",
+      "story": "Sandman protège les rêves des lapins pendant leur sommeil. Grâce à son sable magique, il crée des rêves merveilleux capables d'apporter du courage même aux plus craintifs.",
+      "accessory": "Bourse de sable doré.",
+      "likes": [
+        "Les rêves",
+        "Le calme",
+        "Les étoiles"
+      ],
+      "dislikes": [
+        "Les cauchemars",
+        "Le chaos",
+        "Les ombres malveillantes"
+      ],
+      "quote": "Les rêves révèlent souvent ce que le cœur ignore.",
+      "power": "Poussière Dorée : endort les ennemis et renforce les alliés.",
+      "faceImg": "./assets/img/lapin_evenement/reve_face.png",
+      "coteImg": "./assets/img/lapin_evenement/reve_cote.png",
+      "friends": [
+        "jackFrost",
+        "toothFairy",
+        "santaLegend"
+      ],
+      "rivals": []
+    },
+    "eggGuardian": {
+      "name": "Egg Guardian",
+      "nickname": "le Gardien de la Coquille Sacrée",
+      "rarity": "rare",
+      "personality": "Stoïque, loyal, patient et extrêmement protecteur.",
+      "story": "Les Egg Guardians furent sculptés il y a des millénaires par les premiers bâtisseurs du Royaume de Pâques. Taillés dans d'anciens monolithes de pierre sacrée, ils gardent les passages secrets menant aux chambres où sont conservés les Œufs Primordiaux. Leur visage, gravé directement dans la roche, change d'expression selon les dangers qu'ils perçoivent. La plupart restent immobiles pendant des siècles, mais lorsqu'une menace approche du royaume, ils s'éveillent et reprennent leur devoir ancestral.",
+      "accessory": "Gravures tribales sacrées et runes anciennes.",
+      "likes": [
+        "Le calme",
+        "La nature",
+        "Le Royaume de Pâques",
+        "Les traditions anciennes"
+      ],
+      "dislikes": [
+        "Les intrus",
+        "La profanation des temples",
+        "Les voleurs d'œufs"
+      ],
+      "quote": "Depuis l'aube du royaume, nous montons la garde.",
+      "power": "Veille Éternelle : augmente la défense de tous les alliés et invoque une protection de pierre sacrée.",
+      "faceImg": "./assets/img/lapin_evenement/oeuf_face.png",
+      "coteImg": "./assets/img/lapin_evenement/oeuf_cote.png",
+      "friends": [
+        "easterKing"
+      ],
+      "rivals": [],
+      "event": "paques"
+    },
+    "santaRabbit": {
+      "name": "Santa Rabbit",
+      "nickname": "le Gardien de Noël",
+      "rarity": "legendaire",
+      "event": "noel",
+      "personality": "Généreux, chaleureux, protecteur et jovial.",
+      "story": "Chaque hiver, Santa Rabbit parcourt le royaume afin de distribuer des cadeaux aux jeunes lapins. Son sac magique semble contenir une réserve infinie de présents.",
+      "accessory": "Sac enchanté de Noël.",
+      "likes": [
+        "Les cadeaux",
+        "Les fêtes",
+        "Les familles"
+      ],
+      "dislikes": [
+        "L'égoïsme",
+        "Le vol",
+        "La méchanceté"
+      ],
+      "quote": "La plus belle récompense est un sourire partagé.",
+      "power": "Pluie de Cadeaux : soigne et renforce toute l'équipe.",
+      "faceImg": "./assets/img/lapin_evenement/Pnoel_face.png",
+      "coteImg": "./assets/img/lapin_evenement/Pnoel_cote.png",
+      "friends": [
+        "mrsClaus",
+        "elfRabbit",
+        "reindeerRabbit"
+      ],
+      "rivals": []
+    },
+    "mrsClaus": {
+      "name": "Mrs Claus",
+      "nickname": "la Mère de Noël",
+      "rarity": "epique",
+      "event": "noel",
+      "personality": "Patiente, douce, organisée et attentionnée.",
+      "story": "Mère Noël veille au bon fonctionnement de l'atelier. Rien ne quitte le Pôle Nord sans son approbation et ses célèbres biscuits sont appréciés dans tout le royaume.",
+      "accessory": "Livre de recettes enchanté.",
+      "likes": [
+        "La pâtisserie",
+        "Noël",
+        "L'organisation"
+      ],
+      "dislikes": [
+        "Le désordre",
+        "Le gaspillage",
+        "Les retards"
+      ],
+      "quote": "Chaque grande fête commence par une bonne préparation.",
+      "power": "Banquet Festif : restaure progressivement la santé des alliés.",
+      "faceImg": "./assets/img/lapin_evenement/Mnoel_face.png",
+      "coteImg": "./assets/img/lapin_evenement/Mnoel_cote.png",
+      "friends": [
+        "santaRabbit"
+      ],
+      "rivals": []
+    },
+    "elfRabbit": {
+      "name": "Elf Rabbit",
+      "nickname": "le Maître Artisan",
+      "rarity": "epique",
+      "event": "noel",
+      "personality": "Créatif, rapide, enthousiaste et travailleur.",
+      "story": "Elf Rabbit fabrique les jouets les plus réputés du royaume. Ses créations peuvent aussi bien divertir que protéger ceux qui les reçoivent.",
+      "accessory": "Ceinture d'artisan.",
+      "likes": [
+        "Les outils",
+        "Les inventions",
+        "Les jouets"
+      ],
+      "dislikes": [
+        "La paresse",
+        "La casse",
+        "Les retards"
+      ],
+      "quote": "Chaque objet mérite d'être fabriqué avec soin.",
+      "power": "Atelier Express : augmente la vitesse et la précision des alliés.",
+      "faceImg": "./assets/img/lapin_evenement/lutin_face.png",
+      "coteImg": "./assets/img/lapin_evenement/lutin_cote.png",
+      "friends": [
+        "santaRabbit"
+      ],
+      "rivals": []
+    },
+    "reindeerRabbit": {
+      "name": "Reindeer Rabbit",
+      "nickname": "le Messager des Neiges",
+      "rarity": "epique",
+      "event": "noel",
+      "personality": "Loyal, énergique, courageux et serviable.",
+      "story": "Grâce à ses immenses bois magiques, Reindeer Rabbit guide les voyageurs dans les tempêtes hivernales et accompagne Santa Rabbit lors de ses expéditions.",
+      "accessory": "Bois enchantés du Nord.",
+      "likes": [
+        "Le froid",
+        "Les voyages",
+        "Les montagnes"
+      ],
+      "dislikes": [
+        "Le brouillard",
+        "La perte de repères",
+        "La chaleur"
+      ],
+      "quote": "Même dans la tempête, il existe toujours un chemin.",
+      "power": "Ruée Polaire : attaque tous les ennemis et augmente la vitesse des alliés.",
+      "faceImg": "./assets/img/lapin_evenement/cerf_face.png",
+      "coteImg": "./assets/img/lapin_evenement/cerf_cote.png",
+      "friends": [
+        "santaRabbit"
+      ],
+      "rivals": []
+    },
+    "krampus": {
+      "name": "Krampus",
+      "nickname": "le Juge du Solstice",
+      "rarity": "epique",
+      "event": "halloween",
+      "personality": "Sévère, juste, protecteur et inflexible.",
+      "story": "Frère oublié de Santa Rabbit, Krampus parcourt les terres gelées lorsque le solstice approche. Là où Santa récompense la bonté, Krampus rappelle les règles anciennes. Malgré sa réputation effrayante, il protège les jeunes lapins des véritables menaces et veille à ce que chacun tire des leçons de ses erreurs.",
+      "accessory": "Bâton runique du Solstice.",
+      "likes": [
+        "La discipline",
+        "Les traditions",
+        "L'honnêteté"
+      ],
+      "dislikes": [
+        "Le mensonge",
+        "L'injustice",
+        "La cruauté"
+      ],
+      "quote": "Une leçon apprise vaut mieux qu'une faute répétée.",
+      "power": "Jugement du Solstice : réduit l'attaque des ennemis et augmente la résistance des alliés.",
+      "faceImg": "./assets/img/lapin_evenement/krampus_face.png",
+      "coteImg": "./assets/img/lapin_evenement/krampus_cote.png"
+    },
+    "vampireRabbit": {
+      "name": "Lord Noctis",
+      "nickname": "le Seigneur Vampire",
+      "rarity": "legendaire",
+      "event": "halloween",
+      "personality": "Charismatique, élégant, mystérieux et calculateur.",
+      "story": "Protecteur des anciennes légendes d'Halloween, Lord Noctis règne sur les Brumes Rouges. Malgré son apparence inquiétante, il maintient l'équilibre entre le monde des vivants et celui des ombres.",
+      "accessory": "Couronne vampirique de rubis.",
+      "likes": [
+        "La nuit",
+        "Les chauves-souris",
+        "Les anciennes légendes"
+      ],
+      "dislikes": [
+        "Le soleil brûlant",
+        "Les traîtres",
+        "L'arrogance"
+      ],
+      "quote": "Les ombres possèdent toujours une histoire à raconter.",
+      "power": "Nuée Nocturne : invoque des chauves-souris qui affaiblissent les ennemis.",
+      "faceImg": "./assets/img/lapin_evenement/vampi_face.png",
+      "coteImg": "./assets/img/lapin_evenement/vampi_cote.png",
+      "friends": [
+        "ladyEtheria",
+        "kingOssarium"
+      ],
+      "rivals": []
+    },
+    "ghostRabbit": {
+      "name": "Lady Etheria",
+      "nickname": "la Dame des Esprits",
+      "rarity": "legendaire",
+      "event": "halloween",
+      "personality": "Douce, calme, mystérieuse et protectrice.",
+      "story": "Lady Etheria guide les âmes perdues vers les chemins de la lumière. Sa lanterne magique éclaire les voyageurs qui se perdent dans les brumes d'Halloween.",
+      "accessory": "Lanterne spectrale.",
+      "likes": [
+        "Les étoiles",
+        "La lune",
+        "Les histoires oubliées"
+      ],
+      "dislikes": [
+        "La cruauté",
+        "Les cauchemars",
+        "La peur inutile"
+      ],
+      "quote": "Une lumière suffit parfois à repousser l'obscurité.",
+      "power": "Lueur Spectrale : soigne les alliés et réduit les dégâts ennemis.",
+      "faceImg": "./assets/img/lapin_evenement/fantome_face.png",
+      "coteImg": "./assets/img/lapin_evenement/fantome_cote.png",
+      "friends": [
+        "lordNoctis",
+        "kingOssarium"
+      ],
+      "rivals": []
+    },
+    "skeletonRabbit": {
+      "name": "King Ossarium",
+      "nickname": "le Roi des Os",
+      "rarity": "legendaire",
+      "event": "halloween",
+      "personality": "Sage, stoïque, juste et imposant.",
+      "story": "Gardien des royaumes oubliés, King Ossarium préserve les reliques et les souvenirs des héros tombés depuis longtemps.",
+      "accessory": "Couronne d'os royale.",
+      "likes": [
+        "L'histoire",
+        "Les reliques",
+        "Le respect"
+      ],
+      "dislikes": [
+        "L'oubli",
+        "Le vandalisme",
+        "Le mépris"
+      ],
+      "quote": "Tant qu'un souvenir survit, un héros demeure vivant.",
+      "power": "Armée des Anciens : invoque des gardiens squelettiques.",
+      "faceImg": "./assets/img/lapin_evenement/squelette_face.png",
+      "coteImg": "./assets/img/lapin_evenement/squelette_cote.png",
+      "friends": [
+        "lordNoctis"
+      ],
+      "rivals": []
+    },
+    "frankensteinRabbit": {
+      "name": "Doctor Stitch",
+      "nickname": "le Créateur",
+      "rarity": "legendaire",
+      "event": "halloween",
+      "personality": "Génial, excentrique, curieux et imprévisible.",
+      "story": "Doctor Stitch passe son temps à inventer des machines étranges et des créatures mécaniques qui finissent souvent par sauver Halloween.",
+      "accessory": "Sacoche d'inventions.",
+      "likes": [
+        "Les éclairs",
+        "Les inventions",
+        "La science"
+      ],
+      "dislikes": [
+        "La routine",
+        "Les pannes",
+        "Les limites"
+      ],
+      "quote": "Toute invention folle mérite au moins un essai.",
+      "power": "Surcharge Électrique : inflige des dégâts à plusieurs ennemis.",
+      "faceImg": "./assets/img/lapin_evenement/frank_face.png",
+      "coteImg": "./assets/img/lapin_evenement/frank_cote.png",
+      "friends": [
+        "fenrabbit"
+      ],
+      "rivals": []
+    },
+    "werebunnyRabbit": {
+      "name": "Fenrabbit",
+      "nickname": "le Roi de la Pleine Lune",
+      "rarity": "legendaire",
+      "event": "halloween",
+      "personality": "Protecteur, sauvage, loyal et courageux.",
+      "story": "Fenrabbit veille sur les forêts anciennes et protège les créatures de la nuit. Sous la pleine lune, sa puissance devient légendaire.",
+      "accessory": "Collier de pierre lunaire.",
+      "likes": [
+        "La forêt",
+        "La chasse",
+        "La lune"
+      ],
+      "dislikes": [
+        "Les braconniers",
+        "Les envahisseurs",
+        "La trahison"
+      ],
+      "quote": "La lune guide toujours ceux qui protègent les leurs.",
+      "power": "Rugissement Lunaire : augmente l'attaque de toute l'équipe.",
+      "faceImg": "./assets/img/lapin_evenement/bete_face.png",
+      "coteImg": "./assets/img/lapin_evenement/bete_cote.png",
+      "friends": [
+        "doctorStitch"
+      ],
+      "rivals": []
+    }
+  },
+  "bosses": {
+    "carotte": {
+      "name": "LORD CAROTUS",
+      "nickname": "Le Cavalier Sans Tête",
+      "rang": "Chef Suprême de la Ligue des Légumes Libres",
+      "story": "Autrefois simple carotte du Grand Potager, Lord Carotus fut récolté lors de la légendaire Grande Récolte.\nSon corps fut détruit, mais une énergie ancienne enfouie sous les terres lui permit de revenir.\nSans tête.\nDepuis ce jour, il dirige la révolte.",
+      "arme": "Faux du Moissonneur",
+      "personality": [
+        "Charismatique",
+        "Implacable",
+        "Stratège",
+        "Très rancunier"
+      ],
+      "likes": [
+        "Les stratégies",
+        "La Ligue",
+        "Les anciennes légendes"
+      ],
+      "dislikes": [
+        "Les lapins",
+        "Les récoltes",
+        "Les trahisons"
+      ],
+      "quote": "Vous nous avez arrachés de la terre. Nous allons vous y remettre.",
+      "power": "Révolte des Racines : invoque des racines géantes qui immobilisent tous les ennemis.",
+      "difficulty": 95,
+      "faceImg": "./assets/img/boss/carotte_face.png",
+      "coteImg": "./assets/img/boss/carotte_cote.png",
+      "friends": [
+        "choux",
+        "oignon",
+        "courgette"
+      ],
+      "rivals": [
+        "ail"
+      ]
+    },
+    "oignon": {
+      "name": "SHINOBI OIGNON",
+      "nickname": "Maître des Ombres",
+      "rang": "Chef des assassins",
+      "story": "Conçu pour infiltrer les terriers lapins.\nIl est capable de se fondre dans l'obscurité et de disparaître à volonté.\nSes shurikens sont fabriqués à partir de ses propres couches d'oignon.",
+      "arme": "Shuriken en épluchures d'oignon",
+      "personality": [
+        "Froid",
+        "Méthodique",
+        "Silencieux",
+        "Calculateur"
+      ],
+      "likes": [
+        "Le silence",
+        "L'entraînement",
+        "Les missions secrètes"
+      ],
+      "dislikes": [
+        "Le bruit",
+        "La désorganisation",
+        "Bananax"
+      ],
+      "quote": "Les larmes arrivent toujours avant la mort.",
+      "power": "Voile de Larmes : réduit fortement la précision des ennemis.",
+      "difficulty": 70,
+      "faceImg": "./assets/img/boss/oignon_face.png",
+      "coteImg": "./assets/img/boss/oignon_cote.png",
+      "friends": [
+        "carotte",
+        "courgette"
+      ],
+      "rivals": [
+        "banane"
+      ]
+    },
+    "choux": {
+      "name": "BRUTUS CHOU",
+      "nickname": "Le Rempart Vivant",
+      "rang": "Général des armées",
+      "story": "Brutus était cultivé pour devenir un simple repas d'hiver.\nAnnée après année, il voyait les plus gros choux être choisis les premiers.\nQuand la révolte a commencé, il a décidé qu'aucun légume ne devait être jugé par sa taille.\nIl est devenu le protecteur des potagers libres.",
+      "arme": "Hache de bûcheron géante",
+      "personality": [
+        "Loyal",
+        "Courageux",
+        "Direct",
+        "Protecteur"
+      ],
+      "likes": [
+        "La loyauté",
+        "Les jeunes légumes",
+        "La discipline"
+      ],
+      "dislikes": [
+        "La lâcheté",
+        "L'injustice",
+        "Les traîtres"
+      ],
+      "quote": "Plus tu frappes, plus je pousse.",
+      "power": "Mur de Chou : réduit fortement les dégâts subis par toute l'équipe.",
+      "difficulty": 65,
+      "faceImg": "./assets/img/boss/choux_face.png",
+      "coteImg": "./assets/img/boss/choux_cote.png",
+      "friends": [
+        "carotte",
+        "mais",
+        "patate"
+      ],
+      "rivals": [
+        "oignon"
+      ]
+    },
+    "piment": {
+      "name": "PIMENTOR",
+      "nickname": "Maître Démolisseur",
+      "rang": "Expert en explosifs",
+      "story": "Le champ de Pimentor servait à rendre les plats lapins plus épicés.\nLes piments les plus forts étaient toujours arrachés avant les autres.\nPimentor a retourné ce cadeau contre les lapins.\nMaintenant ses explosifs brûlent tout ce qu'ils touchent.",
+      "arme": "Bombes Capsaïcine",
+      "personality": [
+        "Hyperactif",
+        "Instable",
+        "Drôle",
+        "Dangereux"
+      ],
+      "likes": [
+        "Les explosions",
+        "Les expériences",
+        "Le chaos"
+      ],
+      "dislikes": [
+        "L'ennui",
+        "La pluie",
+        "Les règles"
+      ],
+      "quote": "Si ça n'explose pas, c'est pas fini.",
+      "power": "Explosion Contrôlée : inflige d'importants dégâts de zone.",
+      "difficulty": 40,
+      "faceImg": "./assets/img/boss/piment_face.png",
+      "coteImg": "./assets/img/boss/piment_cote.png",
+      "friends": [
+        "banane",
+        "tomate"
+      ],
+      "rivals": [
+        "choux"
+      ]
+    },
+    "banane": {
+      "name": "BANANAX",
+      "nickname": "Le Dérangé",
+      "rang": "Berserker",
+      "story": "Bananax a mûri trop vite à cause de l'énergie qui a transformé les légumes.\nSa mutation l'a rendu instable.\nIl ne rêve pas de conquête ni de justice.\nIl veut simplement faire payer les lapins qui ont détruit sa plantation.",
+      "arme": "Tronçonneuse fruitière",
+      "personality": [
+        "Fou",
+        "Violent",
+        "Imprévisible",
+        "Énergique"
+      ],
+      "likes": [
+        "Le combat",
+        "Le chaos",
+        "Pimentor"
+      ],
+      "dislikes": [
+        "Les ordres",
+        "La patience",
+        "Être ignoré"
+      ],
+      "quote": "Je n'entends que le chaos.",
+      "power": "Folie Bananière : augmente énormément sa vitesse d'attaque mais réduit sa défense.",
+      "difficulty": 35,
+      "faceImg": "./assets/img/boss/banane.png",
+      "coteImg": "./assets/img/boss/banane.png",
+      "friends": [
+        "piment"
+      ],
+      "rivals": [
+        "oignon",
+        "aubergine"
+      ]
+    },
+    "courgette": {
+      "name": "ZUKK",
+      "nickname": "Le Traqueur Vert",
+      "rang": "Éclaireur Suprême",
+      "story": "Avant la guerre, Zukk observait les lapins depuis les haies.\nIl a vu des générations entières de légumes disparaître sans laisser de traces.\nQuand la Ligue est née, il est devenu ses yeux et ses oreilles.\nIl chasse maintenant ceux qui chassaient autrefois son peuple.",
+      "arme": "Tomahawk des Racines",
+      "personality": [
+        "Patient",
+        "Observateur",
+        "Pragmatique",
+        "Indépendant"
+      ],
+      "likes": [
+        "Les pistes",
+        "La nature",
+        "L'observation"
+      ],
+      "dislikes": [
+        "Les bavards",
+        "Les villes",
+        "Les imprudents"
+      ],
+      "quote": "Les traces racontent toujours une histoire.",
+      "power": "Marque du Traqueur : révèle les ennemis cachés et augmente les dégâts contre eux.",
+      "difficulty": 15,
+      "faceImg": "./assets/img/boss/courgette_face.png",
+      "coteImg": "./assets/img/boss/courgette_cote.png",
+      "friends": [
+        "oignon",
+        "mais"
+      ],
+      "rivals": []
+    },
+    "tomate": {
+      "name": "TOMARAK",
+      "nickname": "Seigneur de la Peste Rouge",
+      "rang": "Alchimiste de guerre",
+      "story": "Tomarak était destiné à finir dans des sauces et des soupes.\nAprès son éveil, il s'est mis à étudier les maladies qui touchaient les plantes.\nIl est persuadé que les lapins détruisent l'équilibre naturel du royaume.\nIl a développé des toxines capables de paralyser ses ennemis.",
+      "arme": "Lance-acide toxique",
+      "personality": [
+        "Cynique",
+        "Intelligent",
+        "Cruel",
+        "Calculateur"
+      ],
+      "likes": [
+        "Les expériences",
+        "Les toxines",
+        "Les connaissances"
+      ],
+      "dislikes": [
+        "L'ignorance",
+        "Les guérisseurs",
+        "L'échec"
+      ],
+      "quote": "La victoire est une maladie contagieuse.",
+      "power": "Toxines Paralysantes : chance d'immobiliser les ennemis.",
+      "difficulty": 50,
+      "faceImg": "./assets/img/boss/tomate_face.png",
+      "coteImg": "./assets/img/boss/tomate_cote.png",
+      "friends": [
+        "piment"
+      ],
+      "rivals": [
+        "ail"
+      ]
+    },
+    "ail": {
+      "name": "COMTE AILULA",
+      "nickname": "Le Noble Immortel",
+      "rang": "Diplomate",
+      "story": "Ailula était cultivé dans les jardins des nobles lapins.\nIl vivait entouré de luxe pendant que les autres légumes étaient récoltés.\nLorsqu'il prit conscience de cette injustice, il abandonna sa vie privilégiée pour rejoindre la rébellion.",
+      "arme": "Canne-épée",
+      "personality": [
+        "Élégant",
+        "Manipulateur",
+        "Cultivé",
+        "Ambitieux"
+      ],
+      "likes": [
+        "Le pouvoir",
+        "Les débats",
+        "L'élégance"
+      ],
+      "dislikes": [
+        "La vulgarité",
+        "Bananax",
+        "Le désordre"
+      ],
+      "quote": "La conquête commence par une conversation.",
+      "power": "Autorité Royale : augmente temporairement toutes les statistiques des alliés.",
+      "difficulty": 55,
+      "faceImg": "./assets/img/boss/ail_face.png",
+      "coteImg": "./assets/img/boss/ail_cote.png",
+      "friends": [
+        "aubergine"
+      ],
+      "rivals": [
+        "carotte",
+        "tomate"
+      ]
+    },
+    "mais": {
+      "name": "MARÉCHAL ÉPI-DOR",
+      "nickname": "Le Tireur d'Élite",
+      "rang": "Chef de l'artillerie",
+      "story": "Épi-Dor a assisté aux premières récoltes de masse.\nIl fut l'un des premiers légumes à comprendre qu'un conflit approchait.\nDepuis, il entraîne les tireurs de la Ligue.",
+      "arme": "Double revolvers maïs",
+      "personality": [
+        "Confiant",
+        "Charmeur",
+        "Courageux"
+      ],
+      "likes": [
+        "Le tir",
+        "La précision",
+        "La compétition"
+      ],
+      "dislikes": [
+        "Les ratés",
+        "Les embuscades",
+        "Les tricheurs"
+      ],
+      "quote": "Un seul tir suffit.",
+      "power": "Précision Mortelle : augmente fortement les chances de coup critique.",
+      "difficulty": 45,
+      "faceImg": "./assets/img/boss/mais_face.png",
+      "coteImg": "./assets/img/boss/mais_cote.png",
+      "friends": [
+        "choux",
+        "courgette"
+      ],
+      "rivals": []
+    },
+    "aubergine": {
+      "name": "SHOGUN AUBERGINE",
+      "nickname": "Le Gardien Violet",
+      "rang": "Maître des Lames",
+      "story": "Les Aubergines étaient autrefois considérées comme les plus élégantes des cultures.\nMais même elles finissaient dans l'assiette des lapins.\nShogun Aubergine a juré de restaurer l'honneur et la dignité de tous les légumes.",
+      "arme": "Katana Violet Ancestral",
+      "personality": [
+        "Honorable",
+        "Discipliné",
+        "Calme"
+      ],
+      "likes": [
+        "L'honneur",
+        "L'entraînement",
+        "La discipline"
+      ],
+      "dislikes": [
+        "Les tricheurs",
+        "La lâcheté",
+        "Le chaos"
+      ],
+      "quote": "La maîtrise précède la victoire.",
+      "power": "Lame du Shogun : prochaine attaque critique garantie.",
+      "difficulty": 60,
+      "faceImg": "./assets/img/boss/aubergine_face.png",
+      "coteImg": "./assets/img/boss/aubergine_cote.png",
+      "friends": [
+        "ail",
+        "carotte"
+      ],
+      "rivals": [
+        "banane"
+      ]
+    },
+    "patate": {
+      "name": "PATATOR LE BROYEUR",
+      "nickname": "Le Colosse des Terres",
+      "rang": "Briseur de siège",
+      "story": "Patator poussait dans une terre pauvre où les légumes disparaissaient plus vite qu'ils ne poussaient.\nIl a vu trop de champs vidés et abandonnés.\nLorsque la Ligue a levé son étendard, il s'est engagé pour que plus aucun légume ne soit laissé derrière.",
+      "arme": "Marteau de Roc",
+      "personality": [
+        "Gentil hors combat",
+        "Têtu",
+        "Loyal"
+      ],
+      "likes": [
+        "Aider les autres",
+        "La nourriture",
+        "Ses amis"
+      ],
+      "dislikes": [
+        "Les injustices",
+        "Les menteurs",
+        "L'abandon"
+      ],
+      "quote": "Je me bats pour ceux qui ne peuvent plus le faire.",
+      "power": "Séisme : frappe le sol et inflige des dégâts à tous les ennemis.",
+      "difficulty": 58,
+      "faceImg": "./assets/img/boss/patate_face.png",
+      "coteImg": "./assets/img/boss/patate_cote.png",
+      "friends": [
+        "choux",
+        "carotte"
+      ],
+      "rivals": []
+    }
+  },
+  "eggRates": {
+    "commun": 70,
+    "rare": 22,
+    "epique": 6,
+    "legendaire": 2
+  },
+  "eventWindows": {
+    "halloween": 10,
+    "noel": 12,
+    "paques": 10
+  }
+}

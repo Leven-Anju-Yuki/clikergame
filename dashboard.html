@@ -1,77 +1,146 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Dashboard Administrateur - Lapinous & Boss</title>
-    <link rel="stylesheet" href="./css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="./css/dashboard.css"/>
-</head>
-<body class="dashboard-auth-pending" data-protected-dashboard="true">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Dashboard — Lapinous</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="./assets/css/style.css" />
+        <link rel="shortcut icon" type="image/png" href="./assets/img/az/az_assis_de_face.png" />
+        <script defer src="./assets/js/dashboard-access.js"></script>
+    </head>
+    <body class="dashboard-page dashboard-auth-pending" data-protected-dashboard="true">
+        <div id="toastContainer" class="toast-container"></div>
 
-<div class="container-fluid py-4">
-    <header class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Dashboard Administration</h1>
-        <a href="./index.html" class="btn btn-outline-secondary">Back to Game ➔</a>
-    </header>
+        <header class="dash-header">
+            <span class="dash-header-title">⚙️ Dashboard — Lapinous</span>
+            <a href="./index.html" class="dash-back-link">← Retour au jeu</a>
+        </header>
 
-    <section class="panel mb-4">
-        <h2>Statistiques des Lapins & Raretés</h2>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="chart-box">
-                    <h3>Répartition par Rareté</h3>
-                    <canvas id="chart-rarity"></canvas>
+        <main class="dash-main">
+            <section class="dash-section">
+                <h2>📊 Statistiques</h2>
+                <div class="chart-grid">
+                    <div class="chart-box">
+                        <h3>Lapins par rareté</h3>
+                        <canvas id="chart-rarity"></canvas>
+                        <div class="slice-detail" id="detail-chart-rarity"></div>
+                    </div>
+                    <div class="chart-box">
+                        <h3>Boss par difficulté</h3>
+                        <canvas id="chart-difficulty"></canvas>
+                        <div class="slice-detail" id="detail-chart-difficulty"></div>
+                    </div>
+                    <div class="chart-box">
+                        <h3>Visuels lapins</h3>
+                        <canvas id="chart-species-img"></canvas>
+                        <ul class="missing-list" id="missing-species-list"></ul>
+                    </div>
+                    <div class="chart-box">
+                        <h3>Visuels boss</h3>
+                        <canvas id="chart-boss-img"></canvas>
+                        <ul class="missing-list" id="missing-boss-list"></ul>
+                    </div>
+                    <div class="chart-box">
+                        <h3>🎃 Lapins Halloween</h3>
+                        <canvas id="chart-event-halloween"></canvas>
+                        <div class="slice-detail" id="detail-chart-event-halloween"></div>
+                    </div>
+                    <div class="chart-box">
+                        <h3>🎄 Lapins Noël</h3>
+                        <canvas id="chart-event-noel"></canvas>
+                        <div class="slice-detail" id="detail-chart-event-noel"></div>
+                    </div>
+                    <div class="chart-box">
+                        <h3>🐣 Lapins Pâques</h3>
+                        <canvas id="chart-event-paques"></canvas>
+                        <div class="slice-detail" id="detail-chart-event-paques"></div>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="chart-box">
-                    <h3>Taux de Découverte / Déblocage</h3>
-                    <canvas id="chart-discovery"></canvas>
+                <p class="panel-desc">💡 Clique sur une part de camembert pour voir la liste de ce qu'elle contient, juste en dessous.</p>
+            </section>
+
+            <section class="dash-section">
+                <h2>🥚 Taux d'apparition des œufs (%, doit faire 100)</h2>
+                <div class="rate-row">
+                    <label>Commun <input type="number" id="rate-commun" min="0" max="100"></label>
+                    <label>Rare <input type="number" id="rate-rare" min="0" max="100"></label>
+                    <label>Épique <input type="number" id="rate-epique" min="0" max="100"></label>
+                    <label>Légendaire <input type="number" id="rate-legendaire" min="0" max="100"></label>
                 </div>
-            </div>
-        </div>
-    </section>
+                <button id="saveEggRatesBtn" class="io-btn" type="button" style="margin-top:10px;max-width:260px;">Enregistrer les taux</button>
+            </section>
 
-    <section class="panel mb-4">
-        <h2>Gestion des Lapins</h2>
-        <div class="table-responsive">
-            <table class="table table-striped table-hover" id="table-rabbits">
-                <thead>
-                    <tr>
-                        <th>Nom de base</th>
-                        <th>Nom personnalisé</th>
-                        <th>Rareté</th>
-                        <th>Personnalité</th>
-                        <th>Statut</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-    </section>
+            <section class="dash-section">
+                <h2>📅 Durée des événements (jours avant/après la date)</h2>
+                <p class="panel-desc">Ex: Halloween à 10 jours = disponible du 21 octobre au 10 novembre. Par défaut : Halloween 10j, Noël 12j, Pâques 10j.</p>
+                <div class="rate-row">
+                    <label>🎃 Halloween (±j) <input type="number" id="window-halloween" min="0" max="60"></label>
+                    <label>🎄 Noël (±j) <input type="number" id="window-noel" min="0" max="60"></label>
+                    <label>🐣 Pâques (±j) <input type="number" id="window-paques" min="0" max="60"></label>
+                </div>
+                <button id="saveEventWindowsBtn" class="io-btn" type="button" style="margin-top:10px;max-width:260px;">Enregistrer les durées</button>
+            </section>
 
-    <section class="panel mb-4">
-        <h2>Gestion des Boss</h2>
-        <div class="table-responsive">
-            <table class="table table-striped table-hover" id="table-bosses">
-                <thead>
-                    <tr>
-                        <th>Boss</th>
-                        <th>Titre</th>
-                        <th>PV (HP)</th>
-                        <th>Découvert / Vaincu</th>
-                        <th>Description</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-    </section>
-</div>
+            <section class="dash-section pm-panel-wide">
+                <h2>🐰 Lapins</h2>
+                <p class="panel-desc">Modifie directement dans le tableau, puis clique 💾 sur la ligne. La dernière ligne sert à ajouter un nouveau lapin. Colonne "Événement" : "Aucun" = toujours disponible ; sinon le lapin n'apparaît dans les œufs que pendant la période choisie (Halloween, Noël, Pâques, ou Pâques + Noël pour les légendes). Pour tes lapins événementiels déjà préparés dans le dossier <code>assets/img/lapin_evenement/</code>, uploade simplement leurs photos ici comme pour les autres.</p>
+                <div class="pm-table-wrap">
+                    <table class="pm-table">
+                        <thead>
+                            <tr>
+                                <th>Photo</th><th>Identifiant</th><th>Nom</th><th>Surnom</th><th>Rareté</th><th>Événement</th>
+                                <th>Personnalité</th><th>Histoire</th><th>Accessoire</th><th>Aime</th><th>N'aime pas</th>
+                                <th>Citation</th><th>Pouvoir</th><th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="speciesTableBody"></tbody>
+                    </table>
+                </div>
+            </section>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="./js/dashboard-access.js"></script>
-<script src="./js/dashboard.js" type="module"></script>
-</body>
+            <section class="dash-section pm-panel-wide">
+                <h2>🥕 Boss légumes</h2>
+                <p class="panel-desc">Idem : modifie dans le tableau puis 💾. La dernière ligne ajoute un nouveau boss.</p>
+                <div class="pm-table-wrap">
+                    <table class="pm-table">
+                        <thead>
+                            <tr>
+                                <th>Photo</th><th>Identifiant</th><th>Nom</th><th>Surnom</th><th>Rang</th>
+                                <th>Histoire</th><th>Arme</th><th>Personnalité</th><th>Aime</th><th>N'aime pas</th>
+                                <th>Citation</th><th>Pouvoir</th><th>Difficulté</th><th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="bossTableBody"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="dash-section">
+                <h2>📦 Contenu (lapins + boss + taux)</h2>
+                <p class="dash-note">Séparé de la sauvegarde du joueur : ce fichier ne contient aucune donnée de progression, juste le contenu ajouté ici.</p>
+                <p class="dash-note">📌 Après avoir exporté, dépose le fichier téléchargé <strong>à la racine de ton projet</strong> (à côté d'<code>index.html</code>) en le renommant exactement <code>lapinous-content.json</code>, en écrasant l'ancien s'il existe. Recharge la page : ce contenu devient alors la référence pour tout le monde, même sans passer par ce Dashboard. (Fonctionne une fois le site en ligne ou lancé via un serveur local — pas en ouvrant juste le fichier en double-clic.)</p>
+                <div class="save-io-row">
+                    <button id="exportContentBtn" class="io-btn" type="button">⬇️ Exporter le contenu (JSON)</button>
+                    <label class="io-btn io-btn-file">⬆️ Importer un contenu (JSON)<input type="file" id="importContentInput" accept="application/json" hidden /></label>
+                </div>
+            </section>
+
+            <section class="dash-section">
+                <h2>🔒 Sécurité</h2>
+                <p class="dash-note">Code par défaut : <code>0000</code>. Change-le dès maintenant si tu veux vraiment protéger ce dashboard.</p>
+                <form id="changeCodeForm" class="dash-form" style="max-width:340px;">
+                    <input type="password" name="newCode" placeholder="Nouveau code (4 caractères min.)" required>
+                    <input type="password" name="newCode2" placeholder="Confirme le nouveau code" required>
+                    <button type="submit" class="io-btn">Changer le code</button>
+                </form>
+            </section>
+        </main>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="./assets/js/species-data.js"></script>
+        <script src="./assets/js/dashboard.js"></script>
+    </body>
 </html>

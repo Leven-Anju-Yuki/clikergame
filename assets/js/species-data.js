@@ -1,157 +1,116 @@
 // =====================================================================
-// DONNÉES DE BASE DES LAPINS ET BOSS
+// DONNÉES PARTAGÉES — mécanique de chargement uniquement.
+// Tout le contenu (les 16 lapins, les 11 boss, les taux d'œufs) vit
+// maintenant dans lapinous-content.json à la racine du projet.
+// Ce fichier ne fait plus que : charger ce JSON, gérer les surcharges
+// locales du Dashboard (localStorage), et exposer getSpecies()/getBosses().
 // =====================================================================
 
-export const DEFAULT_EGG_RATES = {
-    commun: 60,
-    rare: 25,
-    epique: 10,
-    legendaire: 5
+// Azazel reste ici (pas dans le JSON) : c'est le seul dont la logique
+// (nom secret "azazel", aucun malus) est directement liée au code du jeu,
+// pas au contenu éditable. Tout le reste vient de lapinous-content.json.
+const BASE_SPECIES = {
+    az: {
+        name: "Azazel", nickname: "le Premier Lapin", rarity: "divin",
+        personality: "Calme, sage, intemporel et bienveillant.",
+        story: "Bien avant la naissance des royaumes, avant les gardiens et avant les légendes, Azazel parcourait déjà les plaines du monde. On raconte qu'il fut le premier lapin à fouler cette terre et que toutes les lignées actuelles descendent de lui. Ni roi, ni gardien, ni dieu au sens traditionnel, Azazel représente l'origine même de la vie et de l'équilibre. Les plus anciens mythes racontent que lorsqu'il ferme les yeux, le monde rêve, et lorsqu'il les ouvre, une nouvelle ère commence.",
+        accessory: "Halo des Origines.",
+        likes: ["L'équilibre", "Le silence", "La nature", "Toutes les créatures"],
+        dislikes: ["Le chaos", "La corruption", "La destruction inutile"],
+        quote: "Avant toutes les légendes, il y avait simplement la vie.",
+        power: "Souffle Originel : restaure entièrement les alliés et purifie tous les effets négatifs.",
+        faceImg: "./assets/img/species/azazel_face.png",
+        coteImg: "./assets/img/species/azazel_cote.png",
+        friends: [], rivals: [], hidden: true, noMalus: true,
+    },
 };
 
-export const BASE_SPECIES = {
-    azur: {
-        id: "azur",
-        name: "Azur",
-        nickname: "le Lapin Neige",
-        rarity: "commun",
-        personality: "Calme, bienveillant et protecteur.",
-        story: "Azur vit sur les sommets enneigés du Royaume Polaire.",
-        accessory: "Écharpe bleue",
-        likes: ["Flocons", "Carottes glacées"],
-        dislikes: ["Chaleur excessive"],
-        quote: "Le froid ne m'atteint jamais !",
-        power: "Bouclier de Givre",
-        imageFace: "./assets/img/az/az_assis_de_face.png",
-        imageCote: "./assets/img/az/az_assis_3-4.png"
-    },
-    flamme: {
-        id: "flamme",
-        name: "Flamme",
-        nickname: "le Lapin Feux",
-        rarity: "rare",
-        personality: "Énergique, impétueux et passionné.",
-        story: "Flamme vient des zones volcaniques et adore braver les dangers.",
-        accessory: "Bandana rouge",
-        likes: ["Piments", "Soleil"],
-        dislikes: ["EAU", "Bain"],
-        quote: "Ça va chauffer !",
-        power: "Boule de Feu",
-        imageFace: "./assets/img/flamme/flamme_face.png",
-        imageCote: "./assets/img/flamme/flamme_3-4.png"
-    }
+// Pas de boss codé en dur : tous viennent de lapinous-content.json.
+const BASE_BOSSES = {};
+
+const RARITY_META = {
+    commun: { label: "Commun", color: "#b8bcc4" },
+    rare: { label: "Rare", color: "#6ebf77" },
+    epique: { label: "Épique", color: "#5b8fd6" },
+    legendaire: { label: "Légendaire", color: "#a35bd6" },
+    mythique: { label: "Mythique", color: "#f5c34d" },
+    divin: { label: "Divin", color: "#d64545" },
+    secret: { label: "??? Secret", color: "#2b2b2b" },
 };
 
-export const BASE_BOSSES = {
-    tomarak: {
-        id: "tomarak",
-        name: "Tomarak",
-        title: "Lord de la Peste Rouge",
-        power: 12,
-        hp: 1500,
-        rarity: "legendaire",
-        description: "Seigneur tomate mutant projetant du liquide toxique.",
-        image: "./assets/img/boss/tomarak.png"
-    },
-    count_ailula: {
-        id: "count_ailula",
-        name: "Comte Ailula",
-        title: "Le Seigneur Ail Immortel",
-        power: 15,
-        hp: 2200,
-        rarity: "legendaire",
-        description: "Aristocrate ail vêtu d'une cape pourpre et armé d'une canne-épée.",
-        image: "./assets/img/boss/count_ailula.png"
-    },
-    marshal_epi_dor: {
-        id: "marshal_epi_dor",
-        name: "Maréchal Épi-d'Or",
-        title: "L'Artilleur Doré",
-        power: 18,
-        hp: 2800,
-        rarity: "epique",
-        description: "Commandant maïs armé de revolvers et d'un fusil long.",
-        image: "./assets/img/boss/marshal_epi_dor.png"
-    },
-    shogun_eggplant: {
-        id: "shogun_eggplant",
-        name: "Shogun Aubergine",
-        title: "Le Samouraï Violet",
-        power: 22,
-        hp: 3500,
-        rarity: "legendaire",
-        description: "Guerrier légendaire maniant un katana ancestral géant.",
-        image: "./assets/img/boss/shogun_eggplant.png"
-    },
-    lord_carotus: {
-        id: "lord_carotus",
-        name: "Lord Carotus",
-        title: "Le Roi Légendaire",
-        power: 30,
-        hp: 5000,
-        rarity: "legendaire",
-        description: "Chef suprême de la Ligue des Légumes Libres.",
-        image: "./assets/img/boss/lord_carotus.png"
-    },
-    grumpy_onion: {
-        id: "grumpy_onion",
-        name: "Grumpy Onion",
-        title: "Ninja Assassin",
-        power: 10,
-        hp: 1200,
-        rarity: "rare",
-        description: "Assassin furtif entouré de shurikens d'oignon piqueurs.",
-        image: "./assets/img/boss/grumpy_onion.png"
-    },
-    raging_cabbage: {
-        id: "raging_cabbage",
-        name: "Raging Cabbage",
-        title: "Le Tank de la Ligue",
-        power: 14,
-        hp: 2000,
-        rarity: "epique",
-        description: "Berserker de chou résistant armé d'un bouclier solide.",
-        image: "./assets/img/boss/raging_cabbage.png"
-    },
-    spicy_pepper: {
-        id: "spicy_pepper",
-        name: "Spicy Pepper",
-        title: "Expert en Démolition",
-        power: 11,
-        hp: 1400,
-        rarity: "rare",
-        description: "Spécialiste de la pyrotechnie et des grenades pimentées.",
-        image: "./assets/img/boss/spicy_pepper.png"
-    },
-    psycho_banana: {
-        id: "psycho_banana",
-        name: "Psycho Banana",
-        title: "Berserker Instable",
-        power: 16,
-        hp: 2400,
-        rarity: "epique",
-        description: "Combattant au corps-à-corps maniaque et totalement imprévisible.",
-        image: "./assets/img/boss/psycho_banana.png"
-    },
-    tribal_zucchini: {
-        id: "tribal_zucchini",
-        name: "Tribal Zucchini",
-        title: "Chasseur & Traqueur",
-        power: 9,
-        hp: 1100,
-        rarity: "commun",
-        description: "Scout tribal maniant le tomahawk et la lance de bambou.",
-        image: "./assets/img/boss/tribal_zucchini.png"
-    }
-};
+const RELATIONS_TEXT = [
+    "Azur et Bambou sont meilleurs amis.",
+    "Caramel suit souvent Flamme dans ses aventures.",
+    "Mocha aide Koda à préparer ses missions.",
+    "Nova apparaît parfois pour guider le groupe.",
+    "Koda protège naturellement les lapins les plus faibles.",
+    "Flamme essaie constamment de découvrir le secret de Nova.",
+];
 
-/**
- * Retourne le nom affiché : le nom personnalisé si renseigné, sinon le nom de base par défaut.
- */
-export function getDisplayName(entity, customNames = {}) {
-    if (!entity) return "Inconnu";
-    if (customNames[entity.id] && customNames[entity.id].trim() !== "") {
-        return customNames[entity.id].trim();
-    }
-    return entity.name;
+// ---- Stockage des surcharges locales (modifications en cours dans le Dashboard,
+// avant export vers lapinous-content.json) ----
+const CUSTOM_SPECIES_KEY = "lapinous_custom_species";
+const CUSTOM_BOSSES_KEY = "lapinous_custom_bosses";
+const EGG_RATES_KEY = "lapinous_egg_rates";
+
+function loadCustomSpecies() {
+    try { return JSON.parse(localStorage.getItem(CUSTOM_SPECIES_KEY) || "{}"); } catch (e) { return {}; }
 }
+function loadCustomBosses() {
+    try { return JSON.parse(localStorage.getItem(CUSTOM_BOSSES_KEY) || "{}"); } catch (e) { return {}; }
+}
+function loadEggRates() {
+    try {
+        const stored = JSON.parse(localStorage.getItem(EGG_RATES_KEY));
+        if (stored) return stored;
+    } catch (e) {}
+    return JSON_EGG_RATES || { commun: 70, rare: 22, epique: 6, legendaire: 2 };
+}
+function saveEggRates(rates) { localStorage.setItem(EGG_RATES_KEY, JSON.stringify(rates)); }
+
+// ---- Durée des événements (jours avant/après la date d'ancrage), réglable
+// depuis le Dashboard. Partagé avec script.js pour le calcul de disponibilité.
+const EVENT_WINDOWS_KEY = "lapinous_event_windows";
+const DEFAULT_EVENT_WINDOWS = { halloween: 10, noel: 12, paques: 10 };
+function loadEventWindows() {
+    try {
+        const stored = JSON.parse(localStorage.getItem(EVENT_WINDOWS_KEY));
+        if (stored) return { ...DEFAULT_EVENT_WINDOWS, ...stored };
+    } catch (e) {}
+    return { ...DEFAULT_EVENT_WINDOWS, ...(JSON_EVENT_WINDOWS || {}) };
+}
+function saveEventWindows(windows) { localStorage.setItem(EVENT_WINDOWS_KEY, JSON.stringify(windows)); }
+
+// Ordre de priorité (du moins prioritaire au plus prioritaire) :
+//   1. BASE_SPECIES / BASE_BOSSES ci-dessus (juste Azazel, jamais perdu)
+//   2. lapinous-content.json à la racine (LE contenu du jeu, partagé)
+//   3. localStorage (modifications en cours dans le Dashboard, pas encore exportées)
+function getSpecies() { return { ...BASE_SPECIES, ...JSON_SPECIES, ...loadCustomSpecies() }; }
+function getBosses() { return { ...BASE_BOSSES, ...JSON_BOSSES, ...loadCustomBosses() }; }
+
+// ============================================================
+// CHARGEMENT DE lapinous-content.json (déposé à la racine du projet)
+// ============================================================
+// ⚠️ fetch() ne fonctionne PAS si tu ouvres index.html directement en double-cliquant
+// (protocole file://). Il faut un vrai serveur local (ex: `npx serve`,
+// `python -m http.server`) ou être hébergé (GitHub Pages...). Sans ça, le fetch
+// échoue silencieusement : le jeu continue avec juste Azazel + tes surcharges
+// locales, sans planter — mais sans le contenu principal.
+let JSON_SPECIES = {};
+let JSON_BOSSES = {};
+let JSON_EGG_RATES = null;
+let JSON_EVENT_WINDOWS = null;
+
+window.LapinousContentReady = fetch("./lapinous-content.json", { cache: "no-store" })
+    .then((res) => (res.ok ? res.json() : null))
+    .then((data) => {
+        if (data) {
+            JSON_SPECIES = data.species || {};
+            JSON_BOSSES = data.bosses || {};
+            JSON_EGG_RATES = data.eggRates || null;
+            JSON_EVENT_WINDOWS = data.eventWindows || null;
+        }
+    })
+    .catch(() => {
+        // Pas de fichier, pas de serveur, ou erreur réseau : on continue normalement.
+    });

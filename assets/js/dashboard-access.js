@@ -2,15 +2,15 @@
 // ACCÈS AU DASHBOARD — même logique que sur le portfolio
 // =====================================================================
 // Le code n'est jamais stocké en clair : seul son hash SHA-256 l'est.
-// Le Dashboard vit dans la même page (une modale), donc ici on ne redirige
-// pas vers une autre URL : on bloque simplement l'ouverture de la modale
-// tant que le bon code n'a pas été saisi pour cette session d'onglet.
+// dashboard.html est une page à part entière, protégée dès son chargement :
+// si le bon code n'est pas saisi, on redirige vers index.html.
 
 const DASHBOARD_CODE_HASH_KEY = "lapinous_dashboard_code_hash";
 const DASHBOARD_SESSION_KEY = "lapinous_dashboard_authorized";
 const DASHBOARD_ATTEMPTS_KEY = "lapinous_dashboard_attempts";
 const DASHBOARD_MAX_ATTEMPTS = 5;
-const DASHBOARD_DEFAULT_CODE = "2653";
+const DASHBOARD_DEFAULT_CODE = "0000";
+let dashboardCheckRunning = false;
 
 async function hashDashboardCode(value) {
     const encodedValue = new TextEncoder().encode(value);
@@ -20,7 +20,7 @@ async function hashDashboardCode(value) {
         .join("");
 }
 
-// Au tout premier lancement, initialise le hash sur le code par défaut "2653".
+// Au tout premier lancement, initialise le hash sur le code par défaut "0000".
 async function getStoredDashboardHash() {
     let hash = localStorage.getItem(DASHBOARD_CODE_HASH_KEY);
     if (!hash) {
@@ -34,7 +34,7 @@ async function getStoredDashboardHash() {
 async function requestDashboardAccess() {
     const attempts = Number(sessionStorage.getItem(DASHBOARD_ATTEMPTS_KEY) || "0");
     if (attempts >= DASHBOARD_MAX_ATTEMPTS) {
-        window.alert("Trop de tentatives. Recharge la page pour réessayer.");
+        window.alert("Trop de tentatives. Ferme cet onglet avant de réessayer.");
         return false;
     }
 
@@ -53,23 +53,46 @@ async function requestDashboardAccess() {
     return false;
 }
 
-// À appeler avant d'ouvrir la modale du Dashboard.
-async function ensureDashboardUnlocked() {
-    const authorized = sessionStorage.getItem(DASHBOARD_SESSION_KEY) === "yes";
-    if (authorized) return true;
-    return await requestDashboardAccess();
+// Vérifie l'accès dès le chargement de dashboard.html, pas seulement via un bouton.
+async function protectDashboardPage(forcePassword = false) {
+    if (document.body?.dataset.protectedDashboard !== "true" || dashboardCheckRunning) return;
+    dashboardCheckRunning = true;
+
+    try {
+        if (forcePassword) sessionStorage.removeItem(DASHBOARD_SESSION_KEY);
+        const authorized = sessionStorage.getItem(DASHBOARD_SESSION_KEY) === "yes";
+        if (!authorized && !(await requestDashboardAccess())) {
+            window.location.replace("./index.html");
+            return;
+        }
+        document.body.classList.remove("dashboard-auth-pending");
+    } finally {
+        dashboardCheckRunning = false;
+    }
 }
 
-// Change le code (depuis l'intérieur du Dashboard, une fois déverrouillé).
+// Quand on quitte le dashboard, l'autorisation est retirée : la flèche
+// « page précédente » redemandera bien le code.
+window.addEventListener("pagehide", () => {
+    if (document.body?.dataset.protectedDashboard === "true") {
+        sessionStorage.removeItem(DASHBOARD_SESSION_KEY);
+    }
+});
+
+// Le navigateur peut restaurer une ancienne page depuis son cache avec la flèche retour :
+// pageshow relance la protection dans ce cas précis.
+window.addEventListener("pageshow", (event) => {
+    if (document.body?.dataset.protectedDashboard !== "true") return;
+    const navigation = performance.getEntriesByType("navigation")[0];
+    const cameFromHistory = event.persisted || navigation?.type === "back_forward";
+    protectDashboardPage(cameFromHistory);
+});
+
+document.addEventListener("DOMContentLoaded", () => protectDashboardPage(false));
+
+// Changer le code (appelé depuis la section "Sécurité" du Dashboard, une fois déverrouillé).
 async function changeDashboardCode(newCode) {
     const hash = await hashDashboardCode(newCode.trim());
     localStorage.setItem(DASHBOARD_CODE_HASH_KEY, hash);
 }
-
-// Le verrou se referme quand on quitte la page (comme sur le portfolio) :
-// à la prochaine visite, le code sera redemandé.
-window.addEventListener("pagehide", () => {
-    sessionStorage.removeItem(DASHBOARD_SESSION_KEY);
-});
-
-window.LapinousDashboardAccess = { ensureDashboardUnlocked, changeDashboardCode };
+window.LapinousDashboardAccess = { changeDashboardCode };
