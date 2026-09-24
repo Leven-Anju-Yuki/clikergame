@@ -1,39 +1,65 @@
-# Lapin Heureux - Guide de l'utilisateur
+# 🐰 Lapinous
 
-Lapin Heureux est une application web ludique où les utilisateurs peuvent s'occuper d'un lapin virtuel en le nourrissant, en le nettoyant, en jouant avec lui et en veillant à son bien-être général.
+Lapinous est un jeu de collection de lapins virtuels : adopte un compagnon, occupe-toi de lui (nourriture, sommeil, propreté, amitié), fais-le progresser, débloque des œufs pour agrandir ta collection avec des lapins rares, épiques, légendaires, mythiques — voire divins — et pars combattre les boss légumes du jardin.
 
 ## Fonctionnalités
 
-- **Gérer le lapin**: Nourrissez, nettoyez, jouez et prenez soin de votre lapin virtuel pour le garder heureux et en bonne santé.
-- **Explorer différentes zones**: Découvrez les différentes zones disponibles pour interagir avec votre lapin, notamment la cuisine, la chambre, le jardin et la salle de bain.
-- **Suivre les statistiques**: Surveillez les barres de statut pour connaître les besoins de votre lapin en nourriture, énergie, propreté et amitié.
-- **Niveau de progression**: Gagnez des niveaux en renforçant l'amitié avec votre lapin, débloquant ainsi de nouvelles fonctionnalités et améliorations.
+- **Adoption** : choisis un lapin commun au démarrage, ou devine le nom du lapin secret...
+- **Chaque lapin est indépendant** : faim, énergie, propreté, amitié et niveau sont propres à chaque compagnon. Change de lapin actif directement depuis le Salon.
+- **5 pièces** : Salon (boutique à œufs, changement de compagnon), Cuisine, Chambre, Salle de bain, Jardin.
+- **Améliorations de pièces** : chaque pièce peut être améliorée avec l'amitié gagnée (une seule amélioration active à la fois).
+- **Mini-jeu d'agilité** dans le jardin : saute au bon moment pour gagner de l'amitié.
+- **Aventures & combats** : affronte les boss légumes du jardin pour gagner des carottes.
+- **Système d'œufs** : achète des œufs avec tes carottes et ouvre-les pour tenter d'obtenir un nouveau lapin (Commun → Rare → Épique → Légendaire → Mythique → Divin).
+- **Événements saisonniers** : certains lapins n'apparaissent que pendant Halloween, Noël ou Pâques (dates réelles, fenêtre réglable).
+- **Encyclopédie** : fiche complète (personnalité, histoire, pouvoir...) de chaque lapin et boss découvert.
+- **Sauvegardes** : illimitées, nommées et datées, exportables en JSON, ou directement dans un vrai dossier sur ton disque (Chrome/Edge).
+- **Dashboard administrateur** (protégé par code) : ajoute/modifie lapins et boss dans un tableau éditable avec recherche, règle les taux d'apparition des œufs et la durée des événements, suis des statistiques (camemberts par rareté, par difficulté, complétion des visuels).
+
+## Structure du projet
+
+```
+index.html                     → le jeu
+dashboard.html                 → l'espace administrateur (protégé par code)
+lapinous-content.json          → tout le contenu (lapins, boss, taux d'œufs) : modifiable à la main ou via le Dashboard
+assets/
+  css/style.css                → tous les styles
+  js/
+    script.js                  → logique du jeu
+    dashboard.js                → logique du Dashboard
+    species-data.js            → chargement du contenu, fonctions partagées
+    dashboard-access.js        → verrou du Dashboard (code à 4 chiffres, hashé)
+  img/                          → images (lapins, boss, décors, icônes)
+```
 
 ## Comment utiliser
 
-1. Clonez ce dépôt. 
-     ```bash
-    git clone https://github.com/Leven-Anju-Yuki/clikergame.git
-    ```
-2. Ouvrez le fichier `index.html` dans votre navigateur web préféré.
-3. Interagissez avec les boutons et les zones disponibles pour prendre soin de votre lapin virtuel.
-4. Surveillez les barres de statut et essayez de maintenir les besoins de votre lapin à un niveau optimal.
-5. Explorez les différentes fonctionnalités et zones pour progresser et améliorer votre expérience avec votre lapin.
+1. Clone ce dépôt :
+   ```bash
+   git clone https://github.com/Leven-Anju-Yuki/clikergame.git
+   ```
+2. **Important** : ouvre le projet via un petit serveur local plutôt qu'en double-cliquant sur `index.html` (le chargement de `lapinous-content.json` a besoin d'un vrai serveur, même local) :
+   ```bash
+   python -m http.server 8000
+   ```
+   puis va sur `http://localhost:8000/`.
+3. Adopte ton premier lapin, prends-en soin, et pars à l'aventure !
+4. Pour gérer le contenu (ajouter des lapins/boss, régler les événements...), ouvre `dashboard.html` — code par défaut : `0000`, à changer dès que possible dans la section Sécurité.
 
 ## Contribution
 
-Les contributions sont les bienvenues ! Si vous souhaitez contribuer à l'amélioration de Lapin Heureux, veuillez suivre ces étapes :
+Les contributions sont les bienvenues ! Pour proposer une modification :
 
-1. Clonez le dépôt sur votre machine locale.
-2. Créez une nouvelle branche pour vos modifications : `git checkout -b feature/nom-de-la-fonctionnalité`.
-3. Faites vos modifications et testez-les attentivement.
-4. Ajoutez et validez vos modifications : `git add . && git commit -m "Description de vos modifications"`.
-5. Poussez vos modifications sur la branche : `git push origin feature/nom-de-la-fonctionnalité`.
-6. Soumettez une demande d'extraction en expliquant les modifications apportées.
+1. Clone le dépôt sur ta machine locale.
+2. Crée une nouvelle branche : `git checkout -b feature/nom-de-la-fonctionnalité`.
+3. Fais tes modifications et teste-les attentivement (en particulier via le Dashboard si tu modifies du contenu).
+4. Valide tes modifications : `git add . && git commit -m "Description de tes modifications"`.
+5. Pousse ta branche : `git push origin feature/nom-de-la-fonctionnalité`.
+6. Ouvre une pull request en expliquant les changements apportés.
 
 ## Auteurs
 
-- [Florie](https://github.com/Leven-Anju-Yuki) - Développeur principal
+- [Florie](https://github.com/Leven-Anju-Yuki) - Développeuse principale
 
 ## Licence
 

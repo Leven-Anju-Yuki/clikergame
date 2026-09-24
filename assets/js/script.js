@@ -89,15 +89,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // ============================================================
     // TOASTS
     // ============================================================
-    function showToast(message, type = "") {
-        const el = document.createElement("div");
-        el.className = "toast" + (type ? " " + type : "");
-        el.textContent = message;
-        const duration = Math.min(14000, Math.max(6000, message.length * 110));
-        el.style.animationDuration = "0.25s, 0.4s";
-        el.style.animationDelay = "0s, " + (duration - 400) + "ms";
-        toastContainer.appendChild(el);
-        setTimeout(() => el.remove(), duration);
+    function showToast(message) {
+        window.alert(message);
     }
 
     // ============================================================
@@ -849,11 +842,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const nextThreshold = progress().currentLevel * 25;
         if (progress().friendshipTotal >= nextThreshold) {
             progress().currentLevel += 1;
-            progress().food = Math.min(progress().food + 25, 100);
-            progress().energy = Math.min(progress().energy + 25, 100);
-            progress().cleanliness = Math.min(progress().cleanliness + 25, 100);
             document.getElementById("level").innerText = progress().currentLevel;
-            showToast(`🎉 Niveau ${progress().currentLevel} atteint !`, "levelup");
+            showToast(`🎉 Niveau ${progress().currentLevel} atteint !`);
             spawnParticles("🎉", 10);
             refreshCurrentZone();
             updateStatusBars();
@@ -872,7 +862,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (progress().food >= 100) { showToast("Le lapin est déjà rassasié !"); }
         else {
             progress().food = Math.min(progress().food + traitGain("food", 5) + progress().boosts.food, 100);
-            gainFriendship(5); bounceRabbit(); spawnParticles("🥕", 5);
+            gainFriendship(3); bounceRabbit(); spawnParticles("🥕", 5);
         }
         updateStatusBars(); checkStatus(); autoSave();
     };
@@ -880,7 +870,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (progress().energy >= 100) { showToast("Le lapin est déjà bien reposé !"); }
         else {
             progress().energy = Math.min(progress().energy + traitGain("energy", 5) + progress().boosts.energy, 100);
-            gainFriendship(5); bounceRabbit(); spawnParticles("💤", 5);
+            gainFriendship(3); bounceRabbit(); spawnParticles("💤", 5);
         }
         updateStatusBars(); checkStatus(); autoSave();
     };
@@ -888,7 +878,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (progress().cleanliness >= 100) { showToast("Le lapin est déjà tout propre !"); }
         else {
             progress().cleanliness = Math.min(progress().cleanliness + 5 + progress().boosts.cleanliness, 100);
-            gainFriendship(5); bounceRabbit(); spawnParticles("🫧", 5);
+            gainFriendship(3); bounceRabbit(); spawnParticles("🫧", 5);
         }
         updateStatusBars(); checkStatus(); autoSave();
     };
@@ -932,7 +922,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const pos = window._agilityPos || 0;
         const success = pos >= sweetStart && pos <= sweetStart + sweetWidth;
         if (success) {
-            gainFriendship(5 + traitGain("friendship", 0) + progress().boosts.friendship);
+            gainFriendship(3 + traitGain("friendship", 0) + progress().boosts.friendship);
             progress().food = Math.max(progress().food - 5, 0);
             progress().energy = Math.max(progress().energy - 5, 0);
             progress().cleanliness = Math.max(progress().cleanliness - 5, 0);
@@ -1032,6 +1022,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const successChance = Math.min(0.92, Math.max(0.08, 0.5 + (power - boss.difficulty) / (boss.difficulty * 2 || 1)));
         const win = Math.random() < successChance;
 
+        progress().food = Math.max(progress().food - 7, 0);
         progress().energy = Math.max(progress().energy - 10, 0);
         progress().cleanliness = Math.max(progress().cleanliness - 5, 0);
 

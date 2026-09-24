@@ -1,15 +1,55 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Dashboard — Lapinous</title>
+        <title>Lapinous - Dashboard</title>
+
+        <!-- Polices & Styles -->
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Quicksand:wght@500;600;700&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        />
         <link rel="stylesheet" href="./assets/css/style.css" />
-        <link rel="shortcut icon" type="image/png" href="./assets/img/az/az_assis_de_face.png" />
-        <script defer src="./assets/js/dashboard-access.js"></script>
+
+        <!-- Favicon -->
+        <link
+            id="favicon"
+            rel="icon"
+            type="image/png"
+            href="./assets/img/az/az_assis_de_face.png"
+        />
+
+        <!-- Balises Meta SEO -->
+        <meta
+            name="description"
+            content="Adopte un compagnon, prends-en soin dans les différentes pièces, ouvre des œufs pour collectionner des lapins rares, épiques, légendaires ou divins, et affronte les boss légumes !"
+        />
+        <meta
+            name="keywords"
+            content="lapinous, jeu, clicker game, collection, lapins virtuels, œufs, animaux, aventure, boss légumes"
+        />
+        <meta name="author" content="Florie (Leven-Anju-Yuki)" />
+
+        <!-- Balises Meta Open Graph (OG) pour les réseaux sociaux -->
+        <meta property="og:title" content="Lapinous - Collectionne tes lapins virtuels !" />
+        <meta
+            property="og:description"
+            content="Joue à Lapinous : adopte ton compagnon, gagne des carottes, fais éclore des œufs de toutes raretés et combats la Ligue des Légumes !"
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://leven-anju-yuki.github.io/clikergame/" />
+        <meta
+            property="og:image"
+            content="https://leven-anju-yuki.github.io/clikergame/assets/img/az/az_assis_de_face.png"
+        />
+        <meta property="og:site_name" content="Lapinous" />
     </head>
     <body class="dashboard-page dashboard-auth-pending" data-protected-dashboard="true">
         <div id="toastContainer" class="toast-container"></div>
@@ -59,41 +99,108 @@
                         <div class="slice-detail" id="detail-chart-event-paques"></div>
                     </div>
                 </div>
-                <p class="panel-desc">💡 Clique sur une part de camembert pour voir la liste de ce qu'elle contient, juste en dessous.</p>
+                <p class="panel-desc">
+                    💡 Clique sur une part de camembert pour voir la liste de ce qu'elle contient,
+                    juste en dessous.
+                </p>
             </section>
 
             <section class="dash-section">
                 <h2>🥚 Taux d'apparition des œufs (%, doit faire 100)</h2>
                 <div class="rate-row">
-                    <label>Commun <input type="number" id="rate-commun" min="0" max="100"></label>
-                    <label>Rare <input type="number" id="rate-rare" min="0" max="100"></label>
-                    <label>Épique <input type="number" id="rate-epique" min="0" max="100"></label>
-                    <label>Légendaire <input type="number" id="rate-legendaire" min="0" max="100"></label>
+                    <label>Commun <input type="number" id="rate-commun" min="0" max="100" /></label>
+                    <label>Rare <input type="number" id="rate-rare" min="0" max="100" /></label>
+                    <label>Épique <input type="number" id="rate-epique" min="0" max="100" /></label>
+                    <label
+                        >Légendaire <input type="number" id="rate-legendaire" min="0" max="100"
+                    /></label>
                 </div>
-                <button id="saveEggRatesBtn" class="io-btn" type="button" style="margin-top:10px;max-width:260px;">Enregistrer les taux</button>
+                <button
+                    id="saveEggRatesBtn"
+                    class="io-btn"
+                    type="button"
+                    style="margin-top: 10px; max-width: 260px"
+                >
+                    Enregistrer les taux
+                </button>
             </section>
 
             <section class="dash-section">
                 <h2>📅 Durée des événements (jours avant/après la date)</h2>
-                <p class="panel-desc">Ex: Halloween à 10 jours = disponible du 21 octobre au 10 novembre. Par défaut : Halloween 10j, Noël 12j, Pâques 10j.</p>
+                <p class="panel-desc">
+                    Ex: Halloween à 10 jours = disponible du 21 octobre au 10 novembre. Par défaut :
+                    Halloween 10j, Noël 12j, Pâques 10j.
+                </p>
                 <div class="rate-row">
-                    <label>🎃 Halloween (±j) <input type="number" id="window-halloween" min="0" max="60"></label>
-                    <label>🎄 Noël (±j) <input type="number" id="window-noel" min="0" max="60"></label>
-                    <label>🐣 Pâques (±j) <input type="number" id="window-paques" min="0" max="60"></label>
+                    <label
+                        >🎃 Halloween (±j)
+                        <input type="number" id="window-halloween" min="0" max="60"
+                    /></label>
+                    <label
+                        >🎄 Noël (±j) <input type="number" id="window-noel" min="0" max="60"
+                    /></label>
+                    <label
+                        >🐣 Pâques (±j) <input type="number" id="window-paques" min="0" max="60"
+                    /></label>
                 </div>
-                <button id="saveEventWindowsBtn" class="io-btn" type="button" style="margin-top:10px;max-width:260px;">Enregistrer les durées</button>
+                <button
+                    id="saveEventWindowsBtn"
+                    class="io-btn"
+                    type="button"
+                    style="margin-top: 10px; max-width: 260px"
+                >
+                    Enregistrer les durées
+                </button>
             </section>
 
             <section class="dash-section pm-panel-wide">
                 <h2>🐰 Lapins</h2>
-                <p class="panel-desc">Modifie directement dans le tableau, puis clique 💾 sur la ligne. La dernière ligne sert à ajouter un nouveau lapin. Colonne "Événement" : "Aucun" = toujours disponible ; sinon le lapin n'apparaît dans les œufs que pendant la période choisie (Halloween, Noël, Pâques, ou Pâques + Noël pour les légendes). Pour tes lapins événementiels déjà préparés dans le dossier <code>assets/img/lapin_evenement/</code>, uploade simplement leurs photos ici comme pour les autres.</p>
+                <p class="panel-desc">
+                    Modifie directement dans le tableau, puis clique 💾 sur la ligne. La dernière
+                    ligne sert à ajouter un nouveau lapin. Colonne "Événement" : "Aucun" = toujours
+                    disponible ; sinon le lapin n'apparaît dans les œufs que pendant la période
+                    choisie (Halloween, Noël, Pâques, ou Pâques + Noël pour les légendes). Pour tes
+                    lapins événementiels déjà préparés dans le dossier
+                    <code>assets/img/lapin_evenement/</code>, uploade simplement leurs photos ici
+                    comme pour les autres.
+                </p>
+                <input
+                    type="text"
+                    id="speciesSearch"
+                    class="name-input"
+                    placeholder="🔍 Rechercher un lapin (nom, rareté, histoire, citation...)"
+                    style="margin-bottom: 10px"
+                />
                 <div class="pm-table-wrap">
                     <table class="pm-table">
                         <thead>
                             <tr>
-                                <th>Photo</th><th>Identifiant</th><th>Nom</th><th>Surnom</th><th>Rareté</th><th>Événement</th>
-                                <th>Personnalité</th><th>Histoire</th><th>Accessoire</th><th>Aime</th><th>N'aime pas</th>
-                                <th>Citation</th><th>Pouvoir</th><th></th>
+                                <th>Photo</th>
+                                <th>Identifiant</th>
+                                <th>Nom</th>
+                                <th>Surnom</th>
+                                <th
+                                    id="sortRarityBtn"
+                                    style="cursor: pointer"
+                                    title="Cliquer pour trier"
+                                >
+                                    Rareté ↕
+                                </th>
+                                <th
+                                    id="sortEventBtn"
+                                    style="cursor: pointer"
+                                    title="Cliquer pour trier"
+                                >
+                                    Événement ↕
+                                </th>
+                                <th>Personnalité</th>
+                                <th>Histoire</th>
+                                <th>Accessoire</th>
+                                <th>Aime</th>
+                                <th>N'aime pas</th>
+                                <th>Citation</th>
+                                <th>Pouvoir</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody id="speciesTableBody"></tbody>
@@ -103,14 +210,35 @@
 
             <section class="dash-section pm-panel-wide">
                 <h2>🥕 Boss légumes</h2>
-                <p class="panel-desc">Idem : modifie dans le tableau puis 💾. La dernière ligne ajoute un nouveau boss.</p>
+                <p class="panel-desc">
+                    Idem : modifie dans le tableau puis 💾. La dernière ligne ajoute un nouveau
+                    boss.
+                </p>
+                <input
+                    type="text"
+                    id="bossSearch"
+                    class="name-input"
+                    placeholder="🔍 Rechercher un boss (nom, rang, histoire, arme...)"
+                    style="margin-bottom: 10px"
+                />
                 <div class="pm-table-wrap">
                     <table class="pm-table">
                         <thead>
                             <tr>
-                                <th>Photo</th><th>Identifiant</th><th>Nom</th><th>Surnom</th><th>Rang</th>
-                                <th>Histoire</th><th>Arme</th><th>Personnalité</th><th>Aime</th><th>N'aime pas</th>
-                                <th>Citation</th><th>Pouvoir</th><th>Difficulté</th><th></th>
+                                <th>Photo</th>
+                                <th>Identifiant</th>
+                                <th>Nom</th>
+                                <th>Surnom</th>
+                                <th>Rang</th>
+                                <th>Histoire</th>
+                                <th>Arme</th>
+                                <th>Personnalité</th>
+                                <th>Aime</th>
+                                <th>N'aime pas</th>
+                                <th>Citation</th>
+                                <th>Pouvoir</th>
+                                <th>Difficulté</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody id="bossTableBody"></tbody>
@@ -120,20 +248,52 @@
 
             <section class="dash-section">
                 <h2>📦 Contenu (lapins + boss + taux)</h2>
-                <p class="dash-note">Séparé de la sauvegarde du joueur : ce fichier ne contient aucune donnée de progression, juste le contenu ajouté ici.</p>
-                <p class="dash-note">📌 Après avoir exporté, dépose le fichier téléchargé <strong>à la racine de ton projet</strong> (à côté d'<code>index.html</code>) en le renommant exactement <code>lapinous-content.json</code>, en écrasant l'ancien s'il existe. Recharge la page : ce contenu devient alors la référence pour tout le monde, même sans passer par ce Dashboard. (Fonctionne une fois le site en ligne ou lancé via un serveur local — pas en ouvrant juste le fichier en double-clic.)</p>
+                <p class="dash-note">
+                    Séparé de la sauvegarde du joueur : ce fichier ne contient aucune donnée de
+                    progression, juste le contenu ajouté ici.
+                </p>
+                <p class="dash-note">
+                    📌 Après avoir exporté, dépose le fichier téléchargé
+                    <strong>à la racine de ton projet</strong> (à côté d'<code>index.html</code>) en
+                    le renommant exactement <code>lapinous-content.json</code>, en écrasant l'ancien
+                    s'il existe. Recharge la page : ce contenu devient alors la référence pour tout
+                    le monde, même sans passer par ce Dashboard. (Fonctionne une fois le site en
+                    ligne ou lancé via un serveur local — pas en ouvrant juste le fichier en
+                    double-clic.)
+                </p>
                 <div class="save-io-row">
-                    <button id="exportContentBtn" class="io-btn" type="button">⬇️ Exporter le contenu (JSON)</button>
-                    <label class="io-btn io-btn-file">⬆️ Importer un contenu (JSON)<input type="file" id="importContentInput" accept="application/json" hidden /></label>
+                    <button id="exportContentBtn" class="io-btn" type="button">
+                        ⬇️ Exporter le contenu (JSON)
+                    </button>
+                    <label class="io-btn io-btn-file"
+                        >⬆️ Importer un contenu (JSON)<input
+                            type="file"
+                            id="importContentInput"
+                            accept="application/json"
+                            hidden
+                    /></label>
                 </div>
             </section>
 
             <section class="dash-section">
                 <h2>🔒 Sécurité</h2>
-                <p class="dash-note">Code par défaut : <code>0000</code>. Change-le dès maintenant si tu veux vraiment protéger ce dashboard.</p>
-                <form id="changeCodeForm" class="dash-form" style="max-width:340px;">
-                    <input type="password" name="newCode" placeholder="Nouveau code (4 caractères min.)" required>
-                    <input type="password" name="newCode2" placeholder="Confirme le nouveau code" required>
+                <p class="dash-note">
+                    Code par défaut : <code>0000</code>. Change-le dès maintenant si tu veux
+                    vraiment protéger ce dashboard.
+                </p>
+                <form id="changeCodeForm" class="dash-form" style="max-width: 340px">
+                    <input
+                        type="password"
+                        name="newCode"
+                        placeholder="Nouveau code (4 caractères min.)"
+                        required
+                    />
+                    <input
+                        type="password"
+                        name="newCode2"
+                        placeholder="Confirme le nouveau code"
+                        required
+                    />
                     <button type="submit" class="io-btn">Changer le code</button>
                 </form>
             </section>

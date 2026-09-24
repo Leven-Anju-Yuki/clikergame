@@ -75,9 +75,12 @@ document.addEventListener("DOMContentLoaded", () => {
             <td><input type="text" data-field="key" value="${key || ""}" ${key ? "readonly" : ""} placeholder="identifiant"></td>
             <td><input type="text" data-field="name" value="${s?.name || ""}"></td>
             <td><input type="text" data-field="nickname" value="${s?.nickname || ""}"></td>
-            <td><select data-field="rarity">
+            <td>
+                <span class="rarity-dot" style="background:${RARITY_META[s?.rarity || "commun"].color};"></span>
+                <select data-field="rarity" onchange="this.previousElementSibling.style.background=({commun:'#b8bcc4',rare:'#6ebf77',epique:'#5b8fd6',legendaire:'#a35bd6',mythique:'#f5c34d',divin:'#d64545'})[this.value]||'#b8bcc4';">
                     ${["commun", "rare", "epique", "legendaire", "mythique", "divin"].map((r) => `<option value="${r}" ${s?.rarity === r ? "selected" : ""}>${RARITY_META[r].label}</option>`).join("")}
-                </select></td>
+                </select>
+            </td>
             <td><select data-field="event">
                     ${EVENT_OPTIONS.map((opt) => `<option value="${opt.value}" ${speciesEventValue(s) === opt.value ? "selected" : ""}>${opt.label}</option>`).join("")}
                 </select></td>
@@ -114,6 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const tr = document.createElement("tr");
                 tr.dataset.key = key;
                 tr.title = `Origine : ${origin(key, !!custom[key], key === "az")}`;
+                tr.dataset.search = [key, s.name, s.nickname, s.rarity, speciesEventValue(s), s.personality, s.story, s.accessory, s.quote, s.power, (s.likes || []).join(" "), (s.dislikes || []).join(" ")].join(" ").toLowerCase();
                 tr.innerHTML = speciesRowHtml(key, s);
                 tbody.appendChild(tr);
             });
@@ -348,18 +352,25 @@ document.addEventListener("DOMContentLoaded", () => {
     const PALETTE = ["#ffb5c8", "#f5c34d", "#9fd8a3", "#7fc8ff", "#a35bd6", "#b06a6a", "#8b6b57"];
     const chartInstances = {};
 
-    function drawPie(canvasId, labels, data, groups) {
+    let lastClickedSlice = {};
+    function drawPie(canvasId, labels, data, groups, colors) {
         const ctx = document.getElementById(canvasId);
         if (!ctx || typeof Chart === "undefined") return;
         if (chartInstances[canvasId]) chartInstances[canvasId].destroy();
         chartInstances[canvasId] = new Chart(ctx, {
             type: "pie",
-            data: { labels, datasets: [{ data, backgroundColor: PALETTE }] },
+            data: { labels, datasets: [{ data, backgroundColor: colors || PALETTE }] },
             options: {
                 plugins: { legend: { position: "bottom", labels: { boxWidth: 12, font: { size: 10 } } } },
                 onClick: (evt, elements) => {
                     if (!groups || elements.length === 0) return;
                     const idx = elements[0].index;
+                    if (lastClickedSlice[canvasId] === idx) {
+                        lastClickedSlice[canvasId] = null;
+                        hideSliceDetail(canvasId);
+                        return;
+                    }
+                    lastClickedSlice[canvasId] = idx;
                     showSliceDetail(canvasId, labels[idx], groups[idx] || []);
                 },
                 onHover: (evt, elements) => {
@@ -369,11 +380,22 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    function showSliceDetail(canvasId, label, names) {
+    function hideSliceDetail(canvasId) {
+        const box = document.getElementById("detail-" + canvasId);
+        if (box) box.style.display = "none";
+    }
+
+    function showSliceDetail(canvasId, label, items) {
         const box = document.getElementById("detail-" + canvasId);
         if (!box) return;
-        box.innerHTML = names.length
-            ? `<strong>${label} (${names.length})</strong><ul>${names.map((n) => `<li>${n}</li>`).join("")}</ul>`
+        box.innerHTML = items.length
+            ? `<strong>${label} (${items.length})</strong><ul>${items
+                  .map((it) => {
+                      const name = typeof it === "string" ? it : it.name;
+                      const img = typeof it === "string" ? null : it.img;
+                      return `<li>${img ? `<img src="${img}" class="slice-thumb" onerror="this.style.display='none'">` : ""}${name}</li>`;
+                  })
+                  .join("")}</ul>`
             : `<strong>${label}</strong><p>Aucun.</p>`;
         box.style.display = "block";
     }
@@ -389,30 +411,40 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const EVENT_CHART_LABELS = { halloween: "🎃 Événement (Halloween)", noel: "🎄 Événement (Noël)", paques: "🐣 Événement (Pâques)" };
+    const EVENT_CHART_COLORS = { halloween: "#F28C28", noel: "#2E8B57", paques: "#F4A6D7", multi: "#E6C04C" };
     function eventChartCategory(s) {
         if (!s.event) return null;
         const events = Array.isArray(s.event) ? s.event : String(s.event).split(",").map((e) => e.trim());
         if (events.length > 1) return "🎉 Événement (multi-saisons)";
         return EVENT_CHART_LABELS[events[0]] || "🎉 Événement";
     }
+    function eventChartColor(s) {
+        if (!s.event) return null;
+        const events = Array.isArray(s.event) ? s.event : String(s.event).split(",").map((e) => e.trim());
+        if (events.length > 1) return EVENT_CHART_COLORS.multi;
+        return EVENT_CHART_COLORS[events[0]] || EVENT_CHART_COLORS.multi;
+    }
 
     async function renderCharts() {
-        // Lapins par rareté — les lapins d'événement ont leur propre catégorie,
-        // séparée de la rareté brute, pour ne pas gonfler artificiellement
-        // "Légendaire"/"Épique" avec du contenu saisonnier.
+        // Lapins par rareté — les lapins d'événement ont leur propre catégorie
+        // ET leur propre couleur (Halloween=orange, Noël=vert sapin, Pâques=rose
+        // pastel, multi-saisons=or), séparées de la rareté brute.
         const species = getSpecies();
         const rarityCounts = {};
         const rarityNames = {};
+        const rarityColors = {};
         Object.values(species).forEach((s) => {
             const category = eventChartCategory(s) || RARITY_META[s.rarity]?.label || s.rarity;
             rarityCounts[category] = (rarityCounts[category] || 0) + 1;
-            (rarityNames[category] = rarityNames[category] || []).push(s.name);
+            (rarityNames[category] = rarityNames[category] || []).push({ name: s.name, img: s.faceImg || s.coteImg });
+            if (!rarityColors[category]) rarityColors[category] = eventChartColor(s) || RARITY_META[s.rarity]?.color || "#b8bcc4";
         });
         drawPie(
             "chart-rarity",
             Object.keys(rarityCounts),
             Object.values(rarityCounts),
-            Object.keys(rarityCounts).map((r) => rarityNames[r])
+            Object.keys(rarityCounts).map((r) => rarityNames[r]),
+            Object.keys(rarityCounts).map((r) => rarityColors[r])
         );
 
         // Boss par difficulté (buckets)
@@ -423,7 +455,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const d = b.difficulty || 0;
             const label = d < 30 ? "Facile (<30)" : d < 55 ? "Moyen (30-55)" : d < 75 ? "Difficile (55-75)" : "Très difficile (>75)";
             buckets[label]++;
-            bucketNames[label].push(b.name);
+            bucketNames[label].push({ name: b.name, img: b.faceImg || b.coteImg });
         });
         drawPie("chart-difficulty", Object.keys(buckets), Object.values(buckets), Object.keys(buckets).map((k) => bucketNames[k]));
 
@@ -438,18 +470,26 @@ document.addEventListener("DOMContentLoaded", () => {
         function rarityBreakdown(entries) {
             const counts = {};
             const names = {};
+            const colors = {};
             entries.forEach((s) => {
                 const label = RARITY_META[s.rarity]?.label || s.rarity;
                 counts[label] = (counts[label] || 0) + 1;
-                (names[label] = names[label] || []).push(s.name);
+                (names[label] = names[label] || []).push({ name: s.name, img: s.faceImg || s.coteImg });
+                if (!colors[label]) colors[label] = RARITY_META[s.rarity]?.color || "#b8bcc4";
             });
-            return { labels: Object.keys(counts), data: Object.values(counts), groups: Object.keys(counts).map((k) => names[k]) };
+            return {
+                labels: Object.keys(counts),
+                data: Object.values(counts),
+                groups: Object.keys(counts).map((k) => names[k]),
+                colors: Object.keys(counts).map((k) => colors[k]),
+            };
         }
         ["halloween", "noel", "paques"].forEach((tag) => {
             const entries = Object.values(species).filter((s) => hasEvent(s, tag));
-            const { labels, data, groups } = rarityBreakdown(entries);
-            drawPie("chart-event-" + tag, labels, data, groups);
+            const { labels, data, groups, colors } = rarityBreakdown(entries);
+            drawPie("chart-event-" + tag, labels, data, groups, colors);
         });
+
 
         // Complétion des visuels (test réel de chargement d'image face ET côté séparément)
         const speciesEntries = Object.entries(species).filter(([, s]) => !s.hidden);
@@ -496,6 +536,37 @@ document.addEventListener("DOMContentLoaded", () => {
                 return `<li>❌ ${e.name} — photo ${parts.join(" et ")} manquante</li>`;
             })
             .join("");
+    }
+
+    const RARITY_ORDER = ["commun", "rare", "epique", "legendaire", "mythique", "divin", "secret"];
+    let sortState = { key: null, dir: 1 };
+    function sortSpeciesTable(field) {
+        sortState.dir = sortState.key === field ? -sortState.dir : 1;
+        sortState.key = field;
+        const tbody = document.getElementById("speciesTableBody");
+        const rows = Array.from(tbody.querySelectorAll("tr")).filter((tr) => tr.dataset.key);
+        const newRow = tbody.querySelector("tr.new-row");
+        rows.sort((a, b) => {
+            const va = field === "rarity" ? RARITY_ORDER.indexOf(getSpecies()[a.dataset.key]?.rarity) : speciesEventValue(getSpecies()[a.dataset.key]);
+            const vb = field === "rarity" ? RARITY_ORDER.indexOf(getSpecies()[b.dataset.key]?.rarity) : speciesEventValue(getSpecies()[b.dataset.key]);
+            if (va < vb) return -1 * sortState.dir;
+            if (va > vb) return 1 * sortState.dir;
+            return 0;
+        });
+        rows.forEach((r) => tbody.insertBefore(r, newRow));
+    }
+    document.getElementById("sortRarityBtn").addEventListener("click", () => sortSpeciesTable("rarity"));
+    document.getElementById("sortEventBtn").addEventListener("click", () => sortSpeciesTable("event"));
+
+    const speciesSearchInput = document.getElementById("speciesSearch");
+    if (speciesSearchInput) {
+        speciesSearchInput.addEventListener("input", () => {
+            const q = speciesSearchInput.value.trim().toLowerCase();
+            document.querySelectorAll("#speciesTableBody tr").forEach((tr) => {
+                if (!tr.dataset.search) return; // ligne d'ajout, toujours visible
+                tr.style.display = q === "" || tr.dataset.search.includes(q) ? "" : "none";
+            });
+        });
     }
 
     renderDashboard();
