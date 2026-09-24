@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (currentLevel >= 1) {
             const foodButton = createButtonWithImage(
-                "./assets/img/nourriture/pomme.png",
+                "assets/img/nourriture/pomme.png",
                 // "Nourrir le lapin (Nourriture)",
                 feedRabbitFood
             );
@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         if (currentLevel >= 2) {
             const cleanlinessButton = createButtonWithImage(
-                "./assets/img/soin/pommeau.png",
+                "assets/img/soin/pommeau.png",
                 // "Laver le lapin (Propreté)",
                 feedRabbitCleanliness
             );
@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         if (currentLevel >= 3) {
             const energyButton = createButtonWithImage(
-                "./assets/img/dodo/lit.png",
+                "assets/img/dodo/lit.png",
                 // "Coucher le lapin (Énergie)",
                 feedRabbitEnergy
             );
@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         if (currentLevel >= 4) {
             const friendshipButton = createButtonWithImage(
-                "./assets/img/jardin/agilité.webp",
+                "assets/img/jardin/agilite.webp",
                 // "Jouer avec le lapin (Amitié)",
                 feedRabbitSport
             );
