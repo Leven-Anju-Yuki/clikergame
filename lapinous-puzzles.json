@@ -1,0 +1,85 @@
+{
+  "type": "lapinous-puzzles",
+  "version": 1,
+  "levels": [
+    {
+      "rows": 2,
+      "cols": 3,
+      "label": "6 pièces",
+      "friendship": 4,
+      "energy": 4,
+      "cleanliness": 1,
+      "food": 2
+    },
+    {
+      "rows": 3,
+      "cols": 4,
+      "label": "12 pièces",
+      "friendship": 7,
+      "energy": 6,
+      "cleanliness": 2,
+      "food": 3
+    },
+    {
+      "rows": 4,
+      "cols": 5,
+      "label": "20 pièces",
+      "friendship": 10,
+      "energy": 8,
+      "cleanliness": 3,
+      "food": 4
+    },
+    {
+      "rows": 5,
+      "cols": 6,
+      "label": "30 pièces",
+      "friendship": 14,
+      "energy": 10,
+      "cleanliness": 4,
+      "food": 5
+    }
+  ],
+  "puzzles": [
+    {
+      "id": "communs",
+      "title": "Les Communs",
+      "image": "./assets/img/puzzle/les_communs.png",
+      "linkedSpecies": [
+        "azur",
+        "caramel",
+        "flamme",
+        "bambou",
+        "koda",
+        "mocha"
+      ]
+    },
+    {
+      "id": "aventuriers",
+      "title": "Les Aventuriers",
+      "image": "./assets/img/puzzle/les_aventuriers.png",
+      "linkedSpecies": [
+        "corsaire",
+        "nopal"
+      ]
+    },
+    {
+      "id": "scientifiques",
+      "title": "Les Scientifiques",
+      "image": "./assets/img/puzzle/les_scientifiques.png",
+      "linkedSpecies": [
+        "archy",
+        "spark"
+      ]
+    },
+    {
+      "id": "voie-lactee",
+      "title": "La Voie lactée",
+      "image": "./assets/img/puzzle/voie_lactee.png",
+      "linkedSpecies": [
+        "umbra",
+        "solaria",
+        "nova"
+      ]
+    }
+  ]
+}

@@ -24,7 +24,7 @@ body.default { background-image: url(../img/fond/salon.jpg); }
 body.cuisine { background-image: url(../img/fond/cuisine.jpg); }
 body.chambre { background-image: url(../img/fond/chambre.jpg); }
 body.jardin { background-image: url(../img/fond/jardin.jpeg); }
-body.sdb { background-image: url(../img/fond/salle_de_bain.jpg); }
+body.sdb { background-image: url(../img/fond/salle_de_bain.jpeg); }
 
 .event-banner {
     width: 100%; display: none; flex-direction: column; gap: 4px; align-items: center;
@@ -467,3 +467,196 @@ img { max-width: 100%; }
     .encyclopedia-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
     .event-banner-line strong { font-size: .82em; }
 }
+
+
+/* ============================================================
+   COMBAT VISUEL + CONSOLE / PUZZLES
+   ============================================================ */
+body.battle-scene {
+    background-image: url(../img/fond/combat.png) !important;
+    background-size: cover;
+    background-position: center;
+}
+body.battle-scene::before {
+    background: linear-gradient(180deg, rgba(20, 14, 12, .20), rgba(22, 12, 10, .58));
+}
+body.battle-scene .scene-card { background: rgba(35, 22, 18, .84); backdrop-filter: blur(3px); }
+body.battle-scene #gameArea { background: rgba(20, 15, 12, .45); }
+.fight-stage { width:100%; display:flex; flex-direction:column; gap:14px; align-items:center; }
+.fight-stage { display:grid; grid-template-columns:1fr 1fr; }
+.fight-hud-side { width:100%; min-width:0; padding:10px 12px; border-radius:16px; background:rgba(15,10,9,.72); color:#fff; border:1px solid rgba(255,255,255,.16); }
+.fight-name { font-family:var(--font-display); font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.fight-hp { height:16px; margin:6px 0 3px; border-radius:999px; overflow:hidden; background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.3); }
+.fight-hp-fill { height:100%; width:100%; transition:width .38s ease; }
+.player-hp { background:linear-gradient(90deg,#65c878,#a9e67e); }
+.boss-hp { background:linear-gradient(90deg,#d84c4c,#ff8b68); }
+.fight-hp-text { font-size:.72em; opacity:.88; }
+.battle-vs { grid-column:1/-1; }
+.fight-log { grid-column:1/-1; width:100%; min-height:42px; padding:10px 12px; border-radius:14px; text-align:center; font-weight:700; background:rgba(255,255,255,.9); color:var(--ink); }
+.fight-actions { grid-column:1/-1; }
+.fight-hit { animation:fightHit .4s ease; }
+@keyframes fightHit { 0%,100%{transform:translateX(0)} 30%{transform:translateX(-10px) rotate(-2deg);filter:brightness(1.5)} 65%{transform:translateX(8px) rotate(2deg)} }
+
+.salon-console-entry { width:100%; display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap; margin:4px 0 10px; }
+.console-btn { min-width:160px; background:linear-gradient(180deg,#7c76d8,#5650ad); box-shadow:0 5px 0 #403a87; }
+.console-panel,.puzzle-hub,.puzzle-levels,.puzzle-play,.puzzle-win { width:100%; display:flex; flex-direction:column; align-items:center; gap:14px; }
+.console-title { font-family:var(--font-display); font-size:1.35em; font-weight:700; text-align:center; }
+.console-games { width:100%; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+.console-game-card { border:2px solid var(--pink-pale); background:var(--paper-soft); border-radius:18px; padding:14px 10px; display:flex; flex-direction:column; align-items:center; gap:5px; cursor:pointer; color:var(--ink); }
+.console-game-card.locked { opacity:.55; }
+.console-game-icon { font-size:2em; }
+.console-game-card small { font-size:.68em; color:var(--ink-soft); text-align:center; }
+.puzzle-list { width:100%; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+.puzzle-card { border:2px solid var(--pink-pale); background:var(--paper-soft); border-radius:18px; padding:8px; overflow:hidden; display:flex; flex-direction:column; gap:7px; cursor:pointer; color:var(--ink); text-align:left; }
+.puzzle-card.locked { opacity:.45; filter:grayscale(.65); cursor:not-allowed; }
+.puzzle-card img { width:100%; aspect-ratio:16/10; object-fit:cover; border-radius:12px; }
+.puzzle-card span { display:flex; flex-direction:column; gap:2px; }
+.puzzle-card small { color:var(--ink-soft); font-size:.7em; }
+.puzzle-preview { width:min(100%,430px); aspect-ratio:16/10; object-fit:cover; border-radius:18px; box-shadow:0 5px 18px var(--shadow-soft); }
+.puzzle-level-buttons { width:100%; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+.puzzle-level-btn { border:2px solid var(--pink); background:var(--paper-soft); color:var(--ink); border-radius:14px; padding:12px; font-weight:700; cursor:pointer; }
+.puzzle-level-btn.done { border-color:var(--green-deep); background:#eef9ef; }
+.puzzle-level-btn:disabled { opacity:.4; cursor:not-allowed; }
+.puzzle-play-head { width:100%; display:flex; justify-content:space-between; gap:8px; align-items:center; flex-wrap:wrap; }
+.puzzle-board { width:min(100%,560px); aspect-ratio:16/10; display:grid; grid-template-columns:repeat(var(--puzzle-cols),1fr); grid-template-rows:repeat(var(--puzzle-rows),1fr); gap:2px; padding:3px; border-radius:12px; background:#2d211c; box-shadow:0 6px 18px var(--shadow); overflow:hidden; }
+.puzzle-piece { min-width:0; min-height:0; border:0; border-radius:2px; padding:0; background-repeat:no-repeat; cursor:pointer; transition:transform .12s ease, outline .12s ease; }
+.puzzle-piece:hover { transform:scale(.97); }
+.puzzle-piece.selected { outline:4px solid var(--gold); outline-offset:-4px; transform:scale(.94); }
+.puzzle-actions { display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
+.puzzle-win-icon { font-size:3em; animation:bounce .7s ease; }
+.dashboard-filter-row { display:grid; grid-template-columns:minmax(0,2fr) minmax(190px,1fr); gap:10px; margin-bottom:10px; }
+.dashboard-filter-row .name-input { min-width:0; }
+
+@media only screen and (max-width:600px) {
+    .console-games { grid-template-columns:1fr; }
+    .puzzle-list { grid-template-columns:1fr; }
+    .puzzle-level-buttons { grid-template-columns:1fr 1fr; }
+    .dashboard-filter-row { grid-template-columns:1fr; }
+    .fight-stage { grid-template-columns:1fr 1fr; gap:8px; }
+    .fight-hud-side { padding:8px; }
+    .battle-vs { gap:8px; }
+    .battle-vs .vs-side img { width:min(31vw,120px); height:min(31vw,120px); }
+    .fight-log { font-size:.86em; }
+}
+@media only screen and (max-width:380px) {
+    .puzzle-level-buttons { grid-template-columns:1fr; }
+}
+
+/* -------- Renforcement des doublons / coups critiques -------- */
+.duplicate-choice { width:100%; background:linear-gradient(180deg,#fff8e8,#fffdf9); border:2px solid var(--gold); border-radius:20px; padding:14px; box-shadow:0 5px 0 rgba(160,110,20,.15); display:flex; flex-direction:column; gap:10px; align-items:center; text-align:center; }
+.duplicate-title { font-family:var(--font-display); font-weight:700; font-size:1.15em; }
+.attack-upgrade-summary { width:min(100%,420px); display:grid; grid-template-columns:1fr auto; gap:5px 12px; align-items:center; font-size:.85em; font-weight:700; }
+.attack-upgrade-bar { grid-column:1/-1; width:100%; height:13px; border-radius:999px; overflow:hidden; background:#eadfce; border:1px solid rgba(90,64,52,.15); }
+.attack-upgrade-bar > div { height:100%; border-radius:inherit; background:linear-gradient(90deg,#d36a4a,#f5c34d); transition:width .35s ease; }
+.lapin-progress-box { margin:10px 0; padding:10px; border-radius:14px; background:rgba(255,255,255,.65); border:1px solid var(--pink-pale); }
+.lapin-progress-box small { display:block; margin-top:4px; color:var(--ink-soft); }
+.lapin-linked-puzzles { display:flex; flex-wrap:wrap; gap:5px; align-items:center; margin-top:10px; }
+.lapin-linked-puzzles strong { width:100%; }
+.lapin-puzzle-chip { display:inline-block; padding:4px 8px; border-radius:999px; background:var(--paper); border:1px solid var(--pink-pale); font-size:.78em; }
+.lapin-puzzle-chip.done { border-color:var(--green-deep); background:#eef9ef; }
+.fight-crit-label { margin-top:7px; display:flex; justify-content:space-between; gap:8px; font-size:.68em; font-weight:700; opacity:.9; }
+.fight-crit { height:9px; margin-top:3px; border-radius:999px; overflow:hidden; background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.25); }
+.fight-crit-fill { height:100%; width:0; background:linear-gradient(90deg,#f5c34d,#fff4a8); transition:width .22s ease; }
+.fight-critical-hit { animation:fightCriticalHit .62s ease; filter:drop-shadow(0 0 18px #ffd84f) brightness(1.25); }
+@keyframes fightCriticalHit { 0%,100%{transform:translateX(0) scale(1)} 20%{transform:translateX(-12px) rotate(-2deg) scale(1.04)} 45%{transform:translateX(10px) rotate(2deg) scale(.96)} 70%{transform:translateX(-5px) scale(1.02)} }
+@media (max-width:480px){ .duplicate-choice .action-row{width:100%}.duplicate-choice .action-btn{min-width:0;flex:1 1 100%}.fight-crit-label{font-size:.62em}.lapin-progress-box{font-size:.9em} }
+
+
+/* ---------------- DASHBOARD PUZZLES ---------------- */
+.puzzle-admin-list { display:flex; flex-direction:column; gap:16px; }
+.puzzle-admin-card { display:grid; grid-template-columns:180px minmax(0,1fr); gap:18px; background:var(--paper); border:2px solid var(--pink-pale); border-radius:18px; padding:14px; }
+.puzzle-admin-preview img { width:100%; aspect-ratio:16/10; object-fit:cover; border-radius:14px; }
+.puzzle-admin-fields { display:flex; flex-direction:column; gap:10px; min-width:0; }
+.puzzle-admin-fields > label { font-weight:600; }
+.puzzle-admin-fields > label .name-input { margin-top:4px; }
+.puzzle-species-picker { background:var(--paper-soft); border-radius:14px; padding:10px; }
+.puzzle-species-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:6px; margin-top:8px; max-height:250px; overflow:auto; }
+.puzzle-species-check { display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:6px; padding:6px 8px; background:var(--paper); border-radius:10px; cursor:pointer; font-size:.85em; }
+.puzzle-species-check small { color:var(--ink-soft); font-size:.75em; }
+@media (max-width:700px) { .puzzle-admin-card { grid-template-columns:1fr; } .puzzle-admin-preview img { max-height:210px; } .puzzle-species-grid { grid-template-columns:1fr 1fr; } }
+@media (max-width:430px) { .puzzle-species-grid { grid-template-columns:1fr; } }
+
+
+/* ============================================================
+   V4 — Salon large, console intégrée au décor, lapins dans la pièce
+   ============================================================ */
+@media (min-width: 900px) {
+    body.default #gameRoot { max-width: 1180px; padding-left: 28px; padding-right: 28px; }
+    body.default .scene-card { padding: 22px 24px 28px; }
+    body.default #gameArea { min-height: 560px; padding: 22px; }
+}
+.salon-world {
+    position: relative; width: 100%; min-height: 390px; border-radius: 24px; overflow: hidden;
+    background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,247,236,.55));
+    border: 1px solid rgba(255,255,255,.45); box-shadow: inset 0 -35px 55px rgba(90,64,52,.08);
+}
+.salon-room-title { position:absolute; top:12px; left:50%; transform:translateX(-50%); z-index:4; padding:6px 12px; border-radius:999px; background:rgba(255,253,249,.82); font-size:.8em; font-weight:700; white-space:nowrap; }
+.salon-active-rabbit-spot { position:absolute; left:50%; bottom:28px; transform:translateX(-50%); z-index:3; width:250px; height:280px; display:flex; align-items:flex-end; justify-content:center; }
+.salon-active-rabbit-spot #rabbitImage { width:min(230px,90%); max-height:260px; object-fit:contain; }
+.salon-friends { position:absolute; inset:58px 235px 20px 18px; z-index:2; display:grid; grid-template-columns:repeat(4,minmax(80px,1fr)); align-content:end; gap:10px; pointer-events:none; }
+.salon-rabbit-friend { pointer-events:auto; align-self:end; background:rgba(255,253,249,.68); border:2px solid rgba(255,181,200,.55); border-radius:18px; padding:6px; cursor:pointer; backdrop-filter:blur(3px); box-shadow:0 5px 12px rgba(90,64,52,.12); transition:transform .15s ease, background .15s ease; min-width:0; }
+.salon-rabbit-friend:hover { transform:translateY(-6px); background:rgba(255,253,249,.95); }
+.salon-rabbit-friend img { width:100%; height:90px; object-fit:contain; display:block; }
+.salon-rabbit-friend span { display:block; font-size:.68em; font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.salon-alone-note { align-self:end; padding:10px; background:rgba(255,253,249,.72); border-radius:14px; font-size:.78em; }
+.salon-console-object { position:absolute; right:24px; bottom:28px; z-index:5; width:165px; height:205px; border:0; border-radius:22px 22px 15px 15px; cursor:pointer; background:linear-gradient(160deg,#3c356d,#201c41 72%); box-shadow:0 14px 0 #15122c, 0 20px 28px rgba(27,21,61,.28); transform:perspective(600px) rotateY(-6deg); transition:transform .15s ease, filter .15s ease; color:white; padding:14px 14px 12px; }
+.salon-console-object:hover { transform:perspective(600px) rotateY(-3deg) translateY(-5px); filter:brightness(1.08); }
+.console-object-screen { height:112px; border:6px solid #17142e; border-radius:15px; background:radial-gradient(circle at 50% 40%,#938cff,#443b94 54%,#17142e 100%); display:flex; flex-direction:column; align-items:center; justify-content:center; box-shadow:inset 0 0 20px rgba(255,255,255,.18); }
+.console-object-screen span { font-size:2.5em; }
+.console-object-screen small { font-family:var(--font-display); letter-spacing:2px; font-weight:700; }
+.console-object-controls { display:flex; justify-content:space-between; align-items:center; padding:10px 6px 2px; }
+.console-object-controls i { width:25px; height:25px; border-radius:50%; background:#111; box-shadow:inset 0 0 0 6px #555; }
+.console-object-controls b { color:#ffb5c8; letter-spacing:5px; }
+.console-object-label { font-family:var(--font-display); font-weight:700; font-size:.85em; }
+@media (max-width:899px) {
+    .salon-world { min-height:500px; }
+    .salon-friends { inset:55px 10px 185px; grid-template-columns:repeat(3,minmax(72px,1fr)); overflow-y:auto; align-content:start; }
+    .salon-rabbit-friend img { height:68px; }
+    .salon-active-rabbit-spot { left:34%; bottom:20px; width:180px; height:180px; }
+    .salon-active-rabbit-spot #rabbitImage { max-height:175px; width:160px; }
+    .salon-console-object { right:18px; bottom:20px; width:125px; height:155px; padding:9px; }
+    .console-object-screen { height:82px; border-width:4px; }
+    .console-object-screen span { font-size:1.9em; }
+}
+@media (max-width:480px) {
+    .salon-world { min-height:560px; }
+    .salon-friends { grid-template-columns:repeat(2,minmax(0,1fr)); bottom:190px; }
+    .salon-active-rabbit-spot { left:30%; width:150px; }
+    .salon-console-object { width:112px; right:10px; }
+}
+
+/* Dashboard puzzles : vrai tableau + sélection multiple illustrée */
+.puzzle-admin-list { width:100%; }
+.puzzle-admin-table-wrap { width:100%; overflow:auto; border:1px solid var(--pink-pale); border-radius:16px; background:var(--paper-soft); }
+.puzzle-admin-table { width:100%; min-width:1180px; border-collapse:collapse; font-size:.84em; }
+.puzzle-admin-table th { position:sticky; top:0; z-index:3; padding:9px 10px; text-align:left; background:var(--pink-pale); white-space:nowrap; }
+.puzzle-admin-table td { padding:10px; border-bottom:1px solid var(--pink-pale); vertical-align:middle; }
+.puzzle-admin-image-cell { width:250px; }
+.puzzle-admin-image-cell img { width:230px; height:145px; object-fit:cover; border-radius:14px; display:block; box-shadow:0 4px 10px var(--shadow-soft); }
+.puzzle-admin-table .name-input { min-width:150px; font-size:.95em; padding:8px 10px; }
+.puzzle-path-input { min-width:250px !important; }
+.puzzle-links-cell { min-width:280px; }
+.puzzle-species-dropdown { position:relative; min-width:260px; }
+.puzzle-species-dropdown > summary { list-style:none; cursor:pointer; border:2px solid var(--pink-pale); background:var(--paper); border-radius:12px; padding:9px 11px; font-weight:700; user-select:none; }
+.puzzle-species-dropdown > summary::-webkit-details-marker { display:none; }
+.puzzle-species-dropdown[open] > summary { border-color:var(--pink); }
+.puzzle-species-menu { position:absolute; z-index:30; top:calc(100% + 5px); right:0; width:330px; max-height:340px; overflow:auto; padding:8px; border-radius:15px; background:var(--paper-soft); border:2px solid var(--pink); box-shadow:0 14px 34px rgba(90,64,52,.22); display:flex; flex-direction:column; gap:5px; }
+.puzzle-species-option { display:grid; grid-template-columns:auto 46px 1fr; gap:8px; align-items:center; margin:0; padding:6px 8px; border-radius:10px; cursor:pointer; background:var(--paper); }
+.puzzle-species-option:hover { background:var(--pink-pale); }
+.puzzle-species-option img { width:44px; height:44px; object-fit:contain; border-radius:8px; background:white; }
+.puzzle-species-option span { min-width:0; }
+.puzzle-species-option strong,.puzzle-species-option small { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.puzzle-species-option small { color:var(--ink-soft); font-size:.72em; }
+.puzzle-row-actions { white-space:nowrap; }
+@media (max-width:700px) {
+    .puzzle-admin-image-cell img { width:190px; height:120px; }
+    .puzzle-species-menu { left:0; right:auto; width:290px; }
+}
+
+/* Le décor du Salon remplit maintenant réellement la scène de jeu. */
+body.default #gameArea {
+    background-image: linear-gradient(180deg, rgba(255,247,236,.10), rgba(255,247,236,.30)), url(../img/fond/salon.jpg);
+    background-size: cover;
+    background-position: center;
+}
+body.default .scene-card { background: rgba(255,253,249,.80); backdrop-filter: blur(2px); }

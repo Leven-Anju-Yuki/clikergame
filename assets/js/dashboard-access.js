@@ -9,7 +9,8 @@ const DASHBOARD_CODE_HASH_KEY = "lapinous_dashboard_code_hash";
 const DASHBOARD_SESSION_KEY = "lapinous_dashboard_authorized";
 const DASHBOARD_ATTEMPTS_KEY = "lapinous_dashboard_attempts";
 const DASHBOARD_MAX_ATTEMPTS = 5;
-const DASHBOARD_DEFAULT_CODE = "0000";
+const DASHBOARD_DEFAULT_CODE = "2653";
+const DASHBOARD_OLD_DEFAULT_CODE = "0000";
 let dashboardCheckRunning = false;
 
 async function hashDashboardCode(value) {
@@ -20,11 +21,20 @@ async function hashDashboardCode(value) {
         .join("");
 }
 
-// Au tout premier lancement, initialise le hash sur le code par défaut "0000".
+// Au tout premier lancement, initialise le hash sur le code par défaut "2653".
+// Si un navigateur utilisait encore l'ancien code par défaut 0000, on le migre
+// automatiquement. Un code personnalisé par l'administrateur n'est jamais écrasé.
 async function getStoredDashboardHash() {
     let hash = localStorage.getItem(DASHBOARD_CODE_HASH_KEY);
+    const defaultHash = await hashDashboardCode(DASHBOARD_DEFAULT_CODE);
     if (!hash) {
-        hash = await hashDashboardCode(DASHBOARD_DEFAULT_CODE);
+        hash = defaultHash;
+        localStorage.setItem(DASHBOARD_CODE_HASH_KEY, hash);
+        return hash;
+    }
+    const oldDefaultHash = await hashDashboardCode(DASHBOARD_OLD_DEFAULT_CODE);
+    if (hash === oldDefaultHash) {
+        hash = defaultHash;
         localStorage.setItem(DASHBOARD_CODE_HASH_KEY, hash);
     }
     return hash;

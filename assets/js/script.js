@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    (window.LapinousContentReady || Promise.resolve()).then(() => {
+    Promise.all([window.LapinousContentReady || Promise.resolve(), window.LapinousPuzzlesReady || Promise.resolve()]).then(() => {
     // ============================================================
     // RÉFÉRENCES DOM
     // ============================================================
@@ -48,6 +48,15 @@ document.addEventListener("DOMContentLoaded", () => {
             lastUpgradeLevel: 0,
             boosts: { food: 0, energy: 0, cleanliness: 0, friendship: 0 },
             improvements: { cuisine: false, chambre: false, sdb: false, jardin: false },
+            // Les doublons peuvent renforcer définitivement l'attaque de CE lapin.
+            // 5 segments, +2 puissance par segment, soit +10 au maximum.
+            attackTraining: { points: 0, max: 5, bonus: 0, completed: false },
+            // Progression propre à ce lapin dans les mini-jeux.
+            minigames: {
+                puzzle: { unlockedPuzzle: 0, puzzles: {} },
+                memory: { level: 0, completed: 0 },
+                lapidoku: { level: 0, completed: 0 },
+            },
         };
     }
 
@@ -66,13 +75,30 @@ document.addEventListener("DOMContentLoaded", () => {
             ownedSpecies: [],
             speciesTraits: {},
             discoveredBosses: [],
+            duplicateCounts: {},
         };
     }
 
     // Renvoie (et crée si besoin) la progression du lapin actuellement actif.
     function progress() {
         if (!game.progress[game.species]) game.progress[game.species] = freshSpeciesProgress();
+        ensureAttackTraining(game.progress[game.species]);
         return game.progress[game.species];
+    }
+
+    function ensureAttackTraining(p) {
+        if (!p.attackTraining) p.attackTraining = { points: 0, max: 5, bonus: 0, completed: false };
+        p.attackTraining.max = Number(p.attackTraining.max) || 5;
+        p.attackTraining.points = Math.max(0, Math.min(p.attackTraining.max, Number(p.attackTraining.points) || 0));
+        p.attackTraining.bonus = p.attackTraining.points;
+        p.attackTraining.completed = p.attackTraining.completed || p.attackTraining.points >= p.attackTraining.max;
+        return p.attackTraining;
+    }
+
+    function progressForSpecies(key) {
+        if (!game.progress[key]) game.progress[key] = freshSpeciesProgress();
+        ensureAttackTraining(game.progress[key]);
+        return game.progress[key];
     }
 
     // Nom du lapin actif (chacun a le sien).
@@ -535,6 +561,33 @@ document.addEventListener("DOMContentLoaded", () => {
     // Libre d'accès pour le joueur. Le Dashboard (admin) est un lien
     // séparé, discret, tout en bas de la modale.
     // ============================================================
+    function linkedPuzzlesForSpecies(key) {
+        return puzzleCatalog().filter((puz) => Array.isArray(puz.linkedSpecies) && puz.linkedSpecies.includes(key));
+    }
+
+    function encyclopediaProgressHtml(key) {
+        const p = progressForSpecies(key);
+        const training = ensureAttackTraining(p);
+        const pct = training.max ? Math.round((training.points / training.max) * 100) : 100;
+        const linked = linkedPuzzlesForSpecies(key);
+        const puzzleProgress = p.minigames?.puzzle?.puzzles || {};
+        const puzzleHtml = linked.length
+            ? linked.map((puz) => {
+                const st = puzzleProgress[puz.id];
+                const done = !!st?.completed;
+                return `<span class="lapin-puzzle-chip ${done ? "done" : ""}">${done ? "✅" : "🧩"} ${puz.title}</span>`;
+            }).join("")
+            : '<span class="upgrade-locked-note">Aucun puzzle lié pour le moment.</span>';
+        const duplicates = game.duplicateCounts?.[key] || 0;
+        return `
+            <div class="lapin-progress-box">
+                <div><strong>⚔️ Renforcement d'attaque :</strong> +${training.bonus} puissance ${training.completed ? "· MAX" : ""}</div>
+                <div class="attack-upgrade-bar"><div style="width:${pct}%"></div></div>
+                <small>${training.points}/${training.max} fragments · ${duplicates} doublon${duplicates > 1 ? "s" : ""} obtenu${duplicates > 1 ? "s" : ""}</small>
+                <div class="lapin-linked-puzzles"><strong>🧩 Puzzles liés :</strong>${puzzleHtml}</div>
+            </div>`;
+    }
+
     function showEncyclopediaDetail(key) {
         const s = getSpecies()[key];
         const rarity = RARITY_META[s.rarity];
@@ -552,6 +605,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <p><strong>Aime :</strong> ${(s.likes || []).join(", ") || "—"}</p>
                     <p><strong>N'aime pas :</strong> ${(s.dislikes || []).join(", ") || "—"}</p>
                     <p><strong>Pouvoir :</strong> ${s.power}</p>
+                    ${encyclopediaProgressHtml(key)}
                     <p class="entry-quote">« ${s.quote} »</p>
                 </div>
             </div>`;
@@ -740,6 +794,30 @@ document.addEventListener("DOMContentLoaded", () => {
         return `<div class="collection-switcher"><p class="upgrade-locked-note">Tes lapins (clique pour changer ton compagnon actif) :</p><div class="collection-row">${cards}</div></div>`;
     }
 
+    function salonOwnedRabbitsSceneHtml() {
+        const species = getSpecies();
+        const owned = (game.ownedSpecies || []).filter((key) => key !== game.species && species[key]);
+        const friends = owned.map((key, index) => {
+            const sp = species[key];
+            const img = sp.faceImg || sp.coteImg || "./assets/img/species/mystery.svg";
+            const name = game.speciesNames[key] || sp.name || key;
+            return `<button class="salon-rabbit-friend friend-${index % 8}" onclick="switchActiveSpecies('${key}')" title="Jouer avec ${name}">
+                <img src="${img}" alt="${name}" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';">
+                <span>${name}</span>
+            </button>`;
+        }).join("");
+        return `<div class="salon-world">
+            <div class="salon-room-title">🐰 Tes compagnons sont dans le Salon</div>
+            <div class="salon-friends">${friends || '<span class="salon-alone-note">Ton premier compagnon profite du Salon ✨</span>'}</div>
+            <div id="salonActiveRabbitSpot" class="salon-active-rabbit-spot"></div>
+            <button class="salon-console-object" type="button" onclick="openGameConsole()" aria-label="Ouvrir la console de jeux">
+                <span class="console-object-screen"><span>🐰</span><small>PLAY</small></span>
+                <span class="console-object-controls"><i></i><b>● ●</b></span>
+                <span class="console-object-label">Console</span>
+            </button>
+        </div>`;
+    }
+
     window.switchActiveSpecies = function (key) {
         if (key === game.species) return;
         const s = getSpecies()[key];
@@ -754,13 +832,257 @@ document.addEventListener("DOMContentLoaded", () => {
         showToast(`${currentRabbitName()} devient ton compagnon actif ! 🐰 (Niveau ${progress().currentLevel}, tout lui est propre)`, "success");
     };
 
+    // ============================================================
+    // CONSOLE DU SALON / MINI-JEUX
+    // ============================================================
+    // Les progressions sont enregistrées dans progress(), donc indépendantes
+    // pour chaque lapin. On ne peut accéder au puzzle suivant qu'après avoir
+    // terminé le précédent, et idem pour les niveaux de difficulté.
+    function puzzleCatalog() { return (window.getPuzzleCatalog ? window.getPuzzleCatalog() : []) || []; }
+    function puzzleLevels() { return (window.getPuzzleLevels ? window.getPuzzleLevels() : []) || []; }
+    let activePuzzle = null;
+    let selectedPuzzleSlot = null;
+
+    function ensureMinigameProgress() {
+        const p = progress();
+        if (!p.minigames) p.minigames = {};
+        if (!p.minigames.puzzle) p.minigames.puzzle = { unlockedPuzzle: 0, puzzles: {} };
+        if (!p.minigames.puzzle.puzzles) p.minigames.puzzle.puzzles = {};
+        if (!p.minigames.memory) p.minigames.memory = { level: 0, completed: 0 };
+        if (!p.minigames.lapidoku) p.minigames.lapidoku = { level: 0, completed: 0 };
+        return p.minigames;
+    }
+
+    function puzzleState(id) {
+        const state = ensureMinigameProgress().puzzle;
+        if (!state.puzzles[id]) state.puzzles[id] = { completed: false, highestCompletedLevel: -1, bestMoves: {} };
+        return state.puzzles[id];
+    }
+
+    window.openGameConsole = function () {
+        const mg = ensureMinigameProgress();
+        const completed = Object.values(mg.puzzle.puzzles).filter((x) => x.completed).length;
+        gameArea.innerHTML = `
+            <div class="console-panel">
+                <div class="console-title">🎮 Console Lapinous</div>
+                <p class="agility-hint">Joue avec ${currentRabbitName()} pour gagner de l'amitié. Jouer fatigue aussi ton lapin et peut le salir.</p>
+                <div class="console-games">
+                    <button class="console-game-card" onclick="openPuzzleHub()">
+                        <span class="console-game-icon">🧩</span><strong>Puzzles</strong>
+                        <small>${completed}/${puzzleCatalog().length} images terminées au moins une fois</small>
+                    </button>
+                    <button class="console-game-card locked" type="button" onclick="showToast('Le Memory arrive bientôt 🧠', 'warn')">
+                        <span class="console-game-icon">🧠</span><strong>Memory</strong><small>Bientôt disponible</small>
+                    </button>
+                    <button class="console-game-card locked" type="button" onclick="showToast('Lapidoku arrive bientôt 🐰🔢', 'warn')">
+                        <span class="console-game-icon">🔢</span><strong>Lapidoku</strong><small>Bientôt disponible</small>
+                    </button>
+                </div>
+                <button class="ghost-btn" onclick="refreshCurrentZone()">← Retour au Salon</button>
+            </div>`;
+    };
+
+    window.openPuzzleHub = function () {
+        const mg = ensureMinigameProgress().puzzle;
+        const cards = puzzleCatalog().map((puz, index) => {
+            const st = puzzleState(puz.id);
+            const unlocked = index <= (mg.unlockedPuzzle || 0);
+            const status = st.completed ? "✅ Terminé" : unlocked ? "À faire" : "🔒 Termine le puzzle précédent";
+            const linkedNames = (puz.linkedSpecies || []).map((key) => getSpecies()[key]?.name || key).join(", ");
+            return `<button class="puzzle-card ${unlocked ? "" : "locked"}" ${unlocked ? `onclick="openPuzzleLevels(${index})"` : "disabled"}>
+                <img src="${puz.image}" alt="${puz.title}">
+                <span><strong>${index + 1}. ${puz.title}</strong><small>${status}</small>${linkedNames ? `<small>🐰 ${linkedNames}</small>` : ""}</span>
+            </button>`;
+        }).join("");
+        gameArea.innerHTML = `
+            <div class="puzzle-hub">
+                <div class="console-title">🧩 Puzzles de ${currentRabbitName()}</div>
+                <p class="agility-hint">Chaque image se débloque dans l'ordre. Pour une même image, termine une difficulté pour ouvrir la suivante.</p>
+                <div class="puzzle-list">${cards}</div>
+                <button class="ghost-btn" onclick="openGameConsole()">← Console</button>
+            </div>`;
+    };
+
+    window.openPuzzleLevels = function (puzzleIndex) {
+        const puz = puzzleCatalog()[puzzleIndex];
+        if (!puz) return;
+        const mg = ensureMinigameProgress().puzzle;
+        if (puzzleIndex > (mg.unlockedPuzzle || 0)) return;
+        const st = puzzleState(puz.id);
+        const maxUnlockedLevel = Math.min(puzzleLevels().length - 1, st.highestCompletedLevel + 1);
+        const buttons = puzzleLevels().map((lvl, i) => {
+            const unlocked = i <= maxUnlockedLevel;
+            const done = i <= st.highestCompletedLevel;
+            return `<button class="puzzle-level-btn ${done ? "done" : ""}" ${unlocked ? `onclick="startPuzzle(${puzzleIndex},${i})"` : "disabled"}>
+                ${done ? "✅" : unlocked ? "🧩" : "🔒"} ${lvl.label}
+            </button>`;
+        }).join("");
+        gameArea.innerHTML = `
+            <div class="puzzle-levels">
+                <img class="puzzle-preview" src="${puz.image}" alt="${puz.title}">
+                <div class="console-title">${puz.title}</div>
+                <div class="puzzle-level-buttons">${buttons}</div>
+                <button class="ghost-btn" onclick="openPuzzleHub()">← Liste des puzzles</button>
+            </div>`;
+    };
+
+    function shuffledOrder(length) {
+        const arr = Array.from({ length }, (_, i) => i);
+        do {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+        } while (arr.every((v, i) => v === i));
+        return arr;
+    }
+
+    function renderActivePuzzle() {
+        if (!activePuzzle) return;
+        const { puzzleIndex, levelIndex, order, moves } = activePuzzle;
+        const puz = puzzleCatalog()[puzzleIndex];
+        const lvl = puzzleLevels()[levelIndex];
+        const pieces = order.map((sourceIndex, slotIndex) => {
+            const sourceRow = Math.floor(sourceIndex / lvl.cols);
+            const sourceCol = sourceIndex % lvl.cols;
+            const x = lvl.cols === 1 ? 0 : (sourceCol / (lvl.cols - 1)) * 100;
+            const y = lvl.rows === 1 ? 0 : (sourceRow / (lvl.rows - 1)) * 100;
+            return `<button class="puzzle-piece ${selectedPuzzleSlot === slotIndex ? "selected" : ""}" onclick="selectPuzzlePiece(${slotIndex})" aria-label="Pièce ${slotIndex + 1}"
+                style="background-image:url('${puz.image}');background-size:${lvl.cols * 100}% ${lvl.rows * 100}%;background-position:${x}% ${y}%;"></button>`;
+        }).join("");
+        gameArea.innerHTML = `
+            <div class="puzzle-play">
+                <div class="puzzle-play-head"><strong>🧩 ${puz.title}</strong><span>${lvl.label} · ${moves} coup${moves > 1 ? "s" : ""}</span></div>
+                <div class="puzzle-board" style="--puzzle-cols:${lvl.cols};--puzzle-rows:${lvl.rows};">${pieces}</div>
+                <p class="agility-hint">Clique sur deux pièces pour les échanger.</p>
+                <div class="puzzle-actions"><button class="ghost-btn" onclick="startPuzzle(${puzzleIndex},${levelIndex})">🔀 Mélanger</button><button class="ghost-btn" onclick="openPuzzleLevels(${puzzleIndex})">← Quitter</button></div>
+            </div>`;
+    }
+
+    window.startPuzzle = function (puzzleIndex, levelIndex) {
+        const puz = puzzleCatalog()[puzzleIndex];
+        const lvl = puzzleLevels()[levelIndex];
+        if (!puz || !lvl) return;
+        const mg = ensureMinigameProgress().puzzle;
+        const st = puzzleState(puz.id);
+        if (puzzleIndex > (mg.unlockedPuzzle || 0) || levelIndex > Math.min(puzzleLevels().length - 1, st.highestCompletedLevel + 1)) return;
+        const foodCost = Number(lvl.food || 0);
+        const sleepCost = Number(lvl.energy || 0);
+        const cleanCost = Number(lvl.cleanliness || 0);
+        if (progress().energy <= sleepCost || progress().food <= foodCost || progress().cleanliness <= cleanCost) {
+            showToast(`${currentRabbitName()} doit manger, dormir ou se laver avant de jouer 🎮`, "warn");
+            return;
+        }
+        activePuzzle = { puzzleIndex, levelIndex, order: shuffledOrder(lvl.rows * lvl.cols), moves: 0 };
+        selectedPuzzleSlot = null;
+        renderActivePuzzle();
+    };
+
+    window.selectPuzzlePiece = function (slotIndex) {
+        if (!activePuzzle) return;
+        if (selectedPuzzleSlot === null) {
+            selectedPuzzleSlot = slotIndex;
+            renderActivePuzzle();
+            return;
+        }
+        if (selectedPuzzleSlot === slotIndex) {
+            selectedPuzzleSlot = null;
+            renderActivePuzzle();
+            return;
+        }
+        const a = selectedPuzzleSlot;
+        const b = slotIndex;
+        [activePuzzle.order[a], activePuzzle.order[b]] = [activePuzzle.order[b], activePuzzle.order[a]];
+        activePuzzle.moves += 1;
+        selectedPuzzleSlot = null;
+        const solved = activePuzzle.order.every((v, i) => v === i);
+        if (!solved) { renderActivePuzzle(); return; }
+
+        const { puzzleIndex, levelIndex, moves } = activePuzzle;
+        const puz = puzzleCatalog()[puzzleIndex];
+        const lvl = puzzleLevels()[levelIndex];
+        const mg = ensureMinigameProgress().puzzle;
+        const st = puzzleState(puz.id);
+        st.completed = true;
+        st.highestCompletedLevel = Math.max(st.highestCompletedLevel, levelIndex);
+        const previousBest = st.bestMoves[levelIndex];
+        st.bestMoves[levelIndex] = previousBest ? Math.min(previousBest, moves) : moves;
+        if (puzzleIndex < puzzleCatalog().length - 1) mg.unlockedPuzzle = Math.max(mg.unlockedPuzzle || 0, puzzleIndex + 1);
+
+        progress().food = Math.max(0, progress().food - Number(lvl.food || 0));
+        progress().energy = Math.max(0, progress().energy - Number(lvl.energy || 0));
+        progress().cleanliness = Math.max(0, progress().cleanliness - Number(lvl.cleanliness || 0));
+        gainFriendship(lvl.friendship);
+        updateStatusBars();
+        autoSave();
+        spawnParticles("🧩", 10);
+        activePuzzle = null;
+        gameArea.innerHTML = `
+            <div class="puzzle-win">
+                <div class="puzzle-win-icon">🎉</div>
+                <div class="console-title">Puzzle terminé !</div>
+                <img class="puzzle-preview" src="${puz.image}" alt="${puz.title}">
+                <p><strong>${moves}</strong> coups · +${lvl.friendship} 💛 · -${Number(lvl.food || 0)} 🥕 · -${lvl.energy} 😴 · -${lvl.cleanliness} 🫧</p>
+                <p class="agility-hint">Progression enregistrée pour ${currentRabbitName()}.</p>
+                <button class="action-btn" onclick="openPuzzleLevels(${puzzleIndex})"><span>Continuer 🧩</span></button>
+                <button class="ghost-btn" onclick="openPuzzleHub()">Voir les puzzles</button>
+            </div>`;
+    };
+
+    function duplicateChoiceHtml() {
+        const pending = game.pendingDuplicate;
+        if (!pending) return "";
+        const s = getSpecies()[pending.speciesKey];
+        if (!s) return "";
+        const p = progressForSpecies(pending.speciesKey);
+        const training = ensureAttackTraining(p);
+        const pct = Math.round((training.points / training.max) * 100);
+        return `
+            <div class="duplicate-choice">
+                <div class="duplicate-title">✨ Doublon : ${s.name}</div>
+                <p>Que veux-tu faire de ce doublon ?</p>
+                <div class="attack-upgrade-summary">
+                    <span>⚔️ Attaque +${training.bonus}</span><span>${training.points}/${training.max}</span>
+                    <div class="attack-upgrade-bar"><div style="width:${pct}%"></div></div>
+                </div>
+                <div class="action-row">
+                    <button class="action-btn" onclick="resolveDuplicate('carrots')"><span>🥕 Recycler (+${pending.carrotReward})</span></button>
+                    <button class="action-btn adventure" onclick="resolveDuplicate('attack')" ${training.completed ? "disabled" : ""}><span>⚔️ Renforcer l'attaque</span></button>
+                </div>
+                ${training.completed ? '<p class="upgrade-locked-note">Attaque au maximum : les prochains doublons donneront automatiquement des carottes.</p>' : '<p class="upgrade-locked-note">5 fragments remplissent la barre. Chaque fragment donne immédiatement +1 puissance.</p>'}
+            </div>`;
+    }
+
+    window.resolveDuplicate = function (choice) {
+        const pending = game.pendingDuplicate;
+        if (!pending) return;
+        const s = getSpecies()[pending.speciesKey];
+        const p = progressForSpecies(pending.speciesKey);
+        const training = ensureAttackTraining(p);
+        if (choice === "attack" && !training.completed) {
+            training.points = Math.min(training.max, training.points + 1);
+            training.bonus = training.points;
+            training.completed = training.points >= training.max;
+            showToast(training.completed
+                ? `⚔️ ${s.name} atteint son renforcement maximal : +${training.bonus} puissance !`
+                : `⚔️ ${s.name} gagne un fragment d'attaque (${training.points}/${training.max}) : +${training.bonus} puissance.`, "levelup");
+        } else {
+            game.carrots += pending.carrotReward;
+            showToast(`🥕 ${s.name} est recyclé en +${pending.carrotReward} carottes.`, "success");
+        }
+        game.pendingDuplicate = null;
+        autoSave();
+        refreshCurrentZone();
+    };
+
     const zones = {
         default: {
             label: "🏡 Salon",
             image: () => speciesFaceImg(),
             content: () => `
-                <p class="welcome-msg">Te voilà à la maison avec ${currentRabbitName() || "ton lapin"} ! Choisis une pièce en bas pour t'en occuper.</p>
-                ${collectionSwitcherHtml()}
+                <p class="welcome-msg">Te voilà à la maison avec ${currentRabbitName() || "ton lapin"} ! Clique sur un compagnon du Salon pour changer de lapin, ou sur la console pour jouer.</p>
+                ${duplicateChoiceHtml()}
+                ${salonOwnedRabbitsSceneHtml()}
                 <div class="egg-shop">
                     <div class="carrot-counter">🥕 ${game.carrots} · 🥚 ${game.eggs}</div>
                     <div class="action-row">
@@ -772,12 +1094,12 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         cuisine: {
             label: "🥕 Cuisine",
-            image: () => `./assets/img/zone_cuisine/lapin_cuisine.gif`,
+            image: () => `./assets/img/Zone_cuisine/lapin_cuisine.gif`,
             content: () => progress().improvements.cuisine
-                ? `<div class="action-row"><button class="action-btn upgraded" onclick="feedRabbit()"><img class="action-icon" src="./assets/img/zone_cuisine/pomme.png" alt=""><span>Nourrir</span></button></div>`
+                ? `<div class="action-row"><button class="action-btn upgraded" onclick="feedRabbit()"><img class="action-icon" src="./assets/img/Zone_cuisine/pomme.png" alt=""><span>Nourrir</span></button></div>`
                 : `<div class="action-row">
-                    <button class="action-btn" onclick="feedRabbit()"><img class="action-icon" src="./assets/img/zone_cuisine/carotte.png" alt=""><span>Nourrir</span></button>
-                    ${upgradeButtonHtml("cuisine", "./assets/img/zone_cuisine/pomme.png", "improveFeedRabbit()")}
+                    <button class="action-btn" onclick="feedRabbit()"><img class="action-icon" src="./assets/img/Zone_cuisine/carotte.png" alt=""><span>Nourrir</span></button>
+                    ${upgradeButtonHtml("cuisine", "./assets/img/Zone_cuisine/pomme.png", "improveFeedRabbit()")}
                 </div>`,
         },
         chambre: {
@@ -824,7 +1146,12 @@ document.addEventListener("DOMContentLoaded", () => {
         rabbitImage.onerror = () => { rabbitImage.onerror = null; rabbitImage.src = "./assets/img/species/mystery.svg"; };
         rabbitImage.src = zones[zone].image();
         rabbitImage.classList.toggle("photo-frame", zone === "default");
-        gameArea.appendChild(rabbitImage);
+        if (zone === "default") {
+            const activeSpot = document.getElementById("salonActiveRabbitSpot");
+            (activeSpot || gameArea).appendChild(rabbitImage);
+        } else {
+            gameArea.appendChild(rabbitImage);
+        }
         sceneLabel.textContent = zones[zone].label;
         document.querySelectorAll(".room-tab").forEach((btn) => btn.classList.toggle("active", btn.dataset.zone === zone));
     }
@@ -943,7 +1270,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const t = currentTrait();
         const combatBonus = (t.gain && (t.gain.friendship || 0)) * 2;
         const conditionBonus = Math.round(((progress().food + progress().energy + progress().cleanliness) / 3) / 5);
-        return progress().currentLevel * 8 + combatBonus + conditionBonus;
+        const attackBonus = ensureAttackTraining(progress()).bonus || 0;
+        return progress().currentLevel * 8 + combatBonus + conditionBonus + attackBonus;
     }
 
     window.openAdventure = function () {
@@ -995,52 +1323,181 @@ document.addEventListener("DOMContentLoaded", () => {
             autoSave();
         }
 
+        const playerHp = 90 + progress().currentLevel * 12;
+        const bossHp = Math.round(70 + (boss.difficulty || 20) * 1.4);
         gameArea.innerHTML = `
-            <div class="vs-screen">
-                <div class="vs-side">
-                    <img src="${s.coteImg || s.faceImg}" alt="${s.name}" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';">
-                    <div class="vs-name">${currentRabbitName() || s.name}</div>
-                    <div class="vs-sub">Niveau ${progress().currentLevel}</div>
+            <div class="fight-stage">
+                <div class="fight-hud-side player">
+                    <div class="fight-name">🐰 ${currentRabbitName() || s.name}</div>
+                    <div class="fight-hp"><div class="fight-hp-fill player-hp" style="width:100%"></div></div>
+                    <div class="fight-hp-text">${playerHp} / ${playerHp} PV</div>
+                    <div class="fight-crit-label">💥 Critique <span class="fight-crit-text">0%</span></div>
+                    <div class="fight-crit"><div class="fight-crit-fill player-crit-fill" style="width:0%"></div></div>
                 </div>
-                <div class="vs-mark">⚔️</div>
-                <div class="vs-side">
-                    <img src="${boss.coteImg || boss.faceImg}" alt="${boss.name}" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';">
-                    <div class="vs-name">${boss.name}</div>
-                    <div class="vs-sub">Difficulté ${boss.difficulty}</div>
+                <div class="fight-hud-side boss">
+                    <div class="fight-name">🥕 ${boss.name}</div>
+                    <div class="fight-hp"><div class="fight-hp-fill boss-hp" style="width:100%"></div></div>
+                    <div class="fight-hp-text">${bossHp} / ${bossHp} PV</div>
+                    <div class="fight-crit-label">💥 Critique <span class="fight-crit-text">0%</span></div>
+                    <div class="fight-crit"><div class="fight-crit-fill boss-crit-fill" style="width:0%"></div></div>
                 </div>
-            </div>
-            <div class="action-row" style="margin-top:16px;">
-                <button class="action-btn adventure" onclick="fightBoss('${key}')"><span>⚔️ Combattre !</span></button>
-                <button class="ghost-btn" onclick="openAdventure()">← Choisir un autre adversaire</button>
+                <div class="vs-screen battle-vs">
+                    <div class="vs-side"><img src="${s.coteImg || s.faceImg}" alt="${s.name}" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';"><div class="vs-sub">Niveau ${progress().currentLevel}</div></div>
+                    <div class="vs-mark">⚔️</div>
+                    <div class="vs-side"><img src="${boss.coteImg || boss.faceImg}" alt="${boss.name}" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';"><div class="vs-sub">Difficulté ${boss.difficulty}</div></div>
+                </div>
+                <div id="fightLog" class="fight-log">Prêt au combat !</div>
+                <div class="action-row fight-actions"><button class="action-btn adventure" onclick="fightBoss('${key}')"><span>⚔️ Combattre !</span></button><button class="ghost-btn" onclick="openAdventure()">← Autre adversaire</button></div>
             </div>`;
     };
 
-    window.fightBoss = function (key) {
+    function sleep(ms) { return new Promise((resolve) => setTimeout(resolve, ms)); }
+
+    function powerMode(entity) {
+        const explicit = String(entity?.powerMode || entity?.powerType || "").toLowerCase();
+        if (explicit) return explicit;
+        const text = String(entity?.power || "").toLowerCase();
+        if (/soign|restaur|régén|regen|guér|guer/.test(text)) return "heal";
+        if (/bouclier|défense|defense|résistance|resistance|esquive|ralent|immobil|endort|réduit|reduit|augmente|renforce|allié|allie/.test(text)) return "support";
+        return "attack";
+    }
+
+    function powerName(entity) {
+        const text = String(entity?.power || "").trim();
+        if (!text) return "Coup critique";
+        return text.split(":")[0].trim() || "Coup critique";
+    }
+
+    function criticalConfig(entity) {
+        const raw = entity?.critical ?? entity?.critique ?? entity?.crit ?? {};
+        const obj = typeof raw === "object" && raw !== null ? raw : {};
+        const powerMentionsCrit = /critique/i.test(entity?.power || "");
+        const chargePerTurn = Number(
+            obj.chargePerTurn ?? obj.charge ?? entity?.criticalCharge ?? entity?.critCharge ?? (powerMentionsCrit ? 34 : 20)
+        );
+        const multiplier = Number(
+            obj.multiplier ?? entity?.criticalMultiplier ?? entity?.critMultiplier ?? (powerMentionsCrit ? 2 : 1.75)
+        );
+        return {
+            chargePerTurn: Math.max(1, Math.min(100, Number.isFinite(chargePerTurn) ? chargePerTurn : 20)),
+            multiplier: Math.max(1.1, Number.isFinite(multiplier) ? multiplier : 1.75),
+        };
+    }
+
+    function setFightHp(side, hp, maxHp) {
+        const fill = gameArea.querySelector(`.${side}-hp`);
+        const text = fill?.closest('.fight-hud-side')?.querySelector('.fight-hp-text');
+        if (fill) fill.style.width = `${Math.max(0, hp) / maxHp * 100}%`;
+        if (text) text.textContent = `${Math.max(0, Math.round(hp))} / ${maxHp} PV`;
+    }
+
+    function setCritCharge(side, charge) {
+        const fill = gameArea.querySelector(`.${side}-crit-fill`);
+        const text = fill?.closest('.fight-hud-side')?.querySelector('.fight-crit-text');
+        const safe = Math.max(0, Math.min(100, charge));
+        if (fill) fill.style.width = `${safe}%`;
+        if (text) text.textContent = safe >= 100 ? "CRITIQUE PRÊT !" : `${Math.round(safe)}%`;
+    }
+
+    window.fightBoss = async function (key) {
         const boss = getBosses()[key];
+        const s = getSpecies()[game.species];
         if (!boss) return;
+        const fightButton = gameArea.querySelector('.fight-actions .action-btn');
+        if (fightButton) fightButton.disabled = true;
+
         const power = playerPower();
-        const successChance = Math.min(0.92, Math.max(0.08, 0.5 + (power - boss.difficulty) / (boss.difficulty * 2 || 1)));
-        const win = Math.random() < successChance;
+        const playerMaxHp = 90 + progress().currentLevel * 12;
+        const bossMaxHp = Math.round(70 + (boss.difficulty || 20) * 1.4);
+        let playerHp = playerMaxHp;
+        let bossHp = bossMaxHp;
+        let playerCrit = 0;
+        let bossCrit = 0;
+        const playerCritConfig = criticalConfig(s);
+        const bossCritConfig = criticalConfig(boss);
+        const log = gameArea.querySelector('#fightLog');
+        const playerImg = gameArea.querySelector('.battle-vs .vs-side:first-child img');
+        const bossImg = gameArea.querySelector('.battle-vs .vs-side:last-child img');
+
+        while (playerHp > 0 && bossHp > 0) {
+            playerCrit = Math.min(100, playerCrit + playerCritConfig.chargePerTurn);
+            setCritCharge('player', playerCrit);
+            await sleep(180);
+            const playerIsCrit = playerCrit >= 100;
+            let playerDamage = Math.max(6, Math.round(8 + power * 0.22 + Math.random() * 8));
+            let playerSupportHeal = 0;
+            if (playerIsCrit) {
+                const mode = powerMode(s);
+                playerDamage = Math.round(playerDamage * playerCritConfig.multiplier);
+                if (mode === "heal" || mode === "support") {
+                    playerSupportHeal = Math.max(4, Math.round(playerMaxHp * (mode === "heal" ? 0.20 : 0.10)));
+                    playerHp = Math.min(playerMaxHp, playerHp + playerSupportHeal);
+                    setFightHp('player', playerHp, playerMaxHp);
+                    // Les supports restent utiles en solo : leur pouvoir les soutient aussi,
+                    // tout en conservant une attaque critique moins brutale qu'un pur attaquant.
+                    playerDamage = Math.round(playerDamage * (mode === "heal" ? 0.60 : 0.75));
+                }
+                playerCrit = 0;
+                setCritCharge('player', 0);
+            }
+            bossHp = Math.max(0, bossHp - playerDamage);
+            if (log) log.textContent = playerIsCrit
+                ? `💥 ${powerName(s)} ! -${playerDamage} PV à ${boss.name}${playerSupportHeal ? ` · +${playerSupportHeal} PV pour ${currentRabbitName() || s.name}` : ""}`
+                : `${currentRabbitName() || s.name} attaque : -${playerDamage} PV à ${boss.name} !`;
+            bossImg?.classList.add(playerIsCrit ? 'fight-critical-hit' : 'fight-hit');
+            setFightHp('boss', bossHp, bossMaxHp);
+            await sleep(playerIsCrit ? 650 : 420);
+            bossImg?.classList.remove('fight-hit','fight-critical-hit');
+            if (bossHp <= 0) break;
+
+            bossCrit = Math.min(100, bossCrit + bossCritConfig.chargePerTurn);
+            setCritCharge('boss', bossCrit);
+            await sleep(180);
+            const bossIsCrit = bossCrit >= 100;
+            let bossDamage = Math.max(5, Math.round(5 + (boss.difficulty || 20) * 0.14 + Math.random() * 7));
+            let bossSupportHeal = 0;
+            if (bossIsCrit) {
+                const mode = powerMode(boss);
+                bossDamage = Math.round(bossDamage * bossCritConfig.multiplier);
+                if (mode === "heal" || mode === "support") {
+                    bossSupportHeal = Math.max(4, Math.round(bossMaxHp * (mode === "heal" ? 0.20 : 0.10)));
+                    bossHp = Math.min(bossMaxHp, bossHp + bossSupportHeal);
+                    setFightHp('boss', bossHp, bossMaxHp);
+                    bossDamage = Math.round(bossDamage * (mode === "heal" ? 0.60 : 0.75));
+                }
+                bossCrit = 0;
+                setCritCharge('boss', 0);
+            }
+            playerHp = Math.max(0, playerHp - bossDamage);
+            if (log) log.textContent = bossIsCrit
+                ? `💥 ${powerName(boss)} ! -${bossDamage} PV${bossSupportHeal ? ` · ${boss.name} récupère +${bossSupportHeal} PV` : ""}`
+                : `${boss.name} contre-attaque : -${bossDamage} PV !`;
+            playerImg?.classList.add(bossIsCrit ? 'fight-critical-hit' : 'fight-hit');
+            setFightHp('player', playerHp, playerMaxHp);
+            await sleep(bossIsCrit ? 650 : 420);
+            playerImg?.classList.remove('fight-hit','fight-critical-hit');
+        }
 
         progress().food = Math.max(progress().food - 7, 0);
         progress().energy = Math.max(progress().energy - 10, 0);
         progress().cleanliness = Math.max(progress().cleanliness - 5, 0);
 
-        if (win) {
-            const reward = Math.max(2, Math.round(boss.difficulty * 0.3) + Math.floor(Math.random() * 3));
+        if (bossHp <= 0) {
+            const reward = Math.max(2, Math.round((boss.difficulty || 20) * 0.3) + Math.floor(Math.random() * 3));
             game.carrots += reward;
             gainFriendship(3);
-            showToast(`Victoire contre ${boss.name} ! +${reward} 🥕`, "success");
+            if (log) log.textContent = `🏆 Victoire ! +${reward} 🥕 et +3 💛`;
             spawnParticles("🥕", 8);
         } else {
             progress().friendship = Math.max(progress().friendship - 5, 0);
-            showToast(`${boss.name} était trop fort... ${currentRabbitName() || "Ton lapin"} rentre fatigué. 😥`, "warn");
+            if (log) log.textContent = `${boss.name} gagne ce combat. ${currentRabbitName()} a besoin de repos 😴`;
             spawnParticles("💦", 5);
         }
         updateStatusBars();
         checkStatus();
         autoSave();
-        setTimeout(() => window.openAdventure(), 900);
+        const actions = gameArea.querySelector('.fight-actions');
+        if (actions) actions.innerHTML = `<button class="action-btn adventure" onclick="prepareFight('${key}')"><span>🔁 Rejouer</span></button><button class="ghost-btn" onclick="openAdventure()">← Boss</button>`;
     };
 
     // ---- Boutique à œufs (Salon) ----
@@ -1062,6 +1519,11 @@ document.addEventListener("DOMContentLoaded", () => {
             showToast("Tu n'as aucun œuf à ouvrir. Achète-en un d'abord !", "warn");
             return;
         }
+        if (game.pendingDuplicate) {
+            showToast("Choisis d'abord ce que tu fais du doublon précédent.", "warn");
+            refreshCurrentZone();
+            return;
+        }
         game.eggs -= 1;
         const result = rollEgg();
         const s = getSpecies()[result.speciesKey];
@@ -1070,13 +1532,21 @@ document.addEventListener("DOMContentLoaded", () => {
             game.ownedSpecies.push(result.speciesKey);
             game.speciesTraits[result.speciesKey] = result.trait;
             game.speciesNames[result.speciesKey] = s.name;
+            showToast(`🥚 L'œuf éclot... c'est ${s.name} (${RARITY_META[s.rarity].label}) ! Nouveau dans ton encyclopédie 📖.`, "levelup");
+        } else {
+            if (!game.duplicateCounts) game.duplicateCounts = {};
+            game.duplicateCounts[result.speciesKey] = (game.duplicateCounts[result.speciesKey] || 0) + 1;
+            const rewards = { commun: 5, rare: 10, epique: 18, legendaire: 30, mythique: 45, divin: 70, secret: 70 };
+            const carrotReward = rewards[s.rarity] || 5;
+            const training = ensureAttackTraining(progressForSpecies(result.speciesKey));
+            if (training.completed) {
+                game.carrots += carrotReward;
+                showToast(`🥚 Doublon : ${s.name}. Son attaque est déjà au maximum : +${carrotReward} 🥕 automatiquement.`, "levelup");
+            } else {
+                game.pendingDuplicate = { speciesKey: result.speciesKey, carrotReward };
+                showToast(`🥚 Doublon : ${s.name} ! Choisis entre des carottes ou un fragment d'attaque.`, "levelup");
+            }
         }
-        showToast(
-            isNew
-                ? `🥚 L'œuf éclot... c'est ${s.name} (${RARITY_META[s.rarity].label}) ! Nouveau dans ton encyclopédie 📖 — clique sur lui dans le Salon pour jouer avec.`
-                : `🥚 L'œuf éclot... encore un ${s.name} (${RARITY_META[s.rarity].label}). Il rejoint la collection.`,
-            "levelup"
-        );
         spawnParticles("✨", 10);
         autoSave();
         refreshCurrentZone();

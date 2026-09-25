@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    (window.LapinousContentReady || Promise.resolve()).then(() => {
+    Promise.all([window.LapinousContentReady || Promise.resolve(), window.LapinousPuzzlesReady || Promise.resolve()]).then(() => {
     const toastContainer = document.getElementById("toastContainer");
 
     function showToast(message, type = "") {
@@ -43,6 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         renderSpeciesTable();
         renderBossTable();
+        renderPuzzleAdmin();
         renderCharts();
     }
 
@@ -333,6 +334,111 @@ document.addEventListener("DOMContentLoaded", () => {
         e.target.value = "";
     });
 
+
+    // ============================================================
+    // PUZZLES — tableau + menu déroulant illustré pour lier X lapins
+    // ============================================================
+    function puzzleSpeciesDropdown(selected = []) {
+        const set = new Set(selected || []);
+        const options = Object.entries(getSpecies())
+            .filter(([key, sp]) => !sp.hidden || key === "az")
+            .sort((a, b) => (a[1].name || a[0]).localeCompare(b[1].name || b[0]))
+            .map(([key, sp]) => {
+                const img = sp.faceImg || sp.coteImg || "./assets/img/species/mystery.svg";
+                return `<label class="puzzle-species-option">
+                    <input type="checkbox" value="${key}" ${set.has(key) ? "checked" : ""}>
+                    <img src="${img}" alt="" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';">
+                    <span><strong>${sp.name || key}</strong><small>${key}</small></span>
+                </label>`;
+            }).join("");
+        return `<details class="puzzle-species-dropdown">
+            <summary>🐰 ${set.size} lapin${set.size > 1 ? "s" : ""} lié${set.size > 1 ? "s" : ""} — choisir</summary>
+            <div class="puzzle-species-menu">${options}</div>
+        </details>`;
+    }
+
+    function puzzleAdminRow(puz, index) {
+        return `<tr data-puzzle-index="${index}">
+            <td class="puzzle-admin-image-cell"><img src="${puz.image || './assets/img/species/mystery.svg'}" alt="${puz.title || ''}" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';"></td>
+            <td><input class="name-input" data-puzzle-field="id" value="${puz.id || ''}"></td>
+            <td><input class="name-input" data-puzzle-field="title" value="${puz.title || ''}"></td>
+            <td><input class="name-input puzzle-path-input" data-puzzle-field="image" value="${puz.image || ''}" placeholder="./assets/img/puzzle/image.png"></td>
+            <td class="puzzle-links-cell">${puzzleSpeciesDropdown(puz.linkedSpecies)}</td>
+            <td class="row-actions puzzle-row-actions"><button class="slot-btn save" data-save-puzzle>💾</button><button class="slot-btn clear" data-delete-puzzle>🗑️</button></td>
+        </tr>`;
+    }
+
+    function renderPuzzleAdmin() {
+        const box = document.getElementById("puzzleAdminList");
+        if (!box || !window.getPuzzleCatalog) return;
+        const puzzles = window.getPuzzleCatalog() || [];
+        box.innerHTML = puzzles.length ? `<div class="puzzle-admin-table-wrap"><table class="puzzle-admin-table">
+            <thead><tr><th>Image</th><th>Identifiant</th><th>Titre</th><th>Chemin</th><th>Lapins liés</th><th></th></tr></thead>
+            <tbody>${puzzles.map(puzzleAdminRow).join("")}</tbody></table></div>` : '<p class="dash-note">Aucun puzzle pour le moment.</p>';
+
+        box.querySelectorAll('[data-save-puzzle]').forEach((btn) => btn.addEventListener('click', () => {
+            const row = btn.closest('tr[data-puzzle-index]');
+            const idx = Number(row.dataset.puzzleIndex);
+            const list = [...(window.getPuzzleCatalog() || [])];
+            const current = { ...(list[idx] || {}) };
+            row.querySelectorAll('[data-puzzle-field]').forEach((el) => current[el.dataset.puzzleField] = el.value.trim());
+            current.linkedSpecies = Array.from(row.querySelectorAll('.puzzle-species-menu input:checked')).map((el) => el.value);
+            if (!current.id) { showToast('Il faut un identifiant de puzzle.', 'warn'); return; }
+            list[idx] = current;
+            window.saveCustomPuzzles(list);
+            renderPuzzleAdmin();
+            showToast(`Puzzle "${current.title || current.id}" enregistré ✅`, 'success');
+        }));
+        box.querySelectorAll('[data-delete-puzzle]').forEach((btn) => btn.addEventListener('click', () => {
+            const row = btn.closest('tr[data-puzzle-index]');
+            const idx = Number(row.dataset.puzzleIndex);
+            const list = [...(window.getPuzzleCatalog() || [])];
+            const removed = list.splice(idx, 1)[0];
+            window.saveCustomPuzzles(list);
+            renderPuzzleAdmin();
+            showToast(`Puzzle "${removed?.title || removed?.id || ''}" supprimé.`);
+        }));
+        box.querySelectorAll('.puzzle-species-menu input').forEach((cb) => cb.addEventListener('change', () => {
+            const details = cb.closest('.puzzle-species-dropdown');
+            const count = details.querySelectorAll('input:checked').length;
+            details.querySelector('summary').textContent = `🐰 ${count} lapin${count > 1 ? 's' : ''} lié${count > 1 ? 's' : ''} — choisir`;
+        }));
+    }
+
+    document.getElementById('addPuzzleBtn')?.addEventListener('click', () => {
+        const list = [...(window.getPuzzleCatalog() || [])];
+        list.push({ id: `puzzle_${Date.now()}`, title: 'Nouveau puzzle', image: './assets/img/puzzle/', linkedSpecies: [] });
+        window.saveCustomPuzzles(list);
+        renderPuzzleAdmin();
+    });
+
+    document.getElementById('exportPuzzlesBtn')?.addEventListener('click', () => {
+        const bundle = { type: 'lapinous-puzzles', version: 1, levels: window.getPuzzleLevels ? window.getPuzzleLevels() : [], puzzles: window.getPuzzleCatalog ? window.getPuzzleCatalog() : [] };
+        const blob = new Blob([JSON.stringify(bundle, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob); const a = document.createElement('a');
+        a.href = url; a.download = 'lapinous-puzzles.json'; a.click(); URL.revokeObjectURL(url);
+        showToast('Catalogue des puzzles exporté ✅', 'success');
+    });
+
+    document.getElementById('importPuzzlesInput')?.addEventListener('change', (e) => {
+        const file = e.target.files?.[0]; if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => { try {
+            const data = JSON.parse(reader.result);
+            if (!Array.isArray(data.puzzles)) throw new Error('puzzles manquants');
+            window.saveCustomPuzzles(data.puzzles);
+            if (Array.isArray(data.levels)) window.saveCustomPuzzleLevels(data.levels);
+            renderPuzzleAdmin(); showToast('Puzzles importés ✅', 'success');
+        } catch (err) { showToast('Fichier de puzzles invalide.', 'warn'); } };
+        reader.readAsText(file); e.target.value = '';
+    });
+
+    document.getElementById('resetPuzzlesBtn')?.addEventListener('click', () => {
+        window.clearCustomPuzzles?.();
+        renderPuzzleAdmin();
+        showToast("Modifications locales des puzzles annulées.");
+    });
+
     // ---- Sécurité : changer le code du Dashboard ----
     document.getElementById("changeCodeForm").addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -559,15 +665,25 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("sortEventBtn").addEventListener("click", () => sortSpeciesTable("event"));
 
     const speciesSearchInput = document.getElementById("speciesSearch");
-    if (speciesSearchInput) {
-        speciesSearchInput.addEventListener("input", () => {
-            const q = speciesSearchInput.value.trim().toLowerCase();
-            document.querySelectorAll("#speciesTableBody tr").forEach((tr) => {
-                if (!tr.dataset.search) return; // ligne d'ajout, toujours visible
-                tr.style.display = q === "" || tr.dataset.search.includes(q) ? "" : "none";
-            });
+    const speciesEventFilter = document.getElementById("speciesEventFilter");
+    function applySpeciesFilters() {
+        const q = (speciesSearchInput?.value || "").trim().toLowerCase();
+        const eventFilter = speciesEventFilter?.value || "";
+        document.querySelectorAll("#speciesTableBody tr").forEach((tr) => {
+            if (!tr.dataset.search) return; // ligne d'ajout, toujours visible
+            const s = getSpecies()[tr.dataset.key];
+            const ev = speciesEventValue(s);
+            const events = ev ? ev.split(",").map((x) => x.trim()).filter(Boolean) : [];
+            const matchesText = q === "" || tr.dataset.search.includes(q);
+            const matchesEvent = !eventFilter
+                || (eventFilter === "none" && events.length === 0)
+                || (eventFilter === "multi" && events.length > 1)
+                || events.includes(eventFilter);
+            tr.style.display = matchesText && matchesEvent ? "" : "none";
         });
     }
+    if (speciesSearchInput) speciesSearchInput.addEventListener("input", applySpeciesFilters);
+    if (speciesEventFilter) speciesEventFilter.addEventListener("change", applySpeciesFilters);
 
     renderDashboard();
     });

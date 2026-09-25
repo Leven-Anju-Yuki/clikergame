@@ -153,6 +153,19 @@
                 </button>
             </section>
 
+
+            <section class="dash-section pm-panel-wide" id="puzzleDashboardSection">
+                <h2>🧩 Puzzles</h2>
+                <p class="panel-desc">Gère les puzzles depuis le Dashboard. Tu peux relier chaque image à autant de lapins que tu veux. Les identifiants correspondent aux lapins du jeu. Après modification, exporte <code>lapinous-puzzles.json</code> et remplace celui à la racine du projet.</p>
+                <div id="puzzleAdminList" class="puzzle-admin-list"></div>
+                <div class="save-io-row" style="margin-top:14px;">
+                    <button id="addPuzzleBtn" class="io-btn" type="button">➕ Ajouter un puzzle</button>
+                    <button id="exportPuzzlesBtn" class="io-btn" type="button">⬇️ Exporter lapinous-puzzles.json</button>
+                    <label class="io-btn io-btn-file">⬆️ Importer un JSON<input type="file" id="importPuzzlesInput" accept="application/json" hidden></label>
+                    <button id="resetPuzzlesBtn" class="io-btn" type="button">↩️ Revenir au JSON d'origine</button>
+                </div>
+            </section>
+
             <section class="dash-section pm-panel-wide">
                 <h2>🐰 Lapins</h2>
                 <p class="panel-desc">
@@ -164,13 +177,22 @@
                     <code>assets/img/lapin_evenement/</code>, uploade simplement leurs photos ici
                     comme pour les autres.
                 </p>
-                <input
-                    type="text"
-                    id="speciesSearch"
-                    class="name-input"
-                    placeholder="🔍 Rechercher un lapin (nom, rareté, histoire, citation...)"
-                    style="margin-bottom: 10px"
-                />
+                <div class="dashboard-filter-row">
+                    <input
+                        type="text"
+                        id="speciesSearch"
+                        class="name-input"
+                        placeholder="🔍 Rechercher un lapin (nom, rareté, histoire, événement...)"
+                    />
+                    <select id="speciesEventFilter" class="name-input" aria-label="Filtrer par événement">
+                        <option value="">Tous les événements</option>
+                        <option value="none">Sans événement</option>
+                        <option value="halloween">🎃 Halloween</option>
+                        <option value="noel">🎄 Noël</option>
+                        <option value="paques">🐣 Pâques</option>
+                        <option value="multi">🎉 Multi-saisons</option>
+                    </select>
+                </div>
                 <div class="pm-table-wrap">
                     <table class="pm-table">
                         <thead>
@@ -278,7 +300,7 @@
             <section class="dash-section">
                 <h2>🔒 Sécurité</h2>
                 <p class="dash-note">
-                    Code par défaut : <code>0000</code>. Change-le dès maintenant si tu veux
+                    Code par défaut : <code>2653</code>. Change-le dès maintenant si tu veux
                     vraiment protéger ce dashboard.
                 </p>
                 <form id="changeCodeForm" class="dash-form" style="max-width: 340px">
@@ -301,6 +323,7 @@
 
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script src="./assets/js/species-data.js"></script>
+        <script src="./assets/js/puzzle-data.js"></script>
         <script src="./assets/js/dashboard-access.js"></script>
         <script src="./assets/js/dashboard.js"></script>
     </body>
