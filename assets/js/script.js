@@ -1177,10 +1177,43 @@ document.addEventListener("DOMContentLoaded", () => {
     setInterval(updateDayNight, 5 * 60 * 1000);
 
     const SEASON_BANNER_TEXT = {
-        halloween: "🎃 Halloween est là ! Des lapins effrayants rôdent dans les œufs...",
-        noel: "🎄 Noël est là ! Des invités légendaires apparaissent dans les œufs...",
-        paques: "🐣 Pâques est là ! La chasse aux lapins légendaires est ouverte...",
+        halloween: "🎃 HALLOWEEN — Des lapins mystérieux rôdent dans les œufs !",
+        noel: "🎄 NOËL — Les gardiens de l'hiver peuvent apparaître dans les œufs !",
+        paques: "🐣 PÂQUES — La grande chasse aux lapins saisonniers est ouverte !",
     };
+    const SEASON_ICONS = { halloween: "👻 🦇 🎃", noel: "❄️ 🎁 ✨", paques: "🌸 🥚 🐣" };
+
+    let seasonalAudioContext = null;
+    let lastSeasonSound = "";
+    function playSeasonSound(eventName, force = false) {
+        if (!eventName || (!force && lastSeasonSound === eventName)) return;
+        try {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (!AudioCtx) return;
+            seasonalAudioContext = seasonalAudioContext || new AudioCtx();
+            if (seasonalAudioContext.state === "suspended") seasonalAudioContext.resume();
+            const ctx = seasonalAudioContext;
+            const now = ctx.currentTime + 0.03;
+            const melodies = {
+                halloween: [[196, 0], [165, .16], [131, .34], [98, .56]],
+                noel: [[523, 0], [659, .14], [784, .28], [1047, .48]],
+                paques: [[523, 0], [659, .12], [587, .24], [784, .40]],
+            };
+            (melodies[eventName] || melodies.paques).forEach(([freq, offset], i) => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = eventName === "halloween" ? "triangle" : "sine";
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.0001, now + offset);
+                gain.gain.exponentialRampToValueAtTime(i === 0 ? 0.09 : 0.065, now + offset + 0.025);
+                gain.gain.exponentialRampToValueAtTime(0.0001, now + offset + 0.20);
+                osc.connect(gain); gain.connect(ctx.destination);
+                osc.start(now + offset); osc.stop(now + offset + 0.22);
+            });
+            lastSeasonSound = eventName;
+        } catch (e) { /* Le jeu reste jouable même si l'audio est indisponible. */ }
+    }
+
     function updateSeasonalDecor() {
         const active = currentActiveEvents();
         ["halloween", "noel", "paques"].forEach((e) => body.classList.toggle("season-" + e, active.includes(e)));
@@ -1189,13 +1222,33 @@ document.addEventListener("DOMContentLoaded", () => {
         if (active.length === 0) {
             banner.style.display = "none";
             banner.innerHTML = "";
+            lastSeasonSound = "";
             return;
         }
-        banner.innerHTML = active.map((e) => `<span>${SEASON_BANNER_TEXT[e]}</span>`).join("");
+        banner.innerHTML = active.map((e) => `
+            <div class="event-banner-line event-${e}">
+                <span class="event-banner-icons" aria-hidden="true">${SEASON_ICONS[e]}</span>
+                <strong>${SEASON_BANNER_TEXT[e]}</strong>
+                <button type="button" class="event-sound-btn" data-event-sound="${e}" aria-label="Jouer le son de ${EVENT_LABELS[e] || e}" title="Jouer le son">🔊</button>
+            </div>`).join("");
         banner.style.display = "flex";
+        banner.querySelectorAll("[data-event-sound]").forEach((btn) => {
+            btn.addEventListener("click", () => playSeasonSound(btn.dataset.eventSound, true));
+        });
     }
     updateSeasonalDecor();
     setInterval(updateSeasonalDecor, 5 * 60 * 1000);
+
+    // Les navigateurs interdisent l'audio automatique avant une interaction.
+    // Au premier clic/touche du joueur, on joue le jingle de l'événement actif une fois.
+    function unlockSeasonAudio() {
+        const active = currentActiveEvents();
+        if (active.length) playSeasonSound(active[0]);
+        window.removeEventListener("pointerdown", unlockSeasonAudio);
+        window.removeEventListener("keydown", unlockSeasonAudio);
+    }
+    window.addEventListener("pointerdown", unlockSeasonAudio, { once: true });
+    window.addEventListener("keydown", unlockSeasonAudio, { once: true });
 
     // ============================================================
     // RAPPEL DE RETOUR

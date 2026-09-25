@@ -346,3 +346,124 @@ body.dashboard-auth-pending .dash-main, body.dashboard-auth-pending .dash-header
 @media only screen and (max-width: 360px) {
     .room-tab span:not(.tab-emoji) { display: none; }
 }
+
+/* ============================================================
+   ÉVÉNEMENTS SAISONNIERS — ambiance renforcée
+   ============================================================ */
+.event-banner {
+    position: relative;
+    overflow: hidden;
+    padding: 0;
+    border: 3px solid rgba(255,255,255,.75);
+    box-shadow: 0 7px 0 rgba(90,64,52,.18), 0 12px 30px rgba(0,0,0,.12);
+}
+.event-banner-line {
+    width: 100%;
+    min-height: 74px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    text-shadow: 0 1px 0 rgba(255,255,255,.35);
+}
+.event-banner-icons { font-size: 1.45em; letter-spacing: 4px; white-space: nowrap; }
+.event-banner-line strong { font-family: var(--font-display); font-size: 1.02em; line-height: 1.2; }
+.event-sound-btn {
+    width: 42px; height: 42px; border: 2px solid rgba(255,255,255,.75); border-radius: 50%;
+    background: rgba(255,255,255,.28); cursor: pointer; font-size: 1.05em; flex-shrink: 0;
+    box-shadow: 0 3px 0 rgba(0,0,0,.12);
+}
+.event-sound-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,.12); }
+.event-halloween { background: linear-gradient(135deg,#ff9b38 0%,#5e245f 56%,#25112d 100%); color:#fff7e8; text-shadow:none; }
+.event-noel { background: linear-gradient(135deg,#1f8f5f 0%,#145b49 50%,#b32635 100%); color:#fff; text-shadow:none; }
+.event-paques { background: linear-gradient(135deg,#ffd2e8 0%,#fff0a8 50%,#bce9d0 100%); color:#60424f; }
+
+body.season-halloween { --pink:#f5963d; --pink-deep:#71326f; --pink-pale:#fbe1c4; }
+body.season-noel { --pink:#c94d59; --pink-deep:#9e2838; --pink-pale:#e4f3ea; --green:#78bf9b; --green-deep:#2f8b62; }
+body.season-paques { --pink:#f3a8cc; --pink-deep:#dd77ad; --pink-pale:#ffe4f1; --green:#b6e4be; }
+
+body.season-halloween::after {
+    background:
+      radial-gradient(circle at 15% 18%, rgba(255,128,0,.28) 0 6%, transparent 7%),
+      radial-gradient(circle at 88% 14%, rgba(127,45,120,.22) 0 8%, transparent 9%),
+      linear-gradient(180deg, rgba(47,17,51,.18), rgba(20,8,25,.25));
+}
+body.season-halloween .brand-title::after { content:"  🎃"; }
+body.season-noel .brand-title::after { content:"  ❄️"; }
+body.season-paques .brand-title::after { content:"  🌸"; }
+body.season-halloween #rabbitImage { filter: drop-shadow(0 0 12px rgba(255,122,35,.5)) drop-shadow(0 8px 8px var(--shadow-soft)); }
+body.season-noel #rabbitImage { filter: drop-shadow(0 0 12px rgba(255,255,255,.75)) drop-shadow(0 8px 8px var(--shadow-soft)); }
+body.season-paques #rabbitImage { filter: drop-shadow(0 0 12px rgba(255,170,210,.55)) drop-shadow(0 8px 8px var(--shadow-soft)); }
+
+/* ============================================================
+   RESPONSIVE RENFORCÉ — mobile, tablette, petits portables
+   ============================================================ */
+img { max-width: 100%; }
+.scene-card, #statusBars, #friendshipBarContainer, .event-banner { min-width: 0; }
+.action-row > * { max-width: 100%; }
+.modal-dialog { max-width: min(94vw, 800px); margin-left: auto; margin-right: auto; }
+
+@media only screen and (max-width: 900px) {
+    .container { max-width: 680px; padding-left: 16px; padding-right: 16px; }
+    .dash-main { max-width: 100%; padding-left: 14px; padding-right: 14px; }
+    .pm-panel-wide { width: 100%; margin-left: 0; margin-right: 0; border-radius: 20px; padding-left: 14px; padding-right: 14px; }
+    .chart-grid { grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); }
+    .pm-table-wrap { width: 100%; max-width: 100%; -webkit-overflow-scrolling: touch; }
+}
+
+@media only screen and (max-width: 600px) {
+    body { padding-bottom: 104px; background-attachment: scroll; }
+    .container { padding: 72px 10px 0; }
+    .brand { width: 100%; justify-content: center; flex-wrap: wrap; margin-bottom: 12px; }
+    .brand-title { font-size: clamp(1.55rem, 8vw, 2rem); text-align: center; }
+    .rules-btn, .save-btn, .encyclopedia-btn { top: 10px; }
+    .rules-btn { left: 10px; }
+    .encyclopedia-btn { left: 62px; }
+    .save-btn { right: 10px; }
+    #friendshipBarContainer { padding: 12px 14px; border-radius: 20px; }
+    .friendship-top { gap: 8px; flex-wrap: wrap; }
+    .scene-card { border-radius: 22px; padding: 12px 10px 18px; }
+    #gameArea { min-height: 300px; padding: 18px 8px; border-radius: 18px; gap: 14px; }
+    #rabbitImage, #rabbitImage.photo-frame { width: min(58vw, 205px); max-height: 220px; }
+    .action-row { width: 100%; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
+    .action-btn { min-width: 0; width: 100%; padding: 12px 8px; border-radius: 18px; }
+    .action-btn span { font-size: .95em; text-align:center; line-height:1.1; }
+    .action-icon { width: 44px; height: 44px; }
+    #statusBars { padding: 14px; gap: 11px; margin-bottom: 96px; border-radius: 20px; }
+    .difzone { gap: 2px; padding: 7px 4px calc(7px + env(safe-area-inset-bottom)); }
+    .room-tab { min-width: 0; padding: 7px 2px; font-size: .72em; }
+    .room-tab .tab-emoji { font-size: 1.5em; }
+    .event-banner-line { grid-template-columns: 1fr auto; min-height: 68px; padding: 10px 12px; }
+    .event-banner-icons { grid-column: 1 / -1; font-size: 1.15em; line-height: 1; }
+    .event-banner-line strong { font-size: .9em; }
+    .event-sound-btn { width: 38px; height: 38px; }
+    .single-carousel { gap: 6px; }
+    .carousel-arrow { width: 38px; height: 38px; }
+    .adoption-screen { align-items: flex-start; padding: 20px 8px; }
+    .adoption-content { gap: 12px; }
+    .adoption-title { font-size: 1.55em; }
+    .adoption-card { width: min(62vw, 230px); padding: 14px 10px; }
+    .adoption-photo { width: min(42vw, 150px); height: min(42vw, 150px); }
+    .encyclopedia-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+    .encyclopedia-detail-card { flex-direction: column; align-items: center; }
+    .entry-header { flex-wrap: wrap; }
+    .modal-body { padding: 18px 14px; }
+    .save-slot { align-items: stretch; flex-direction: column; }
+    .save-slot-actions { flex-wrap: wrap; }
+    .save-slot-actions .slot-btn { flex: 1 1 110px; }
+    .dash-header { padding: 12px; gap: 8px; align-items: flex-start; }
+    .dash-header-title { font-size: 1.05em; }
+    .dash-section { padding: 14px 12px; border-radius: 18px; }
+    .rate-row label { flex: 1 1 90px; }
+    .rate-row input { width: 100%; }
+    .slice-detail ul { columns: 1; }
+}
+
+@media only screen and (max-width: 380px) {
+    .action-row { grid-template-columns: 1fr; }
+    .room-tab span:not(.tab-emoji) { display:none; }
+    .room-tab .tab-emoji { font-size:1.65em; }
+    .encyclopedia-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+    .event-banner-line strong { font-size: .82em; }
+}
