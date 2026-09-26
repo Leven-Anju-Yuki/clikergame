@@ -189,26 +189,8 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <div class="save-new-row">
-                            <input
-                                type="text"
-                                id="newSaveName"
-                                class="name-input"
-                                placeholder="Nom de la sauvegarde (optionnel, sinon date/heure)"
-                                style="flex: 1"
-                            />
-                            <button
-                                id="newSaveBtn"
-                                class="io-btn"
-                                type="button"
-                                style="max-width: 200px"
-                            >
-                                💾 Créer une sauvegarde
-                            </button>
-                        </div>
-                        <div id="saveSlots" class="save-slots"></div>
-                        <hr />
-                        <div class="save-io-row">
+                        <div class="save-section-title">📦 Import / export</div>
+                        <div class="save-io-row save-io-main">
                             <button id="exportBtn" class="io-btn" type="button">
                                 ⬇️ Exporter en JSON
                             </button>
@@ -220,6 +202,14 @@
                                     hidden
                             /></label>
                         </div>
+
+                        <!-- Éléments historiques conservés hors écran pour compatibilité JS -->
+                        <div class="legacy-save-ui" aria-hidden="true">
+                            <input type="text" id="newSaveName" />
+                            <button id="newSaveBtn" type="button"></button>
+                            <div id="saveSlots"></div>
+                        </div>
+
                         <hr />
                         <h6>📁 Dossier de sauvegardes (Chrome / Edge uniquement)</h6>
                         <p class="dash-note">

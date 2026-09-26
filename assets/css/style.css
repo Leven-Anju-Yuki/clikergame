@@ -1634,3 +1634,31 @@ body.game-running.default .salon-rabbit-friend:nth-child(3) { z-index: 10; }
 body.game-running.default .salon-rabbit-friend:nth-child(4) { z-index: 8; }
 body.game-running.default .salon-rabbit-friend:nth-child(5) { z-index: 9; }
 body.game-running.default .salon-rabbit-friend:nth-child(6) { z-index: 10; }
+
+
+/* ============================================================
+   V13 — fenêtre de sauvegarde simplifiée
+   ============================================================ */
+.legacy-save-ui { display:none !important; }
+.save-section-title {
+    font-family:var(--font-display);
+    font-weight:700;
+    color:var(--ink);
+    margin-bottom:10px;
+    font-size:1rem;
+}
+.save-io-main {
+    margin-bottom:6px;
+}
+#saveModal .modal-body > hr {
+    border:0;
+    border-top:1px solid rgba(138,106,61,.20);
+    margin:18px 0;
+}
+#saveModal .io-btn {
+    background:rgba(247,240,225,.90);
+    border-color:rgba(138,106,61,.35);
+}
+#saveModal .io-btn:hover {
+    background:rgba(233,221,193,.96);
+}
