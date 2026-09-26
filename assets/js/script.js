@@ -1386,7 +1386,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 image: () => `./assets/img/Zone_jardin/entrenement.png`,
                 content: () => {
                     const icon = progress().improvements.jardin
-                        ? "./assets/img/Zone_jardin/agilite.png2"
+                        ? "./assets/img/Zone_jardin/agilite.png"
                         : "./assets/img/Zone_jardin/cliker.png";
                     const btnClass = progress().improvements.jardin
                         ? "action-btn upgraded"
