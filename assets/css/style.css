@@ -1,10 +1,10 @@
 :root {
-    --paper: #fff7ec; --paper-soft: #fffdf9;
-    --pink: #ffb5c8; --pink-deep: #ff7fa0; --pink-pale: #ffe3ec;
-    --green: #9fd8a3; --green-deep: #6ebf77;
-    --gold: #f5c34d; --gold-deep: #e0a52f;
-    --ink: #5a4034; --ink-soft: #8b6b57;
-    --shadow: rgba(90, 64, 52, 0.18); --shadow-soft: rgba(90, 64, 52, 0.1);
+    --paper: #f7f0e1; --paper-soft: #fffaf2;
+    --pink: #cbb58b; --pink-deep: #8a6a3d; --pink-pale: #efe5cf;
+    --green: #9db88a; --green-deep: #6f8b57;
+    --gold: #e0b254; --gold-deep: #bc8a2f;
+    --ink: #574132; --ink-soft: #7f6850;
+    --shadow: rgba(83, 58, 37, 0.18); --shadow-soft: rgba(83, 58, 37, 0.1);
     --font-display: "Baloo 2", "Quicksand", sans-serif;
     --font-body: "Quicksand", sans-serif;
     --overlay-top: rgba(255, 247, 236, 0.55); --overlay-bottom: rgba(255, 247, 236, 0.85);
@@ -20,11 +20,11 @@ body[data-time="night"] { --overlay-top: rgba(30, 24, 50, 0.55); --overlay-botto
 body[data-time="evening"] { --overlay-top: rgba(255, 190, 150, 0.45); --overlay-bottom: rgba(120, 70, 90, 0.7); }
 body[data-time="morning"] { --overlay-top: rgba(255, 247, 220, 0.4); --overlay-bottom: rgba(255, 240, 200, 0.75); }
 
-body.default { background-image: url(../img/fond/salon.jpg); }
-body.cuisine { background-image: url(../img/fond/cuisine.jpg); }
-body.chambre { background-image: url(../img/fond/chambre.jpg); }
-body.jardin { background-image: url(../img/fond/jardin.jpeg); }
-body.sdb { background-image: url(../img/fond/salle_de_bain.jpeg); }
+body.default { background-image: url(../img/fond/salon.png); }
+body.cuisine { background-image: url(../img/fond/cuisine.png); }
+body.chambre { background-image: url(../img/fond/chambre.png); }
+body.jardin { background-image: url(../img/fond/jardin.png); }
+body.sdb { background-image: url(../img/fond/salle_de_bain.png); }
 
 .event-banner {
     width: 100%; display: none; flex-direction: column; gap: 4px; align-items: center;
@@ -85,7 +85,7 @@ body.season-noel .scene-card::before {
 /* ---------------- SCÈNE ---------------- */
 .scene-card { width: 100%; background: var(--paper-soft); border-radius: 32px; padding: 18px 18px 26px; box-shadow: 0 10px 0 var(--shadow-soft), 0 12px 28px var(--shadow-soft); margin-bottom: 20px; }
 .scene-label { font-family: var(--font-display); font-weight: 600; font-size: 1.5em; text-align: center; margin-bottom: 14px; }
-#gameArea { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; min-height: 340px; border-radius: 24px; background: linear-gradient(180deg, var(--pink-pale) 0%, #fff 100%); padding: 26px 14px; overflow: hidden; }
+#gameArea { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; min-height: 340px; border-radius: 24px; background: linear-gradient(180deg, rgba(244,236,218,.94) 0%, rgba(255,250,242,.98) 100%); padding: 26px 14px; overflow: hidden; }
 .welcome-msg { font-weight: 600; color: var(--ink-soft); text-align: center; font-size: 1.05em; max-width: 320px; }
 
 #rabbitImage { order: -1; width: 230px; height: auto; display: block; filter: drop-shadow(0 8px 8px var(--shadow-soft)); }
@@ -101,12 +101,12 @@ body.season-noel .scene-card::before {
 
 /* ---------------- BOUTONS D'ACTION ---------------- */
 .action-row { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
-.action-btn { position: relative; display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 128px; background: linear-gradient(180deg, var(--pink) 0%, var(--pink-deep) 100%); border: none; border-radius: 24px; padding: 16px 18px; box-shadow: 0 5px 0 #d85f82; cursor: pointer; }
+.action-btn { position: relative; display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 128px; background: linear-gradient(180deg, #d9c398 0%, #9b7547 100%); border: none; border-radius: 24px; padding: 16px 18px; box-shadow: 0 5px 0 #76522b; cursor: pointer; }
 .action-btn:active { transform: translateY(4px); box-shadow: 0 1px 0 #d85f82; }
 .action-btn span { font-family: var(--font-display); font-weight: 600; font-size: 1.15em; color: #fff; }
 .action-icon { width: 56px; height: 56px; object-fit: contain; }
 .action-btn.upgrade { background: linear-gradient(180deg, var(--gold) 0%, var(--gold-deep) 100%); box-shadow: 0 5px 0 #b9821e; }
-.action-btn.upgraded { background: linear-gradient(180deg, #ffd27f 0%, var(--gold-deep) 100%); box-shadow: 0 5px 0 #b9821e; }
+.action-btn.upgraded { background: linear-gradient(180deg, #b8c98f 0%, #708952 100%); box-shadow: 0 5px 0 #51643a; }
 .action-btn.upgraded::after { content: "✨"; position: absolute; top: -10px; right: -8px; font-size: 1.3em; }
 .action-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
@@ -125,7 +125,7 @@ body.battle-scene .boss-power, body.battle-scene .boss-diff { color: #d9b6bd; }
 .vs-sub { font-size: 0.8em; color: #d9b6bd; }
 .vs-mark { font-size: 2em; }
 .action-btn.adventure { background: linear-gradient(180deg, #b06a6a 0%, #7a3a3a 100%); box-shadow: 0 5px 0 #5a2a2a; }
-.carrot-counter { font-family: var(--font-display); font-weight: 700; color: var(--ink); background: var(--pink-pale); border-radius: 999px; padding: 4px 14px; font-size: 0.95em; }
+.carrot-counter { font-family: var(--font-display); font-weight: 700; color: var(--ink); background: rgba(247,240,224,.95); border:1px solid rgba(138,106,61,.16); border-radius: 999px; padding: 4px 14px; font-size: 0.95em; box-shadow:0 3px 10px rgba(83,58,37,.08); }
 .egg-shop { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
 
 .collection-switcher { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 8px; }
@@ -606,7 +606,7 @@ body.battle-scene #gameArea { background: rgba(20, 15, 12, .45); }
 .console-object-screen small { font-family:var(--font-display); letter-spacing:2px; font-weight:700; }
 .console-object-controls { display:flex; justify-content:space-between; align-items:center; padding:10px 6px 2px; }
 .console-object-controls i { width:25px; height:25px; border-radius:50%; background:#111; box-shadow:inset 0 0 0 6px #555; }
-.console-object-controls b { color:#ffb5c8; letter-spacing:5px; }
+.console-object-controls b { color:#d8caa2; letter-spacing:5px; }
 .console-object-label { font-family:var(--font-display); font-weight:700; font-size:.85em; }
 @media (max-width:899px) {
     .salon-world { min-height:500px; }
@@ -655,8 +655,982 @@ body.battle-scene #gameArea { background: rgba(20, 15, 12, .45); }
 
 /* Le décor du Salon remplit maintenant réellement la scène de jeu. */
 body.default #gameArea {
-    background-image: linear-gradient(180deg, rgba(255,247,236,.10), rgba(255,247,236,.30)), url(../img/fond/salon.jpg);
+    background-image: linear-gradient(180deg, rgba(255,247,236,.10), rgba(255,247,236,.30)), url(../img/fond/salon.png);
     background-size: cover;
     background-position: center;
 }
 body.default .scene-card { background: rgba(255,253,249,.80); backdrop-filter: blur(2px); }
+
+/* ============================================================
+   V5 — chemins web, Salon sans fond doublé, combat sur le terrain
+   ============================================================ */
+
+/* Un seul décor dans le Salon : le fond appartient à la page, pas à la scène. */
+body.default #gameArea {
+    background: transparent !important;
+    box-shadow: none;
+}
+body.default .scene-card {
+    background: rgba(255,253,249,.18) !important;
+    backdrop-filter: none !important;
+    box-shadow: none;
+    border: 0;
+}
+body.default .salon-world {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    min-height: 520px;
+}
+
+/* Le lapin actif garde sa place, les autres vivent dans la pièce sans cartes massives. */
+body.default .salon-active-rabbit-spot {
+    left: 58%;
+    bottom: 34px;
+    width: 230px;
+    height: 260px;
+    z-index: 5;
+}
+body.default .salon-friends {
+    inset: 74px 430px 26px 24px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(78px, 1fr));
+    align-content: end;
+    gap: 14px;
+    overflow: auto;
+    padding-right: 6px;
+}
+body.default .salon-rabbit-friend {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    backdrop-filter: none;
+    padding: 2px;
+    min-height: 116px;
+    text-shadow: 0 1px 3px #fff, 0 0 8px #fff;
+}
+body.default .salon-rabbit-friend:hover { background: transparent; transform: translateY(-8px) scale(1.04); }
+body.default .salon-rabbit-friend img {
+    height: 92px;
+    filter: drop-shadow(0 8px 8px rgba(70,50,35,.20));
+}
+body.default .salon-rabbit-friend span {
+    display: inline-block;
+    background: rgba(255,253,249,.76);
+    border-radius: 999px;
+    padding: 2px 8px;
+    max-width: 100%;
+}
+body.default .salon-console-object {
+    right: 38px;
+    bottom: 42px;
+}
+
+/* Fiche encyclopédie : miniature du puzzle + état. */
+.lapin-linked-puzzles { display:flex; flex-direction:column; gap:8px; margin-top:12px; }
+.lapin-puzzle-card {
+    display:grid;
+    grid-template-columns: 118px minmax(0,1fr);
+    align-items:center;
+    gap:10px;
+    background:var(--paper);
+    border:1px solid var(--pink-pale);
+    border-radius:14px;
+    padding:7px;
+}
+.lapin-puzzle-card.done { border-color:var(--green-deep); background:#eef9ef; }
+.lapin-puzzle-card img { width:118px; height:72px; object-fit:cover; border-radius:10px; display:block; }
+.lapin-puzzle-card span,.lapin-puzzle-card strong,.lapin-puzzle-card small { display:block; min-width:0; }
+.lapin-puzzle-card small { margin-top:2px; color:var(--ink-soft); }
+
+/* Combat : le décor complet reste visible, le HUD flotte au-dessus du terrain. */
+body.battle-scene {
+    background-image: url(../img/fond/combat.png) !important;
+    background-size: cover !important;
+    background-position: center bottom !important;
+    background-attachment: fixed !important;
+}
+body.battle-scene::before {
+    background: linear-gradient(180deg, rgba(18,14,10,.08), rgba(18,14,10,.18)) !important;
+}
+body.battle-scene .scene-card,
+body.battle-scene #gameArea {
+    background: transparent !important;
+    box-shadow: none !important;
+    border: 0 !important;
+    backdrop-filter: none !important;
+}
+body.battle-scene .scene-card { padding-top: 6px; }
+body.battle-scene .scene-label {
+    color:#fff !important;
+    text-shadow:0 2px 8px rgba(0,0,0,.75);
+}
+.fight-stage {
+    width:100%;
+    min-height: 560px;
+    position:relative;
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows:auto 1fr auto auto;
+    gap:12px 18px;
+    align-items:start;
+    padding: 10px 8px 16px;
+    background: transparent !important;
+}
+.fight-hud-side {
+    position:relative;
+    z-index:8;
+    background:rgba(25,20,17,.78);
+    border:1px solid rgba(255,255,255,.24);
+    backdrop-filter:blur(4px);
+    border-radius:18px;
+    padding:12px 14px;
+    color:#fff;
+    box-shadow:0 8px 22px rgba(0,0,0,.18);
+}
+.battle-vs {
+    grid-column:1/-1;
+    width:100%;
+    min-height:330px;
+    position:relative;
+    display:grid;
+    grid-template-columns:1fr auto 1fr;
+    align-items:end;
+    gap:28px;
+    padding: 18px 7% 4px;
+}
+.battle-vs .fighter { min-width:0; align-self:end; }
+.battle-vs .battle-sprite {
+    width:min(230px, 24vw);
+    height:min(230px, 24vw);
+    object-fit:contain;
+    filter:drop-shadow(0 14px 12px rgba(0,0,0,.35));
+    animation:battleIdle 2.8s ease-in-out infinite;
+    transform-origin:50% 100%;
+    will-change:transform;
+}
+.battle-vs .boss-sprite { animation-delay:-1.1s; }
+@keyframes battleIdle {
+    0%,100% { transform:translateY(0) rotate(-1deg); }
+    50% { transform:translateY(-8px) rotate(1deg); }
+}
+.fight-power-name {
+    margin-top:4px;
+    max-width:220px;
+    color:#fff;
+    text-shadow:0 2px 6px rgba(0,0,0,.75);
+    font-size:.72em;
+    font-weight:700;
+    line-height:1.2;
+}
+.fight-attack-player { animation:fightAttackPlayer .46s ease-in-out !important; }
+.fight-attack-boss { animation:fightAttackBoss .46s ease-in-out !important; }
+@keyframes fightAttackPlayer {
+    0%{transform:translateX(0) translateY(0) scale(1)}
+    48%{transform:translateX(clamp(70px,16vw,230px)) translateY(-8px) scale(1.08)}
+    62%{transform:translateX(clamp(70px,16vw,230px)) translateY(0) scale(1.04)}
+    100%{transform:translateX(0) translateY(0) scale(1)}
+}
+@keyframes fightAttackBoss {
+    0%{transform:translateX(0) translateY(0) scale(1)}
+    48%{transform:translateX(clamp(-230px,-16vw,-70px)) translateY(-8px) scale(1.08)}
+    62%{transform:translateX(clamp(-230px,-16vw,-70px)) translateY(0) scale(1.04)}
+    100%{transform:translateX(0) translateY(0) scale(1)}
+}
+.fight-hit { animation:fightDamage .36s ease !important; }
+@keyframes fightDamage {
+    0%,100%{transform:translateX(0); filter:drop-shadow(0 14px 12px rgba(0,0,0,.35));}
+    30%{transform:translateX(-14px) rotate(-3deg); filter:brightness(1.55) drop-shadow(0 0 18px #fff);}
+    65%{transform:translateX(10px) rotate(2deg);}
+}
+.fight-log {
+    grid-column:1/-1;
+    position:relative;
+    z-index:8;
+    background:rgba(255,253,249,.88) !important;
+    color:var(--ink) !important;
+    border:1px solid rgba(255,255,255,.65);
+    backdrop-filter:blur(5px);
+}
+.fight-actions { grid-column:1/-1; position:relative; z-index:8; }
+
+@media (max-width:899px) {
+    body.default .salon-friends { inset:62px 180px 188px 10px; grid-template-columns:repeat(3,minmax(62px,1fr)); gap:8px; }
+    body.default .salon-rabbit-friend img { height:62px; }
+    body.default .salon-active-rabbit-spot { left:34%; bottom:18px; width:170px; height:180px; }
+    body.default .salon-console-object { right:16px; bottom:18px; }
+    .fight-stage { min-height:500px; padding:8px 0 12px; }
+    .battle-vs { min-height:270px; gap:8px; padding:12px 3% 2px; }
+    .battle-vs .battle-sprite { width:min(145px,32vw); height:min(145px,32vw); }
+    .fight-power-name { max-width:145px; font-size:.62em; }
+}
+@media (max-width:520px) {
+    body.default .salon-friends { inset:56px 8px 210px; grid-template-columns:repeat(3,minmax(0,1fr)); }
+    body.default .salon-active-rabbit-spot { left:30%; }
+    .lapin-puzzle-card { grid-template-columns:90px minmax(0,1fr); }
+    .lapin-puzzle-card img { width:90px; height:58px; }
+    .fight-stage { grid-template-columns:1fr; grid-template-rows:auto auto 1fr auto auto; }
+    .fight-hud-side.player,.fight-hud-side.boss { grid-column:1; }
+    .battle-vs { grid-column:1; min-height:220px; }
+    .battle-vs .battle-sprite { width:min(115px,34vw); height:min(115px,34vw); }
+    .fight-power-name { display:none; }
+}
+
+/* ============================================================
+   V6 — écran de jeu 100% viewport + Salon vivant et dispersé
+   ============================================================ */
+body.game-running {
+    width:100%;
+    height:100svh;
+    min-height:100svh;
+    padding-bottom:0 !important;
+    overflow:hidden !important;
+    background-attachment:fixed;
+}
+body.game-running #gameRoot {
+    position:fixed;
+    inset:0 0 78px 0;
+    width:100%;
+    max-width:none;
+    height:auto;
+    padding:0;
+    margin:0;
+    overflow:hidden;
+    display:flex;
+    align-items:stretch;
+}
+body.game-running .scene-card {
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    margin:0;
+    padding:0;
+    border-radius:0;
+    overflow:hidden;
+}
+body.game-running #gameArea {
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    min-height:0;
+    margin:0;
+    padding:76px 18px 92px;
+    overflow:hidden;
+    border-radius:0;
+}
+body.game-running .scene-label {
+    position:absolute;
+    top:14px;
+    left:50%;
+    transform:translateX(-50%);
+    z-index:80;
+    margin:0;
+    padding:6px 15px;
+    border-radius:999px;
+    background:rgba(255,253,249,.78);
+    backdrop-filter:blur(6px);
+    box-shadow:0 4px 14px rgba(40,28,20,.12);
+    font-size:clamp(.92rem,1.3vw,1.18rem);
+    color:var(--ink);
+    pointer-events:none;
+}
+body.game-running .brand {
+    position:fixed;
+    z-index:860;
+    left:18px;
+    bottom:90px;
+    margin:0;
+    gap:6px;
+    padding:6px 9px;
+    border-radius:16px;
+    background:rgba(255,253,249,.86);
+    backdrop-filter:blur(6px);
+    box-shadow:0 5px 14px rgba(90,64,52,.12);
+}
+body.game-running .brand-title { font-size:clamp(.9rem,1.2vw,1.1rem); }
+body.game-running .rename-btn { width:30px; height:30px; font-size:.76rem; }
+body.game-running #friendshipBarContainer {
+    position:fixed;
+    z-index:850;
+    top:14px;
+    left:50%;
+    transform:translateX(-50%);
+    width:min(360px,42vw);
+    margin:0;
+    padding:8px 12px;
+    border-width:2px;
+    border-radius:17px;
+    background:rgba(255,253,249,.88);
+    backdrop-filter:blur(6px);
+    box-shadow:0 5px 14px rgba(90,64,52,.12);
+}
+body.game-running .friendship-top { margin-bottom:4px; }
+body.game-running .friendship-label,
+body.game-running #levelDisplay { font-size:.78rem; }
+body.game-running #levelDisplay { padding:3px 9px; }
+body.game-running #friendshipBarContainer .bar { height:10px; }
+body.game-running #statusBars {
+    position:fixed;
+    z-index:840;
+    right:14px;
+    top:92px;
+    width:205px;
+    margin:0;
+    padding:10px 12px;
+    gap:8px;
+    border-radius:17px;
+    background:rgba(255,253,249,.84);
+    backdrop-filter:blur(6px);
+    box-shadow:0 5px 16px rgba(90,64,52,.13);
+}
+body.game-running #statusBars .status-bar span { margin-bottom:3px; font-size:.72rem; }
+body.game-running #statusBars .bar { height:10px; }
+body.game-running .event-banner {
+    position:fixed;
+    z-index:830;
+    top:68px;
+    left:50%;
+    transform:translateX(-50%);
+    width:auto;
+    max-width:min(520px,70vw);
+    margin:0;
+    padding:5px 12px;
+    border-radius:999px;
+    font-size:.72rem;
+}
+body.game-running .difzone {
+    height:78px;
+    min-height:78px;
+    padding:6px 10px max(6px,env(safe-area-inset-bottom));
+    gap:4px;
+}
+body.game-running .room-tab { padding:4px 3px; font-size:.72rem; max-width:130px; }
+body.game-running .room-tab .tab-emoji { font-size:1.35rem; }
+
+/* Toutes les pièces profitent du décor plein écran : la carte ne masque plus le fond. */
+body.game-running:not(.battle-scene) .scene-card,
+body.game-running:not(.battle-scene) #gameArea {
+    background:transparent !important;
+    box-shadow:none !important;
+    border:0 !important;
+    backdrop-filter:none !important;
+}
+body.game-running:not(.default) #gameArea {
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    gap:16px;
+}
+body.game-running:not(.default) #rabbitImage {
+    width:min(240px,24vw);
+    max-height:36vh;
+}
+body.game-running:not(.default) .action-row {
+    position:relative;
+    z-index:5;
+    background:rgba(255,253,249,.74);
+    backdrop-filter:blur(5px);
+    padding:10px 12px;
+    border-radius:22px;
+    box-shadow:0 6px 18px rgba(90,64,52,.13);
+}
+body.game-running:not(.default) .carrot-counter {
+    background:rgba(255,227,236,.88);
+    backdrop-filter:blur(5px);
+}
+
+/* Salon : toute la largeur, lapin actif au centre et compagnons dispersés. */
+body.game-running.default #gameArea { padding:0; }
+body.game-running.default .salon-world {
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    min-height:0;
+    overflow:hidden;
+}
+body.game-running.default .salon-room-title { display:none; }
+body.game-running.default .welcome-msg { display:none; }
+body.game-running.default .salon-active-rabbit-spot {
+    left:50%;
+    bottom:14%;
+    width:min(270px,24vw);
+    height:min(310px,43vh);
+    z-index:16;
+    pointer-events:none;
+}
+body.game-running.default .salon-active-rabbit-spot #rabbitImage {
+    width:100%;
+    max-height:100%;
+    object-fit:contain;
+    filter:drop-shadow(0 14px 18px rgba(65,45,30,.24));
+}
+.active-rabbit-name {
+    position:absolute;
+    left:50%;
+    bottom:-5px;
+    transform:translateX(-50%);
+    z-index:20;
+    padding:4px 11px;
+    border-radius:999px;
+    background:rgba(255,253,249,.9);
+    color:var(--ink);
+    font-weight:700;
+    font-size:.72rem;
+    white-space:nowrap;
+    box-shadow:0 3px 9px rgba(90,64,52,.12);
+}
+body.game-running.default .salon-friends {
+    position:absolute;
+    inset:0;
+    z-index:10;
+    display:block;
+    pointer-events:none;
+    overflow:visible;
+}
+body.game-running.default .salon-rabbit-friend {
+    position:absolute;
+    left:var(--friend-x);
+    top:var(--friend-y);
+    width:clamp(72px,7.5vw,118px);
+    min-width:0;
+    padding:0;
+    border:0;
+    border-radius:0;
+    background:transparent;
+    box-shadow:none;
+    backdrop-filter:none;
+    transform:translate(-50%,-50%) scale(var(--friend-scale,1));
+    transform-origin:50% 100%;
+    pointer-events:auto;
+    animation:salonFriendIdle 4.2s ease-in-out infinite;
+    animation-delay:var(--friend-delay,0s);
+    transition:filter .15s ease, transform .15s ease;
+}
+body.game-running.default .salon-rabbit-friend:hover {
+    background:transparent;
+    filter:brightness(1.08);
+    transform:translate(-50%,-54%) scale(calc(var(--friend-scale,1) * 1.08));
+}
+body.game-running.default .salon-rabbit-friend img {
+    width:100%;
+    height:clamp(82px,10vw,145px);
+    object-fit:contain;
+    filter:drop-shadow(0 8px 8px rgba(65,45,30,.20));
+}
+body.game-running.default .salon-rabbit-friend span {
+    display:table;
+    margin:-4px auto 0;
+    padding:2px 8px;
+    max-width:100%;
+    border-radius:999px;
+    background:rgba(255,253,249,.88);
+    color:#261d19;
+    font-size:clamp(.56rem,.72vw,.7rem);
+    font-weight:700;
+    text-align:center;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+}
+@keyframes salonFriendIdle {
+    0%,100% { margin-top:0; }
+    50% { margin-top:-7px; }
+}
+body.game-running.default .salon-alone-note {
+    position:absolute;
+    left:8%;
+    top:22%;
+}
+body.game-running.default .salon-console-object {
+    right:4.5%;
+    bottom:18%;
+    width:clamp(118px,10vw,168px);
+    height:clamp(152px,14vw,212px);
+}
+body.game-running.default .egg-shop {
+    position:absolute;
+    z-index:40;
+    left:50%;
+    bottom:12px;
+    transform:translateX(-50%);
+    width:auto;
+    min-width:330px;
+    display:grid;
+    grid-template-columns:auto auto;
+    align-items:center;
+    gap:8px 10px;
+    padding:7px 10px;
+    border-radius:20px;
+    background:rgba(255,253,249,.82);
+    backdrop-filter:blur(6px);
+    box-shadow:0 5px 16px rgba(90,64,52,.13);
+}
+body.game-running.default .egg-shop .carrot-counter { grid-column:1/-1; justify-self:center; }
+body.game-running.default .egg-shop .action-row { grid-column:1/-1; gap:8px; flex-wrap:nowrap; }
+body.game-running.default .egg-shop .action-btn { min-width:128px; padding:9px 12px; border-radius:18px; }
+body.game-running.default .egg-shop .action-btn span { font-size:.83rem; }
+body.game-running.default .egg-shop .action-icon-emoji { font-size:1.2rem; }
+body.game-running.default .egg-shop .upgrade-locked-note { display:none; }
+body.game-running.default .duplicate-choice {
+    position:absolute;
+    z-index:60;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    width:min(520px,80vw);
+    background:rgba(255,253,249,.96);
+    border-radius:22px;
+    box-shadow:0 16px 45px rgba(45,30,20,.28);
+    padding:18px;
+}
+
+/* Combat : tout doit rester visible sans scroller. */
+body.game-running.battle-scene #gameArea { padding:66px 14px 88px; }
+body.game-running.battle-scene .fight-stage {
+    width:min(1180px,100%);
+    height:100%;
+    min-height:0;
+    margin:0 auto;
+    grid-template-rows:auto minmax(0,1fr) auto auto;
+    gap:7px 14px;
+    padding:0 8px;
+}
+body.game-running.battle-scene .fight-hud-side { padding:7px 11px; border-radius:14px; font-size:.78rem; }
+body.game-running.battle-scene .fight-hud-side .bar { height:9px; }
+body.game-running.battle-scene .battle-vs {
+    min-height:0;
+    height:100%;
+    padding:0 9% 0;
+    align-items:end;
+}
+body.game-running.battle-scene .battle-vs .battle-sprite {
+    width:min(210px,18vw,28vh);
+    height:min(210px,18vw,28vh);
+}
+body.game-running.battle-scene .fight-log { padding:8px 12px; border-radius:14px; font-size:.82rem; }
+body.game-running.battle-scene .fight-actions { margin:0 !important; gap:8px; }
+body.game-running.battle-scene .fight-actions .action-btn { padding:9px 13px; min-width:130px; border-radius:17px; }
+body.game-running.battle-scene .fight-actions .action-btn span { font-size:.85rem; }
+
+/* Sur écrans plus bas, on compacte encore plutôt que de créer un scroll de page. */
+@media (max-height:760px) and (min-width:700px) {
+    body.game-running #gameArea { padding-top:58px; padding-bottom:78px; }
+    body.game-running #statusBars { top:72px; width:190px; gap:5px; padding:7px 10px; }
+    body.game-running #friendshipBarContainer { top:8px; }
+    body.game-running .scene-label { top:8px; left:27%; }
+    body.game-running.default .salon-active-rabbit-spot { bottom:11%; height:35vh; }
+    body.game-running.default .salon-console-object { bottom:14%; }
+    body.game-running.default .egg-shop { bottom:6px; }
+    body.game-running.battle-scene .battle-vs .battle-sprite { width:min(170px,16vw,24vh); height:min(170px,16vw,24vh); }
+    body.game-running.battle-scene .fight-power-name { font-size:.62rem; }
+}
+
+/* Tablette/mobile : pas de scroll de page, interface réduite et zones internes adaptatives. */
+@media (max-width:699px) {
+    body.game-running #gameRoot { inset:0 0 66px; }
+    body.game-running .difzone { height:66px; min-height:66px; }
+    body.game-running #gameArea { padding:62px 8px 76px; overflow:auto; }
+    body.game-running .scene-label { top:7px; font-size:.82rem; }
+    body.game-running .brand { display:none; }
+    body.game-running #friendshipBarContainer { top:7px; left:8px; transform:none; width:45vw; max-width:230px; }
+    body.game-running #statusBars { top:7px; right:8px; width:42vw; max-width:205px; padding:6px 8px; gap:4px; }
+    body.game-running #statusBars .status-bar span { font-size:.6rem; }
+    body.game-running #statusBars .bar,
+    body.game-running #friendshipBarContainer .bar { height:7px; }
+    body.game-running.default #gameArea { overflow:hidden; }
+    body.game-running.default .salon-active-rabbit-spot { left:50%; bottom:16%; width:42vw; height:34vh; }
+    body.game-running.default .salon-console-object { right:4%; bottom:17%; width:92px; height:122px; padding:7px; }
+    body.game-running.default .console-object-screen { height:66px; }
+    body.game-running.default .salon-rabbit-friend { width:clamp(54px,16vw,76px); }
+    body.game-running.default .salon-rabbit-friend img { height:clamp(60px,18vw,84px); }
+    body.game-running.default .egg-shop { min-width:0; width:92%; bottom:5px; padding:5px 7px; }
+    body.game-running.default .egg-shop .action-btn { min-width:0; flex:1 1 0; padding:7px 8px; }
+    body.game-running.default .egg-shop .action-btn span { font-size:.7rem; }
+    body.game-running.battle-scene #gameArea { padding:58px 4px 72px; overflow:hidden; }
+    body.game-running.battle-scene .fight-stage { grid-template-columns:1fr 1fr; grid-template-rows:auto minmax(0,1fr) auto auto; gap:4px 6px; padding:0; }
+    body.game-running.battle-scene .fight-hud-side { font-size:.63rem; padding:5px 7px; }
+    body.game-running.battle-scene .battle-vs { grid-column:1/-1; min-height:0; height:100%; padding:0 2%; }
+    body.game-running.battle-scene .battle-vs .battle-sprite { width:min(112px,27vw,20vh); height:min(112px,27vw,20vh); }
+    body.game-running.battle-scene .fight-power-name { display:none; }
+    body.game-running.battle-scene .fight-log { font-size:.68rem; padding:5px 7px; }
+    body.game-running.battle-scene .fight-actions .action-btn { min-width:105px; padding:6px 9px; }
+}
+
+/* Le décor reste lisible : l'overlay global ne blanchit plus les fonds conçus pour le jeu. */
+body.game-running::before {
+    background:linear-gradient(180deg,rgba(255,247,236,.12),rgba(255,247,236,.24));
+}
+body.game-running[data-time="evening"]::before { background:linear-gradient(180deg,rgba(255,180,130,.10),rgba(80,45,65,.18)); }
+body.game-running[data-time="night"]::before { background:linear-gradient(180deg,rgba(22,18,40,.22),rgba(12,10,28,.34)); }
+
+
+/* ============================================================
+   V7 — palette nature / parchemin / fond png
+   ============================================================ */
+.rules-btn, .save-btn, .encyclopedia-btn, .rename-btn {
+    background: rgba(255,250,242,.92);
+    box-shadow: 0 4px 0 rgba(118,82,43,.18);
+}
+#friendshipBarContainer {
+    background: rgba(255,250,242,.9);
+    border-color: rgba(138,106,61,.35);
+}
+.bar { background-color: rgba(223,213,188,.72); }
+#sleepBar { background: linear-gradient(90deg, #88b6d8 0%, #b9d8ef 100%); }
+#cleanBar { background: linear-gradient(90deg, #8bbf86 0%, #bce1aa 100%); }
+.room-tab.active {
+    background: rgba(239,229,207,.95);
+    color: var(--pink-deep);
+}
+.modal-header {
+    background: linear-gradient(135deg, #d7c39d 0%, #8b6a3d 100%);
+}
+#encyclopediaModal .modal-content {
+    position: relative;
+    overflow: hidden;
+    border-radius: 24px;
+    border: 1px solid rgba(138,106,61,.35);
+    background:
+        linear-gradient(180deg, rgba(255,249,238,.90), rgba(239,228,203,.92)),
+        url("../img/ui/paper_dashboard_bg.jpg");
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 18px 42px rgba(67,46,26,.22);
+}
+#encyclopediaModal .modal-content::before {
+    content: "";
+    position: absolute;
+    inset: 22px;
+    border-radius: 18px;
+    pointer-events: none;
+    border: 1px solid rgba(138,106,61,.14);
+    background:
+        radial-gradient(circle at 92% 14%, rgba(111,139,87,.10) 0 46px, transparent 47px),
+        radial-gradient(circle at 12% 88%, rgba(111,139,87,.08) 0 58px, transparent 59px);
+}
+#encyclopediaModal .modal-body { position: relative; }
+#encyclopediaModal .encyclopedia-tab,
+#encyclopediaModal .encyclopedia-card,
+#encyclopediaModal .encyclopedia-detail-card,
+#encyclopediaModal .encyclopedia-relations {
+    background: rgba(255,250,242,.82);
+    border: 1px solid rgba(138,106,61,.14);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.65);
+}
+#encyclopediaModal .encyclopedia-tab.active {
+    background: linear-gradient(180deg, #d9c398, #a27b47);
+    color: #fff;
+    border-color: rgba(138,106,61,.45);
+}
+#encyclopediaModal .back-btn { color: var(--green-deep); }
+#encyclopediaModal .owned-badge { background: var(--green-deep); }
+#encyclopediaModal .encyclopedia-lock { opacity: .55; }
+#encyclopediaModal .encyclopedia-lock:hover { opacity: .95; }
+body.dashboard-page {
+    background:
+        linear-gradient(180deg, rgba(255,249,238,.84), rgba(240,229,206,.88)),
+        url("../img/ui/paper_dashboard_bg.jpg");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+body.dashboard-page::before {
+    display: block;
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+        radial-gradient(circle at 14% 82%, rgba(111,139,87,.08) 0 90px, transparent 91px),
+        radial-gradient(circle at 87% 78%, rgba(111,139,87,.06) 0 110px, transparent 111px),
+        linear-gradient(180deg, rgba(255,247,236,.20), rgba(255,247,236,.10));
+    z-index: 0;
+    pointer-events:none;
+}
+.dash-main, .dash-header { position: relative; z-index: 1; }
+.dash-header {
+    background: linear-gradient(135deg, #7b9c62 0%, #587241 55%, #8b6a3d 100%);
+    box-shadow: 0 10px 30px rgba(67,46,26,.14);
+}
+.dash-section {
+    position: relative;
+    overflow: hidden;
+    background: rgba(255,250,242,.82);
+    border: 1px solid rgba(138,106,61,.18);
+    backdrop-filter: blur(1.5px);
+    box-shadow: 0 10px 24px rgba(67,46,26,.08);
+}
+.dash-section::before {
+    content: "🍃";
+    position: absolute;
+    right: 18px;
+    top: 10px;
+    font-size: 2.4rem;
+    opacity: .08;
+    transform: rotate(-14deg);
+    pointer-events: none;
+}
+.pm-table th, .puzzle-admin-table th { background: rgba(223,213,188,.92); }
+.pm-table td:first-child, .pm-table tr.new-row td:first-child, .pm-table tr.new-row td { background: rgba(255,250,242,.94); }
+
+/* Salon : lapins au sol + lapin actif un peu plus haut */
+body.game-running.default .salon-active-rabbit-spot {
+    left: 50%;
+    bottom: 21%;
+    width: min(275px, 25vw);
+    height: min(320px, 46vh);
+}
+body.game-running.default .salon-active-rabbit-spot #rabbitImage {
+    filter: drop-shadow(0 16px 18px rgba(65,45,30,.26));
+}
+body.game-running.default .active-rabbit-name { bottom: 6px; }
+body.game-running.default .salon-rabbit-friend {
+    transform: translate(-50%, -100%) scale(var(--friend-scale,1));
+}
+body.game-running.default .salon-rabbit-friend:hover {
+    transform: translate(-50%, -104%) scale(calc(var(--friend-scale,1) * 1.08));
+}
+body.game-running.default .salon-rabbit-friend span {
+    background: rgba(255,250,242,.94);
+    border: 1px solid rgba(138,106,61,.14);
+}
+body.game-running.default .salon-console-object {
+    bottom: 17%;
+    background: linear-gradient(160deg,#32425d,#1e2842 72%);
+    box-shadow: 0 14px 0 #182033, 0 20px 28px rgba(27,21,61,.28);
+}
+body.game-running.default .egg-shop {
+    bottom: 10px;
+    background: rgba(247,240,224,.90);
+    border: 1px solid rgba(138,106,61,.15);
+}
+body.game-running.default .egg-shop .action-btn:first-child {
+    background: linear-gradient(180deg, #cfa26c 0%, #8e6137 100%);
+    box-shadow: 0 5px 0 #6f4827;
+}
+body.game-running.default .egg-shop .action-btn:last-child {
+    background: linear-gradient(180deg, #d8c89c 0%, #9a8553 100%);
+    box-shadow: 0 5px 0 #7f6840;
+}
+body.game-running.default .egg-shop .action-btn span { color:#fffaf2; }
+body.game-running.default .salon-alone-note {
+    background: rgba(255,250,242,.92);
+    border: 1px solid rgba(138,106,61,.12);
+}
+@media (max-width: 900px) {
+    body.game-running.default .salon-active-rabbit-spot {
+        bottom: 22%;
+        width: 170px;
+        height: 210px;
+    }
+    body.game-running.default .salon-console-object { bottom: 17%; }
+    body.game-running.default .egg-shop { min-width: 300px; }
+}
+@media (max-width: 640px) {
+    body.game-running.default .salon-active-rabbit-spot {
+        left: 50%;
+        bottom: 23%;
+        width: 150px;
+        height: 180px;
+    }
+    body.game-running.default .egg-shop {
+        width: calc(100% - 16px);
+        min-width: 0;
+        padding: 8px;
+    }
+}
+
+
+/* ============================================================
+   V11 — coin jeux naturel + lapins non superposés
+   ============================================================ */
+body.game-running.default .salon-friends { z-index: 9; }
+body.game-running.default .salon-rabbit-friend {
+    width: clamp(64px, 6.2vw, 96px);
+    animation-duration: 4.8s;
+}
+body.game-running.default .salon-rabbit-friend img {
+    height: clamp(70px, 8vw, 112px);
+}
+body.game-running.default .salon-rabbit-friend span {
+    margin-top: -8px;
+    box-shadow: 0 2px 8px rgba(83,58,37,.10);
+}
+body.game-running.default .salon-active-rabbit-spot {
+    z-index: 12;
+}
+body.game-running.default .salon-console-object.board-game-object {
+    right: 5%;
+    bottom: 14%;
+    width: clamp(150px, 14vw, 210px);
+    height: clamp(108px, 10vw, 144px);
+    padding: 10px 12px 12px;
+    border-radius: 26px;
+    border: 2px solid rgba(111,78,44,.18);
+    background: linear-gradient(180deg, rgba(183,146,93,.95) 0%, rgba(124,88,52,.98) 100%);
+    box-shadow: 0 10px 0 #7c5733, 0 18px 28px rgba(53,33,18,.22);
+    transform: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    color: #fff7ec;
+}
+body.game-running.default .salon-console-object.board-game-object:hover {
+    transform: translateY(-4px) rotate(-1deg);
+    filter: brightness(1.03);
+}
+body.game-running.default .board-top {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 68px;
+    border-radius: 18px;
+    background: linear-gradient(180deg, rgba(249,241,220,.98) 0%, rgba(229,210,177,.98) 100%);
+    border: 2px solid rgba(101,72,42,.22);
+    box-shadow: inset 0 2px 8px rgba(255,255,255,.32), inset 0 -6px 10px rgba(141,100,57,.10);
+    overflow: hidden;
+}
+body.game-running.default .board-grid {
+    position: absolute;
+    inset: 8px;
+    border-radius: 12px;
+    background:
+        linear-gradient(90deg, rgba(115,150,100,.18) 0 2px, transparent 2px 22px),
+        linear-gradient(rgba(115,150,100,.18) 0 2px, transparent 2px 22px),
+        linear-gradient(180deg, rgba(239,234,210,.9), rgba(231,221,191,.96));
+    background-size: 22px 22px, 22px 22px, auto;
+}
+body.game-running.default .board-card,
+body.game-running.default .board-die,
+body.game-running.default .board-pawn { position: absolute; display: block; }
+body.game-running.default .board-card {
+    left: 18px; top: 16px; width: 22px; height: 28px; border-radius: 6px;
+    background: linear-gradient(180deg, #fdfcf8, #efe6d3); border: 2px solid rgba(122,83,47,.22);
+    box-shadow: 8px 4px 0 -2px rgba(171,116,82,.26);
+    transform: rotate(-12deg);
+}
+body.game-running.default .board-card::after {
+    content: "♥"; position: absolute; inset: 0; display: grid; place-items: center; font-size: 12px; color: #b75f52;
+}
+body.game-running.default .board-die {
+    right: 20px; top: 18px; width: 22px; height: 22px; border-radius: 6px;
+    background: #fff8ed; border: 2px solid rgba(122,83,47,.22); transform: rotate(14deg);
+}
+body.game-running.default .board-die::before,
+body.game-running.default .board-die::after {
+    content: ""; position: absolute; width: 4px; height: 4px; border-radius: 50%; background: #7f6840;
+}
+body.game-running.default .board-die::before { left: 5px; top: 5px; box-shadow: 8px 8px 0 #7f6840, 0 8px 0 #7f6840; }
+body.game-running.default .board-die::after { right: 5px; top: 5px; box-shadow: -8px 8px 0 #7f6840; }
+body.game-running.default .board-pawn {
+    left: 50%; bottom: 10px; width: 18px; height: 26px; transform: translateX(-50%);
+    border-radius: 12px 12px 9px 9px; background: linear-gradient(180deg, #8fb172, #5f814c);
+    box-shadow: inset 0 -4px 0 rgba(255,255,255,.12);
+}
+body.game-running.default .board-pawn::before {
+    content: ""; position: absolute; left: 50%; top: -8px; width: 14px; height: 14px; transform: translateX(-50%); border-radius: 50%; background: #a6c489;
+}
+body.game-running.default .salon-console-object.board-game-object .console-object-label {
+    font-size: 1rem;
+    letter-spacing: .02em;
+    text-shadow: 0 1px 1px rgba(0,0,0,.18);
+}
+body.game-running.default .board-sub {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: rgba(255,247,236,.20);
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+}
+@media (max-width: 900px) {
+    body.game-running.default .salon-console-object.board-game-object {
+        right: 4%; bottom: 15%; width: 132px; height: 104px; padding: 8px 10px 10px;
+    }
+    body.game-running.default .board-top { height: 56px; }
+    body.game-running.default .salon-rabbit-friend { width: clamp(54px, 9vw, 78px); }
+    body.game-running.default .salon-rabbit-friend img { height: clamp(58px, 11vw, 88px); }
+}
+@media (max-width: 640px) {
+    body.game-running.default .salon-console-object.board-game-object {
+        right: 3%; bottom: 16%; width: 118px; height: 96px; border-radius: 20px;
+    }
+    body.game-running.default .board-top { height: 48px; }
+    body.game-running.default .salon-rabbit-friend { width: clamp(50px, 14vw, 68px); }
+}
+
+
+/* ============================================================
+   V12 — suppression du rose résiduel + fond papier étendu
+   ============================================================ */
+.chart-box,
+.dash-section,
+#encyclopediaModal .encyclopedia-card,
+#encyclopediaModal .boss-card,
+#encyclopediaModal .encyclopedia-detail-card,
+#encyclopediaModal .lapin-puzzle-card,
+#encyclopediaModal .encyclopedia-relations,
+#encyclopediaModal .encyclopedia-tab {
+    background-image: linear-gradient(rgba(255,249,238,.82), rgba(240,229,206,.82)), url("../img/ui/paper_dashboard_bg.jpg") !important;
+    background-size: cover !important;
+    background-position: center !important;
+    border-color: rgba(138,106,61,.16) !important;
+}
+#encyclopediaModal .encyclopedia-card,
+#encyclopediaModal .boss-card,
+#encyclopediaModal .lapin-puzzle-card {
+    box-shadow: 0 4px 12px rgba(67,46,26,.08);
+}
+#encyclopediaModal .encyclopedia-card:hover,
+#encyclopediaModal .boss-card:hover {
+    transform: translateY(-3px);
+}
+#encyclopediaModal .encyclopedia-card .card-name,
+#encyclopediaModal .boss-card .card-name {
+    background: rgba(255,248,235,.78);
+    padding: 3px 8px;
+    border-radius: 999px;
+}
+.chart-box {
+    background-image: linear-gradient(rgba(255,249,238,.86), rgba(240,229,206,.86)), url("../img/ui/paper_dashboard_bg.jpg") !important;
+}
+.missing-none { color: var(--green-deep); font-weight: 700; }
+body.dashboard-page .pm-table td,
+body.dashboard-page .pm-table th {
+    background-color: rgba(255,248,235,.72);
+}
+body.dashboard-page .slice-detail,
+body.dashboard-page .missing-list,
+body.dashboard-page .panel-desc,
+body.dashboard-page .dash-note {
+    background: rgba(255,248,235,.40);
+    border-radius: 12px;
+    padding: 8px 10px;
+}
+/* Compagnons du salon : plus espacés, jamais sur le coin jeux */
+body.game-running.default .salon-rabbit-friend {
+    width: clamp(58px, 5.8vw, 88px) !important;
+}
+body.game-running.default .salon-rabbit-friend img {
+    height: clamp(64px, 7.2vw, 102px) !important;
+}
+body.game-running.default .salon-rabbit-friend span {
+    font-size: clamp(.54rem,.68vw,.68rem) !important;
+}
+body.game-running.default .salon-console-object.board-game-object {
+    right: 4.5%;
+    bottom: 13%;
+}
+body.game-running.default .salon-active-rabbit-spot { z-index: 15; }
+body.game-running.default .salon-rabbit-friend { z-index: 9; }
+body.game-running.default .salon-rabbit-friend:nth-child(1) { z-index: 8; }
+body.game-running.default .salon-rabbit-friend:nth-child(2) { z-index: 9; }
+body.game-running.default .salon-rabbit-friend:nth-child(3) { z-index: 10; }
+body.game-running.default .salon-rabbit-friend:nth-child(4) { z-index: 8; }
+body.game-running.default .salon-rabbit-friend:nth-child(5) { z-index: 9; }
+body.game-running.default .salon-rabbit-friend:nth-child(6) { z-index: 10; }

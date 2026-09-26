@@ -362,7 +362,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <td class="puzzle-admin-image-cell"><img src="${puz.image || './assets/img/species/mystery.svg'}" alt="${puz.title || ''}" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';"></td>
             <td><input class="name-input" data-puzzle-field="id" value="${puz.id || ''}"></td>
             <td><input class="name-input" data-puzzle-field="title" value="${puz.title || ''}"></td>
-            <td><input class="name-input puzzle-path-input" data-puzzle-field="image" value="${puz.image || ''}" placeholder="./assets/img/puzzle/image.png"></td>
+            <td><input class="name-input puzzle-path-input" data-puzzle-field="image" value="${puz.image || ''}" placeholder="./assets/img/puzzle/mon_puzzle.png"></td>
             <td class="puzzle-links-cell">${puzzleSpeciesDropdown(puz.linkedSpecies)}</td>
             <td class="row-actions puzzle-row-actions"><button class="slot-btn save" data-save-puzzle>💾</button><button class="slot-btn clear" data-delete-puzzle>🗑️</button></td>
         </tr>`;
@@ -455,7 +455,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // ============================================================
     // CAMEMBERTS (Chart.js)
     // ============================================================
-    const PALETTE = ["#ffb5c8", "#f5c34d", "#9fd8a3", "#7fc8ff", "#a35bd6", "#b06a6a", "#8b6b57"];
+    const PALETTE = ["#d8c89c", "#e0b254", "#9db88a", "#88b6d8", "#a68fbf", "#b3815a", "#7f6850"];
     const chartInstances = {};
 
     let lastClickedSlice = {};
@@ -604,7 +604,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const speciesFullyFound = speciesEntries.filter((_, i) => speciesFaceResults[i] && speciesCoteResults[i]).length;
         const speciesCompleteNames = speciesEntries.filter((_, i) => speciesFaceResults[i] && speciesCoteResults[i]).map(([, s]) => s.name);
         const speciesIncompleteNames = speciesEntries.filter((_, i) => !(speciesFaceResults[i] && speciesCoteResults[i])).map(([, s]) => s.name);
-        drawPie("chart-species-img", ["Complet", "Incomplet"], [speciesFullyFound, speciesEntries.length - speciesFullyFound], [speciesCompleteNames, speciesIncompleteNames]);
+        drawPie("chart-species-img", ["Complet", "Incomplet"], [speciesFullyFound, speciesEntries.length - speciesFullyFound], [speciesCompleteNames, speciesIncompleteNames], ["#9db88a", "#d8c89c"]);
         renderMissingList(
             "missing-species-list",
             speciesEntries
@@ -618,7 +618,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const bossFullyFound = bossEntries.filter((_, i) => bossFaceResults[i] && bossCoteResults[i]).length;
         const bossCompleteNames = bossEntries.filter((_, i) => bossFaceResults[i] && bossCoteResults[i]).map(([, b]) => b.name);
         const bossIncompleteNames = bossEntries.filter((_, i) => !(bossFaceResults[i] && bossCoteResults[i])).map(([, b]) => b.name);
-        drawPie("chart-boss-img", ["Complet", "Incomplet"], [bossFullyFound, bossEntries.length - bossFullyFound], [bossCompleteNames, bossIncompleteNames]);
+        drawPie("chart-boss-img", ["Complet", "Incomplet"], [bossFullyFound, bossEntries.length - bossFullyFound], [bossCompleteNames, bossIncompleteNames], ["#9db88a", "#d8c89c"]);
         renderMissingList(
             "missing-boss-list",
             bossEntries

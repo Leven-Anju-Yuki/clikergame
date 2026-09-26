@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Boss inconnu">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#fff7ec"/>
+      <stop offset="100%" stop-color="#f0e5ce"/>
+    </linearGradient>
+    <linearGradient id="veg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f7b35d"/>
+      <stop offset="100%" stop-color="#d46b2c"/>
+    </linearGradient>
+    <linearGradient id="leaf" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#9ecb75"/>
+      <stop offset="100%" stop-color="#5f8c42"/>
+    </linearGradient>
+  </defs>
+  <rect x="12" y="12" width="176" height="176" rx="28" fill="url(#bg)" stroke="#8a6a3d" stroke-width="4" stroke-dasharray="8 6"/>
+  <g transform="translate(0,6)">
+    <path d="M98 48c8 0 12 7 8 15l-8 18-8-18c-4-8 0-15 8-15z" fill="url(#leaf)" stroke="#5f8c42" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M84 56c-4-9-14-15-24-16 2 11 9 21 19 25" fill="url(#leaf)" stroke="#5f8c42" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M112 56c4-9 14-15 24-16-2 11-9 21-19 25" fill="url(#leaf)" stroke="#5f8c42" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M100 68c28 0 50 23 50 51 0 26-18 42-50 42s-50-16-50-42c0-28 22-51 50-51z" fill="url(#veg)" stroke="#8a4f24" stroke-width="5"/>
+    <path d="M77 103c-4 0-7 3-7 7 0 6 5 10 12 10 7 0 12-4 12-10 0-4-3-7-7-7-3 0-5 1-5 4 0-3-2-4-5-4z" fill="#fff6ea" opacity=".35"/>
+    <circle cx="82" cy="116" r="8" fill="#fff3e4" stroke="#8a4f24" stroke-width="4"/>
+    <circle cx="118" cy="116" r="8" fill="#fff3e4" stroke="#8a4f24" stroke-width="4"/>
+    <circle cx="82" cy="116" r="3" fill="#8a4f24"/>
+    <circle cx="118" cy="116" r="3" fill="#8a4f24"/>
+    <path d="M88 137c7 6 17 6 24 0" fill="none" stroke="#8a4f24" stroke-width="5" stroke-linecap="round"/>
+  </g>
+  <text x="157" y="56" font-size="38" text-anchor="middle" fill="#8a4f24" font-family="Arial, sans-serif" font-weight="700">?</text>
+</svg>

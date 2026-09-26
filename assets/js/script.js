@@ -108,6 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let game = freshGame();
     let currentZone = "default";
+const BOSS_MYSTERY_IMG = "./assets/img/bosses/mystery_boss.svg";
     const UPGRADE_COST = 20;
     const EGG_COST = 45;
     const ROOM_REQUIRED_LEVEL = { cuisine: 2, chambre: 3, sdb: 4, jardin: 5 };
@@ -575,7 +576,11 @@ document.addEventListener("DOMContentLoaded", () => {
             ? linked.map((puz) => {
                 const st = puzzleProgress[puz.id];
                 const done = !!st?.completed;
-                return `<span class="lapin-puzzle-chip ${done ? "done" : ""}">${done ? "✅" : "🧩"} ${puz.title}</span>`;
+                const img = puz.image || "./assets/img/species/mystery.svg";
+                return `<div class="lapin-puzzle-card ${done ? "done" : ""}">
+                    <img src="${img}" alt="${puz.title}" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';">
+                    <span><strong>${puz.title}</strong><small>${done ? "✅ Terminé" : "🧩 À découvrir"}</small></span>
+                </div>`;
             }).join("")
             : '<span class="upgrade-locked-note">Aucun puzzle lié pour le moment.</span>';
         const duplicates = game.duplicateCounts?.[key] || 0;
@@ -619,7 +624,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const b = getBosses()[key];
         document.getElementById("encyclopediaDetailCard").innerHTML = `
             <div class="encyclopedia-detail-card">
-                <img src="${b.faceImg || b.coteImg}" alt="${b.name}" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';">
+                <img src="${b.faceImg || b.coteImg}" alt="${b.name}" onerror="this.onerror=null;this.src='./assets/img/bosses/mystery_boss.svg';">
                 <div class="entry-body">
                     <div class="entry-header">
                         <strong>${b.name}${b.nickname ? ", " + b.nickname : ""}</strong>
@@ -676,8 +681,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const card = document.createElement("button");
             card.type = "button";
             card.className = "encyclopedia-card" + (found ? "" : " locked");
-            const imgSrc = found ? (b.faceImg || b.coteImg) : "./assets/img/species/mystery.svg";
-            card.innerHTML = `<img src="${imgSrc}" alt="${found ? b.name : '???'}" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';"><span class="card-name">${found ? b.name : "???"}</span>${found ? '<span class="owned-badge">✓</span>' : ""}`;
+            const imgSrc = found ? (b.faceImg || b.coteImg) : BOSS_MYSTERY_IMG;
+            card.innerHTML = `<img src="${imgSrc}" alt="${found ? b.name : '???'}" onerror="this.onerror=null;this.src='./assets/img/bosses/mystery_boss.svg';"><span class="card-name">${found ? b.name : "???"}</span>${found ? '<span class="owned-badge">✓</span>' : ""}`;
             card.addEventListener("click", () => {
                 if (found) showBossDetail(key);
                 else showToast("Ce boss n'a pas encore été rencontré. Pars à l'aventure depuis le jardin !", "warn");
@@ -711,6 +716,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // DÉMARRAGE DU JEU
     // ============================================================
     function startGameUI() {
+        body.classList.add("game-running");
         adoptionScreen.style.display = "none";
         gameRoot.style.display = "flex";
         mainNav.style.display = "flex";
@@ -794,6 +800,17 @@ document.addEventListener("DOMContentLoaded", () => {
         return `<div class="collection-switcher"><p class="upgrade-locked-note">Tes lapins (clique pour changer ton compagnon actif) :</p><div class="collection-row">${cards}</div></div>`;
     }
 
+    function salonFriendPlacement(key, index) {
+        // Emplacements fixes et espacés pour éviter les chevauchements.
+        const slots = [
+            [10, 70, .74], [16, 55, .68], [23, 86, .64], [30, 64, .64],
+            [38, 46, .60], [52, 82, .58], [62, 58, .58], [74, 40, .56],
+            [84, 58, .58], [90, 78, .54], [12, 90, .56], [32, 92, .54]
+        ];
+        const slot = slots[index % slots.length];
+        return `--friend-x:${slot[0]}%;--friend-y:${slot[1]}%;--friend-scale:${slot[2]};--friend-delay:${-(index % 9) / 10}s;`;
+    }
+
     function salonOwnedRabbitsSceneHtml() {
         const species = getSpecies();
         const owned = (game.ownedSpecies || []).filter((key) => key !== game.species && species[key]);
@@ -801,19 +818,24 @@ document.addEventListener("DOMContentLoaded", () => {
             const sp = species[key];
             const img = sp.faceImg || sp.coteImg || "./assets/img/species/mystery.svg";
             const name = game.speciesNames[key] || sp.name || key;
-            return `<button class="salon-rabbit-friend friend-${index % 8}" onclick="switchActiveSpecies('${key}')" title="Jouer avec ${name}">
+            return `<button class="salon-rabbit-friend friend-${index % 8}" style="${salonFriendPlacement(key, index)}" onclick="switchActiveSpecies('${key}')" title="Jouer avec ${name}">
                 <img src="${img}" alt="${name}" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';">
                 <span>${name}</span>
             </button>`;
         }).join("");
         return `<div class="salon-world">
-            <div class="salon-room-title">🐰 Tes compagnons sont dans le Salon</div>
+            <div class="salon-room-title">🐰 Le Salon de tes compagnons</div>
             <div class="salon-friends">${friends || '<span class="salon-alone-note">Ton premier compagnon profite du Salon ✨</span>'}</div>
-            <div id="salonActiveRabbitSpot" class="salon-active-rabbit-spot"></div>
-            <button class="salon-console-object" type="button" onclick="openGameConsole()" aria-label="Ouvrir la console de jeux">
-                <span class="console-object-screen"><span>🐰</span><small>PLAY</small></span>
-                <span class="console-object-controls"><i></i><b>● ●</b></span>
-                <span class="console-object-label">Console</span>
+            <div id="salonActiveRabbitSpot" class="salon-active-rabbit-spot"><span class="active-rabbit-name">${currentRabbitName()}</span></div>
+            <button class="salon-console-object board-game-object" type="button" onclick="openGameConsole()" aria-label="Ouvrir le coin jeux">
+                <span class="board-top">
+                    <span class="board-grid"></span>
+                    <span class="board-card"></span>
+                    <span class="board-die"></span>
+                    <span class="board-pawn"></span>
+                </span>
+                <span class="console-object-label">Coin jeux</span>
+                <span class="board-sub">Jouer</span>
             </button>
         </div>`;
     }
@@ -890,7 +912,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const status = st.completed ? "✅ Terminé" : unlocked ? "À faire" : "🔒 Termine le puzzle précédent";
             const linkedNames = (puz.linkedSpecies || []).map((key) => getSpecies()[key]?.name || key).join(", ");
             return `<button class="puzzle-card ${unlocked ? "" : "locked"}" ${unlocked ? `onclick="openPuzzleLevels(${index})"` : "disabled"}>
-                <img src="${puz.image}" alt="${puz.title}">
+                <img src="${puz.image}" alt="${puz.title}" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';">
                 <span><strong>${index + 1}. ${puz.title}</strong><small>${status}</small>${linkedNames ? `<small>🐰 ${linkedNames}</small>` : ""}</span>
             </button>`;
         }).join("");
@@ -919,7 +941,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }).join("");
         gameArea.innerHTML = `
             <div class="puzzle-levels">
-                <img class="puzzle-preview" src="${puz.image}" alt="${puz.title}">
+                <img class="puzzle-preview" src="${puz.image}" alt="${puz.title}" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';">
                 <div class="console-title">${puz.title}</div>
                 <div class="puzzle-level-buttons">${buttons}</div>
                 <button class="ghost-btn" onclick="openPuzzleHub()">← Liste des puzzles</button>
@@ -1021,7 +1043,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="puzzle-win">
                 <div class="puzzle-win-icon">🎉</div>
                 <div class="console-title">Puzzle terminé !</div>
-                <img class="puzzle-preview" src="${puz.image}" alt="${puz.title}">
+                <img class="puzzle-preview" src="${puz.image}" alt="${puz.title}" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';">
                 <p><strong>${moves}</strong> coups · +${lvl.friendship} 💛 · -${Number(lvl.food || 0)} 🥕 · -${lvl.energy} 😴 · -${lvl.cleanliness} 🫧</p>
                 <p class="agility-hint">Progression enregistrée pour ${currentRabbitName()}.</p>
                 <button class="action-btn" onclick="openPuzzleLevels(${puzzleIndex})"><span>Continuer 🧩</span></button>
@@ -1094,7 +1116,7 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         cuisine: {
             label: "🥕 Cuisine",
-            image: () => `./assets/img/Zone_cuisine/lapin_cuisine.gif`,
+            image: () => `./assets/img/Zone_cuisine/lapin_cuisine.png`,
             content: () => progress().improvements.cuisine
                 ? `<div class="action-row"><button class="action-btn upgraded" onclick="feedRabbit()"><img class="action-icon" src="./assets/img/Zone_cuisine/pomme.png" alt=""><span>Nourrir</span></button></div>`
                 : `<div class="action-row">
@@ -1104,33 +1126,33 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         chambre: {
             label: "🛏️ Chambre",
-            image: () => `./assets/img/zone_Chambre/dodo.gif`,
+            image: () => `./assets/img/Zone_Chambre/dodo.png`,
             content: () => progress().improvements.chambre
-                ? `<div class="action-row"><button class="action-btn upgraded" onclick="putRabbitToSleep()"><img class="action-icon" src="./assets/img/zone_Chambre/lit.png" alt=""><span>Dodo</span></button></div>`
+                ? `<div class="action-row"><button class="action-btn upgraded" onclick="putRabbitToSleep()"><img class="action-icon" src="./assets/img/Zone_Chambre/lit.png" alt=""><span>Dodo</span></button></div>`
                 : `<div class="action-row">
-                    <button class="action-btn" onclick="putRabbitToSleep()"><img class="action-icon" src="./assets/img/zone_Chambre/panier.png" alt=""><span>Dodo</span></button>
-                    ${upgradeButtonHtml("chambre", "./assets/img/zone_Chambre/lit.png", "improvePutRabbitToSleep()")}
+                    <button class="action-btn" onclick="putRabbitToSleep()"><img class="action-icon" src="./assets/img/Zone_Chambre/panier.png" alt=""><span>Dodo</span></button>
+                    ${upgradeButtonHtml("chambre", "./assets/img/Zone_Chambre/lit.png", "improvePutRabbitToSleep()")}
                 </div>`,
         },
         sdb: {
             label: "🛁 Salle de bain",
-            image: () => `./assets/img/zone_SdB/lapin_SdB.gif`,
+            image: () => `./assets/img/Zone_SdB/lapin_SdB.png`,
             content: () => progress().improvements.sdb
-                ? `<div class="action-row"><button class="action-btn upgraded" onclick="cleanRabbit()"><img class="action-icon" src="./assets/img/zone_SdB/pommeau.png" alt=""><span>Nettoyer</span></button></div>`
+                ? `<div class="action-row"><button class="action-btn upgraded" onclick="cleanRabbit()"><img class="action-icon" src="./assets/img/Zone_SdB/pommeau.png" alt=""><span>Nettoyer</span></button></div>`
                 : `<div class="action-row">
-                    <button class="action-btn" onclick="cleanRabbit()"><img class="action-icon" src="./assets/img/zone_SdB/brosse.png" alt=""><span>Nettoyer</span></button>
-                    ${upgradeButtonHtml("sdb", "./assets/img/zone_SdB/pommeau.png", "improveCleanRabbit()")}
+                    <button class="action-btn" onclick="cleanRabbit()"><img class="action-icon" src="./assets/img/Zone_SdB/brosse.png" alt=""><span>Nettoyer</span></button>
+                    ${upgradeButtonHtml("sdb", "./assets/img/Zone_SdB/pommeau.png", "improveCleanRabbit()")}
                 </div>`,
         },
         jardin: {
             label: "🌿 Jardin",
-            image: () => `./assets/img/zone_jardin/entrenement.gif`,
+            image: () => `./assets/img/Zone_jardin/entrenement.png`,
             content: () => {
-                const icon = progress().improvements.jardin ? "./assets/img/zone_jardin/agilité.webp" : "./assets/img/zone_jardin/dressage.png";
+                const icon = progress().improvements.jardin ? "./assets/img/Zone_jardin/agilite.webp" : "./assets/img/Zone_jardin/dressage.png";
                 const btnClass = progress().improvements.jardin ? "action-btn upgraded" : "action-btn";
                 return `<div class="action-row">
                     <button class="${btnClass}" onclick="startAgility()"><img class="action-icon" src="${icon}" alt=""><span>Jouer</span></button>
-                    ${progress().improvements.jardin ? "" : upgradeButtonHtml("jardin", "./assets/img/zone_jardin/agilité.webp", "improvePlayWithRabbit()")}
+                    ${progress().improvements.jardin ? "" : upgradeButtonHtml("jardin", "./assets/img/Zone_jardin/agilite.webp", "improvePlayWithRabbit()")}
                     <button class="action-btn adventure" onclick="openAdventure()"><span class="action-icon-emoji">⚔️</span><span>Aventure</span></button>
                 </div>
                 <div class="carrot-counter">🥕 ${game.carrots} carotte${game.carrots > 1 ? "s" : ""}</div>`;
@@ -1141,8 +1163,8 @@ document.addEventListener("DOMContentLoaded", () => {
     function updateGameArea(zone) {
         currentZone = zone;
         gameArea.innerHTML = zones[zone].content();
-        body.className = "";
-        body.classList.add(zone);
+        ["default", "cuisine", "chambre", "sdb", "jardin", "battle-scene"].forEach((c) => body.classList.remove(c));
+        body.classList.add("game-running", zone);
         rabbitImage.onerror = () => { rabbitImage.onerror = null; rabbitImage.src = "./assets/img/species/mystery.svg"; };
         rabbitImage.src = zones[zone].image();
         rabbitImage.classList.toggle("photo-frame", zone === "default");
@@ -1288,7 +1310,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const diff = b.difficulty - power;
                 const label = diff > 15 ? "💀 Très dangereux" : diff > 0 ? "⚠️ Difficile" : "🙂 Faisable";
                 return `<button class="boss-card" onclick="prepareFight('${key}')">
-                    <img src="${b.faceImg || b.coteImg}" alt="${b.name}" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';">
+                    <img src="${b.faceImg || b.coteImg}" alt="${b.name}" onerror="this.onerror=null;this.src='./assets/img/bosses/mystery_boss.svg';">
                     <div class="boss-name">${b.name}</div>
                     <div class="boss-power">Difficulté ${b.difficulty}</div>
                     <div class="boss-diff">${label}</div>
@@ -1342,9 +1364,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     <div class="fight-crit"><div class="fight-crit-fill boss-crit-fill" style="width:0%"></div></div>
                 </div>
                 <div class="vs-screen battle-vs">
-                    <div class="vs-side"><img src="${s.coteImg || s.faceImg}" alt="${s.name}" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';"><div class="vs-sub">Niveau ${progress().currentLevel}</div></div>
+                    <div class="vs-side fighter player-fighter"><img class="battle-sprite player-sprite" src="${s.coteImg || s.faceImg}" alt="${s.name}" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';"><div class="vs-sub">Niveau ${progress().currentLevel}</div><div class="fight-power-name">${powerName(s)}</div></div>
                     <div class="vs-mark">⚔️</div>
-                    <div class="vs-side"><img src="${boss.coteImg || boss.faceImg}" alt="${boss.name}" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';"><div class="vs-sub">Difficulté ${boss.difficulty}</div></div>
+                    <div class="vs-side fighter boss-fighter"><img class="battle-sprite boss-sprite" src="${boss.coteImg || boss.faceImg}" alt="${boss.name}" onerror="this.onerror=null;this.src='./assets/img/bosses/mystery_boss.svg';"><div class="vs-sub">Difficulté ${boss.difficulty}</div><div class="fight-power-name">${powerName(boss)}</div></div>
                 </div>
                 <div id="fightLog" class="fight-log">Prêt au combat !</div>
                 <div class="action-row fight-actions"><button class="action-btn adventure" onclick="fightBoss('${key}')"><span>⚔️ Combattre !</span></button><button class="ghost-btn" onclick="openAdventure()">← Autre adversaire</button></div>
@@ -1416,8 +1438,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const playerCritConfig = criticalConfig(s);
         const bossCritConfig = criticalConfig(boss);
         const log = gameArea.querySelector('#fightLog');
-        const playerImg = gameArea.querySelector('.battle-vs .vs-side:first-child img');
-        const bossImg = gameArea.querySelector('.battle-vs .vs-side:last-child img');
+        const playerImg = gameArea.querySelector('.player-sprite');
+        const bossImg = gameArea.querySelector('.boss-sprite');
 
         while (playerHp > 0 && bossHp > 0) {
             playerCrit = Math.min(100, playerCrit + playerCritConfig.chargePerTurn);
@@ -1440,6 +1462,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 playerCrit = 0;
                 setCritCharge('player', 0);
             }
+            playerImg?.classList.add('fight-attack-player');
+            await sleep(220);
             bossHp = Math.max(0, bossHp - playerDamage);
             if (log) log.textContent = playerIsCrit
                 ? `💥 ${powerName(s)} ! -${playerDamage} PV à ${boss.name}${playerSupportHeal ? ` · +${playerSupportHeal} PV pour ${currentRabbitName() || s.name}` : ""}`
@@ -1447,6 +1471,7 @@ document.addEventListener("DOMContentLoaded", () => {
             bossImg?.classList.add(playerIsCrit ? 'fight-critical-hit' : 'fight-hit');
             setFightHp('boss', bossHp, bossMaxHp);
             await sleep(playerIsCrit ? 650 : 420);
+            playerImg?.classList.remove('fight-attack-player');
             bossImg?.classList.remove('fight-hit','fight-critical-hit');
             if (bossHp <= 0) break;
 
@@ -1468,6 +1493,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 bossCrit = 0;
                 setCritCharge('boss', 0);
             }
+            bossImg?.classList.add('fight-attack-boss');
+            await sleep(220);
             playerHp = Math.max(0, playerHp - bossDamage);
             if (log) log.textContent = bossIsCrit
                 ? `💥 ${powerName(boss)} ! -${bossDamage} PV${bossSupportHeal ? ` · ${boss.name} récupère +${bossSupportHeal} PV` : ""}`
@@ -1475,12 +1502,15 @@ document.addEventListener("DOMContentLoaded", () => {
             playerImg?.classList.add(bossIsCrit ? 'fight-critical-hit' : 'fight-hit');
             setFightHp('player', playerHp, playerMaxHp);
             await sleep(bossIsCrit ? 650 : 420);
+            bossImg?.classList.remove('fight-attack-boss');
             playerImg?.classList.remove('fight-hit','fight-critical-hit');
         }
 
         progress().food = Math.max(progress().food - 7, 0);
         progress().energy = Math.max(progress().energy - 10, 0);
         progress().cleanliness = Math.max(progress().cleanliness - 5, 0);
+
+        const fightExhausted = bossHp > 0 || playerHp <= Math.max(10, Math.round(playerMaxHp * 0.10));
 
         if (bossHp <= 0) {
             const reward = Math.max(2, Math.round((boss.difficulty || 20) * 0.3) + Math.floor(Math.random() * 3));
@@ -1492,6 +1522,19 @@ document.addEventListener("DOMContentLoaded", () => {
             progress().friendship = Math.max(progress().friendship - 5, 0);
             if (log) log.textContent = `${boss.name} gagne ce combat. ${currentRabbitName()} a besoin de repos 😴`;
             spawnParticles("💦", 5);
+        }
+
+        if (fightExhausted) {
+            progress().food = 0;
+            progress().energy = 0;
+            progress().cleanliness = 0;
+            if (bossHp <= 0) {
+                if (log) log.textContent += ` · ${currentRabbitName()} termine le combat complètement épuisé·e : nourriture, sommeil et propreté tombent à 0.`;
+            } else {
+                if (log) log.textContent = `${currentRabbitName()} revient complètement épuisé·e : nourriture, sommeil et propreté tombent à 0.`;
+            }
+            showToast(`${currentRabbitName()} est KO de fatigue : nourriture, sommeil et propreté à 0.`, "warn");
+            spawnParticles("💤", 5);
         }
         updateStatusBars();
         checkStatus();
@@ -1613,6 +1656,7 @@ document.addEventListener("DOMContentLoaded", () => {
         currentZone = "default";
         gameRoot.style.display = "none";
         mainNav.style.display = "none";
+        body.classList.remove("game-running");
         adoptionScreen.style.display = "flex";
         showCommon(0);
         showToast("Déconnecté. À bientôt ! 👋");
