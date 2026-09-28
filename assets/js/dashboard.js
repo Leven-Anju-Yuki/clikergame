@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function renderDashboard() {
         const rates = loadEggRates();
-        ["commun", "rare", "epique", "legendaire"].forEach((r) => {
+        ["commun", "rare", "epique", "legendaire", "mythique", "divin"].forEach((r) => {
             const input = document.getElementById("rate-" + r);
             if (input) input.value = rates[r];
         });
@@ -266,8 +266,10 @@ document.addEventListener("DOMContentLoaded", () => {
             rare: parseFloat(document.getElementById("rate-rare").value) || 0,
             epique: parseFloat(document.getElementById("rate-epique").value) || 0,
             legendaire: parseFloat(document.getElementById("rate-legendaire").value) || 0,
+            mythique: parseFloat(document.getElementById("rate-mythique").value) || 0,
+            divin: parseFloat(document.getElementById("rate-divin").value) || 0,
         };
-        const total = rates.commun + rates.rare + rates.epique + rates.legendaire;
+        const total = Object.values(rates).reduce((sum, value) => sum + value, 0);
         if (Math.abs(total - 100) > 0.5) {
             showToast(`Le total doit faire 100% (actuellement ${total}%).`, "warn");
             return;

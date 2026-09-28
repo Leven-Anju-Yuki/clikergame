@@ -64,7 +64,7 @@ function loadEggRates() {
         const stored = JSON.parse(localStorage.getItem(EGG_RATES_KEY));
         if (stored) return stored;
     } catch (e) {}
-    return JSON_EGG_RATES || { commun: 70, rare: 22, epique: 6, legendaire: 2 };
+    return JSON_EGG_RATES || { commun: 68, rare: 22, epique: 6, legendaire: 2.5, mythique: 1.2, divin: 0.3 };
 }
 function saveEggRates(rates) { localStorage.setItem(EGG_RATES_KEY, JSON.stringify(rates)); }
 

@@ -124,6 +124,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 speciesTraits: {},
                 discoveredBosses: [],
                 duplicateCounts: {},
+                records: { eggsOpened: 0, eggsBought: 0, bossesDefeated: 0, agilityPlayed: 0, puzzlesCompleted: 0 },
+                audio: { muted: false, ambience: true, sfx: true },
             };
         }
 
@@ -169,8 +171,64 @@ document.addEventListener("DOMContentLoaded", () => {
         // ============================================================
         // TOASTS
         // ============================================================
-        function showToast(message) {
-            window.alert(message);
+        function showToast(message, type = "") {
+            if (!toastContainer) return;
+            const el = document.createElement("div");
+            el.className = "toast readable-toast" + (type ? " " + type : "");
+            const text = document.createElement("span");
+            text.className = "toast-message";
+            text.textContent = message;
+            const close = document.createElement("button");
+            close.className = "toast-close";
+            close.type = "button";
+            close.setAttribute("aria-label", "Fermer la notification");
+            close.textContent = "OK";
+            close.onclick = () => el.remove();
+            el.append(text, close);
+            toastContainer.appendChild(el);
+            // Les messages importants ne disparaissent jamais seuls : le joueur valide avec OK.
+            // Seules les informations neutres/secondaires s'effacent automatiquement.
+            const important = ["warn", "success", "levelup"].includes(type);
+            if (!important) {
+                const timer = setTimeout(() => el.remove(), 12000);
+                el.addEventListener("mouseenter", () => clearTimeout(timer), { once: true });
+            }
+        }
+
+        function ensureNewSystems() {
+            game.records = { eggsOpened: 0, eggsBought: 0, bossesDefeated: 0, agilityPlayed: 0, puzzlesCompleted: 0, ...(game.records || {}) };
+            game.audio = { muted: false, ambience: true, sfx: true, ...(game.audio || {}) };
+        }
+
+        const AUDIO_FILES = {
+            click: "./assets/audio/common/click.mp3", purchase: "./assets/audio/common/purchase.mp3",
+            levelup: "./assets/audio/common/level-up.mp3", eggCrack: "./assets/audio/egg/egg-crack.mp3",
+            eggRare: "./assets/audio/egg/rare-reveal.mp3", attack: "./assets/audio/combat/attack.mp3",
+            critical: "./assets/audio/combat/critical.mp3", victory: "./assets/audio/combat/victory.mp3",
+            halloween: "./assets/audio/halloween/ambience.mp3", noel: "./assets/audio/noel/ambience.mp3",
+            paques: "./assets/audio/paques/ambience.mp3"
+        };
+        let ambienceAudio = null;
+        function playSfx(name) {
+            ensureNewSystems(); if (game.audio.muted || !game.audio.sfx || !AUDIO_FILES[name]) return;
+            const a = new Audio(AUDIO_FILES[name]); a.volume = 0.55; a.play().catch(() => {});
+        }
+        function updateAmbience() {
+            ensureNewSystems();
+            const event = currentActiveEvents()[0];
+            const wanted = event && AUDIO_FILES[event];
+            if (ambienceAudio) { ambienceAudio.pause(); ambienceAudio = null; }
+            if (!wanted || game.audio.muted || !game.audio.ambience) return;
+            ambienceAudio = new Audio(wanted); ambienceAudio.loop = true; ambienceAudio.volume = 0.22; ambienceAudio.play().catch(() => {});
+        }
+        window.toggleLapinousAudio = function () {
+            ensureNewSystems(); game.audio.muted = !game.audio.muted; autoSave(); updateAmbience(); renderAudioButton();
+            showToast(game.audio.muted ? "🔇 Sons coupés" : "🔊 Sons activés", "success");
+        };
+        function renderAudioButton() {
+            let btn = document.getElementById("lapinousAudioBtn");
+            if (!btn) { btn = document.createElement("button"); btn.id="lapinousAudioBtn"; btn.className="audio-toggle"; btn.onclick=window.toggleLapinousAudio; document.body.appendChild(btn); }
+            ensureNewSystems(); btn.textContent = game.audio.muted ? "🔇" : "🔊"; btn.title = "Activer / couper les sons"; renderRecordsButton();
         }
 
         // ============================================================
@@ -606,16 +664,19 @@ document.addEventListener("DOMContentLoaded", () => {
             const roll = Math.random() * 100;
             let acc = 0;
             let chosenRarity = "commun";
-            for (const rarity of ["commun", "rare", "epique", "legendaire"]) {
+            for (const rarity of ["commun", "rare", "epique", "legendaire", "mythique", "divin"]) {
                 acc += rates[rarity] || 0;
                 if (roll <= acc) {
                     chosenRarity = rarity;
                     break;
                 }
             }
-            const pool = Object.entries(species).filter(
+            let pool = Object.entries(species).filter(
                 ([k, s]) => s.rarity === chosenRarity && !s.hidden && isSpeciesAvailableNow(s),
             );
+            const activeEvents = currentActiveEvents();
+            const eventPool = pool.filter(([, sp]) => sp.event && (Array.isArray(sp.event) ? sp.event : String(sp.event).split(",")).some(e => activeEvents.includes(String(e).trim())));
+            if (eventPool.length && Math.random() < 0.65) pool = eventPool;
             if (pool.length === 0) {
                 // Rien de dispo dans cette rareté en ce moment (ex: tout événementiel hors saison) → repli sur un commun
                 const fallback = Object.entries(species).filter(
@@ -753,6 +814,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <p><strong>N'aime pas :</strong> ${(s.dislikes || []).join(", ") || "—"}</p>
                     <p><strong>Pouvoir :</strong> ${s.power}</p>
                     ${encyclopediaProgressHtml(key)}
+                    <button class="action-btn" onclick="switchActiveSpecies('${key}'); $('#encyclopediaModal').modal('hide');">🐰 Choisir ce lapin</button>
                     <p class="entry-quote">« ${s.quote} »</p>
                 </div>
             </div>`;
@@ -799,12 +861,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 const card = document.createElement("button");
                 card.type = "button";
                 card.className = "encyclopedia-card" + (owned ? "" : " locked");
-                const imgSrc = owned ? s.faceImg || s.coteImg : "./assets/img/species/mystery.svg";
+                const realImg = s.faceImg || s.coteImg || "";
+                const imgSrc = realImg || "./assets/img/species/mystery.svg";
                 const eventBadge =
                     s.event && !isSpeciesAvailableNow(s)
                         ? `<span class="event-badge">${eventLabelFor(s).split(" ")[0]}</span>`
                         : "";
-                card.innerHTML = `<img src="${imgSrc}" alt="${owned ? s.name : "???"}" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';"><span class="card-name">${owned ? s.name : "???"}</span>${owned ? '<span class="owned-badge">✓</span>' : ""}${eventBadge}`;
+                card.innerHTML = `<img class="${owned ? "" : (realImg ? "rabbit-silhouette" : "")}" src="${imgSrc}" alt="${owned ? s.name : "???"}" onerror="this.onerror=null;this.classList.remove('rabbit-silhouette');this.src='./assets/img/species/mystery.svg';"><span class="card-name">${owned ? s.name : "???"}</span>${owned ? '<span class="owned-badge">✓</span>' : ""}${eventBadge}`;
                 card.addEventListener("click", () => {
                     if (owned) showEncyclopediaDetail(key);
                     else if (s.event && !isSpeciesAvailableNow(s))
@@ -910,7 +973,7 @@ document.addEventListener("DOMContentLoaded", () => {
             foodBar.style.width = progress().food + "%";
             energyBar.style.width = progress().energy + "%";
             cleanlinessBar.style.width = progress().cleanliness + "%";
-            friendshipBar.style.width = progress().friendship + "%";
+            friendshipBar.style.width = Math.max(0, Math.min(100, ((progress().friendshipTotal - ((progress().currentLevel - 1) * 25)) / 25) * 100)) + "%";
         }
         function bounceRabbit() {
             rabbitImage.classList.remove("bounce");
@@ -946,25 +1009,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Tous tes lapins partagent le même niveau/stats/progression — changer ici
         // ne fait que choisir lequel te représente (et son trait bonus/malus).
+        let collectionCarouselIndex = 0;
         function collectionSwitcherHtml() {
-            const owned = game.ownedSpecies || [];
+            const owned = (game.ownedSpecies || []).filter(k => getSpecies()[k]);
             if (owned.length <= 1) return "";
-            const species = getSpecies();
-            const cards = owned
-                .map((key) => {
-                    const s = species[key];
-                    if (!s) return "";
-                    const active = key === game.species;
-                    const img = s.faceImg || s.coteImg || "./assets/img/species/mystery.svg";
-                    const displayName = game.speciesNames[key] || s.name;
-                    return `<button class="collection-card${active ? " active" : ""}" onclick="switchActiveSpecies('${key}')" ${active ? "disabled" : ""}>
-                    <img src="${img}" alt="${displayName}" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';">
-                    <span>${displayName}</span>
-                </button>`;
-                })
-                .join("");
-            return `<div class="collection-switcher"><p class="upgrade-locked-note">Tes lapins (clique pour changer ton compagnon actif) :</p><div class="collection-row">${cards}</div></div>`;
+            const activeIndex = Math.max(0, owned.indexOf(game.species));
+            if (collectionCarouselIndex >= owned.length || collectionCarouselIndex < 0) collectionCarouselIndex = activeIndex;
+            const key = owned[collectionCarouselIndex], sp = getSpecies()[key];
+            const img = sp.faceImg || sp.coteImg || "./assets/img/species/mystery.svg";
+            const name = game.speciesNames[key] || sp.name;
+            return `<div class="collection-switcher collection-carousel"><p class="upgrade-locked-note">Tes lapins (${collectionCarouselIndex+1}/${owned.length}) :</p><div class="collection-carousel-main"><button class="collection-arrow" onclick="moveCollectionCarousel(-1)">‹</button><button class="collection-card carousel-big ${key===game.species?'active':''}" onclick="switchActiveSpecies('${key}')"><img src="${img}" alt="${name}" onerror="this.src='./assets/img/species/mystery.svg'"><span>${name}${key===game.species?' · actif':''}</span></button><button class="collection-arrow" onclick="moveCollectionCarousel(1)">›</button></div></div>`;
         }
+        window.moveCollectionCarousel=function(dir){const owned=(game.ownedSpecies||[]).filter(k=>getSpecies()[k]);if(!owned.length)return;collectionCarouselIndex=(collectionCarouselIndex+dir+owned.length)%owned.length;refreshCurrentZone();};
 
         function salonFriendPlacement(key, index) {
             // Emplacements fixes et espacés pour éviter les chevauchements.
@@ -1080,11 +1136,11 @@ document.addEventListener("DOMContentLoaded", () => {
                         <span class="console-game-icon">🧩</span><strong>Puzzles</strong>
                         <small>${completed}/${puzzleCatalog().length} images terminées au moins une fois</small>
                     </button>
-                    <button class="console-game-card locked" type="button" onclick="showToast('Le Memory arrive bientôt 🧠', 'warn')">
-                        <span class="console-game-icon">🧠</span><strong>Memory</strong><small>Bientôt disponible</small>
+                    <button class="console-game-card" type="button" onclick="openMemory()">
+                        <span class="console-game-icon">🧠</span><strong>Memory</strong><small>${mg.memory.completed || 0} partie(s) terminée(s)</small>
                     </button>
-                    <button class="console-game-card locked" type="button" onclick="showToast('Lapidoku arrive bientôt 🐰🔢', 'warn')">
-                        <span class="console-game-icon">🔢</span><strong>Lapidoku</strong><small>Bientôt disponible</small>
+                    <button class="console-game-card" type="button" onclick="openLapidoku()">
+                        <span class="console-game-icon">🔢</span><strong>Lapidoku</strong><small>${mg.lapidoku.completed || 0} grille(s) terminée(s)</small>
                     </button>
                 </div>
                 <button class="ghost-btn" onclick="refreshCurrentZone()">← Retour au Salon</button>
@@ -1093,36 +1149,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
         window.openPuzzleHub = function () {
             const mg = ensureMinigameProgress().puzzle;
-            const cards = puzzleCatalog()
-                .map((puz, index) => {
-                    const st = puzzleState(puz.id);
-                    const unlocked = index <= (mg.unlockedPuzzle || 0);
-                    const status = st.completed
-                        ? "✅ Terminé"
-                        : unlocked
-                          ? "À faire"
-                          : "🔒 Termine le puzzle précédent";
-                    const linkedNames = (puz.linkedSpecies || [])
-                        .map((key) => getSpecies()[key]?.name || key)
-                        .join(", ");
-                    return `<button class="puzzle-card ${unlocked ? "" : "locked"}" ${unlocked ? `onclick="openPuzzleLevels(${index})"` : "disabled"}>
-                <img src="${puz.image}" alt="${puz.title}" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';">
-                <span><strong>${index + 1}. ${puz.title}</strong><small>${status}</small>${linkedNames ? `<small>🐰 ${linkedNames}</small>` : ""}</span>
-            </button>`;
-                })
-                .join("");
-            gameArea.innerHTML = `
-            <div class="puzzle-hub">
-                <div class="console-title">🧩 Puzzles de ${currentRabbitName()}</div>
-                <p class="agility-hint">Chaque image se débloque dans l'ordre. Pour une même image, termine une difficulté pour ouvrir la suivante.</p>
-                <div class="puzzle-list">${cards}</div>
-                <button class="ghost-btn" onclick="openGameConsole()">← Console</button>
-            </div>`;
+            const activeEvents = currentActiveEvents();
+            const catalog = puzzleCatalog();
+            const visible = catalog.map((puz,index)=>({puz,index})).filter(({puz}) => {
+                const eventKey = puz.event || (puz.id === "noel" ? "noel" : (["pacques","paques"].includes(puz.id) ? "paques" : (puz.id === "halloween" ? "halloween" : null)));
+                return !eventKey || activeEvents.includes(eventKey);
+            });
+            const cards = visible.map(({puz,index}) => {
+                const st = puzzleState(puz.id);
+                const unlocked = index <= (mg.unlockedPuzzle || 0);
+                const status = st.completed ? "✅ Terminé" : unlocked ? "À faire" : "🔒 Termine le puzzle précédent";
+                const linkedNames = (puz.linkedSpecies || []).map((key) => getSpecies()[key]?.name || key).join(", ");
+                return `<button class="puzzle-card ${unlocked ? "" : "locked"}" ${unlocked ? `onclick="openPuzzleLevels(${index})"` : "disabled"}>
+                    <img src="${puz.image}" alt="${puz.title}" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';">
+                    <span><strong>${puz.title}</strong><small>${status}</small>${linkedNames ? `<small>🐰 ${linkedNames}</small>` : ""}</span>
+                </button>`;
+            }).join("");
+            gameArea.innerHTML = `<div class="puzzle-hub"><div class="console-title">🧩 Puzzles de ${currentRabbitName()}</div><p class="agility-hint">Les puzzles événementiels apparaissent uniquement pendant leur événement.</p><div class="puzzle-list">${cards}</div><button class="ghost-btn" onclick="openGameConsole()">← Console</button></div>`;
         };
 
         window.openPuzzleLevels = function (puzzleIndex) {
             const puz = puzzleCatalog()[puzzleIndex];
             if (!puz) return;
+            const eventKey = puz.event || (puz.id === "noel" ? "noel" : (["pacques","paques"].includes(puz.id) ? "paques" : (puz.id === "halloween" ? "halloween" : null)));
+            if (eventKey && !currentActiveEvents().includes(eventKey)) { openPuzzleHub(); return; }
             const mg = ensureMinigameProgress().puzzle;
             if (puzzleIndex > (mg.unlockedPuzzle || 0)) return;
             const st = puzzleState(puz.id);
@@ -1170,7 +1220,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     const sourceCol = sourceIndex % lvl.cols;
                     const x = lvl.cols === 1 ? 0 : (sourceCol / (lvl.cols - 1)) * 100;
                     const y = lvl.rows === 1 ? 0 : (sourceRow / (lvl.rows - 1)) * 100;
-                    return `<button class="puzzle-piece ${selectedPuzzleSlot === slotIndex ? "selected" : ""}" onclick="selectPuzzlePiece(${slotIndex})" aria-label="Pièce ${slotIndex + 1}"
+                    return `<button draggable="true" data-slot="${slotIndex}" ondragstart="puzzleDragStart(event,${slotIndex})" ondragover="event.preventDefault()" ondrop="puzzleDrop(event,${slotIndex})" class="puzzle-piece ${selectedPuzzleSlot === slotIndex ? "selected" : ""}" onclick="selectPuzzlePiece(${slotIndex})" aria-label="Pièce ${slotIndex + 1}"
                 style="background-image:url('${puz.image}');background-size:${lvl.cols * 100}% ${lvl.rows * 100}%;background-position:${x}% ${y}%;"></button>`;
                 })
                 .join("");
@@ -1178,7 +1228,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="puzzle-play">
                 <div class="puzzle-play-head"><strong>🧩 ${puz.title}</strong><span>${lvl.label} · ${moves} coup${moves > 1 ? "s" : ""}</span></div>
                 <div class="puzzle-board" style="--puzzle-cols:${lvl.cols};--puzzle-rows:${lvl.rows};">${pieces}</div>
-                <p class="agility-hint">Clique sur deux pièces pour les échanger.</p>
+                <p class="agility-hint">Glisse une pièce sur une autre pour les échanger (ou clique sur deux pièces).</p>
                 <div class="puzzle-actions"><button class="ghost-btn" onclick="startPuzzle(${puzzleIndex},${levelIndex})">🔀 Mélanger</button><button class="ghost-btn" onclick="openPuzzleLevels(${puzzleIndex})">← Quitter</button></div>
             </div>`;
         }
@@ -1218,6 +1268,17 @@ document.addEventListener("DOMContentLoaded", () => {
             renderActivePuzzle();
         };
 
+        window.puzzleDragStart = function (event, slotIndex) {
+            window._puzzleDragSlot = slotIndex;
+            if (event.dataTransfer) event.dataTransfer.effectAllowed = "move";
+        };
+        window.puzzleDrop = function (event, slotIndex) {
+            event.preventDefault();
+            if (!activePuzzle || window._puzzleDragSlot == null || window._puzzleDragSlot === slotIndex) return;
+            const a = window._puzzleDragSlot, b = slotIndex; window._puzzleDragSlot = null;
+            selectedPuzzleSlot = a; window.selectPuzzlePiece(b);
+        };
+
         window.selectPuzzlePiece = function (slotIndex) {
             if (!activePuzzle) return;
             if (selectedPuzzleSlot === null) {
@@ -1249,7 +1310,9 @@ document.addEventListener("DOMContentLoaded", () => {
             const lvl = puzzleLevels()[levelIndex];
             const mg = ensureMinigameProgress().puzzle;
             const st = puzzleState(puz.id);
+            const wasCompleted = st.completed;
             st.completed = true;
+            if (!wasCompleted) { ensureNewSystems(); game.records.puzzlesCompleted += 1; }
             st.highestCompletedLevel = Math.max(st.highestCompletedLevel, levelIndex);
             const previousBest = st.bestMoves[levelIndex];
             st.bestMoves[levelIndex] = previousBest ? Math.min(previousBest, moves) : moves;
@@ -1313,6 +1376,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 training.points = Math.min(training.max, training.points + 1);
                 training.bonus = training.points;
                 training.completed = training.points >= training.max;
+                training.skillUnlocked = training.completed;
                 showToast(
                     training.completed
                         ? `⚔️ ${s.name} atteint son renforcement maximal : +${training.bonus} puissance !`
@@ -1429,6 +1493,9 @@ document.addEventListener("DOMContentLoaded", () => {
             updateGameArea(currentZone);
         }
 
+        window.showLapinousRecords=function(){ensureNewSystems();const owned=(game.ownedSpecies||[]).length;const maxLevel=Math.max(1,...Object.values(game.progress||{}).map(p=>Number(p.currentLevel)||1));const overlay=document.createElement('div');overlay.className='records-overlay';overlay.innerHTML=`<div class="records-card"><button class="records-close" aria-label="Fermer">×</button><h2>🏆 Records Lapinous</h2><div class="records-grid"><div><strong>${owned}</strong><span>Lapins collectionnés</span></div><div><strong>${game.records.eggsOpened}</strong><span>Œufs ouverts</span></div><div><strong>${game.records.eggsBought}</strong><span>Œufs achetés</span></div><div><strong>${game.records.bossesDefeated}</strong><span>Boss vaincus</span></div><div><strong>${game.records.agilityPlayed}</strong><span>Parties d’agilité</span></div><div><strong>${game.records.puzzlesCompleted}</strong><span>Jeux/puzzles terminés</span></div><div><strong>${maxLevel}</strong><span>Meilleur niveau</span></div><div><strong>${game.carrots}</strong><span>Carottes actuelles</span></div></div></div>`;document.body.appendChild(overlay);overlay.onclick=e=>{if(e.target===overlay||e.target.classList.contains('records-close'))overlay.remove();};};
+        function renderRecordsButton(){let b=document.getElementById('lapinousRecordsBtn');if(!b){b=document.createElement('button');b.id='lapinousRecordsBtn';b.className='records-toggle';b.textContent='🏆';b.title='Records';b.onclick=window.showLapinousRecords;document.body.appendChild(b);}}
+
         // ============================================================
         // STATUTS / NIVEAU
         // ============================================================
@@ -1441,19 +1508,23 @@ document.addEventListener("DOMContentLoaded", () => {
                 showToast(`${currentRabbitName() || "Ton lapin"} a besoin d'un bain ! 🫧`, "warn");
         }
         function checkLevelUp() {
-            const nextThreshold = progress().currentLevel * 25;
-            if (progress().friendshipTotal >= nextThreshold) {
+            while (progress().currentLevel < 100 && progress().friendshipTotal >= progress().currentLevel * 25) {
                 progress().currentLevel += 1;
-                document.getElementById("level").innerText = progress().currentLevel;
-                showToast(`🎉 Niveau ${progress().currentLevel} atteint !`);
-                spawnParticles("🎉", 10);
-                refreshCurrentZone();
-                updateStatusBars();
+                if (game.species === "az" && progress().currentLevel % 20 === 0) {
+                    showToast(`🌟 Azazel atteint le palier ${progress().currentLevel} : sa compétence secrète devient plus puissante !`, "levelup");
+                }
+                if (progress().currentLevel % 20 === 0) { game.eggs += 1; showToast(`🎁 Niveau ${progress().currentLevel} : un œuf offert !`, "levelup"); }
+                else showToast(`🎉 Niveau ${progress().currentLevel} atteint !`, "levelup");
+                playSfx("levelup"); spawnParticles("🎉", 10);
             }
+            if (progress().currentLevel >= 100) progress().currentLevel = 100;
+            document.getElementById("level").innerText = progress().currentLevel;
+            updateStatusBars();
         }
         function gainFriendship(amount) {
-            progress().friendship = Math.min(progress().friendship + amount, 100);
-            progress().friendshipTotal += amount;
+            const scaled = Math.max(1, Math.round(amount * 0.45));
+            progress().friendshipTotal = Math.max(0, progress().friendshipTotal + scaled);
+            progress().friendship = Math.max(0, Math.min(100, progress().friendship + scaled));
             checkLevelUp();
         }
 
@@ -1468,7 +1539,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     progress().food + traitGain("food", 5) + progress().boosts.food,
                     100,
                 );
-                gainFriendship(3);
                 bounceRabbit();
                 spawnParticles("🥕", 5);
             }
@@ -1484,7 +1554,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     progress().energy + traitGain("energy", 5) + progress().boosts.energy,
                     100,
                 );
-                gainFriendship(3);
                 bounceRabbit();
                 spawnParticles("💤", 5);
             }
@@ -1500,7 +1569,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     progress().cleanliness + 5 + progress().boosts.cleanliness,
                     100,
                 );
-                gainFriendship(3);
                 bounceRabbit();
                 spawnParticles("🫧", 5);
             }
@@ -1509,68 +1577,136 @@ document.addEventListener("DOMContentLoaded", () => {
             autoSave();
         };
 
-        // ---- Mini-jeu d'agilité ----
+        // ---- Memory ----
+        let memoryState = null;
+        window.openMemory = function () {
+            const pool = (game.ownedSpecies || []).slice(0, 8);
+            const fallback = Object.keys(getSpecies()).slice(0, 8);
+            const keys = (pool.length >= 4 ? pool : fallback).slice(0, 6);
+            const cards = [...keys, ...keys].sort(() => Math.random() - 0.5).map((key, i) => ({ key, id:i, open:false, found:false }));
+            memoryState = { cards, first:null, lock:false, moves:0 };
+            renderMemory();
+        };
+        function renderMemory() {
+            if (!memoryState) return;
+            gameArea.innerHTML = `<div class="console-panel"><div class="console-title">🧠 Memory</div><p class="agility-hint">Retrouve les paires. Les lapins de ta collection sont utilisés en priorité.</p><div class="memory-grid">${memoryState.cards.map((c,i)=>{const sp=getSpecies()[c.key]||{};return `<button class="memory-card ${c.open||c.found?'open':''}" onclick="flipMemory(${i})" ${c.found?'disabled':''}>${c.open||c.found?`<img src="${sp.faceImg||'./assets/img/species/mystery.svg'}" alt="${sp.name||''}">`:'❓'}</button>`}).join('')}</div><small>${memoryState.moves} coup(s)</small><button class="ghost-btn" onclick="openGameConsole()">← Console</button></div>`;
+        }
+        window.flipMemory = function(i){
+            const st=memoryState;if(!st||st.lock) return; const c=st.cards[i]; if(c.open||c.found)return; c.open=true;
+            if(st.first===null){st.first=i;renderMemory();return;} st.moves++; const a=st.cards[st.first];
+            if(a.key===c.key){a.found=c.found=true;st.first=null;renderMemory(); if(st.cards.every(x=>x.found)){ensureMinigameProgress().memory.completed++; gainFriendship(6); game.records.puzzlesCompleted += 1; showToast('Memory terminé : +6 💛','success'); autoSave();}} else {st.lock=true;renderMemory();setTimeout(()=>{a.open=c.open=false;st.first=null;st.lock=false;renderMemory();},700);}
+        };
+
+        // ---- Lapidoku 4x4 ----
+        let lapidokuState=null;
+        const LAPIDOKU_SOLVED=[1,2,3,4,3,4,1,2,2,1,4,3,4,3,2,1];
+        window.openLapidoku=function(){
+            const holes=[1,3,4,6,9,11,12,14]; const board=LAPIDOKU_SOLVED.slice(); holes.forEach(i=>board[i]=0); lapidokuState={board,holes:new Set(holes),selected:1}; renderLapidoku();
+        };
+        function renderLapidoku(){if(!lapidokuState)return;gameArea.innerHTML=`<div class="console-panel"><div class="console-title">🔢 Lapidoku</div><p class="agility-hint">Complète la grille 4×4 : chaque ligne, colonne et bloc 2×2 doit contenir 1, 2, 3 et 4.</p><div class="lapidoku-grid">${lapidokuState.board.map((v,i)=>`<button class="lapidoku-cell ${lapidokuState.holes.has(i)?'editable':'fixed'}" ${lapidokuState.holes.has(i)?`onclick="cycleLapidoku(${i})"`:'disabled'}>${v||'·'}</button>`).join('')}</div><button class="action-btn" onclick="checkLapidoku()">✓ Vérifier</button><button class="ghost-btn" onclick="openGameConsole()">← Console</button></div>`;}
+        window.cycleLapidoku=function(i){if(!lapidokuState?.holes.has(i))return;lapidokuState.board[i]=(lapidokuState.board[i]%4)+1;renderLapidoku();};
+        window.checkLapidoku=function(){if(!lapidokuState)return;const ok=lapidokuState.board.every((v,i)=>v===LAPIDOKU_SOLVED[i]);if(ok){ensureMinigameProgress().lapidoku.completed++;gainFriendship(8);showToast('Lapidoku réussi : +8 💛','success');spawnParticles('💛',6);autoSave();openGameConsole();}else showToast('Il reste des erreurs dans la grille 🐰','warn');};
+
+        // ---- Mini-jeu d'agilité : mini-runner ----
         let agilityRAF = null;
+        let agilityRun = null;
+
         window.startAgility = function () {
             if (progress().food <= 5 || progress().energy <= 5 || progress().cleanliness <= 5) {
                 showToast("Votre lapin n'est pas en état de jouer maintenant !", "warn");
                 return;
             }
-            const t = currentTrait();
-            const sweetWidth = Math.min(55, Math.max(15, 30 + (t.agilityBonus || 0)));
-            const sweetStart = 50 - sweetWidth / 2;
-
+            cancelAnimationFrame(agilityRAF);
+            const trait = currentTrait();
+            agilityRun = {
+                startedAt: performance.now(), lastAt: performance.now(),
+                y: 0, vy: 0, obstacles: [], spawnIn: 850, distance: 0,
+                hits: 0, maxHits: 3, speed: Math.max(0.24, 0.34 - ((trait.agilityBonus || 0) / 1000)),
+                running: true
+            };
             gameArea.innerHTML = `
-            <div class="action-row" style="flex-direction:column;align-items:center;">
-                <div class="agility-hint">Clique sur "Sauter !" quand le curseur est dans la zone verte 🎯</div>
-                <div class="agility-track" id="agilityTrack">
-                    <div class="agility-sweet" style="left:${sweetStart}%;width:${sweetWidth}%;"></div>
-                    <div class="agility-marker" id="agilityMarker" style="left:0%;"></div>
+              <div class="agility-runner-wrap">
+                <div class="agility-runner-head">
+                  <strong>🐇 Parcours d'agilité</strong>
+                  <span>Distance : <b id="agilityDistance">0</b> m</span>
+                  <span>Erreurs : <b id="agilityHits">0</b>/3</span>
                 </div>
-                <button class="action-btn" onclick="jumpAgility(${sweetStart}, ${sweetWidth})" style="margin-top:14px;"><span>Sauter !</span></button>
-            </div>`;
-            gameArea.appendChild(rabbitImage);
-
-            const marker = document.getElementById("agilityMarker");
-            const start = performance.now();
-            function loop(now) {
-                const t2 = (now - start) / 900;
-                const pos = ((Math.sin(t2) + 1) / 2) * 100;
-                if (marker) marker.style.left = pos + "%";
-                window._agilityPos = pos;
-                agilityRAF = requestAnimationFrame(loop);
-            }
-            agilityRAF = requestAnimationFrame(loop);
+                <div class="agility-runner" id="agilityRunner" tabindex="0" aria-label="Parcours d'agilité">
+                  <div class="agility-ground"></div>
+                  <div class="agility-runner-rabbit" id="agilityRabbit">🐇</div>
+                  <div class="agility-start-hint" id="agilityHint">ESPACE, ↑ ou clique pour sauter</div>
+                </div>
+                <div class="agility-runner-controls">
+                  <button class="action-btn" id="agilityJumpBtn" onclick="agilityJump()">⬆ Sauter</button>
+                  <button class="ghost-btn" onclick="stopAgility(false)">Arrêter</button>
+                </div>
+                <small>Le parcours accélère progressivement. Trois collisions mettent fin à la partie.</small>
+              </div>`;
+            const runner = document.getElementById('agilityRunner');
+            runner.onclick = (e) => { if (!e.target.closest('button')) agilityJump(); };
+            runner.focus();
+            window.addEventListener('keydown', agilityKeyHandler);
+            agilityRAF = requestAnimationFrame(agilityLoop);
         };
 
-        window.jumpAgility = function (sweetStart, sweetWidth) {
-            cancelAnimationFrame(agilityRAF);
-            const pos = window._agilityPos || 0;
-            const success = pos >= sweetStart && pos <= sweetStart + sweetWidth;
-            if (success) {
-                gainFriendship(3 + traitGain("friendship", 0) + progress().boosts.friendship);
-                progress().food = Math.max(progress().food - 5, 0);
-                progress().energy = Math.max(progress().energy - 5, 0);
-                progress().cleanliness = Math.max(progress().cleanliness - 5, 0);
-                showToast(
-                    `${currentRabbitName() || "Ton lapin"} réussit son saut ! 🐇✨`,
-                    "success",
-                );
-                spawnParticles("💛", 6);
-            } else {
-                progress().friendship = Math.max(progress().friendship - 5, 0);
-                progress().cleanliness = Math.max(progress().cleanliness - 8, 0);
-                showToast(
-                    `${currentRabbitName() || "Ton lapin"} rate son saut et se salit un peu... 😥`,
-                    "warn",
-                );
-                spawnParticles("💦", 4);
+        function agilityKeyHandler(e) {
+            if (!agilityRun?.running) return;
+            if (e.code === 'Space' || e.code === 'ArrowUp') { e.preventDefault(); agilityJump(); }
+        }
+
+        window.agilityJump = function () {
+            if (!agilityRun?.running) return;
+            if (agilityRun.y <= 1) agilityRun.vy = 0.68;
+            const hint = document.getElementById('agilityHint'); if (hint) hint.remove();
+        };
+
+        function agilityLoop(now) {
+            if (!agilityRun?.running) return;
+            const dt = Math.min(34, now - agilityRun.lastAt); agilityRun.lastAt = now;
+            agilityRun.distance += dt * (0.010 + agilityRun.speed * 0.012);
+            agilityRun.speed = Math.min(0.72, agilityRun.speed + dt * 0.000006);
+            agilityRun.vy -= 0.00215 * dt;
+            agilityRun.y += agilityRun.vy * dt;
+            if (agilityRun.y < 0) { agilityRun.y = 0; agilityRun.vy = 0; }
+            const rabbit = document.getElementById('agilityRabbit');
+            if (rabbit) rabbit.style.transform = `translateY(${-Math.min(118, agilityRun.y)}px) scaleX(-1)`;
+
+            agilityRun.spawnIn -= dt;
+            if (agilityRun.spawnIn <= 0) {
+                const runner = document.getElementById('agilityRunner');
+                if (runner) {
+                    const el = document.createElement('div'); el.className='agility-obstacle'; el.textContent = Math.random() < .5 ? '🪵' : '🪨';
+                    runner.appendChild(el); agilityRun.obstacles.push({ x: 100, hit:false, el });
+                }
+                agilityRun.spawnIn = 1050 + Math.random()*650 - agilityRun.speed*420;
             }
-            bounceRabbit();
-            updateStatusBars();
-            checkStatus();
-            autoSave();
-            setTimeout(() => refreshCurrentZone(), 700);
+            for (const o of agilityRun.obstacles) {
+                o.x -= dt * agilityRun.speed * 0.095;
+                if (o.el) o.el.style.left = o.x + '%';
+                if (!o.hit && o.x < 19 && o.x > 8 && agilityRun.y < 43) {
+                    o.hit=true; agilityRun.hits++; o.el?.classList.add('hit');
+                    const h=document.getElementById('agilityHits'); if(h)h.textContent=agilityRun.hits;
+                    spawnParticles('💥',4);
+                    if (agilityRun.hits >= agilityRun.maxHits) return stopAgility(true);
+                }
+                if (o.x < -8) o.el?.remove();
+            }
+            agilityRun.obstacles = agilityRun.obstacles.filter(o=>o.x>=-8);
+            const d=document.getElementById('agilityDistance'); if(d)d.textContent=Math.floor(agilityRun.distance);
+            agilityRAF=requestAnimationFrame(agilityLoop);
+        }
+
+        window.stopAgility = function (finished = false) {
+            if (!agilityRun?.running) { refreshCurrentZone(); return; }
+            agilityRun.running=false; cancelAnimationFrame(agilityRAF); window.removeEventListener('keydown', agilityKeyHandler);
+            ensureNewSystems(); game.records.agilityPlayed += 1;
+            const meters=Math.floor(agilityRun.distance);
+            const reward=Math.max(1, Math.min(10, Math.floor(meters/18))) + traitGain('friendship',0) + progress().boosts.friendship;
+            gainFriendship(reward);
+            progress().food=Math.max(0,progress().food-6); progress().energy=Math.max(0,progress().energy-8); progress().cleanliness=Math.max(0,progress().cleanliness-(4+agilityRun.hits*2));
+            updateStatusBars(); checkStatus(); autoSave();
+            showToast(`${finished?'Parcours terminé':'Entraînement arrêté'} : ${meters} m — +${reward} 💛 d'amitié.`, finished?'warn':'success');
+            agilityRun=null; setTimeout(()=>refreshCurrentZone(),1200);
         };
 
         // ---- Aventure / combat contre les boss légumes ----
@@ -1835,7 +1971,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     2,
                     Math.round((boss.difficulty || 20) * 0.3) + Math.floor(Math.random() * 3),
                 );
-                game.carrots += reward;
+                game.carrots += reward; ensureNewSystems(); game.records.bossesDefeated += 1; playSfx("victory");
                 gainFriendship(3);
                 if (log) log.textContent = `🏆 Victoire ! +${reward} 🥕 et +3 💛`;
                 spawnParticles("🥕", 8);
@@ -1871,21 +2007,100 @@ document.addEventListener("DOMContentLoaded", () => {
                 actions.innerHTML = `<button class="action-btn adventure" onclick="prepareFight('${key}')"><span>🔁 Rejouer</span></button><button class="ghost-btn" onclick="openAdventure()">← Boss</button>`;
         };
 
+        // ---- Combat tactique manuel / équipe ----
+        let tacticalFight = null;
+        let selectedFightTeam = [];
+        function raritySkillCount(rarity){ return ({commun:1,rare:2,epique:3,legendaire:4,mythique:5,divin:5})[rarity] || 1; }
+        function rabbitCombatStats(key){
+            const sp=getSpecies()[key]||{}, pr=progressForSpecies(key), tr=ensureAttackTraining(pr);
+            const azTier = key === "az" ? Math.floor(pr.currentLevel / 20) : 0;
+            const basePower = 8 + pr.currentLevel*3 + (tr.bonus||0)*3 + azTier*8;
+            return {key,sp,pr,maxHp:80+pr.currentLevel*10,hp:80+pr.currentLevel*10,power:basePower,charge:0,azTier,guard:0};
+        }
+        function rabbitDisplayName(r){ return game.speciesNames?.[r.key] || r.sp.name || r.key; }
+        function techniqueFor(r,index){
+            const base=powerName(r.sp)||'Pouvoir';
+            const mode=powerMode(r.sp);
+            const defaults=[
+                {name:base, kind:mode==='heal'?'heal':mode==='support'?'guard':'damage', mult:1.35},
+                {name:'Frappe éclair',kind:'damage',mult:1.55},
+                {name:'Garde héroïque',kind:'guard',mult:0.85},
+                {name:'Assaut renforcé',kind:'damage',mult:1.85},
+                {name:'Second souffle',kind:'heal',mult:0.65}
+            ];
+            return defaults[index]||defaults[0];
+        }
+        function ultimateName(r){ return `${powerName(r.sp)||r.sp.name} — Ultime`; }
+        function nextLivingIndex(f,from){
+            if(!f.team.some(x=>x.hp>0)) return -1;
+            for(let step=1;step<=f.team.length;step++){const i=(from+step)%f.team.length;if(f.team[i].hp>0)return i;}
+            return -1;
+        }
+        window.toggleFightTeam=function(key,bossKey){
+            if(selectedFightTeam.includes(key)) selectedFightTeam=selectedFightTeam.filter(x=>x!==key); else if(selectedFightTeam.length<3) selectedFightTeam.push(key); else showToast('Équipe limitée à 3 lapins.','warn');
+            prepareFight(bossKey);
+        };
+        window.prepareFight = function(key){
+            const boss=getBosses()[key]; if(!boss)return; if(!game.discoveredBosses)game.discoveredBosses=[];if(!game.discoveredBosses.includes(key))game.discoveredBosses.push(key);
+            const owned=(game.ownedSpecies||[game.species]).slice(); if(!selectedFightTeam.length) selectedFightTeam=owned.slice(0,Math.min(3,owned.length));
+            selectedFightTeam=selectedFightTeam.filter(k=>owned.includes(k)).slice(0,3);
+            const teamCards=owned.map(k=>{const sp=getSpecies()[k]||{},on=selectedFightTeam.includes(k),pr=progressForSpecies(k);return `<button class="fight-team-card ${on?'selected':''}" onclick="toggleFightTeam('${k}','${key}')"><img src="${sp.faceImg||sp.coteImg||'./assets/img/species/mystery.svg'}"><span>${game.speciesNames?.[k]||sp.name||k}<small>Niv. ${pr.currentLevel} · ${RARITY_META[sp.rarity]?.label||sp.rarity||'Commun'}</small></span></button>`}).join('');
+            const preview=selectedFightTeam.map((k,i)=>{const sp=getSpecies()[k]||{};return `<div class="team-preview-rabbit slot-${i+1}"><img src="${sp.coteImg||sp.faceImg||'./assets/img/species/mystery.svg'}"><strong>${game.speciesNames?.[k]||sp.name||k}</strong></div>`}).join('');
+            gameArea.innerHTML=`<div class="fight-stage"><div class="console-title">⚔️ Prépare ton équipe contre ${boss.name}</div><p class="agility-hint">Choisis jusqu’à 3 lapins. Les lapins sélectionnés apparaissent directement sur le terrain.</p><div class="fight-team-select">${teamCards}</div><div class="battlefield-preview"><div class="team-preview-side">${preview||'<span>Choisis ton équipe</span>'}</div><div class="vs-mark">VS</div><div class="preview-boss"><img src="${boss.coteImg||boss.faceImg}" onerror="this.src='./assets/img/bosses/mystery_boss.svg'"><strong>${boss.name}</strong></div></div><div class="action-row"><button class="action-btn adventure" onclick="startTacticalFight('${key}')" ${selectedFightTeam.length?'':'disabled'}>⚔️ Commencer</button><button class="ghost-btn" onclick="openAdventure()">← Boss</button></div></div>`; autoSave();
+        };
+        window.startTacticalFight=function(key){
+            const boss=getBosses()[key]; if(!boss||!selectedFightTeam.length)return; const team=selectedFightTeam.map(rabbitCombatStats); tacticalFight={key,boss,team,active:0,bossMaxHp:100+(boss.difficulty||20)*3,bossHp:100+(boss.difficulty||20)*3,turn:1,locked:false}; renderTacticalFight(`${rabbitDisplayName(team[0])} ouvre le combat !`);
+        };
+        function renderTacticalFight(message){
+            const f=tacticalFight;if(!f)return;if(!f.team.some(x=>x.hp>0)){finishTacticalFight(false);return;}if(f.team[f.active]?.hp<=0)f.active=nextLivingIndex(f,f.active);const r=f.team[f.active];
+            const skillN=raritySkillCount(r.sp.rarity), unlocked=ensureAttackTraining(r.pr).skillUnlocked;
+            const skills=Array.from({length:skillN},(_,i)=>{const t=techniqueFor(r,i);return `<button class="fight-command" onclick="tacticalAction('skill',${i})" ${i>0&&!unlocked?'disabled title="Remplis la barre de fragments"':''}>✨ ${t.name}</button>`}).join('');
+            const fighters=f.team.map((x,i)=>`<div class="team-fighter battle-slot-${i+1} ${i===f.active?'active-turn':''} ${x.hp<=0?'ko':''}" data-fighter="${i}"><div class="turn-marker">${i===f.active?'▼ TOUR':''}</div><img class="battle-sprite team-rabbit-sprite" src="${x.sp.coteImg||x.sp.faceImg||'./assets/img/species/mystery.svg'}" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';"><strong>${rabbitDisplayName(x)}</strong><small>${Math.max(0,x.hp)} / ${x.maxHp} PV</small><div class="mini-hp"><i style="width:${Math.max(0,x.hp)/x.maxHp*100}%"></i></div></div>`).join('');
+            gameArea.innerHTML=`<div class="fight-stage tactical"><div class="fight-hud-side player"><div class="fight-name">🐰 Tour de ${rabbitDisplayName(r)}</div><div class="fight-hp"><div class="fight-hp-fill player-hp" style="width:${r.hp/r.maxHp*100}%"></div></div><div class="fight-hp-text">${Math.max(0,r.hp)} / ${r.maxHp} PV</div><div class="fight-crit-label">🌟 Ultime ${Math.round(r.charge)}%</div><div class="fight-crit"><div class="fight-crit-fill player-crit-fill" style="width:${r.charge}%"></div></div></div><div class="fight-hud-side boss"><div class="fight-name">🥕 ${f.boss.name}</div><div class="fight-hp"><div class="fight-hp-fill boss-hp" style="width:${f.bossHp/f.bossMaxHp*100}%"></div></div><div class="fight-hp-text">${Math.max(0,f.bossHp)} / ${f.bossMaxHp} PV</div></div><div class="team-battlefield"><div class="team-fighters">${fighters}</div><div class="vs-mark">⚔️</div><div class="boss-battle-slot"><img class="battle-sprite boss-sprite" src="${f.boss.coteImg||f.boss.faceImg}" onerror="this.onerror=null;this.src='./assets/img/bosses/mystery_boss.svg';"><strong>${f.boss.name}</strong></div></div><div id="fightLog" class="fight-log">Tour ${f.turn} · ${message}</div><div class="fight-command-grid"><button class="fight-command" onclick="tacticalAction('attack')">⚔️ Coup de patte</button>${skills}<button class="fight-command ultimate" onclick="tacticalAction('ultimate')" ${r.charge<100?'disabled':''}>🌟 ${ultimateName(r)}</button></div></div>`;
+        }
+        window.tacticalAction=async function(type,index=0){
+            const f=tacticalFight;if(!f||f.locked)return;f.locked=true;const r=f.team[f.active], name=rabbitDisplayName(r);let dmg=0,msg='',heal=0;
+            const sprite=gameArea.querySelector(`[data-fighter="${f.active}"] .team-rabbit-sprite`),bossSprite=gameArea.querySelector('.boss-sprite');
+            if(type==='attack'){dmg=Math.round(r.power*.85+Math.random()*7);r.charge=Math.min(100,r.charge+22);msg=`🐰 ${name} utilise Coup de patte ! — ${dmg} dégâts.`;playSfx('attack');}
+            else if(type==='skill'){
+                const t=techniqueFor(r,index);r.charge=Math.min(100,r.charge+28);
+                if(t.kind==='heal'){heal=Math.max(8,Math.round(r.maxHp*.22));r.hp=Math.min(r.maxHp,r.hp+heal);dmg=Math.round(r.power*.45);msg=`✨ ${name} utilise ${t.name} ! +${heal} PV et ${dmg} dégâts.`;}
+                else if(t.kind==='guard'){r.guard=Math.max(r.guard,0.55);dmg=Math.round(r.power*t.mult);msg=`🛡️ ${name} utilise ${t.name} ! ${dmg} dégâts et se protège.`;}
+                else {dmg=Math.round(r.power*t.mult+Math.random()*8);msg=`✨ ${name} utilise ${t.name} ! — ${dmg} dégâts.`;}
+            } else if(type==='ultimate'){dmg=Math.round(r.power*2.6+Math.random()*12);r.charge=0;msg=`🌟 ${name} déclenche ${ultimateName(r)} ! — ${dmg} dégâts !`;playSfx('critical');}
+            sprite?.classList.add('fight-attack-player');await sleep(240);f.bossHp=Math.max(0,f.bossHp-dmg);bossSprite?.classList.add(type==='ultimate'?'fight-critical-hit':'fight-hit');const log=gameArea.querySelector('#fightLog');if(log)log.textContent=msg;await sleep(type==='ultimate'?650:430);sprite?.classList.remove('fight-attack-player');bossSprite?.classList.remove('fight-hit','fight-critical-hit');
+            if(f.bossHp<=0){finishTacticalFight(true);return;}
+            const raw=Math.max(5,Math.round((f.boss.difficulty||20)*.30+Math.random()*8));const bd=Math.max(1,Math.round(raw*(1-(r.guard||0))));r.guard=0;const bossImg=gameArea.querySelector('.boss-sprite');bossImg?.classList.add('fight-attack-boss');await sleep(220);r.hp=Math.max(0,r.hp-bd);sprite?.classList.add('fight-hit');if(log)log.textContent+=` 🥕 ${f.boss.name} attaque ${name} : ${bd} dégâts.${r.hp<=0?` ${name} est K.O. !`:''}`;await sleep(430);bossImg?.classList.remove('fight-attack-boss');sprite?.classList.remove('fight-hit');
+            if(!f.team.some(x=>x.hp>0)){finishTacticalFight(false);return;}
+            f.active=nextLivingIndex(f,f.active);f.turn++;f.locked=false;renderTacticalFight(`C'est au tour de ${rabbitDisplayName(f.team[f.active])}.`);
+        };
+        function finishTacticalFight(win){const f=tacticalFight;if(!f)return;if(win){const reward=Math.max(2,Math.round((f.boss.difficulty||20)*.22));game.carrots+=reward;game.records.bossesDefeated++;f.team.forEach(x=>{const old=game.species;game.species=x.key;gainFriendship(3);game.species=old;});playSfx('victory');showToast(`Victoire ! +${reward} 🥕 · +3 💛 pour l’équipe`,'success');}else showToast('Ton équipe est K.O. Elle a besoin de repos.','warn');f.team.forEach(x=>{x.pr.food=Math.max(0,x.pr.food-8);x.pr.energy=Math.max(0,x.pr.energy-12);x.pr.cleanliness=Math.max(0,x.pr.cleanliness-5);});autoSave();const key=f.key;tacticalFight=null;gameArea.innerHTML=`<div class="console-panel"><div class="console-title">${win?'🏆 Victoire !':'💤 Défaite'}</div><button class="action-btn" onclick="prepareFight('${key}')">🔁 Rejouer</button><button class="ghost-btn" onclick="openAdventure()">← Boss</button></div>`;}
+
         // ---- Boutique à œufs (Salon) ----
+        function eggRevealAnimation(speciesData) {
+            return new Promise((resolve) => {
+                const rarity = speciesData.rarity || "commun";
+                const overlay = document.createElement("div"); overlay.className = `egg-reveal-overlay rarity-${rarity}`;
+                overlay.innerHTML = `<div class="egg-reveal-card"><div class="egg-shell" title="Clique sur l'œuf">🥚</div><div class="egg-reveal-hint">Clique sur l'œuf pour le faire éclore</div><div class="egg-rabbit" hidden><img src="${speciesData.faceImg || speciesData.coteImg}" alt="${speciesData.name}"><strong>${speciesData.name}</strong><span>${RARITY_META[rarity]?.label || rarity}</span><button class="action-btn">Continuer</button></div></div>`;
+                document.body.appendChild(overlay);
+                overlay.querySelector(".egg-shell").onclick = () => { playSfx("eggCrack"); overlay.classList.add("cracked"); setTimeout(() => { overlay.querySelector(".egg-shell").hidden=true; overlay.querySelector(".egg-reveal-hint").hidden=true; overlay.querySelector(".egg-rabbit").hidden=false; if (!["commun","rare"].includes(rarity)) playSfx("eggRare"); }, 450); };
+                overlay.querySelector("button").onclick = () => { overlay.remove(); resolve(); };
+            });
+        }
         window.buyEgg = function () {
             if (game.carrots < EGG_COST) {
                 showToast(`Pas assez de carottes (il en faut ${EGG_COST}).`, "warn");
                 return;
             }
             game.carrots -= EGG_COST;
-            game.eggs += 1;
+            game.eggs += 1; ensureNewSystems(); game.records.eggsBought += 1; playSfx("purchase");
             showToast("Œuf acheté ! 🥚", "success");
             spawnParticles("🥚", 4);
             autoSave();
             refreshCurrentZone();
         };
 
-        window.openEgg = function () {
+        window.openEgg = async function () {
             if (game.eggs <= 0) {
                 showToast("Tu n'as aucun œuf à ouvrir. Achète-en un d'abord !", "warn");
                 return;
@@ -1895,9 +2110,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 refreshCurrentZone();
                 return;
             }
-            game.eggs -= 1;
+            game.eggs -= 1; ensureNewSystems(); game.records.eggsOpened += 1;
             const result = rollEgg();
             const s = getSpecies()[result.speciesKey];
+            await eggRevealAnimation(s);
             const isNew = !game.ownedSpecies.includes(result.speciesKey);
             if (isNew) {
                 game.ownedSpecies.push(result.speciesKey);
@@ -2199,5 +2415,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 checkComeback();
             } catch (e) {}
         }
+        ensureNewSystems();
+        renderAudioButton();
+        document.addEventListener("click", (e) => { if (e.target.closest("button") && !e.target.closest("#lapinousAudioBtn")) playSfx("click"); }, { passive: true });
+        document.addEventListener("pointerdown", () => updateAmbience(), { once: true });
+
     });
 });

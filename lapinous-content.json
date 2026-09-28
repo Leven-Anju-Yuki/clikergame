@@ -1257,10 +1257,12 @@
     }
   },
   "eggRates": {
-    "commun": 70,
+    "commun": 68,
     "rare": 22,
     "epique": 6,
-    "legendaire": 2
+    "legendaire": 2.5,
+    "mythique": 1.2,
+    "divin": 0.3
   },
   "eventWindows": {
     "halloween": 10,
