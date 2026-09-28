@@ -80,6 +80,44 @@
         "solaria",
         "nova"
       ]
+    },
+    {
+      "id": "nature",
+      "title": "Les habitants de la nature",
+      "image": "./assets/img/puzzle/Nature.png",
+      "linkedSpecies": [
+        "meli",
+        "myco",
+        "sakura"
+      ]
+    },
+    {
+      "id": "noel",
+      "title": "Les défenseurs de Noël",
+      "image": "./assets/img/puzzle/Noel.png",
+      "linkedSpecies": [
+        "jackFrost",
+        "santaLegend"
+      ]
+    },
+    {
+      "id": "pacques",
+      "title": "Les défenseurs de Pâques",
+      "image": "./assets/img/puzzle/pacques.png",
+      "linkedSpecies": [
+        "easterKing",
+        "eggGuardian"
+      ]
+    },
+    {
+      "id": "reve",
+      "title": "Les protecteurs des rêves",
+      "image": "./assets/img/puzzle/reve.png",
+      "linkedSpecies": [
+        "cauchemar",
+        "sandman",
+        "toothFairy"
+      ]
     }
   ]
 }

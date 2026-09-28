@@ -116,3 +116,37 @@ Est appréciée par presque tous les lapins.
 Rivalité légère
 
 ⚡ Spark effraie souvent ses abeilles avec ses expériences.
+
+
+faire qu'on puisse avoir un bouton pour choisir un lapin dans l'encyclopedie au cas ou on le voit pas 
+faire que tt les 20 palier d'amitier az améliore sa compétence
+Maison :
+
+J'aime bien l'interface, c'est cozy et semble tout doux
+j'aime bien qu'on puisse voir les lapins qu'on récupère dans le fond, MAIS je pense que faire un autre espace où on pourrait les voir à part serait mieux ? (avis personnel)
+Baisser l'expérience gagnée (on en gagne trop TROP vite, j'ai joué 15 minutes je suis lvl 28 avec un seul lapin en spammant la bouffe/bain/dodo)
+Rajouter d'autres choses à acheter, parce exemple un autre type de bouffe, ou même des décorations à placer pour augmenter les stats du lapin pour chaque salle liée
+L'encyclopédie est claire c'est cool ! (Ce serait encore mieux si on pouvait voir la silhouette des lapins, pour qu'on soit encore plus intrigué par les plus rares)
+Quand t'ouvres un oeuf j'aimerais trop qu'on le voit pop sur notre écran et qu'on doive cliquer dessus pour voir le lapin qu'on a gagné apparaître (en mode l'oeuf se casse) parce que sur ordi on a juste la notif c'est tristouille (peut-être rajouter une aura derrière l'oeuf pour nous montrer avant l'ouverture si quelle rareté on a eu)
+
+Combats :
+
+Nous laisser le choix de faire des attaques avec le lapin serait plus cool je pense, pour qu'on participe un peu plus (avec la barre de critique qui nous permettrait de faire un petit ult par exemple)
+Peut-être augmenter la difficulté des monstres, j'ai pu faire l'avant dernier presque instantanément, si on veut avoir la sensation d'avancer plus fortement dans le jeu peut-être augmenter le niveau de difficulté (et ne pas à hésiter à réduire les récompenses offertes parce que les combats vont vite)
+
+Jeux :
+
+j'aime pas trop le jeu où on doit cliquer pour sauter, c'est facile de douiller et de spam vu que quand il pop sa barre se met direct au milieu donc tu doubles clic vite et tu as déjà fini
+Le puzzle est cool (amélioration possible : Essayer de faire en sorte que les pièces soient pas placées directement dans l'espace mais devoir nous-même venir les poser dans l'espace du milieu ?)
+Moxxie — 21:31
+Quand j'ai acheté les objets avec les coeurs jaunes il m'en demandait 20, mais je savais même pas combien j'en avais et j'ai juste cliqué comme une gogolle et ça a fonctionné, donc tu pourrais faire en sorte de mettre un petit encadré pour qu'on voit ? Et que ce soit pas aussi facile d'acheter les améliorations de meubles aussi, qu'on doive vraiment choisir où est-ce qu'on veut améliorer
+
+faire des systemes de record ouvert tant d'oeuf etc 
+et que on compte l'ouverture des oeuf  et que tt les 20 niveaux les gens optienne un oeuf et que les niveaux sarrete a 100
+retirer les alert quand on ouvre et on achete un oeuf
+
+rajouter le mythique dans les pourcentage des oeuf et divin et tt les autres si oublier 
+
+et faire que les oeuf evenement sois plus présent que les autres durent les evenement et faire que les puzzles des evement ne sois proposer que pdt les evenements
+
+essayer de faire un systeme de pixel art avec les images des puzzles
