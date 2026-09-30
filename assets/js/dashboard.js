@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+    if (!(["localhost", "127.0.0.1", "::1", "[::1]"].includes(window.location.hostname.toLowerCase()))) return;
     Promise.all([window.LapinousContentReady || Promise.resolve(), window.LapinousPuzzlesReady || Promise.resolve()]).then(() => {
     const toastContainer = document.getElementById("toastContainer");
 

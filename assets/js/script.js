@@ -221,6 +221,7 @@ document.addEventListener("DOMContentLoaded", () => {
             hohoho: "./assets/audio/noel/ho-ho-ho-merry-christmas.mp3",
             monsterCombat: "./assets/audio/combat/cris_monstre_deb_combat.mp3"
         };
+        const SFX_VOLUMES = {monsterCombat: 0.25, victory: 0.25};
         let ambienceAudios = [];
         let ambienceKey = "";
         // Cache des <audio> déjà chargés pour éviter de re-télécharger/décoder le fichier
@@ -250,7 +251,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 // cloneNode() permet de rejouer un son déjà en cours (ex: clics rapides)
                 // sans attendre qu'il se termine, tout en gardant le fichier déjà préchargé.
                 const a = getCachedAudio(f).cloneNode();
-                a.volume = 0.55;
+                a.volume = SFX_VOLUMES[name] ?? 0.55;
                 if (["feed", "sleep", "clean"].includes(name)) {
                     if (activeCareAudio) { activeCareAudio.pause(); activeCareAudio.currentTime = 0; }
                     clearTimeout(careAudioTimer);
@@ -2726,7 +2727,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                 }
             }
+            paths.push(root + 'Saison/' + time + '/' + file.replace('.png', '_' + chosenSeason + '.png'));
             paths.push(root + 'saison/' + time + '/' + file.replace('.png', '_' + chosenSeason + '.png'));
+            // Le ZIP contient déjà fond/ : accepte aussi une extraction dans fond/.
+            paths.push(root + 'fond/saison/' + time + '/' + file.replace('.png', '_' + chosenSeason + '.png'));
             paths.push(root + file);
             return paths;
         }
@@ -2779,12 +2783,15 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         // Outils de test accessibles après saisie du code du Dashboard.
+        const isLocalAdmin = ["localhost", "127.0.0.1", "::1", "[::1]"].includes(window.location.hostname.toLowerCase());
+        if (isLocalAdmin) {
         let adminBackup = null;
         const adminButton = document.createElement("button");
         adminButton.className = "admin-test-toggle";
         adminButton.textContent = "🛠 Admin";
         document.body.appendChild(adminButton);
         adminButton.onclick = async () => {
+            if (!isLocalAdmin) return;
             if (!adminTesting) {
                 if (typeof requestDashboardAccess !== "function" || !(await requestDashboardAccess())) return;
                 adminBackup = serializeGame();
@@ -2826,6 +2833,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 autoSave(); updateStatusBars(); refreshCurrentZone();
             };
         };
+        }
         // Ajuste le combat à l'espace disponible sans débordement de page.
         function fitBattleStage() {
             const stage = gameArea.querySelector(".fight-stage");

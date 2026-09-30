@@ -1,3 +1,4 @@
+const DASHBOARD_LOCAL_ONLY = ["localhost", "127.0.0.1", "::1", "[::1]"].includes(window.location.hostname.toLowerCase());
 // =====================================================================
 // ACCÈS AU DASHBOARD — même logique que sur le portfolio
 // =====================================================================
@@ -42,6 +43,7 @@ async function getStoredDashboardHash() {
 
 // Affiche la demande de code et bloque après cinq erreurs dans le même onglet.
 async function requestDashboardAccess() {
+    if (!DASHBOARD_LOCAL_ONLY) return false;
     const attempts = Number(sessionStorage.getItem(DASHBOARD_ATTEMPTS_KEY) || "0");
     if (attempts >= DASHBOARD_MAX_ATTEMPTS) {
         window.alert("Trop de tentatives. Ferme cet onglet avant de réessayer.");
@@ -65,6 +67,13 @@ async function requestDashboardAccess() {
 
 // Vérifie l'accès dès le chargement de dashboard.html, pas seulement via un bouton.
 async function protectDashboardPage(forcePassword = false) {
+    if (!DASHBOARD_LOCAL_ONLY) {
+        if (document.body?.dataset.protectedDashboard === "true") {
+            document.documentElement.style.display = "none";
+            window.location.replace("./index.html");
+        }
+        return;
+    }
     if (document.body?.dataset.protectedDashboard !== "true" || dashboardCheckRunning) return;
     dashboardCheckRunning = true;
 
@@ -102,6 +111,7 @@ document.addEventListener("DOMContentLoaded", () => protectDashboardPage(false))
 
 // Changer le code (appelé depuis la section "Sécurité" du Dashboard, une fois déverrouillé).
 async function changeDashboardCode(newCode) {
+    if (!DASHBOARD_LOCAL_ONLY) return false;
     const hash = await hashDashboardCode(newCode.trim());
     localStorage.setItem(DASHBOARD_CODE_HASH_KEY, hash);
 }
