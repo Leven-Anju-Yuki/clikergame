@@ -978,9 +978,13 @@ body.battle-scene .boss-diff {
     font-size: 0.95em;
     max-width: 380px;
     text-align: center;
-    animation-name: toastIn, toastOut;
-    animation-timing-function: ease, ease;
-    animation-fill-mode: none, forwards;
+    animation: toastIn .3s ease;
+}
+
+/* Ajoutée par le JS juste avant de retirer le toast, pour un fondu propre
+   plutôt qu'une disparition instantanée. */
+.toast.toast-leaving {
+    animation: toastOut .25s ease forwards;
 }
 
 .toast.success {
@@ -5077,6 +5081,18 @@ body.game-running.default .salon-rabbit-friend:nth-child(6) {
     box-shadow: 0 0 50px var(--egg-glow, #fff8)
 }
 
+@keyframes eggShake {
+    0%, 100% { transform: translate(0, 0) rotate(0); }
+    20% { transform: translate(-4px, 1px) rotate(-6deg); }
+    40% { transform: translate(4px, -1px) rotate(6deg); }
+    60% { transform: translate(-3px, 1px) rotate(-4deg); }
+    80% { transform: translate(3px, -1px) rotate(4deg); }
+}
+
+.egg-shell.shaking {
+    animation: eggShake .4s ease;
+}
+
 .egg-shell {
     font-size: 130px;
     cursor: pointer;
@@ -5269,19 +5285,37 @@ body.game-running.default .salon-rabbit-friend:nth-child(6) {
 }
 
 .fight-command {
-    border: 0;
+    border: 2px solid var(--pink-deep);
     border-radius: 12px;
     padding: 10px 14px;
-    background: #f2e7cf;
-    cursor: pointer
+    background: var(--paper-soft);
+    color: var(--ink);
+    font-weight: 700;
+    box-shadow: 0 4px 10px var(--shadow-soft);
+    cursor: pointer;
+    transition: transform .15s ease, background .15s ease;
+}
+
+.fight-command:hover:not(:disabled) {
+    background: var(--pink-pale);
+    transform: translateY(-2px);
 }
 
 .fight-command.ultimate {
-    background: #f2d5a8
+    background: var(--gold);
+    border-color: var(--gold-deep);
+    color: var(--ink);
+}
+
+.fight-command.ultimate:hover:not(:disabled) {
+    background: var(--gold-deep);
+    color: #fff;
 }
 
 .fight-command:disabled {
-    opacity: .45;
+    opacity: .55;
+    background: var(--paper);
+    color: var(--ink-soft);
     cursor: not-allowed
 }
 
@@ -5678,6 +5712,14 @@ body.game-running.default .salon-rabbit-friend:nth-child(6) {
     overflow: hidden;
 }
 
+/* Le combat contre les boss (team-battlefield + fight-command-grid) n'était pas
+   rattaché aux 2 colonnes de .fight-stage : il retombait dans la même case que
+   d'autres blocs et se superposait à l'écran (boutons illisibles par-dessus les lapins). */
+.fight-stage.tactical .team-battlefield,
+.fight-stage.tactical .fight-command-grid {
+    grid-column: 1/-1;
+}
+
 .fight-stage.tactical .team-battlefield {
     position: relative;
     display: block;
@@ -5819,3 +5861,257 @@ body.game-running.default .salon-rabbit-friend:nth-child(6) {
         height: 250px
     }
 }
+/* V5 — texte intégral, notifications et zones de combat séparées. */
+#toastContainer {
+    left: auto; right: 16px; top: 16px; transform: none;
+    width: min(460px, calc(100vw - 32px)); max-width: none;
+    max-height: calc(100dvh - 32px); overflow-y: auto;
+    padding: 4px; align-items: stretch; pointer-events: none;
+}
+#toastContainer .readable-toast {
+    display: flex; opacity: 1; visibility: visible; pointer-events: auto;
+    width: 100%; max-width: none; height: auto; flex-shrink: 0;
+    background: #fffaf2; color: #35243e; text-align: left;
+    border: 2px solid #79558b; box-sizing: border-box;
+}
+#toastContainer .toast-message { min-width: 0; white-space: normal; overflow-wrap: anywhere; }
+#toastContainer .toast-leaving { animation: toastOut .25s ease forwards !important; }
+.adoption-screen { align-items: flex-start; }
+.adoption-content { margin: auto; flex-shrink: 0; position: relative; }
+body.game-running.battle-scene #gameArea { overflow-y: auto; padding: 110px 20px 100px; }
+body.game-running.battle-scene .fight-stage {
+    height: auto; min-height: 0; overflow: visible;
+    grid-template-rows: none; align-items: start; gap: 14px;
+}
+body.game-running.battle-scene .fight-preparation {
+    grid-template-columns: minmax(0, 1fr);
+}
+.fight-preparation > * { min-width: 0; }
+.fight-preparation .console-title, .fight-preparation .agility-hint,
+.fight-stage .fight-log, .fight-stage .action-row {
+    position: static; margin: 0; padding: 12px 16px;
+    background: #fffaf2; color: #35243e; border-radius: 16px;
+    white-space: normal; overflow-wrap: anywhere;
+}
+.fight-preparation .fight-team-select { margin: 0; }
+.fight-preparation .battlefield-preview { grid-column: 1 / -1; }
+.fight-stage .fight-command-grid {
+    position: static; grid-column: 1 / -1; margin: 0;
+    padding: 12px; background: #fffaf2; border-radius: 16px;
+}
+.fight-stage .fight-command { background: #fffaf2; color: #35243e; white-space: normal; }
+.fight-stage .fight-command:disabled { opacity: 1; background: #e2dce5; color: #655a6b; cursor: not-allowed; box-shadow: none; }
+.fight-stage .ghost-btn { color: #57346d; }
+.team-preview-rabbit strong, .preview-boss strong,
+.team-fighter strong, .team-fighter small, .boss-battle-slot strong {
+    padding: 3px 8px; border-radius: 8px; background: #fffaf2; color: #35243e;
+}
+body.game-running.battle-scene .fight-stage.tactical .team-battlefield {
+    grid-row: 2; height: 310px; min-height: 310px;
+}
+.fight-stage.tactical .fight-log { grid-row: 3; grid-column: 1 / -1; }
+.fight-stage.tactical .fight-command-grid { grid-row: 4; }
+@media (max-width: 700px) {
+    body.game-running.battle-scene #gameArea { padding: 110px 10px 100px; }
+    .fight-preparation .battlefield-preview { grid-template-columns: 1fr; }
+    .fight-preparation .team-preview-side { flex-wrap: wrap; }
+    .fight-stage.tactical .team-fighter img { width: min(90px, 19vw); }
+    .fight-stage.tactical .boss-battle-slot img { width: min(120px, 24vw); }
+    .fight-stage .fight-command { flex: 1 1 140px; }
+}
+
+/* V6 — combat contenu dans la page et commandes de test. */
+#toastContainer .readable-toast { flex: 0 0 auto; min-height: 0; }
+body.game-running.battle-scene #gameArea { overflow: hidden; padding: 100px 14px 94px; }
+body.game-running.battle-scene .fight-stage { gap: 8px; }
+body.game-running.battle-scene .fight-stage.tactical .team-battlefield { height: 240px; min-height: 240px; }
+.fight-stage.tactical .team-fighters { height: 220px; }
+.fight-stage.tactical .team-fighter img { height: 130px; width: min(120px, 11vw); }
+.fight-stage.tactical .boss-battle-slot img { height: 160px; }
+.fight-stage .fight-command-grid { padding: 8px; gap: 6px; }
+.fight-stage .fight-command { font-size: .9rem; padding: 7px 10px; }
+.fight-stage .fight-log { font-size: .9rem; padding: 8px 12px; }
+.fight-preparation .fight-team-card { padding: 4px 8px; font-size: .85rem; }
+.fight-preparation .fight-team-card img { height: 42px; width: 42px; }
+.fight-preparation .fight-team-select { gap: 6px; }
+.admin-test-toggle { position: fixed; bottom: 100px; right: 12px; z-index: 150; border-radius: 12px; background: #fffaf2; color: #35243e; padding: 8px 12px; border: 2px solid #79558b; }
+#adminTestPanel { position: fixed; right: 12px; bottom: 145px; z-index: 7500; display: flex; flex-direction: column; gap: 7px; width: min(300px, calc(100vw - 24px)); max-height: calc(100dvh - 165px); overflow: auto; padding: 14px; background: #fffaf2; color: #35243e; border: 2px solid #79558b; border-radius: 16px; box-shadow: 0 8px 30px #0005; }
+#adminTestPanel button, #adminTestPanel select { padding: 7px; border-radius: 8px; background: #eee5f3; color: #35243e; border: 1px solid #79558b; }
+
+.egg-batch-overlay { position: fixed; inset: 0; z-index: 7200; display: flex; align-items: center; justify-content: center; padding: 12px; background: #120c20cc; }
+.egg-batch-card { width: min(860px, 100%); max-height: calc(100dvh - 24px); overflow: auto; padding: 16px; border-radius: 20px; background: #fffaf2; color: #35243e; text-align: center; }
+.egg-batch-grid { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: 8px; margin: 12px 0; }
+.egg-batch-grid > div { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px; border: 1px solid #b69cc4; border-radius: 12px; }
+.egg-batch-grid img { height: clamp(60px,13vh,110px); max-width: 100%; object-fit: contain; }
+.egg-batch-grid small { font-size: .75rem; }
+@media(max-width:600px) { .egg-batch-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+
+/* V5 — huit emplacements uniques, sans animation horizontale ni agrandissement. */
+body.game-running.default .salon-rabbit-friend,
+body.game-running.default .salon-rabbit-friend:hover {
+    width: min(74px, 10vw) !important;
+    transform: translate(-50%, -50%) !important;
+    animation: none !important;
+}
+body.game-running.default .salon-rabbit-friend img {
+    height: min(85px, 15vh, 12vw) !important;
+    width: 100%; object-fit: contain;
+}
+body.game-running.default .salon-rabbit-friend span {
+    display: block; max-width: 100%; white-space: normal;
+    overflow-wrap: anywhere; line-height: 1.15;
+}
+.salon-friends-pages {
+    position: absolute; left: 3%; bottom: 2%; z-index: 25;
+    display: flex; align-items: center; gap: 8px;
+    padding: 5px 8px; border-radius: 12px;
+    background: #fffaf2; color: #35243e; font-size: .8rem;
+}
+.salon-friends-pages button {
+    border: 1px solid #79558b; border-radius: 8px;
+    background: #eee5f3; color: #35243e; padding: 2px 10px; font-size: 1.2rem;
+}
+
+/* V7 — tous les compagnons ensemble, sans pagination. */
+body.game-running.default .salon-friends {
+    inset: 5% 2% 44%; overflow: hidden;
+}
+body.game-running.default .salon-rabbit-friend,
+body.game-running.default .salon-rabbit-friend:hover {
+    width: var(--companion-size, 50px) !important;
+    height: calc(var(--companion-size, 50px) * 1.2 + 20px);
+    transform: translate(-50%, -50%) !important;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 0; animation: none !important; min-height: 0; padding: 0; box-sizing: border-box;
+}
+body.game-running.default .salon-rabbit-friend img {
+    width: 100%; height: calc(var(--companion-size, 50px) * 1.2) !important;
+    flex: 0 0 auto; object-fit: contain;
+}
+body.game-running.default .salon-rabbit-friend span {
+    margin: 0; padding: 1px 2px; height: 20px; box-sizing: border-box;
+    font-size: clamp(6px, calc(var(--companion-size, 50px) * .14), 10px);
+    line-height: 9px; width: 100%; overflow: hidden; border-radius: 5px; flex: 0 0 20px;
+}
+body.game-running.default .salon-active-rabbit-spot {
+    bottom: 5%; left: 50%; width: 20%; height: 33%;
+}
+body.game-running.default .salon-active-rabbit-spot #rabbitImage {
+    max-height: 100%; width: 100%; object-fit: contain;
+}
+body.game-running.default .salon-console-object.board-game-object {
+    bottom: 6%; right: 4%; width: 20%; height: 28%;
+}
+/* La sélection d'équipe occupe le côté libre et défile indépendamment. */
+body.game-running.battle-scene .fight-stage.fight-preparation {
+    width: 100%; max-width: none; height: 100%; min-height: 0;
+    display: grid; grid-template-columns: clamp(170px, 22vw, 260px) minmax(0, 1fr);
+    grid-template-rows: auto auto minmax(0, 1fr) auto;
+    gap: 8px 18px; overflow: hidden; box-sizing: border-box;
+}
+.fight-preparation > .fight-team-select {
+    grid-column: 1; grid-row: 1 / -1; min-height: 0; overflow-y: auto;
+    display: flex; flex-direction: column; flex-wrap: nowrap;
+    justify-content: flex-start; align-items: stretch; margin: 0;
+    padding: 8px; background: #fffaf2ed; border-radius: 16px;
+    scrollbar-width: thin;
+}
+.fight-preparation .fight-team-card { flex-shrink: 0; text-align: left; width: 100%; }
+.fight-preparation .fight-team-card span { min-width: 0; overflow-wrap: anywhere; }
+.fight-preparation > .console-title { grid-column: 2; grid-row: 1; }
+.fight-preparation > .agility-hint { grid-column: 2; grid-row: 2; }
+.fight-preparation > .battlefield-preview {
+    grid-column: 2; grid-row: 3; min-height: 0; height: 100%;
+    box-sizing: border-box; padding: 8px 0;
+    grid-template-columns: minmax(0, 1fr) auto minmax(70px, .4fr); gap: 8px;
+}
+.fight-preparation .team-preview-side { min-height: 0; gap: 5px; flex-wrap: nowrap; }
+.fight-preparation .team-preview-rabbit { min-width: 0; flex: 1; }
+.fight-preparation .team-preview-rabbit img,
+.fight-preparation .preview-boss img { max-width: 100%; height: min(170px, 24vh); }
+.fight-preparation > .action-row { grid-column: 2; grid-row: 4; flex-wrap: wrap; }
+@media(max-width: 700px) {
+    body.game-running.battle-scene .fight-stage.fight-preparation {
+        grid-template-columns: minmax(110px, 30%) minmax(0, 1fr); gap: 5px;
+    }
+    .fight-preparation .fight-team-card { padding: 3px; gap: 3px; font-size: .65rem; }
+    .fight-preparation .fight-team-card img { width: 28px; height: 32px; }
+    .fight-preparation > .console-title,
+    .fight-preparation > .agility-hint,
+    .fight-preparation > .action-row { padding: 5px; font-size: .7rem; }
+    .fight-preparation .team-preview-rabbit strong,
+    .fight-preparation .preview-boss strong { font-size: .6rem; padding: 2px; }
+}
+
+/* V8 — le terrain de préparation garde sa taille, indépendamment de la liste. */
+body.game-running.battle-scene #gameArea { display: block; box-sizing: border-box; }
+body.game-running.battle-scene .fight-stage.fight-preparation {
+    transform: none !important; height: 100%; max-height: 100%; min-height: 0;
+    grid-template-columns: clamp(200px, 23vw, 300px) minmax(0, 1fr);
+}
+.fight-preparation > .fight-team-select { height: 100%; max-height: 100%; box-sizing: border-box; }
+.fight-preparation .fight-team-card { padding: 7px 10px; font-size: .9rem; gap: 10px; }
+.fight-preparation .fight-team-card img { width: 52px; height: 56px; }
+.fight-preparation .team-preview-rabbit img { width: min(180px, 15vw); height: min(240px, 33vh); }
+.fight-preparation .preview-boss img { width: min(210px, 18vw); height: min(260px, 36vh); }
+.fight-preparation .team-preview-rabbit strong,
+.fight-preparation .preview-boss strong { font-size: .9rem; }
+/* Les compagnons entourent le lapin actif ; le centre est réservé. */
+body.game-running.default .salon-friends { inset: 24% 2% 23%; padding: 0; }
+body.game-running.default .salon-active-rabbit-spot {
+    left: 50%; bottom: 24%; width: min(290px, 23vw); height: 33%;
+    z-index: 18; display: flex; align-items: center; justify-content: center;
+}
+body.game-running.default .salon-active-rabbit-spot #rabbitImage {
+    height: 100%; max-height: 100%; width: 100%; min-height: 0;
+    margin: 0; padding: 0; border: 0; background: transparent; box-shadow: none;
+}
+body.game-running.default .salon-rabbit-friend { border: 0; border-radius: 0; background: transparent; }
+body.game-running.default .salon-rabbit-friend span {
+    background: transparent; border: 0; box-shadow: none; text-shadow: 0 1px 3px white;
+    color: #241c18; font-size: clamp(7px, calc(var(--companion-size) * .13), 11px);
+}
+body.game-running.default .salon-console-object.board-game-object {
+    bottom: 4%; right: 3%; width: clamp(110px, 15vw, 190px); height: min(135px, 20vh);
+}
+body.game-running.default .egg-shop {
+    bottom: 3%; width: auto; min-width: 0; max-width: 52%; padding: 6px 10px;
+    display: flex; flex-direction: column; gap: 4px; border-radius: 18px;
+}
+body.game-running.default .egg-shop .action-row { display: flex; gap: 5px; margin: 0; }
+body.game-running.default .egg-shop .action-btn {
+    min-width: 0; min-height: 0; width: auto; height: auto; padding: 8px 12px;
+    display: flex; flex-direction: row; gap: 5px; align-items: center;
+}
+body.game-running.default .egg-shop .action-icon-emoji { font-size: 1rem; }
+body.game-running.default .egg-shop .action-btn span { font-size: .8rem; }
+body.game-running.default .egg-shop .upgrade-locked-note { display: none; }
+#toastContainer { max-width: min(440px, 90vw); }
+#toastContainer .readable-toast { font-size: .9rem; padding: 10px; gap: 8px; }
+#toastContainer .toast-close { padding: 5px 9px; font-size: .85rem; }
+@media(max-width: 700px) {
+    body.game-running.battle-scene #gameArea { padding: 85px 6px 82px; }
+    body.game-running.battle-scene .fight-stage.fight-preparation {
+        grid-template-columns: minmax(115px, 30%) minmax(0, 1fr);
+    }
+    .fight-preparation .fight-team-card { padding: 4px; font-size: .7rem; gap: 4px; }
+    .fight-preparation .fight-team-card img { width: 32px; height: 36px; }
+    .fight-preparation .team-preview-rabbit img { width: 100%; height: min(150px, 23vh); }
+    .fight-preparation .preview-boss img { width: 100%; height: min(160px, 24vh); }
+    .fight-preparation .team-preview-rabbit strong, .fight-preparation .preview-boss strong { font-size: .65rem; }
+    body.game-running.default .salon-active-rabbit-spot { width: 30%; }
+    body.game-running.default .egg-shop { max-width: 68%; left: 38%; bottom: 4%; }
+    body.game-running.default .egg-shop .action-btn { padding: 6px 5px; }
+    body.game-running.default .egg-shop .action-btn span { font-size: .65rem; }
+    body.game-running.default .salon-console-object.board-game-object { width: 26%; height: 15%; }
+    body.game-running.default .board-top { height: 32px; }
+}
+/* Les silhouettes et leurs noms restent dans la ligne réservée au terrain. */
+.fight-preparation .team-preview-side,
+.fight-preparation .preview-boss { height: 100%; max-height: 100%; min-height: 0; }
+.fight-preparation .team-preview-rabbit { height: 100%; max-height: 100%; justify-content: flex-end; }
+.fight-preparation .preview-boss { justify-content: flex-end; }
+.fight-preparation .team-preview-rabbit img,
+.fight-preparation .preview-boss img { max-height: calc(100% - 32px); flex-shrink: 1; }
+.fight-preparation .team-preview-rabbit strong,
+.fight-preparation .preview-boss strong { flex: 0 0 auto; }

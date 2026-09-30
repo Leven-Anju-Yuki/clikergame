@@ -6,8 +6,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const el = document.createElement("div");
         el.className = "toast" + (type ? " " + type : "");
         el.textContent = message;
+        el.title = "Cliquer pour fermer";
+        el.style.cursor = "pointer";
+        el.style.pointerEvents = "auto";
+        const dismiss = () => { el.classList.add("toast-leaving"); setTimeout(() => el.remove(), 260); };
+        el.addEventListener("click", dismiss);
         toastContainer.appendChild(el);
-        setTimeout(() => el.remove(), 3600);
+        // Durée : 30 s pour un message court, 50 s pour un message long
+        setTimeout(dismiss, String(message).length > 60 ? 50000 : 30000);
     }
 
     function fileToDataUrl(file) {
@@ -359,12 +365,31 @@ document.addEventListener("DOMContentLoaded", () => {
         </details>`;
     }
 
+    const PUZZLE_EVENT_CHOICES = [
+        { value: "halloween", label: "🎃 Halloween" },
+        { value: "noel", label: "🎄 Noël" },
+        { value: "paques", label: "🐣 Pâques" },
+    ];
+    // Valeur de l'événement d'un puzzle (mêmes règles que puzzleEvents() dans script.js)
+    function puzzleEventValue(puz) {
+        let ev = puz.event;
+        if (ev === undefined || ev === null) {
+            if (puz.id === "noel") ev = "noel";
+            else if (["pacques", "paques"].includes(puz.id)) ev = "paques";
+            else if (puz.id === "halloween") ev = "halloween";
+            else ev = "";
+        }
+        const list = (Array.isArray(ev) ? ev : String(ev).split(/[,+]/)).map((e) => String(e).trim().toLowerCase().replace("pacques", "paques")).filter(Boolean);
+        return list.join(",");
+    }
+
     function puzzleAdminRow(puz, index) {
         return `<tr data-puzzle-index="${index}">
             <td class="puzzle-admin-image-cell"><img src="${puz.image || './assets/img/species/mystery.svg'}" alt="${puz.title || ''}" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';"></td>
             <td><input class="name-input" data-puzzle-field="id" value="${puz.id || ''}"></td>
             <td><input class="name-input" data-puzzle-field="title" value="${puz.title || ''}"></td>
             <td><input class="name-input puzzle-path-input" data-puzzle-field="image" value="${puz.image || ''}" placeholder="./assets/img/puzzle/mon_puzzle.png"></td>
+            <td class="puzzle-event-cell"><div style="display:flex;flex-direction:column;gap:4px;min-width:120px;">${PUZZLE_EVENT_CHOICES.map((opt) => `<label style="display:flex;align-items:center;gap:6px;cursor:pointer;white-space:nowrap;"><input type="checkbox" data-puzzle-event value="${opt.value}" ${puzzleEventValue(puz).split(",").includes(opt.value) ? "checked" : ""}>${opt.label}</label>`).join("")}<small style="opacity:.7;">Rien coché = toujours dispo</small></div></td>
             <td class="puzzle-links-cell">${puzzleSpeciesDropdown(puz.linkedSpecies)}</td>
             <td class="row-actions puzzle-row-actions"><button class="slot-btn save" data-save-puzzle>💾</button><button class="slot-btn clear" data-delete-puzzle>🗑️</button></td>
         </tr>`;
@@ -375,7 +400,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!box || !window.getPuzzleCatalog) return;
         const puzzles = window.getPuzzleCatalog() || [];
         box.innerHTML = puzzles.length ? `<div class="puzzle-admin-table-wrap"><table class="puzzle-admin-table">
-            <thead><tr><th>Image</th><th>Identifiant</th><th>Titre</th><th>Chemin</th><th>Lapins liés</th><th></th></tr></thead>
+            <thead><tr><th>Image</th><th>Identifiant</th><th>Titre</th><th>Chemin</th><th>Événement</th><th>Lapins liés</th><th></th></tr></thead>
             <tbody>${puzzles.map(puzzleAdminRow).join("")}</tbody></table></div>` : '<p class="dash-note">Aucun puzzle pour le moment.</p>';
 
         box.querySelectorAll('[data-save-puzzle]').forEach((btn) => btn.addEventListener('click', () => {
@@ -384,6 +409,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const list = [...(window.getPuzzleCatalog() || [])];
             const current = { ...(list[idx] || {}) };
             row.querySelectorAll('[data-puzzle-field]').forEach((el) => current[el.dataset.puzzleField] = el.value.trim());
+            current.event = Array.from(row.querySelectorAll('[data-puzzle-event]:checked')).map((el) => el.value).join(',');
             current.linkedSpecies = Array.from(row.querySelectorAll('.puzzle-species-menu input:checked')).map((el) => el.value);
             if (!current.id) { showToast('Il faut un identifiant de puzzle.', 'warn'); return; }
             list[idx] = current;
@@ -409,7 +435,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById('addPuzzleBtn')?.addEventListener('click', () => {
         const list = [...(window.getPuzzleCatalog() || [])];
-        list.push({ id: `puzzle_${Date.now()}`, title: 'Nouveau puzzle', image: './assets/img/puzzle/', linkedSpecies: [] });
+        list.push({ id: `puzzle_${Date.now()}`, title: 'Nouveau puzzle', image: './assets/img/puzzle/', event: '', linkedSpecies: [] });
         window.saveCustomPuzzles(list);
         renderPuzzleAdmin();
     });

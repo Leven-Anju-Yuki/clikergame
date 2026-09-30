@@ -171,28 +171,30 @@ document.addEventListener("DOMContentLoaded", () => {
         // ============================================================
         // TOASTS
         // ============================================================
-        function showToast(message, type = "") {
+        function showToast(message, type = "", durationOverride = null) {
             if (!toastContainer) return;
             const el = document.createElement("div");
             el.className = "toast readable-toast" + (type ? " " + type : "");
             const text = document.createElement("span");
             text.className = "toast-message";
             text.textContent = message;
+            el.setAttribute("role", "status");
             const close = document.createElement("button");
             close.className = "toast-close";
             close.type = "button";
             close.setAttribute("aria-label", "Fermer la notification");
             close.textContent = "OK";
-            close.onclick = () => el.remove();
+            // Fondu propre avant de retirer réellement le toast du DOM
+            // (la CSS n'avait pas de durée d'animation : sans ça le popup
+            // disparaissait quasi instantanément, avant même d'être lu).
+            const dismiss = () => { el.classList.add("toast-leaving"); setTimeout(() => el.remove(), 260); };
+            close.onclick = dismiss;
             el.append(text, close);
             toastContainer.appendChild(el);
-            // Les messages importants ne disparaissent jamais seuls : le joueur valide avec OK.
-            // Seules les informations neutres/secondaires s'effacent automatiquement.
-            const important = ["warn", "success", "levelup"].includes(type);
-            if (!important) {
-                const timer = setTimeout(() => el.remove(), 12000);
-                el.addEventListener("mouseenter", () => clearTimeout(timer), { once: true });
-            }
+            // Toutes les notifications se ferment seules, y compris les avertissements.
+            const duration = Math.min(12000, Math.max(1500, durationOverride ?? (String(message).length > 90 ? 8000 : 5000)));
+            setTimeout(dismiss, duration);
+            while (toastContainer.children.length > 3) toastContainer.firstElementChild.remove();
         }
 
         function ensureNewSystems() {
@@ -201,25 +203,88 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const AUDIO_FILES = {
+            // Son de fond normal : placer le fichier ici pour une lecture en boucle.
+            ambience: "./assets/audio/common/ambience.mp3",
             click: "./assets/audio/common/click.mp3", purchase: "./assets/audio/common/purchase.mp3",
-            levelup: "./assets/audio/common/level-up.mp3", eggCrack: "./assets/audio/egg/egg-crack.mp3",
-            eggRare: "./assets/audio/egg/rare-reveal.mp3", attack: "./assets/audio/combat/attack.mp3",
-            critical: "./assets/audio/combat/critical.mp3", victory: "./assets/audio/combat/victory.mp3",
-            halloween: "./assets/audio/halloween/ambience.mp3", noel: "./assets/audio/noel/ambience.mp3",
-            paques: "./assets/audio/paques/ambience.mp3"
+            levelup: "./assets/audio/common/level_up.mp3", eggCrack: "./assets/audio/egg/egg-crack.mp3",
+            eggRare: "./assets/audio/egg/rare-reveal.mp3", attack: "./assets/audio/combat/attaque_physique.mp3",
+            magic: "./assets/audio/combat/attaque_magique.mp3",
+            feed: "./assets/audio/action/manger.mp3",
+            sleep: "./assets/audio/action/dormir.mp3",
+            clean: "./assets/audio/action/doucher.mp3",
+            defeat: "./assets/audio/combat/defaite.mp3",
+            critical: "./assets/audio/combat/critical.mp3", victory: "./assets/audio/combat/victoire.mp3",
+            // Ambiance d'Halloween : piano angoissant + rire de sorcière joués ensemble en boucle
+            halloween: ["./assets/audio/halloween/piano_angoissant.mp3", "./assets/audio/halloween/rire_de_sorciere.mp3"],
+            noel: "./assets/audio/noel/jingle-bells.mp3",
+            paques: "./assets/audio/paques/ambience.mp3",
+            hohoho: "./assets/audio/noel/ho-ho-ho-merry-christmas.mp3",
+            monsterCombat: "./assets/audio/combat/cris_monstre_deb_combat.mp3"
         };
-        let ambienceAudio = null;
+        let ambienceAudios = [];
+        let ambienceKey = "";
+        // Cache des <audio> déjà chargés pour éviter de re-télécharger/décoder le fichier
+        // à chaque déclenchement, ce qui causait un petit temps de latence.
+        const AUDIO_CACHE = {};
+        function getCachedAudio(src) {
+            if (!AUDIO_CACHE[src]) {
+                const a = new Audio(src);
+                a.preload = "auto";
+                AUDIO_CACHE[src] = a;
+            }
+            return AUDIO_CACHE[src];
+        }
+        // Précharge tous les sons dès le démarrage pour qu'ils soient prêts à jouer
+        // instantanément (au lieu d'être téléchargés au moment où on en a besoin).
+        Object.values(AUDIO_FILES).forEach((entry) => {
+            (Array.isArray(entry) ? entry : [entry]).forEach(getCachedAudio);
+        });
+        let activeCareAudio = null;
+        let careAudioTimer = null;
+        let buttonPlayedSfx = false;
         function playSfx(name) {
+            if (name !== "click") buttonPlayedSfx = true;
             ensureNewSystems(); if (game.audio.muted || !game.audio.sfx || !AUDIO_FILES[name]) return;
-            const a = new Audio(AUDIO_FILES[name]); a.volume = 0.55; a.play().catch(() => {});
+            const files = Array.isArray(AUDIO_FILES[name]) ? AUDIO_FILES[name] : [AUDIO_FILES[name]];
+            files.forEach((f) => {
+                // cloneNode() permet de rejouer un son déjà en cours (ex: clics rapides)
+                // sans attendre qu'il se termine, tout en gardant le fichier déjà préchargé.
+                const a = getCachedAudio(f).cloneNode();
+                a.volume = 0.55;
+                if (["feed", "sleep", "clean"].includes(name)) {
+                    if (activeCareAudio) { activeCareAudio.pause(); activeCareAudio.currentTime = 0; }
+                    clearTimeout(careAudioTimer);
+                    activeCareAudio = a;
+                    a.addEventListener("playing", () => {
+                        careAudioTimer = setTimeout(() => { a.pause(); a.currentTime = 0; }, 5000);
+                    }, { once: true });
+                }
+                a.play().catch(() => {});
+            });
         }
         function updateAmbience() {
             ensureNewSystems();
-            const event = currentActiveEvents()[0];
-            const wanted = event && AUDIO_FILES[event];
-            if (ambienceAudio) { ambienceAudio.pause(); ambienceAudio = null; }
-            if (!wanted || game.audio.muted || !game.audio.ambience) return;
-            ambienceAudio = new Audio(wanted); ambienceAudio.loop = true; ambienceAudio.volume = 0.22; ambienceAudio.play().catch(() => {});
+            const event = currentActiveEvents().find(name => AUDIO_FILES[name]);
+            const wanted = event ? AUDIO_FILES[event] : AUDIO_FILES.ambience;
+            const files = Array.isArray(wanted) ? wanted : [wanted];
+            const enabled = !game.audio.muted && game.audio.ambience;
+            const key = enabled ? files.join('|') : '';
+            // Changer de pièce ne redémarre pas la musique déjà en cours.
+            if (key === ambienceKey) {
+                if (enabled) ambienceAudios.filter(a => a.paused).forEach(a => a.play().catch(() => {}));
+                return;
+            }
+            ambienceAudios.forEach(a => { a.pause(); a.currentTime = 0; });
+            ambienceAudios = [];
+            ambienceKey = key;
+            if (!enabled) return;
+            ambienceAudios = files.filter(Boolean).map(src => {
+                const audio = getCachedAudio(src).cloneNode();
+                audio.loop = true;
+                audio.volume = 0.22;
+                audio.play().catch(() => {});
+                return audio;
+            });
         }
         window.toggleLapinousAudio = function () {
             ensureNewSystems(); game.audio.muted = !game.audio.muted; autoSave(); updateAmbience(); renderAudioButton();
@@ -598,7 +663,12 @@ document.addEventListener("DOMContentLoaded", () => {
             return diffDays <= days;
         }
 
+        let adminTesting = false;
+        let adminEvent = "auto";
+        let adminSeason = "auto";
+        let adminTime = "auto";
         function currentActiveEvents(date = new Date()) {
+            if (adminTesting && adminEvent !== "auto") return adminEvent === "none" ? [] : adminEvent === "all" ? ["halloween", "noel", "paques"] : [adminEvent];
             const windows = loadEventWindows();
             const active = [];
             const year = date.getFullYear();
@@ -955,6 +1025,8 @@ document.addEventListener("DOMContentLoaded", () => {
             updateStatusBars();
             document.getElementById("level").innerText = progress().currentLevel;
             updateGameArea("default");
+            // Petit ho-ho-ho d'accueil dans le salon, si Noël est actif
+            if (currentActiveEvents().includes("noel")) playSfx("hohoho");
         }
 
         function currentTrait() {
@@ -1022,24 +1094,41 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         window.moveCollectionCarousel=function(dir){const owned=(game.ownedSpecies||[]).filter(k=>getSpecies()[k]);if(!owned.length)return;collectionCarouselIndex=(collectionCarouselIndex+dir+owned.length)%owned.length;refreshCurrentZone();};
 
-        function salonFriendPlacement(key, index) {
-            // Emplacements fixes et espacés pour éviter les chevauchements.
-            const slots = [
-                [10, 70, 0.74],
-                [16, 55, 0.68],
-                [23, 86, 0.64],
-                [30, 64, 0.64],
-                [38, 46, 0.6],
-                [52, 82, 0.58],
-                [62, 58, 0.58],
-                [74, 40, 0.56],
-                [84, 58, 0.58],
-                [90, 78, 0.54],
-                [12, 90, 0.56],
-                [32, 92, 0.54],
-            ];
-            const slot = slots[index % slots.length];
-            return `--friend-x:${slot[0]}%;--friend-y:${slot[1]}%;--friend-scale:${slot[2]};--friend-delay:${-(index % 9) / 10}s;`;
+        // Chaque compagnon dispose d'une zone propre, avec un léger décalage naturel.
+        function fitSalonFriends() {
+            const area = gameArea.querySelector('.salon-friends');
+            if (!area) return;
+            const friends = [...area.querySelectorAll('.salon-rabbit-friend')];
+            const width = area.clientWidth, height = area.clientHeight;
+            if (!friends.length || !width || !height) return;
+            const hero = gameArea.querySelector('.salon-active-rabbit-spot');
+            const areaBox = area.getBoundingClientRect();
+            const heroBox = hero?.getBoundingClientRect();
+            const blocked = heroBox ? { left: heroBox.left - areaBox.left - 14, right: heroBox.right - areaBox.left + 14, top: heroBox.top - areaBox.top - 10, bottom: heroBox.bottom - areaBox.top + 18 } : null;
+            let slots = [], size = 96;
+            for (; size >= 4; size -= 2) {
+                const cellW = size + 22, cellH = size * 1.2 + 40;
+                const cols = Math.floor(width / cellW), rows = Math.floor(height / cellH);
+                slots = [];
+                for (let row = 0; row < rows; row++) for (let col = 0; col < cols; col++) {
+                    const x = (col + .5) * width / cols + ((row * 13 + col * 7) % 5 - 2) * 3;
+                    const y = (row + .5) * height / rows + ((row * 7 + col * 11) % 5 - 2) * 4;
+                    const left = x - size / 2, right = x + size / 2;
+                    const top = y - (size * 1.2 + 20) / 2, bottom = y + (size * 1.2 + 20) / 2;
+                    if (blocked && left < blocked.right && right > blocked.left && top < blocked.bottom && bottom > blocked.top) continue;
+                    slots.push({ x, y, row, col });
+                }
+                if (slots.length >= friends.length) break;
+            }
+            // Répartition stable, décalée et sans cartes ni rangées de collection.
+            slots.sort((a, b) => ((a.row * 31 + a.col * 17) % 101) - ((b.row * 31 + b.col * 17) % 101));
+            friends.forEach((friend, index) => {
+                const slot = slots[index];
+                if (!slot) return;
+                friend.style.left = `${slot.x}px`;
+                friend.style.top = `${slot.y}px`;
+                friend.style.setProperty('--companion-size', `${size}px`);
+            });
         }
 
         function salonOwnedRabbitsSceneHtml() {
@@ -1052,7 +1141,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     const sp = species[key];
                     const img = sp.faceImg || sp.coteImg || "./assets/img/species/mystery.svg";
                     const name = game.speciesNames[key] || sp.name || key;
-                    return `<button class="salon-rabbit-friend friend-${index % 8}" style="${salonFriendPlacement(key, index)}" onclick="switchActiveSpecies('${key}')" title="Jouer avec ${name}">
+                    return `<button class="salon-rabbit-friend friend-${index % 8}" onclick="switchActiveSpecies('${key}')" title="Jouer avec ${name}">
                 <img src="${img}" alt="${name}" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';">
                 <span>${name}</span>
             </button>`;
@@ -1104,6 +1193,35 @@ document.addEventListener("DOMContentLoaded", () => {
         function puzzleLevels() {
             return (window.getPuzzleLevels ? window.getPuzzleLevels() : []) || [];
         }
+        // --- Disponibilité événementielle des puzzles ---
+        // puz.event : "" / absent = toujours dispo ; "halloween" | "noel" | "paques" ;
+        // ou plusieurs événements ("paques,noel" ou tableau) = dispo si AU MOINS un est actif.
+        function puzzleEvents(puz) {
+            let ev = puz.event;
+            if (ev === undefined || ev === null) {
+                // Anciennes données sans champ "event" : déduction depuis l'id
+                if (puz.id === "noel") ev = "noel";
+                else if (["paques", "paques"].includes(puz.id)) ev = "paques";
+                else if (puz.id === "halloween") ev = "halloween";
+                else ev = "";
+            }
+            const list = Array.isArray(ev) ? ev : String(ev).split(/[,+]/);
+            return list.map((e) => String(e).trim().toLowerCase().replace("pacques", "paques")).filter((e) => e && e !== "none" && e !== "aucun");
+        }
+        function isPuzzleAvailableNow(puz) {
+            const required = puzzleEvents(puz);
+            if (!required.length) return true;
+            const active = currentActiveEvents();
+            return required.some((e) => active.includes(e));
+        }
+        // Un puzzle est débloqué si l'index est atteint, ou si tous les puzzles
+        // précédents actuellement disponibles sont terminés (les puzzles
+        // événementiels masqués ne bloquent donc pas la suite).
+        function isPuzzleUnlocked(index) {
+            const mg = ensureMinigameProgress().puzzle;
+            if (index <= (mg.unlockedPuzzle || 0)) return true;
+            return puzzleCatalog().slice(0, index).every((q) => !isPuzzleAvailableNow(q) || puzzleState(q.id).completed);
+        }
         let activePuzzle = null;
         let selectedPuzzleSlot = null;
 
@@ -1126,7 +1244,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         window.openGameConsole = function () {
             const mg = ensureMinigameProgress();
-            const completed = Object.values(mg.puzzle.puzzles).filter((x) => x.completed).length;
+            const availablePuzzles = puzzleCatalog().filter(isPuzzleAvailableNow);
+            const completed = availablePuzzles.filter((puz) => mg.puzzle.puzzles[puz.id]?.completed).length;
             gameArea.innerHTML = `
             <div class="console-panel">
                 <div class="console-title">🎮 Console Lapinous</div>
@@ -1134,7 +1253,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <div class="console-games">
                     <button class="console-game-card" onclick="openPuzzleHub()">
                         <span class="console-game-icon">🧩</span><strong>Puzzles</strong>
-                        <small>${completed}/${puzzleCatalog().length} images terminées au moins une fois</small>
+                        <small>${completed}/${availablePuzzles.length} images terminées au moins une fois</small>
                     </button>
                     <button class="console-game-card" type="button" onclick="openMemory()">
                         <span class="console-game-icon">🧠</span><strong>Memory</strong><small>${mg.memory.completed || 0} partie(s) terminée(s)</small>
@@ -1149,15 +1268,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         window.openPuzzleHub = function () {
             const mg = ensureMinigameProgress().puzzle;
-            const activeEvents = currentActiveEvents();
             const catalog = puzzleCatalog();
-            const visible = catalog.map((puz,index)=>({puz,index})).filter(({puz}) => {
-                const eventKey = puz.event || (puz.id === "noel" ? "noel" : (["pacques","paques"].includes(puz.id) ? "paques" : (puz.id === "halloween" ? "halloween" : null)));
-                return !eventKey || activeEvents.includes(eventKey);
-            });
+            const visible = catalog.map((puz,index)=>({puz,index})).filter(({puz}) => isPuzzleAvailableNow(puz));
             const cards = visible.map(({puz,index}) => {
                 const st = puzzleState(puz.id);
-                const unlocked = index <= (mg.unlockedPuzzle || 0);
+                const unlocked = isPuzzleUnlocked(index);
                 const status = st.completed ? "✅ Terminé" : unlocked ? "À faire" : "🔒 Termine le puzzle précédent";
                 const linkedNames = (puz.linkedSpecies || []).map((key) => getSpecies()[key]?.name || key).join(", ");
                 return `<button class="puzzle-card ${unlocked ? "" : "locked"}" ${unlocked ? `onclick="openPuzzleLevels(${index})"` : "disabled"}>
@@ -1171,10 +1286,8 @@ document.addEventListener("DOMContentLoaded", () => {
         window.openPuzzleLevels = function (puzzleIndex) {
             const puz = puzzleCatalog()[puzzleIndex];
             if (!puz) return;
-            const eventKey = puz.event || (puz.id === "noel" ? "noel" : (["pacques","paques"].includes(puz.id) ? "paques" : (puz.id === "halloween" ? "halloween" : null)));
-            if (eventKey && !currentActiveEvents().includes(eventKey)) { openPuzzleHub(); return; }
-            const mg = ensureMinigameProgress().puzzle;
-            if (puzzleIndex > (mg.unlockedPuzzle || 0)) return;
+            if (!isPuzzleAvailableNow(puz)) { openPuzzleHub(); return; }
+            if (!isPuzzleUnlocked(puzzleIndex)) return;
             const st = puzzleState(puz.id);
             const maxUnlockedLevel = Math.min(
                 puzzleLevels().length - 1,
@@ -1240,7 +1353,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const mg = ensureMinigameProgress().puzzle;
             const st = puzzleState(puz.id);
             if (
-                puzzleIndex > (mg.unlockedPuzzle || 0) ||
+                !isPuzzleAvailableNow(puz) ||
+                !isPuzzleUnlocked(puzzleIndex) ||
                 levelIndex > Math.min(puzzleLevels().length - 1, st.highestCompletedLevel + 1)
             )
                 return;
@@ -1390,7 +1504,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     "success",
                 );
             }
-            game.pendingDuplicate = null;
+            game.pendingDuplicate = (game.pendingDuplicates || []).shift() || null;
             autoSave();
             refreshCurrentZone();
         };
@@ -1407,9 +1521,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     <div class="carrot-counter">🥕 ${game.carrots} · 🥚 ${game.eggs}</div>
                     <div class="action-row">
                         <button class="action-btn" onclick="buyEgg()"><span class="action-icon-emoji">🥚</span><span>Acheter (${EGG_COST} 🥕)</span></button>
-                        <button class="action-btn upgrade" onclick="openEgg()" ${game.eggs > 0 ? "" : "disabled"}><span class="action-icon-emoji">🎁</span><span>Ouvrir un œuf</span></button>
+                        <button class="action-btn upgrade" onclick="openEgg()" ${game.eggs > 0 ? "" : "disabled"}><span class="action-icon-emoji">🎁</span><span>Ouvrir un œuf</span></button><button class="action-btn upgrade" onclick="openTenEggs()" ${game.eggs >= 10 && !game.pendingDuplicate ? "" : "disabled"}><span>🥚 Ouvrir 10 œufs</span></button>
                     </div>
-                    <p class="upgrade-locked-note">Gagne des carottes 🥕 en combattant les boss du jardin, achète des œufs ici, puis ouvre-les pour tenter d'obtenir un nouveau compagnon rare, épique ou légendaire (visible dans l'encyclopédie).</p>
+                    <p class="upgrade-locked-note">Gagne des carottes 🥕 en combattant les boss du jardin, achète des œufs ici, puis ouvre-les pour tenter d’obtenir un nouveau compagnon rare, épique ou légendaire (visible dans l'encyclopédie).</p>
                 </div>`,
             },
             cuisine: {
@@ -1532,6 +1646,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // ACTIONS
         // ============================================================
         window.feedRabbit = function () {
+            playSfx("feed");
             if (progress().food >= 100) {
                 showToast("Le lapin est déjà rassasié !");
             } else {
@@ -1547,6 +1662,7 @@ document.addEventListener("DOMContentLoaded", () => {
             autoSave();
         };
         window.putRabbitToSleep = function () {
+            playSfx("sleep");
             if (progress().energy >= 100) {
                 showToast("Le lapin est déjà bien reposé !");
             } else {
@@ -1562,6 +1678,7 @@ document.addEventListener("DOMContentLoaded", () => {
             autoSave();
         };
         window.cleanRabbit = function () {
+            playSfx("clean");
             if (progress().cleanliness >= 100) {
                 showToast("Le lapin est déjà tout propre !");
             } else {
@@ -1976,7 +2093,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (log) log.textContent = `🏆 Victoire ! +${reward} 🥕 et +3 💛`;
                 spawnParticles("🥕", 8);
             } else {
-                progress().friendship = Math.max(progress().friendship - 5, 0);
+                playSfx("defeat"); // Une défaite ne retire aucune amitié ni aucun niveau.
                 if (log)
                     log.textContent = `${boss.name} gagne ce combat. ${currentRabbitName()} a besoin de repos 😴`;
                 spawnParticles("💦", 5);
@@ -2010,6 +2127,45 @@ document.addEventListener("DOMContentLoaded", () => {
         // ---- Combat tactique manuel / équipe ----
         let tacticalFight = null;
         let selectedFightTeam = [];
+        let fightMode = "manual";
+        let fightSpeed = 1;
+        let autoFightTimer = null;
+        function queueAutoFight() {
+            clearTimeout(autoFightTimer);
+            const f = tacticalFight;
+            if (!f || !f.auto || f.locked) return;
+            autoFightTimer = setTimeout(() => {
+                if (tacticalFight !== f || !f.auto || !gameArea.querySelector('.tactical')) return;
+                const r = f.team[f.active];
+                if (r.charge >= 100) window.tacticalAction('ultimate');
+                else {
+                    const count = raritySkillCount(r.sp.rarity);
+                    const unlocked = ensureAttackTraining(r.pr).skillUnlocked;
+                    let best = 0;
+                    if (unlocked) for (let i = 1; i < count; i++) {
+                        const t = techniqueFor(r, i);
+                        if (t.kind === 'heal' && r.hp < r.maxHp * .45) { best = i; break; }
+                        if (t.kind === 'damage' && t.mult > techniqueFor(r, best).mult) best = i;
+                    }
+                    window.tacticalAction('skill', best);
+                }
+            }, 650 / f.speed);
+        }
+        window.setFightMode = function(mode) {
+            fightMode = mode === 'auto' ? 'auto' : 'manual';
+            if (tacticalFight) {
+                tacticalFight.auto = fightMode === 'auto';
+                clearTimeout(autoFightTimer);
+                const btn = gameArea.querySelector('#fightModeToggle');
+                if (btn) btn.textContent = tacticalFight.auto ? '⏸ Reprendre en manuel' : '▶ Combat automatique';
+                if (!tacticalFight.locked) renderTacticalFight('Mode ' + (tacticalFight.auto ? 'automatique' : 'manuel'));
+            }
+        };
+        window.setFightSpeed = function(value) {
+            fightSpeed = Number(value) === 3 ? 3 : 1;
+            if (tacticalFight) { tacticalFight.speed = fightSpeed; queueAutoFight(); }
+        };
+        function fightPause(f, ms) { return sleep(ms / f.speed); }
         function raritySkillCount(rarity){ return ({commun:1,rare:2,epique:3,legendaire:4,mythique:5,divin:5})[rarity] || 1; }
         function rabbitCombatStats(key){
             const sp=getSpecies()[key]||{}, pr=progressForSpecies(key), tr=ensureAttackTraining(pr);
@@ -2019,10 +2175,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         function rabbitDisplayName(r){ return game.speciesNames?.[r.key] || r.sp.name || r.key; }
         function techniqueFor(r,index){
-            const base=powerName(r.sp)||'Pouvoir';
-            const mode=powerMode(r.sp);
             const defaults=[
-                {name:base, kind:mode==='heal'?'heal':mode==='support'?'guard':'damage', mult:1.35},
+                {name:'Frappe renforcée', kind:'damage', mult:1.35},
                 {name:'Frappe éclair',kind:'damage',mult:1.55},
                 {name:'Garde héroïque',kind:'guard',mult:0.85},
                 {name:'Assaut renforcé',kind:'damage',mult:1.85},
@@ -2030,7 +2184,7 @@ document.addEventListener("DOMContentLoaded", () => {
             ];
             return defaults[index]||defaults[0];
         }
-        function ultimateName(r){ return `${powerName(r.sp)||r.sp.name} — Ultime`; }
+        function ultimateName(r){ return `${powerName(r.sp)||r.sp.name} — Coup critique`; }
         function nextLivingIndex(f,from){
             if(!f.team.some(x=>x.hp>0)) return -1;
             for(let step=1;step<=f.team.length;step++){const i=(from+step)%f.team.length;if(f.team[i].hp>0)return i;}
@@ -2046,45 +2200,115 @@ document.addEventListener("DOMContentLoaded", () => {
             selectedFightTeam=selectedFightTeam.filter(k=>owned.includes(k)).slice(0,3);
             const teamCards=owned.map(k=>{const sp=getSpecies()[k]||{},on=selectedFightTeam.includes(k),pr=progressForSpecies(k);return `<button class="fight-team-card ${on?'selected':''}" onclick="toggleFightTeam('${k}','${key}')"><img src="${sp.faceImg||sp.coteImg||'./assets/img/species/mystery.svg'}"><span>${game.speciesNames?.[k]||sp.name||k}<small>Niv. ${pr.currentLevel} · ${RARITY_META[sp.rarity]?.label||sp.rarity||'Commun'}</small></span></button>`}).join('');
             const preview=selectedFightTeam.map((k,i)=>{const sp=getSpecies()[k]||{};return `<div class="team-preview-rabbit slot-${i+1}"><img src="${sp.coteImg||sp.faceImg||'./assets/img/species/mystery.svg'}"><strong>${game.speciesNames?.[k]||sp.name||k}</strong></div>`}).join('');
-            gameArea.innerHTML=`<div class="fight-stage"><div class="console-title">⚔️ Prépare ton équipe contre ${boss.name}</div><p class="agility-hint">Choisis jusqu’à 3 lapins. Les lapins sélectionnés apparaissent directement sur le terrain.</p><div class="fight-team-select">${teamCards}</div><div class="battlefield-preview"><div class="team-preview-side">${preview||'<span>Choisis ton équipe</span>'}</div><div class="vs-mark">VS</div><div class="preview-boss"><img src="${boss.coteImg||boss.faceImg}" onerror="this.src='./assets/img/bosses/mystery_boss.svg'"><strong>${boss.name}</strong></div></div><div class="action-row"><button class="action-btn adventure" onclick="startTacticalFight('${key}')" ${selectedFightTeam.length?'':'disabled'}>⚔️ Commencer</button><button class="ghost-btn" onclick="openAdventure()">← Boss</button></div></div>`; autoSave();
+            gameArea.innerHTML=`<div class="fight-stage fight-preparation"><div class="console-title">⚔️ Prépare ton équipe contre ${boss.name}</div><p class="agility-hint">Choisis jusqu’à 3 lapins. Les lapins sélectionnés apparaissent directement sur le terrain.</p><div class="fight-team-select">${teamCards}</div><div class="battlefield-preview"><div class="team-preview-side">${preview||'<span>Choisis ton équipe</span>'}</div><div class="vs-mark">VS</div><div class="preview-boss"><img src="${boss.coteImg||boss.faceImg}" onerror="this.src='./assets/img/bosses/mystery_boss.svg'"><strong>${boss.name}</strong></div></div><div class="action-row"><label>Combat <select onchange="setFightMode(this.value)"><option value="manual" ${fightMode==='manual'?'selected':''}>Manuel</option><option value="auto" ${fightMode==='auto'?'selected':''}>Automatique</option></select></label><label>Vitesse <select onchange="setFightSpeed(this.value)"><option value="1" ${fightSpeed===1?'selected':''}>×1</option><option value="3" ${fightSpeed===3?'selected':''}>×3</option></select></label><button class="action-btn adventure" onclick="startTacticalFight('${key}')" ${selectedFightTeam.length?'':'disabled'}>⚔️ Commencer</button><button class="ghost-btn" onclick="openAdventure()">← Boss</button></div></div>`; autoSave();
         };
         window.startTacticalFight=function(key){
-            const boss=getBosses()[key]; if(!boss||!selectedFightTeam.length)return; const team=selectedFightTeam.map(rabbitCombatStats); tacticalFight={key,boss,team,active:0,bossMaxHp:100+(boss.difficulty||20)*3,bossHp:100+(boss.difficulty||20)*3,turn:1,locked:false}; renderTacticalFight(`${rabbitDisplayName(team[0])} ouvre le combat !`);
+            const boss=getBosses()[key]; if(!boss||!selectedFightTeam.length)return; const team=selectedFightTeam.map(rabbitCombatStats); tacticalFight={key,boss,team,active:0,bossMaxHp:100+(boss.difficulty||20)*3,bossHp:100+(boss.difficulty||20)*3,turn:1,locked:false,auto:fightMode==='auto',speed:fightSpeed,bossCharge:0,bossGuard:0}; clearTimeout(autoFightTimer); playSfx("monsterCombat"); renderTacticalFight(`${rabbitDisplayName(team[0])} ouvre le combat !`);
         };
         function renderTacticalFight(message){
             const f=tacticalFight;if(!f)return;if(!f.team.some(x=>x.hp>0)){finishTacticalFight(false);return;}if(f.team[f.active]?.hp<=0)f.active=nextLivingIndex(f,f.active);const r=f.team[f.active];
             const skillN=raritySkillCount(r.sp.rarity), unlocked=ensureAttackTraining(r.pr).skillUnlocked;
             const skills=Array.from({length:skillN},(_,i)=>{const t=techniqueFor(r,i);return `<button class="fight-command" onclick="tacticalAction('skill',${i})" ${i>0&&!unlocked?'disabled title="Remplis la barre de fragments"':''}>✨ ${t.name}</button>`}).join('');
             const fighters=f.team.map((x,i)=>`<div class="team-fighter battle-slot-${i+1} ${i===f.active?'active-turn':''} ${x.hp<=0?'ko':''}" data-fighter="${i}"><div class="turn-marker">${i===f.active?'▼ TOUR':''}</div><img class="battle-sprite team-rabbit-sprite" src="${x.sp.coteImg||x.sp.faceImg||'./assets/img/species/mystery.svg'}" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';"><strong>${rabbitDisplayName(x)}</strong><small>${Math.max(0,x.hp)} / ${x.maxHp} PV</small><div class="mini-hp"><i style="width:${Math.max(0,x.hp)/x.maxHp*100}%"></i></div></div>`).join('');
-            gameArea.innerHTML=`<div class="fight-stage tactical"><div class="fight-hud-side player"><div class="fight-name">🐰 Tour de ${rabbitDisplayName(r)}</div><div class="fight-hp"><div class="fight-hp-fill player-hp" style="width:${r.hp/r.maxHp*100}%"></div></div><div class="fight-hp-text">${Math.max(0,r.hp)} / ${r.maxHp} PV</div><div class="fight-crit-label">🌟 Ultime ${Math.round(r.charge)}%</div><div class="fight-crit"><div class="fight-crit-fill player-crit-fill" style="width:${r.charge}%"></div></div></div><div class="fight-hud-side boss"><div class="fight-name">🥕 ${f.boss.name}</div><div class="fight-hp"><div class="fight-hp-fill boss-hp" style="width:${f.bossHp/f.bossMaxHp*100}%"></div></div><div class="fight-hp-text">${Math.max(0,f.bossHp)} / ${f.bossMaxHp} PV</div></div><div class="team-battlefield"><div class="team-fighters">${fighters}</div><div class="vs-mark">⚔️</div><div class="boss-battle-slot"><img class="battle-sprite boss-sprite" src="${f.boss.coteImg||f.boss.faceImg}" onerror="this.onerror=null;this.src='./assets/img/bosses/mystery_boss.svg';"><strong>${f.boss.name}</strong></div></div><div id="fightLog" class="fight-log">Tour ${f.turn} · ${message}</div><div class="fight-command-grid"><button class="fight-command" onclick="tacticalAction('attack')">⚔️ Coup de patte</button>${skills}<button class="fight-command ultimate" onclick="tacticalAction('ultimate')" ${r.charge<100?'disabled':''}>🌟 ${ultimateName(r)}</button></div></div>`;
+            gameArea.innerHTML=`<div class="fight-stage tactical"><div class="fight-hud-side player"><div class="fight-name">🐰 Tour de ${rabbitDisplayName(r)}</div><div class="fight-hp"><div class="fight-hp-fill player-hp" style="width:${r.hp/r.maxHp*100}%"></div></div><div class="fight-hp-text">${Math.max(0,r.hp)} / ${r.maxHp} PV</div><div class="fight-crit-label">🌟 Critique ${Math.round(r.charge)}%</div><div class="fight-crit"><div class="fight-crit-fill player-crit-fill" style="width:${r.charge}%"></div></div></div><div class="fight-hud-side boss"><div class="fight-name">🥕 ${f.boss.name}</div><div class="fight-hp"><div class="fight-hp-fill boss-hp" style="width:${f.bossHp/f.bossMaxHp*100}%"></div></div><div class="fight-hp-text">${Math.max(0,f.bossHp)} / ${f.bossMaxHp} PV</div><div class="fight-crit-label">🌟 Critique ${Math.round(f.bossCharge)}%</div><div class="fight-crit"><div class="fight-crit-fill" style="width:${f.bossCharge}%"></div></div></div><div class="team-battlefield"><div class="team-fighters">${fighters}</div><div class="vs-mark">⚔️</div><div class="boss-battle-slot"><img class="battle-sprite boss-sprite" src="${f.boss.coteImg||f.boss.faceImg}" onerror="this.onerror=null;this.src='./assets/img/bosses/mystery_boss.svg';"><strong>${f.boss.name}</strong></div></div><div id="fightLog" class="fight-log">Tour ${f.turn} · ${message}</div><div class="fight-command-grid"><button class="fight-command" onclick="tacticalAction('attack')">⚔️ Coup de patte</button>${skills}${r.charge>=100?`<button class="fight-command ultimate" onclick="tacticalAction('ultimate')">🌟 ${ultimateName(r)}</button>`:''}<button id="fightModeToggle" class="fight-command" onclick="setFightMode(tacticalFightMode())">${f.auto?'⏸ Reprendre en manuel':'▶ Combat automatique'}</button><label>Vitesse <select onchange="setFightSpeed(this.value)"><option value="1" ${f.speed===1?'selected':''}>×1</option><option value="3" ${f.speed===3?'selected':''}>×3</option></select></label></div></div>`;
+            queueAutoFight();
         }
+        window.tacticalFightMode = () => tacticalFight?.auto ? 'manual' : 'auto';
         window.tacticalAction=async function(type,index=0){
-            const f=tacticalFight;if(!f||f.locked)return;f.locked=true;const r=f.team[f.active], name=rabbitDisplayName(r);let dmg=0,msg='',heal=0;
+            const f=tacticalFight;if(!f||f.locked)return;const r=f.team[f.active];
+            if (!['attack','skill','ultimate'].includes(type)) return;
+            if (type==='ultimate' && r.charge<100) return;
+            if (type==='skill' && (!Number.isInteger(index) || index<0 || index>=raritySkillCount(r.sp.rarity) || (index>0&&!ensureAttackTraining(r.pr).skillUnlocked))) return;
+            clearTimeout(autoFightTimer);f.locked=true;const name=rabbitDisplayName(r);let dmg=0,msg='',heal=0;
             const sprite=gameArea.querySelector(`[data-fighter="${f.active}"] .team-rabbit-sprite`),bossSprite=gameArea.querySelector('.boss-sprite');
-            if(type==='attack'){dmg=Math.round(r.power*.85+Math.random()*7);r.charge=Math.min(100,r.charge+22);msg=`🐰 ${name} utilise Coup de patte ! — ${dmg} dégâts.`;playSfx('attack');}
+            if(type==='attack'){dmg=Math.round(r.power*.85+Math.random()*7);r.charge=Math.min(100,r.charge+criticalConfig(r.sp).chargePerTurn);msg=`🐰 ${name} utilise Coup de patte ! — ${dmg} dégâts.`;playSfx('attack');}
             else if(type==='skill'){
-                const t=techniqueFor(r,index);r.charge=Math.min(100,r.charge+28);
+                playSfx('magic');const t=techniqueFor(r,index);r.charge=Math.min(100,r.charge+criticalConfig(r.sp).chargePerTurn);
                 if(t.kind==='heal'){heal=Math.max(8,Math.round(r.maxHp*.22));r.hp=Math.min(r.maxHp,r.hp+heal);dmg=Math.round(r.power*.45);msg=`✨ ${name} utilise ${t.name} ! +${heal} PV et ${dmg} dégâts.`;}
                 else if(t.kind==='guard'){r.guard=Math.max(r.guard,0.55);dmg=Math.round(r.power*t.mult);msg=`🛡️ ${name} utilise ${t.name} ! ${dmg} dégâts et se protège.`;}
                 else {dmg=Math.round(r.power*t.mult+Math.random()*8);msg=`✨ ${name} utilise ${t.name} ! — ${dmg} dégâts.`;}
-            } else if(type==='ultimate'){dmg=Math.round(r.power*2.6+Math.random()*12);r.charge=0;msg=`🌟 ${name} déclenche ${ultimateName(r)} ! — ${dmg} dégâts !`;playSfx('critical');}
-            sprite?.classList.add('fight-attack-player');await sleep(240);f.bossHp=Math.max(0,f.bossHp-dmg);bossSprite?.classList.add(type==='ultimate'?'fight-critical-hit':'fight-hit');const log=gameArea.querySelector('#fightLog');if(log)log.textContent=msg;await sleep(type==='ultimate'?650:430);sprite?.classList.remove('fight-attack-player');bossSprite?.classList.remove('fight-hit','fight-critical-hit');
+            } else if(type==='ultimate'){dmg=Math.round(r.power*criticalConfig(r.sp).multiplier+Math.random()*12);r.charge=0;const mode=powerMode(r.sp);if(mode==='heal'){f.team.filter(x=>x.hp>0).forEach(x=>x.hp=Math.min(x.maxHp,x.hp+Math.round(x.maxHp*.25)));}else if(mode==='support'){f.team.filter(x=>x.hp>0).forEach(x=>x.guard=Math.max(x.guard,.55));}msg=`🌟 ${name} déclenche ${ultimateName(r)} ! — ${dmg} dégâts !`;playSfx('critical');}
+            gameArea.querySelectorAll('.fight-command').forEach(btn=>btn.disabled=true);
+            sprite?.classList.add('fight-attack-player');await fightPause(f,240);dmg=Math.max(1,Math.round(dmg*(1-f.bossGuard)));f.bossGuard=0;f.bossHp=Math.max(0,f.bossHp-dmg);bossSprite?.classList.add(type==='ultimate'?'fight-critical-hit':'fight-hit');const log=gameArea.querySelector('#fightLog');if(log)log.textContent=msg;await fightPause(f,type==='ultimate'?650:430);sprite?.classList.remove('fight-attack-player');bossSprite?.classList.remove('fight-hit','fight-critical-hit');
             if(f.bossHp<=0){finishTacticalFight(true);return;}
-            const raw=Math.max(5,Math.round((f.boss.difficulty||20)*.30+Math.random()*8));const bd=Math.max(1,Math.round(raw*(1-(r.guard||0))));r.guard=0;const bossImg=gameArea.querySelector('.boss-sprite');bossImg?.classList.add('fight-attack-boss');await sleep(220);r.hp=Math.max(0,r.hp-bd);sprite?.classList.add('fight-hit');if(log)log.textContent+=` 🥕 ${f.boss.name} attaque ${name} : ${bd} dégâts.${r.hp<=0?` ${name} est K.O. !`:''}`;await sleep(430);bossImg?.classList.remove('fight-attack-boss');sprite?.classList.remove('fight-hit');
+            const config=criticalConfig(f.boss);
+            f.bossCharge=Math.min(100,f.bossCharge+config.chargePerTurn);
+            const bossCritical=f.bossCharge>=100;
+            const raw=Math.max(5,Math.round((f.boss.difficulty||20)*.30+Math.random()*8));
+            const bd=Math.max(1,Math.round(raw*(bossCritical?config.multiplier:1)*(1-(r.guard||0))));
+            r.guard=0;
+            const bossMessage=bossCritical ? `🌟 ${f.boss.name} déclenche ${powerName(f.boss)} : ${bd} dégâts !` : `🥕 ${f.boss.name} attaque ${name} : ${bd} dégâts.`;
+            if(bossCritical){
+                f.bossCharge=0;
+                const mode=powerMode(f.boss);
+                if(mode==='heal') f.bossHp=Math.min(f.bossMaxHp,f.bossHp+Math.round(f.bossMaxHp*.2));
+                else if(mode==='support') f.bossGuard=.4;
+            }
+            const bossImg=gameArea.querySelector('.boss-sprite');bossImg?.classList.add('fight-attack-boss');
+            await fightPause(f,220);r.hp=Math.max(0,r.hp-bd);playSfx(bossCritical?'critical':'attack');
+            sprite?.classList.add(bossCritical?'fight-critical-hit':'fight-hit');
+            if(log)log.textContent+=` ${bossMessage}${r.hp<=0?` ${name} est K.O. !`:''}`;
+            await fightPause(f,bossCritical?650:430);bossImg?.classList.remove('fight-attack-boss');sprite?.classList.remove('fight-hit','fight-critical-hit');
             if(!f.team.some(x=>x.hp>0)){finishTacticalFight(false);return;}
-            f.active=nextLivingIndex(f,f.active);f.turn++;f.locked=false;renderTacticalFight(`C'est au tour de ${rabbitDisplayName(f.team[f.active])}.`);
+            f.active=nextLivingIndex(f,f.active);f.turn++;f.locked=false;renderTacticalFight(`${msg} ${bossMessage} C'est au tour de ${rabbitDisplayName(f.team[f.active])}.`);
         };
-        function finishTacticalFight(win){const f=tacticalFight;if(!f)return;if(win){const reward=Math.max(2,Math.round((f.boss.difficulty||20)*.22));game.carrots+=reward;game.records.bossesDefeated++;f.team.forEach(x=>{const old=game.species;game.species=x.key;gainFriendship(3);game.species=old;});playSfx('victory');showToast(`Victoire ! +${reward} 🥕 · +3 💛 pour l’équipe`,'success');}else showToast('Ton équipe est K.O. Elle a besoin de repos.','warn');f.team.forEach(x=>{x.pr.food=Math.max(0,x.pr.food-8);x.pr.energy=Math.max(0,x.pr.energy-12);x.pr.cleanliness=Math.max(0,x.pr.cleanliness-5);});autoSave();const key=f.key;tacticalFight=null;gameArea.innerHTML=`<div class="console-panel"><div class="console-title">${win?'🏆 Victoire !':'💤 Défaite'}</div><button class="action-btn" onclick="prepareFight('${key}')">🔁 Rejouer</button><button class="ghost-btn" onclick="openAdventure()">← Boss</button></div>`;}
+        function finishTacticalFight(win){clearTimeout(autoFightTimer);const f=tacticalFight;if(!f)return;if(win){const reward=Math.max(2,Math.round((f.boss.difficulty||20)*.22));game.carrots+=reward;game.records.bossesDefeated++;f.team.forEach(x=>{const old=game.species;game.species=x.key;gainFriendship(3);game.species=old;});playSfx('victory');showToast(`Victoire ! +${reward} 🥕 · +3 💛 pour l’équipe`,'success');}else {playSfx('defeat');showToast('Ton équipe est K.O. Elle a besoin de repos.','warn');}f.team.forEach(x=>{x.pr.food=Math.max(0,x.pr.food-8);x.pr.energy=Math.max(0,x.pr.energy-12);x.pr.cleanliness=Math.max(0,x.pr.cleanliness-5);});updateStatusBars();autoSave();const key=f.key;tacticalFight=null;gameArea.innerHTML=`<div class="console-panel"><div class="console-title">${win?'🏆 Victoire !':'💤 Défaite'}</div><button class="action-btn" onclick="prepareFight('${key}')">🔁 Rejouer</button><button class="ghost-btn" onclick="openAdventure()">← Boss</button></div>`;}
 
         // ---- Boutique à œufs (Salon) ----
+        const EGG_IMAGES = Object.fromEntries(['commun','rare','epique','legendaire','mythique','divin'].map(rarity => [rarity, `./assets/img/oeuf/${rarity}.png`]));
+        const EGG_TAPS_TO_HATCH = 5;
+        const eggStyle = document.createElement('style');
+        eggStyle.textContent = `
+            .egg-shell.illustrated-egg { display: inline-flex; align-items: center; justify-content: center; position: relative; border: 0; padding: 0; background: transparent; cursor: pointer; transform-origin: 50% 85%; width: min(280px, 60vw); height: min(320px, 46vh); touch-action: manipulation; }
+            .egg-shell.illustrated-egg img { width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
+            .egg-shell.illustrated-egg.shaking { animation: eggWiggle .5s ease-in-out; }
+            .egg-shell.illustrated-egg.hatching { animation: eggWiggle .25s ease-in-out 3; }
+            .egg-shell.illustrated-egg[hidden], .egg-rabbit[hidden] { display: none !important; }
+            .egg-shell.illustrated-egg:focus-visible { outline: 3px solid #79558b; border-radius: 35%; }
+            .egg-batch-grid > .egg-batch-item { position: relative; min-height: 170px; justify-content: center; overflow: hidden; }
+            .egg-batch-shell { width: 100%; display: flex; justify-content: center; transform-origin: 50% 85%; animation: eggWiggle .6s ease-in-out 4; animation-delay: var(--egg-delay); }
+            .egg-batch-shell img { height: clamp(75px, 17vh, 150px); width: 100%; object-fit: contain; }
+            .egg-batch-shell.breaking { animation: batchEggBreak .3s ease-in forwards; }
+            .egg-batch-result { display: flex; flex-direction: column; align-items: center; gap: 3px; animation: batchRabbitAppear .35s ease-out; }
+            .egg-batch-result[hidden], .egg-batch-shell[hidden] { display: none !important; }
+            @keyframes batchEggBreak { to { transform: scale(1.12); opacity: 0; } }
+            @keyframes batchRabbitAppear { from { transform: scale(.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+            @media(prefers-reduced-motion:reduce) { .egg-batch-shell, .egg-batch-shell.breaking, .egg-batch-result { animation: none; } }
+            @keyframes eggWiggle { 0%,100% { transform: rotate(0); } 15% { transform: rotate(-9deg); } 35% { transform: rotate(9deg); } 55% { transform: rotate(-7deg); } 75% { transform: rotate(5deg); } }
+            @media(prefers-reduced-motion:reduce) { .egg-shell.illustrated-egg.shaking, .egg-shell.illustrated-egg.hatching { animation: none; } }
+        `;
+        document.head.appendChild(eggStyle);
         function eggRevealAnimation(speciesData) {
-            return new Promise((resolve) => {
-                const rarity = speciesData.rarity || "commun";
-                const overlay = document.createElement("div"); overlay.className = `egg-reveal-overlay rarity-${rarity}`;
-                overlay.innerHTML = `<div class="egg-reveal-card"><div class="egg-shell" title="Clique sur l'œuf">🥚</div><div class="egg-reveal-hint">Clique sur l'œuf pour le faire éclore</div><div class="egg-rabbit" hidden><img src="${speciesData.faceImg || speciesData.coteImg}" alt="${speciesData.name}"><strong>${speciesData.name}</strong><span>${RARITY_META[rarity]?.label || rarity}</span><button class="action-btn">Continuer</button></div></div>`;
+            return new Promise(resolve => {
+                const rarity = speciesData.rarity || 'commun';
+                const image = EGG_IMAGES[rarity] || EGG_IMAGES.divin;
+                const overlay = document.createElement('div');
+                overlay.className = `egg-reveal-overlay rarity-${rarity}`;
+                overlay.innerHTML = `<div class="egg-reveal-card"><button type="button" class="egg-shell illustrated-egg" aria-label="Toucher l'œuf pour le faire éclore"><img src="${image}" alt="Œuf ${RARITY_META[rarity]?.label || rarity}" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span hidden aria-hidden="true">🥚</span></button><div class="egg-reveal-hint" role="status">Touche l'œuf plusieurs fois : 0/${EGG_TAPS_TO_HATCH}</div><div class="egg-rabbit" hidden><img src="${speciesData.faceImg || speciesData.coteImg}" alt="${speciesData.name}"><strong>${speciesData.name}</strong><span>${RARITY_META[rarity]?.label || rarity}</span><button type="button" class="action-btn">Continuer</button></div></div>`;
                 document.body.appendChild(overlay);
-                overlay.querySelector(".egg-shell").onclick = () => { playSfx("eggCrack"); overlay.classList.add("cracked"); setTimeout(() => { overlay.querySelector(".egg-shell").hidden=true; overlay.querySelector(".egg-reveal-hint").hidden=true; overlay.querySelector(".egg-rabbit").hidden=false; if (!["commun","rare"].includes(rarity)) playSfx("eggRare"); }, 450); };
-                overlay.querySelector("button").onclick = () => { overlay.remove(); resolve(); };
+                const shell = overlay.querySelector('.egg-shell');
+                const hint = overlay.querySelector('.egg-reveal-hint');
+                const rabbit = overlay.querySelector('.egg-rabbit');
+                let taps = 0, hatching = false;
+                shell.onclick = () => {
+                    if (hatching) return;
+                    taps++;
+                    playSfx('eggCrack');
+                    hint.textContent = `Quelque chose bouge à l'intérieur… ${taps}/${EGG_TAPS_TO_HATCH}`;
+                    shell.classList.remove('shaking');
+                    void shell.offsetWidth;
+                    if (taps < EGG_TAPS_TO_HATCH) { shell.classList.add('shaking'); return; }
+                    hatching = true;
+                    shell.disabled = true;
+                    shell.classList.add('hatching');
+                    hint.textContent = 'Il éclot !';
+                    setTimeout(() => {
+                        overlay.classList.add('cracked');
+                        shell.hidden = true; hint.hidden = true; rabbit.hidden = false;
+                        if (!['commun','rare'].includes(rarity)) playSfx('eggRare');
+                    }, 750);
+                };
+                rabbit.querySelector('button').onclick = () => { overlay.remove(); resolve(); };
             });
         }
         window.buyEgg = function () {
@@ -2100,7 +2324,9 @@ document.addEventListener("DOMContentLoaded", () => {
             refreshCurrentZone();
         };
 
+        let openingEggs = false;
         window.openEgg = async function () {
+            if (openingEggs) return;
             if (game.eggs <= 0) {
                 showToast("Tu n'as aucun œuf à ouvrir. Achète-en un d'abord !", "warn");
                 return;
@@ -2110,10 +2336,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 refreshCurrentZone();
                 return;
             }
+            openingEggs = true;
             game.eggs -= 1; ensureNewSystems(); game.records.eggsOpened += 1;
             const result = rollEgg();
             const s = getSpecies()[result.speciesKey];
             await eggRevealAnimation(s);
+            openingEggs = false;
             const isNew = !game.ownedSpecies.includes(result.speciesKey);
             if (isNew) {
                 game.ownedSpecies.push(result.speciesKey);
@@ -2155,6 +2383,78 @@ document.addEventListener("DOMContentLoaded", () => {
             spawnParticles("✨", 10);
             autoSave();
             refreshCurrentZone();
+        };
+
+        window.openTenEggs = function () {
+            if (openingEggs || game.eggs < 10 || game.pendingDuplicate) return;
+            openingEggs = true;
+            ensureNewSystems();
+            const results = Array.from({length:10}, () => rollEgg());
+            game.eggs -= 10; game.records.eggsOpened += 10;
+            const rewards = {commun:5,rare:10,epique:18,legendaire:30,mythique:45,divin:70,secret:70};
+            game.pendingDuplicates = game.pendingDuplicates || [];
+            const cards = results.map(result => {
+                const sp = getSpecies()[result.speciesKey];
+                const isNew = !game.ownedSpecies.includes(result.speciesKey);
+                let label = 'Nouveau !';
+                if (isNew) {
+                    game.ownedSpecies.push(result.speciesKey);
+                    game.speciesTraits[result.speciesKey] = result.trait;
+                    game.speciesNames[result.speciesKey] = sp.name;
+                    progressForSpecies(result.speciesKey);
+                } else {
+                    game.duplicateCounts = game.duplicateCounts || {};
+                    game.duplicateCounts[result.speciesKey] = (game.duplicateCounts[result.speciesKey] || 0) + 1;
+                    const reward = rewards[sp.rarity] || 5;
+                    if (ensureAttackTraining(progressForSpecies(result.speciesKey)).completed) {
+                        game.carrots += reward; label = `Doublon : +${reward} 🥕`;
+                    } else {
+                        game.pendingDuplicates.push({speciesKey:result.speciesKey,carrotReward:reward});
+                        label = 'Doublon : choix après ouverture';
+                    }
+                }
+                return {sp,label};
+            });
+            game.pendingDuplicate = game.pendingDuplicates.shift() || null;
+            autoSave(); refreshCurrentZone();
+            const overlay = document.createElement('div');
+            overlay.className = 'egg-batch-overlay';
+            const panel = document.createElement('div'); panel.className = 'egg-batch-card';
+            const title = document.createElement('h2'); title.textContent = '🥚 Tes 10 œufs remuent…'; panel.appendChild(title);
+            const grid = document.createElement('div'); grid.className = 'egg-batch-grid';
+            const animatedCards = cards.map(({sp,label}, index) => {
+                const card = document.createElement('div'); card.className = 'egg-batch-item';
+                const shell = document.createElement('div'); shell.className = 'egg-batch-shell';
+                shell.style.setProperty('--egg-delay', `${index * 40}ms`);
+                const egg = document.createElement('img');
+                egg.src = EGG_IMAGES[sp.rarity] || EGG_IMAGES.divin;
+                egg.alt = `Œuf ${RARITY_META[sp.rarity]?.label || sp.rarity}`;
+                egg.onerror = () => { egg.hidden = true; const fallback = document.createElement('span'); fallback.textContent = '🥚'; shell.appendChild(fallback); };
+                shell.appendChild(egg);
+                const reveal = document.createElement('div'); reveal.className = 'egg-batch-result'; reveal.hidden = true;
+                const img = document.createElement('img'); img.src = sp.faceImg || sp.coteImg; img.alt = sp.name;
+                const name = document.createElement('strong'); name.textContent = sp.name;
+                const rarity = document.createElement('span'); rarity.textContent = RARITY_META[sp.rarity]?.label || sp.rarity;
+                const info = document.createElement('small'); info.textContent = label;
+                reveal.append(img,name,rarity,info); card.append(shell,reveal); grid.appendChild(card);
+                return {shell,reveal};
+            });
+            const done = document.createElement('button'); done.className = 'action-btn'; done.textContent = 'Éclosion en cours…'; done.disabled = true;
+            done.onclick = () => { overlay.remove(); openingEggs = false; refreshCurrentZone(); };
+            panel.append(grid,done); overlay.appendChild(panel); document.body.appendChild(overlay);
+            // Un son commun au lot évite de superposer dix craquements.
+            setTimeout(() => playSfx('eggCrack'), 2600);
+            animatedCards.forEach(({shell,reveal}, index) => {
+                setTimeout(() => {
+                    shell.classList.add('breaking');
+                    setTimeout(() => { shell.hidden = true; reveal.hidden = false; }, 300);
+                }, 2600 + index * 80);
+            });
+            setTimeout(() => {
+                title.textContent = '🐰 Tes 10 lapins sont révélés !';
+                done.disabled = false; done.textContent = 'Continuer';
+                if (cards.some(({sp}) => !['commun','rare'].includes(sp.rarity))) playSfx('eggRare');
+            }, 2600 + 9 * 80 + 350);
         };
 
         // ---- Améliorations ----
@@ -2380,11 +2680,84 @@ document.addEventListener("DOMContentLoaded", () => {
         function unlockSeasonAudio() {
             const active = currentActiveEvents();
             if (active.length) playSeasonSound(active[0]);
+            updateAmbience();
             window.removeEventListener("pointerdown", unlockSeasonAudio);
             window.removeEventListener("keydown", unlockSeasonAudio);
         }
         window.addEventListener("pointerdown", unlockSeasonAudio, { once: true });
         window.addEventListener("keydown", unlockSeasonAudio, { once: true });
+
+        // Fonds : événement en priorité, sinon nuit de 20 h à 7 h (heure locale).
+        const BACKGROUND_FILES = {default:'salon.png',cuisine:'cuisine.png',chambre:'chambre.png',sdb:'salle_de_bain.png',jardin:'jardin.png',combat:'combat.png'};
+        // Chemins exacts des fonds fournis (majuscules et suffixes inclus).
+        const BACKGROUND_EVENT_FILES = {
+            halloween: {default:'Halloween/Salon_halloween.png', cuisine:'Halloween/Cuisine_halloween.png', chambre:'Halloween/Chambre_halloween.png', sdb:'Halloween/salle_de_bain_halloween.png', jardin:'Halloween/Jardin_halloween.png', combat:'Halloween/Combat_halloween.png'},
+            noel: {default:'Noel/Salon_noel.png', cuisine:'Noel/Cuisine_noel.png', chambre:'Noel/Chambre_noel.png', sdb:'Noel/salle_de_bain_noel.png', jardin:'Noel/Jardin_noel.png', combat:'Noel/Combat_noel.png'},
+            paques: {default:'Paques/Salon_paques.png', cuisine:'Paques/Cuisine_paques.png', chambre:'Paques/Chambre_paques.png', sdb:'Paques/salle_de_bain_paques.png', jardin:'Paques/Jardin_paques.png', combat:'Paques/Conbat_paques.png'}
+        };
+        const BACKGROUND_EVENT_ALIASES = {halloween:['haloween'],noel:['noël'],paques:['pâques','pacques']};
+        const BACKGROUND_EXTENSIONS = ['png','webp','jpg','jpeg'];
+        function eventBackgroundFolders(event) {
+            const original = String(event).trim();
+            const normal = original.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9_-]+/g, '_');
+            if (!normal) return [];
+            return [...new Set([original, normal, normal.charAt(0).toUpperCase() + normal.slice(1), ...(BACKGROUND_EVENT_ALIASES[normal] || [])])].map(encodeURIComponent);
+        }
+        function calendarSeason(date = new Date()) {
+            const month = date.getMonth();
+            return month >= 2 && month <= 4 ? 'printemps' : month >= 5 && month <= 7 ? 'ete' : month >= 8 && month <= 10 ? 'automne' : 'hiver';
+        }
+        function backgroundCandidates(zone, events, hour, season = calendarSeason()) {
+            const file = BACKGROUND_FILES[zone] || BACKGROUND_FILES.default;
+            const root = './assets/img/fond/';
+            const orderedEvents = [...new Set([...['halloween','noel','paques'].filter(key => events.includes(key)), ...events])];
+            const time = adminTesting && adminTime !== 'auto' ? adminTime : (hour >= 20 || hour < 7) ? 'nuit' : 'jour';
+            const chosenSeason = adminTesting && adminSeason !== 'auto' ? adminSeason : season;
+            const paths = [];
+            const room = file.replace(/\.png$/, '');
+            for (const event of orderedEvents) {
+                const key = String(event).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                const known = BACKGROUND_EVENT_FILES[key];
+                if (known) paths.push(root + (known[zone] || known.default));
+                // Compatibilité avec les autres dossiers d'événements.
+                for (const folder of eventBackgroundFolders(event)) {
+                    for (const name of [room, room + '_' + key, room.charAt(0).toUpperCase() + room.slice(1) + '_' + key]) {
+                        for (const extension of BACKGROUND_EXTENSIONS) paths.push(root + folder + '/' + name + '.' + extension);
+                    }
+                }
+            }
+            paths.push(root + 'saison/' + time + '/' + file.replace('.png', '_' + chosenSeason + '.png'));
+            paths.push(root + file);
+            return paths;
+        }
+        function backgroundPath(zone, events, hour, season) { return backgroundCandidates(zone, events, hour, season)[0]; }
+        const backgroundAvailability = new Map();
+        const backgroundFailures = new Map();
+        let requestedBackground = '';
+        function updateSceneBackground(force = false) {
+            const zone = body.classList.contains('battle-scene') ? 'combat' : Object.keys(BACKGROUND_FILES).find(key => body.classList.contains(key)) || 'default';
+            const date = new Date();
+            const paths = backgroundCandidates(zone, currentActiveEvents(date), date.getHours(), calendarSeason(date));
+            const request = paths.join('|');
+            if (force !== true && request === requestedBackground) return;
+            requestedBackground = request;
+            const apply = path => { if (requestedBackground === request) body.style.setProperty('background-image', `url("${path}")`, 'important'); };
+            function tryPath(index) {
+                const path = paths[index];
+                if (!path || requestedBackground !== request) return;
+                if (backgroundAvailability.get(path) === true) { apply(path); return; }
+                if (backgroundAvailability.get(path) === false && Date.now() - backgroundFailures.get(path) < 60000) { tryPath(index + 1); return; }
+                const img = new Image();
+                img.onload = () => { backgroundAvailability.set(path, true); apply(path); };
+                img.onerror = () => { backgroundAvailability.set(path, false); backgroundFailures.set(path, Date.now()); tryPath(index + 1); };
+                img.src = path;
+            }
+            tryPath(0);
+        }
+        new MutationObserver(updateSceneBackground).observe(body, {attributes:true,attributeFilter:['class']});
+        setInterval(() => { updateSceneBackground(true); updateAmbience(); }, 60 * 1000);
+        window.addEventListener('focus', () => { updateSceneBackground(true); updateAmbience(); });
+        updateSceneBackground();
 
         // ============================================================
         // RAPPEL DE RETOUR
@@ -2405,6 +2778,71 @@ document.addEventListener("DOMContentLoaded", () => {
             localStorage.setItem("lapinous_last_visit", String(now));
         }
 
+        // Outils de test accessibles après saisie du code du Dashboard.
+        let adminBackup = null;
+        const adminButton = document.createElement("button");
+        adminButton.className = "admin-test-toggle";
+        adminButton.textContent = "🛠 Admin";
+        document.body.appendChild(adminButton);
+        adminButton.onclick = async () => {
+            if (!adminTesting) {
+                if (typeof requestDashboardAccess !== "function" || !(await requestDashboardAccess())) return;
+                adminBackup = serializeGame();
+                adminTesting = true;
+            }
+            const existing = document.getElementById("adminTestPanel");
+            if (existing) { existing.remove(); return; }
+            const panel = document.createElement("div");
+            panel.id = "adminTestPanel";
+            panel.innerHTML = `<strong>🛠 Tests du jeu</strong><button data-test="money">+100 000 🥕</button><button data-test="eggs">+100 œufs</button><button data-test="care">Besoins à 100 %</button><button data-test="collection">Tous les lapins</button><button data-test="skills">Débloquer les techniques</button><label>Événement <select id="adminEventSelect"><option value="auto">Calendrier normal</option><option value="none">Aucun</option><option value="halloween">Halloween</option><option value="noel">Noël</option><option value="paques">Pâques</option><option value="all">Tous</option></select></label><label>Saison <select id="adminSeasonSelect"><option value="auto">Saison actuelle</option><option value="printemps">Printemps</option><option value="ete">Été</option><option value="automne">Automne</option><option value="hiver">Hiver</option></select></label><label>Lumière <select id="adminTimeSelect"><option value="auto">Heure actuelle</option><option value="jour">Jour</option><option value="nuit">Nuit</option></select></label><small>Les événements ont priorité sur les saisons.</small><button data-test="restore">Restaurer la partie avant les tests</button><button data-test="close">Fermer</button>`;
+            document.body.appendChild(panel);
+            panel.querySelector('#adminEventSelect').value = adminEvent;
+            panel.querySelector('#adminSeasonSelect').value = adminSeason;
+            panel.querySelector('#adminTimeSelect').value = adminTime;
+            panel.querySelector('#adminEventSelect').onchange = e => { adminEvent = e.target.value; updateSeasonalDecor(); updateSceneBackground(); updateAmbience(); if (!body.classList.contains("battle-scene")) refreshCurrentZone(); };
+            panel.querySelector('#adminSeasonSelect').onchange = e => { adminSeason = e.target.value; updateSceneBackground(); };
+            panel.querySelector('#adminTimeSelect').onchange = e => { adminTime = e.target.value; updateSceneBackground(); };
+            panel.onclick = e => {
+                const action = e.target.dataset.test;
+                if (!action || !adminTesting) return;
+                if (action === "close") { panel.remove(); return; }
+                if (action === "restore") {
+                    adminTesting = false; adminEvent = "auto"; adminSeason = "auto"; adminTime = "auto";
+                    if (adminBackup) applyLoadedGame(JSON.parse(adminBackup));
+                    autoSave(); updateSeasonalDecor(); updateSceneBackground(); updateAmbience(); refreshCurrentZone(); panel.remove(); return;
+                }
+                if (action === "money") game.carrots += 100000;
+                if (action === "eggs") game.eggs += 100;
+                if (action === "collection") {
+                    game.ownedSpecies = Object.keys(getSpecies());
+                    game.ownedSpecies.forEach(key => progressForSpecies(key));
+                }
+                if (action === "care") (game.ownedSpecies || [game.species]).forEach(key => {
+                    const pr = progressForSpecies(key); pr.food = pr.energy = pr.cleanliness = 100;
+                });
+                if (action === "skills") (game.ownedSpecies || [game.species]).forEach(key => {
+                    const training = ensureAttackTraining(progressForSpecies(key)); training.skillUnlocked = true; training.completed = true;
+                });
+                autoSave(); updateStatusBars(); refreshCurrentZone();
+            };
+        };
+        // Ajuste le combat à l'espace disponible sans débordement de page.
+        function fitBattleStage() {
+            const stage = gameArea.querySelector(".fight-stage");
+            if (!stage || !body.classList.contains("battle-scene")) return;
+            stage.style.transform = "none";
+            if (stage.classList.contains("fight-preparation")) return;
+            const css = getComputedStyle(gameArea);
+            const available = gameArea.clientHeight - parseFloat(css.paddingTop) - parseFloat(css.paddingBottom);
+            const scale = Math.min(1, Math.max(1, available) / stage.scrollHeight);
+            stage.style.transformOrigin = "top center";
+            stage.style.transform = `scale(${scale})`;
+        }
+        new MutationObserver(() => requestAnimationFrame(() => { fitBattleStage(); fitSalonFriends(); })).observe(gameArea, { childList: true, subtree: true });
+        window.addEventListener("resize", () => { fitBattleStage(); fitSalonFriends(); });
+        gameArea.addEventListener("load", () => { fitBattleStage(); fitSalonFriends(); }, true);
+        new ResizeObserver(fitSalonFriends).observe(gameArea);
+
         // ============================================================
         // INITIALISATION
         // ============================================================
@@ -2417,7 +2855,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         ensureNewSystems();
         renderAudioButton();
-        document.addEventListener("click", (e) => { if (e.target.closest("button") && !e.target.closest("#lapinousAudioBtn")) playSfx("click"); }, { passive: true });
+        document.addEventListener("click", () => { buttonPlayedSfx = false; }, { capture: true });
+        document.addEventListener("click", (e) => {
+            const btn = e.target.closest("button");
+            if (!btn || btn.disabled || btn.id === "lapinousAudioBtn") return;
+            const handler = btn.getAttribute('onclick') || '';
+            const hasOwnSound = /feedRabbit|putRabbitToSleep|cleanRabbit|buyEgg|openEgg|openTenEggs|tacticalAction|startTacticalFight|fightBoss/.test(handler) || btn.matches('[data-event-sound], .egg-shell');
+            if (!buttonPlayedSfx && !hasOwnSound) playSfx("click");
+        }, { passive: true });
         document.addEventListener("pointerdown", () => updateAmbience(), { once: true });
 
     });
