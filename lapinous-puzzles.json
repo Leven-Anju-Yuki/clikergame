@@ -42,7 +42,7 @@
   "puzzles": [
     {
       "id": "communs",
-      "title": "Les Communs",
+      "title": "Les Compagnons de l’Aube",
       "image": "./assets/img/puzzle/les_communs.png",
       "linkedSpecies": [
         "azur",
@@ -55,7 +55,7 @@
     },
     {
       "id": "aventuriers",
-      "title": "Les Aventuriers",
+      "title": "Les Conquérants de l’Horizon",
       "image": "./assets/img/puzzle/les_aventuriers.png",
       "linkedSpecies": [
         "corsaire",
@@ -64,7 +64,7 @@
     },
     {
       "id": "scientifiques",
-      "title": "Les Scientifiques",
+      "title": "Les Artisans de l’Impossible",
       "image": "./assets/img/puzzle/les_scientifiques.png",
       "linkedSpecies": [
         "archy",
@@ -73,7 +73,7 @@
     },
     {
       "id": "voie-lactee",
-      "title": "La Voie lactée",
+      "title": "Les Souverains du Firmament",
       "image": "./assets/img/puzzle/voie_lactee.png",
       "linkedSpecies": [
         "umbra",
@@ -83,7 +83,7 @@
     },
     {
       "id": "nature",
-      "title": "Les habitants de la nature",
+      "title": "Les Esprits de la Forêt",
       "image": "./assets/img/puzzle/Nature.png",
       "linkedSpecies": [
         "meli",
@@ -93,7 +93,8 @@
     },
     {
       "id": "noel",
-      "title": "Les défenseurs de Noël",
+      "event": "noel",
+      "title": "Les Légendes du Grand Hiver",
       "image": "./assets/img/puzzle/Noel.png",
       "linkedSpecies": [
         "jackFrost",
@@ -102,7 +103,8 @@
     },
     {
       "id": "pacques",
-      "title": "Les défenseurs de Pâques",
+      "event": "paques",
+      "title": "Les Héritiers du Printemps",
       "image": "./assets/img/puzzle/pacques.png",
       "linkedSpecies": [
         "easterKing",
@@ -111,13 +113,58 @@
     },
     {
       "id": "reve",
-      "title": "Les protecteurs des rêves",
+      "title": "Les Tisseurs de Songes",
       "image": "./assets/img/puzzle/reve.png",
       "linkedSpecies": [
         "cauchemar",
         "sandman",
         "toothFairy"
       ]
+    },
+    {
+      "id": "fantome",
+      "title": "La Dame des Esprits",
+      "image": "./assets/img/puzzle/fantome.png",
+      "linkedSpecies": [
+        "ghostRabbit"
+      ],
+      "event": "halloween"
+    },
+    {
+      "id": "frankenstein",
+      "title": "Le Créateur",
+      "image": "./assets/img/puzzle/frankenshtein.png",
+      "linkedSpecies": [
+        "frankensteinRabbit"
+      ],
+      "event": "halloween"
+    },
+    {
+      "id": "lapin-bete",
+      "event": "halloween",
+      "title": "Le Roi de la Pleine Lune",
+      "image": "./assets/img/puzzle/lapin_bete.png",
+      "linkedSpecies": [
+        "werebunnyRabbit"
+      ]
+    },
+    {
+      "id": "squelette",
+      "title": "Le Roi des Os",
+      "image": "./assets/img/puzzle/Squelette.png",
+      "linkedSpecies": [
+        "skeletonRabbit"
+      ],
+      "event": "halloween"
+    },
+    {
+      "id": "vampire-vs-nonne",
+      "title": "Vampire contre Nonne",
+      "image": "./assets/img/puzzle/VampireVSNonne.png",
+      "linkedSpecies": [
+        "vampireRabbit"
+      ],
+      "event": "halloween"
     }
   ]
 }

@@ -25,7 +25,15 @@
       "friends": [
         "bambou"
       ],
-      "rivals": []
+      "rivals": [],
+      "attacks": [
+        {
+          "id": "azur-attack-1",
+          "name": "Frappe de givre",
+          "kind": "damage",
+          "mult": 1.35
+        }
+      ]
     },
     "caramel": {
       "name": "Caramel",
@@ -51,6 +59,14 @@
       "rivals": [],
       "follows": [
         "flamme"
+      ],
+      "attacks": [
+        {
+          "id": "caramel-attack-1",
+          "name": "Frappe de Caramel",
+          "kind": "damage",
+          "mult": 1.35
+        }
       ]
     },
     "mocha": {
@@ -77,12 +93,20 @@
       "rivals": [],
       "helps": [
         "koda"
+      ],
+      "attacks": [
+        {
+          "id": "mocha-attack-1",
+          "name": "Frappe de Mocha",
+          "kind": "damage",
+          "mult": 1.35
+        }
       ]
     },
     "bambou": {
       "name": "Bambou",
       "nickname": "le Lapin Panda",
-      "rarity": "rare",
+      "rarity": "commun",
       "personality": "Sage, patient et méditatif.",
       "story": "Bambou habite les Jardins Silencieux où il passe son temps à méditer sous les arbres géants.",
       "accessory": "Collier de bambou sacré.",
@@ -102,12 +126,26 @@
       "friends": [
         "azur"
       ],
-      "rivals": []
+      "rivals": [],
+      "attacks": [
+        {
+          "id": "bambou-attack-1",
+          "name": "Frappe de Bambou",
+          "kind": "damage",
+          "mult": 1.35
+        },
+        {
+          "id": "bambou-attack-2",
+          "name": "Éclair de Bambou",
+          "kind": "damage",
+          "mult": 1.55
+        }
+      ]
     },
     "flamme": {
       "name": "Flamme",
       "nickname": "le Lapin Renard",
-      "rarity": "rare",
+      "rarity": "commun",
       "personality": "Malin, curieux et aventurier.",
       "story": "Flamme explore les ruines anciennes à la recherche de passages secrets et d'artefacts oubliés.",
       "accessory": "Foulard des explorateurs.",
@@ -128,12 +166,26 @@
       "rivals": [],
       "curiousAbout": [
         "nova"
+      ],
+      "attacks": [
+        {
+          "id": "flamme-attack-1",
+          "name": "Frappe de Flamme",
+          "kind": "damage",
+          "mult": 1.35
+        },
+        {
+          "id": "flamme-attack-2",
+          "name": "Éclair de Flamme",
+          "kind": "damage",
+          "mult": 1.55
+        }
       ]
     },
     "koda": {
       "name": "Koda",
       "nickname": "le Lapin Tigre",
-      "rarity": "epique",
+      "rarity": "commun",
       "personality": "Courageux, loyal et protecteur.",
       "story": "Ancien gardien des plaines dorées, Koda défend ses amis contre tous les dangers.",
       "accessory": "Bandeau du guerrier ancien.",
@@ -152,12 +204,32 @@
       "coteImg": "./assets/img/species/tigre_cote.png",
       "friends": [],
       "rivals": [],
-      "protects": "les plus faibles"
+      "protects": "les plus faibles",
+      "attacks": [
+        {
+          "id": "koda-attack-1",
+          "name": "Frappe de Koda",
+          "kind": "damage",
+          "mult": 1.35
+        },
+        {
+          "id": "koda-attack-2",
+          "name": "Éclair de Koda",
+          "kind": "damage",
+          "mult": 1.55
+        },
+        {
+          "id": "koda-attack-3",
+          "name": "Garde de Koda",
+          "kind": "guard",
+          "mult": 0.85
+        }
+      ]
     },
     "nova": {
       "name": "Nova",
       "nickname": "le Lapin Galaxie",
-      "rarity": "legendaire",
+      "rarity": "epique",
       "personality": "Mystérieux, intelligent et rêveur.",
       "story": "Nova viendrait d'une constellation lointaine. Il semble connaître l'avenir à travers les étoiles.",
       "accessory": "Cape cosmique constellée.",
@@ -176,7 +248,33 @@
       "coteImg": "./assets/img/species/etoile_cote.png",
       "friends": [],
       "rivals": [],
-      "guides": true
+      "guides": true,
+      "attacks": [
+        {
+          "id": "nova-attack-1",
+          "name": "Frappe des étoiles",
+          "kind": "damage",
+          "mult": 1.35
+        },
+        {
+          "id": "nova-attack-2",
+          "name": "Éclair des étoiles",
+          "kind": "damage",
+          "mult": 1.55
+        },
+        {
+          "id": "nova-attack-3",
+          "name": "Garde des étoiles",
+          "kind": "guard",
+          "mult": 0.85
+        },
+        {
+          "id": "nova-attack-4",
+          "name": "Assaut des étoiles",
+          "kind": "damage",
+          "mult": 1.85
+        }
+      ]
     },
     "sakura": {
       "name": "Sakura",
@@ -199,7 +297,27 @@
       "faceImg": "./assets/img/species/fleur_face.png",
       "coteImg": "./assets/img/species/fleur_cote.png",
       "friends": [],
-      "rivals": []
+      "rivals": [],
+      "attacks": [
+        {
+          "id": "sakura-attack-1",
+          "name": "Frappe de Sakura",
+          "kind": "damage",
+          "mult": 1.35
+        },
+        {
+          "id": "sakura-attack-2",
+          "name": "Éclair de Sakura",
+          "kind": "damage",
+          "mult": 1.55
+        },
+        {
+          "id": "sakura-attack-3",
+          "name": "Garde de Sakura",
+          "kind": "guard",
+          "mult": 0.85
+        }
+      ]
     },
     "spark": {
       "name": "Spark",
@@ -222,7 +340,21 @@
       "faceImg": "./assets/img/species/eclair_face.png",
       "coteImg": "./assets/img/species/eclair_cote.png",
       "friends": [],
-      "rivals": []
+      "rivals": [],
+      "attacks": [
+        {
+          "id": "spark-attack-1",
+          "name": "Frappe de tempête",
+          "kind": "damage",
+          "mult": 1.35
+        },
+        {
+          "id": "spark-attack-2",
+          "name": "Éclair de tempête",
+          "kind": "damage",
+          "mult": 1.55
+        }
+      ]
     },
     "myco": {
       "name": "Myco",
@@ -245,7 +377,15 @@
       "faceImg": "./assets/img/species/champi_face.png",
       "coteImg": "./assets/img/species/champi_cote.png",
       "friends": [],
-      "rivals": []
+      "rivals": [],
+      "attacks": [
+        {
+          "id": "myco-attack-1",
+          "name": "Frappe de Myco",
+          "kind": "damage",
+          "mult": 1.35
+        }
+      ]
     },
     "corsaire": {
       "name": "Corsaire",
@@ -268,7 +408,15 @@
       "faceImg": "./assets/img/species/pirate_face.png",
       "coteImg": "./assets/img/species/pirate_cote.png",
       "friends": [],
-      "rivals": []
+      "rivals": [],
+      "attacks": [
+        {
+          "id": "corsaire-attack-1",
+          "name": "Frappe de Corsaire",
+          "kind": "damage",
+          "mult": 1.35
+        }
+      ]
     },
     "nopal": {
       "name": "NOPAL",
@@ -291,7 +439,21 @@
       "faceImg": "./assets/img/species/cactus_face.png",
       "coteImg": "./assets/img/species/cactus_cote.png",
       "friends": [],
-      "rivals": []
+      "rivals": [],
+      "attacks": [
+        {
+          "id": "nopal-attack-1",
+          "name": "Frappe de NOPAL",
+          "kind": "damage",
+          "mult": 1.35
+        },
+        {
+          "id": "nopal-attack-2",
+          "name": "Éclair de NOPAL",
+          "kind": "damage",
+          "mult": 1.55
+        }
+      ]
     },
     "umbra": {
       "name": "Umbra",
@@ -314,7 +476,27 @@
       "faceImg": "./assets/img/species/lune_face.png",
       "coteImg": "./assets/img/species/lune_cote.png",
       "friends": [],
-      "rivals": []
+      "rivals": [],
+      "attacks": [
+        {
+          "id": "umbra-attack-1",
+          "name": "Frappe des étoiles",
+          "kind": "damage",
+          "mult": 1.35
+        },
+        {
+          "id": "umbra-attack-2",
+          "name": "Éclair des étoiles",
+          "kind": "damage",
+          "mult": 1.55
+        },
+        {
+          "id": "umbra-attack-3",
+          "name": "Garde des étoiles",
+          "kind": "guard",
+          "mult": 0.85
+        }
+      ]
     },
     "archy": {
       "name": "ARCHY",
@@ -337,7 +519,27 @@
       "faceImg": "./assets/img/species/archy_face.png",
       "coteImg": "./assets/img/species/archy_cote.png",
       "friends": [],
-      "rivals": []
+      "rivals": [],
+      "attacks": [
+        {
+          "id": "archy-attack-1",
+          "name": "Frappe de ARCHY",
+          "kind": "damage",
+          "mult": 1.35
+        },
+        {
+          "id": "archy-attack-2",
+          "name": "Éclair de ARCHY",
+          "kind": "damage",
+          "mult": 1.55
+        },
+        {
+          "id": "archy-attack-3",
+          "name": "Garde de ARCHY",
+          "kind": "guard",
+          "mult": 0.85
+        }
+      ]
     },
     "solaria": {
       "name": "SOLARIA",
@@ -363,7 +565,27 @@
       "faceImg": "./assets/img/species/soleil_face.png",
       "coteImg": "./assets/img/species/soleil_cote.png",
       "friends": [],
-      "rivals": []
+      "rivals": [],
+      "attacks": [
+        {
+          "id": "solaria-attack-1",
+          "name": "Frappe de SOLARIA",
+          "kind": "damage",
+          "mult": 1.35
+        },
+        {
+          "id": "solaria-attack-2",
+          "name": "Éclair de SOLARIA",
+          "kind": "damage",
+          "mult": 1.55
+        },
+        {
+          "id": "solaria-attack-3",
+          "name": "Garde de SOLARIA",
+          "kind": "guard",
+          "mult": 0.85
+        }
+      ]
     },
     "meli": {
       "name": "MELI",
@@ -386,7 +608,27 @@
       "faceImg": "./assets/img/species/abeille_face.png",
       "coteImg": "./assets/img/species/abeille_cote.png",
       "friends": [],
-      "rivals": []
+      "rivals": [],
+      "attacks": [
+        {
+          "id": "meli-attack-1",
+          "name": "Frappe de MELI",
+          "kind": "damage",
+          "mult": 1.35
+        },
+        {
+          "id": "meli-attack-2",
+          "name": "Éclair de MELI",
+          "kind": "damage",
+          "mult": 1.55
+        },
+        {
+          "id": "meli-attack-3",
+          "name": "Garde de MELI",
+          "kind": "guard",
+          "mult": 0.85
+        }
+      ]
     },
     "cauchemar": {
       "name": "Peatch Black",
@@ -414,12 +656,38 @@
       "friends": [],
       "rivals": [
         "sandman"
+      ],
+      "attacks": [
+        {
+          "id": "cauchemar-attack-1",
+          "name": "Frappe des ombres",
+          "kind": "damage",
+          "mult": 1.35
+        },
+        {
+          "id": "cauchemar-attack-2",
+          "name": "Éclair des ombres",
+          "kind": "damage",
+          "mult": 1.55
+        },
+        {
+          "id": "cauchemar-attack-3",
+          "name": "Garde des ombres",
+          "kind": "guard",
+          "mult": 0.85
+        },
+        {
+          "id": "cauchemar-attack-4",
+          "name": "Assaut des ombres",
+          "kind": "damage",
+          "mult": 1.85
+        }
       ]
     },
     "santaLegend": {
       "name": "Santa Rabbit",
       "nickname": "le Gardien du Grand Hiver",
-      "rarity": "mythique",
+      "rarity": "legendaire",
       "personality": "Généreux, protecteur, chaleureux et courageux.",
       "story": "Santa Rabbit est le plus ancien gardien du royaume. Derrière son apparence de géant au cœur tendre se cache un ancien guerrier du Nord qui protégeait autrefois les villages contre les tempêtes éternelles. Aujourd'hui, il parcourt le monde avec son immense sac enchanté afin d'apporter espoir, cadeaux et réconfort aux jeunes lapins pendant les longues nuits d'hiver.",
       "accessory": "Marteau Runique du Solstice.",
@@ -448,12 +716,44 @@
         "jackFrost",
         "sandman"
       ],
-      "rivals": []
+      "rivals": [],
+      "attacks": [
+        {
+          "id": "santaLegend-attack-1",
+          "name": "Frappe de Santa Rabbit",
+          "kind": "damage",
+          "mult": 1.35
+        },
+        {
+          "id": "santaLegend-attack-2",
+          "name": "Éclair de Santa Rabbit",
+          "kind": "damage",
+          "mult": 1.55
+        },
+        {
+          "id": "santaLegend-attack-3",
+          "name": "Garde de Santa Rabbit",
+          "kind": "guard",
+          "mult": 0.85
+        },
+        {
+          "id": "santaLegend-attack-4",
+          "name": "Assaut de Santa Rabbit",
+          "kind": "damage",
+          "mult": 1.85
+        },
+        {
+          "id": "santaLegend-attack-5",
+          "name": "Souffle de Santa Rabbit",
+          "kind": "heal",
+          "mult": 0.65
+        }
+      ]
     },
     "easterKing": {
       "name": "Easter King",
       "nickname": "le Gardien du Printemps",
-      "rarity": "mythique",
+      "rarity": "legendaire",
       "event": [
         "paques",
         "noel"
@@ -480,12 +780,44 @@
         "jackFrost",
         "santaLegend"
       ],
-      "rivals": []
+      "rivals": [],
+      "attacks": [
+        {
+          "id": "easterKing-attack-1",
+          "name": "Frappe de Easter King",
+          "kind": "damage",
+          "mult": 1.35
+        },
+        {
+          "id": "easterKing-attack-2",
+          "name": "Éclair de Easter King",
+          "kind": "damage",
+          "mult": 1.55
+        },
+        {
+          "id": "easterKing-attack-3",
+          "name": "Garde de Easter King",
+          "kind": "guard",
+          "mult": 0.85
+        },
+        {
+          "id": "easterKing-attack-4",
+          "name": "Assaut de Easter King",
+          "kind": "damage",
+          "mult": 1.85
+        },
+        {
+          "id": "easterKing-attack-5",
+          "name": "Souffle de Easter King",
+          "kind": "heal",
+          "mult": 0.65
+        }
+      ]
     },
     "toothFairy": {
       "name": "Tooth Fairy",
       "nickname": "la Reine des Souvenirs",
-      "rarity": "mythique",
+      "rarity": "legendaire",
       "event": [
         "paques",
         "noel"
@@ -512,12 +844,44 @@
         "sandman",
         "santaLegend"
       ],
-      "rivals": []
+      "rivals": [],
+      "attacks": [
+        {
+          "id": "toothFairy-attack-1",
+          "name": "Frappe de Tooth Fairy",
+          "kind": "damage",
+          "mult": 1.35
+        },
+        {
+          "id": "toothFairy-attack-2",
+          "name": "Éclair de Tooth Fairy",
+          "kind": "damage",
+          "mult": 1.55
+        },
+        {
+          "id": "toothFairy-attack-3",
+          "name": "Garde de Tooth Fairy",
+          "kind": "guard",
+          "mult": 0.85
+        },
+        {
+          "id": "toothFairy-attack-4",
+          "name": "Assaut de Tooth Fairy",
+          "kind": "damage",
+          "mult": 1.85
+        },
+        {
+          "id": "toothFairy-attack-5",
+          "name": "Souffle de Tooth Fairy",
+          "kind": "heal",
+          "mult": 0.65
+        }
+      ]
     },
     "jackFrost": {
       "name": "Jack Frost",
       "nickname": "le Gardien de l'Hiver",
-      "rarity": "mythique",
+      "rarity": "legendaire",
       "event": [
         "paques",
         "noel"
@@ -544,12 +908,44 @@
         "sandman",
         "santaLegend"
       ],
-      "rivals": []
+      "rivals": [],
+      "attacks": [
+        {
+          "id": "jackFrost-attack-1",
+          "name": "Frappe de givre",
+          "kind": "damage",
+          "mult": 1.35
+        },
+        {
+          "id": "jackFrost-attack-2",
+          "name": "Éclair de givre",
+          "kind": "damage",
+          "mult": 1.55
+        },
+        {
+          "id": "jackFrost-attack-3",
+          "name": "Garde de givre",
+          "kind": "guard",
+          "mult": 0.85
+        },
+        {
+          "id": "jackFrost-attack-4",
+          "name": "Assaut de givre",
+          "kind": "damage",
+          "mult": 1.85
+        },
+        {
+          "id": "jackFrost-attack-5",
+          "name": "Souffle de givre",
+          "kind": "heal",
+          "mult": 0.65
+        }
+      ]
     },
     "sandman": {
       "name": "Sandman",
       "nickname": "le Marchand de Rêves",
-      "rarity": "mythique",
+      "rarity": "legendaire",
       "event": [
         "paques",
         "noel"
@@ -576,7 +972,39 @@
         "toothFairy",
         "santaLegend"
       ],
-      "rivals": []
+      "rivals": [],
+      "attacks": [
+        {
+          "id": "sandman-attack-1",
+          "name": "Frappe de Sandman",
+          "kind": "damage",
+          "mult": 1.35
+        },
+        {
+          "id": "sandman-attack-2",
+          "name": "Éclair de Sandman",
+          "kind": "damage",
+          "mult": 1.55
+        },
+        {
+          "id": "sandman-attack-3",
+          "name": "Garde de Sandman",
+          "kind": "guard",
+          "mult": 0.85
+        },
+        {
+          "id": "sandman-attack-4",
+          "name": "Assaut de Sandman",
+          "kind": "damage",
+          "mult": 1.85
+        },
+        {
+          "id": "sandman-attack-5",
+          "name": "Souffle de Sandman",
+          "kind": "heal",
+          "mult": 0.65
+        }
+      ]
     },
     "eggGuardian": {
       "name": "Egg Guardian",
@@ -604,12 +1032,26 @@
         "easterKing"
       ],
       "rivals": [],
-      "event": "paques"
+      "event": "paques",
+      "attacks": [
+        {
+          "id": "eggGuardian-attack-1",
+          "name": "Frappe de Egg Guardian",
+          "kind": "damage",
+          "mult": 1.35
+        },
+        {
+          "id": "eggGuardian-attack-2",
+          "name": "Éclair de Egg Guardian",
+          "kind": "damage",
+          "mult": 1.55
+        }
+      ]
     },
     "santaRabbit": {
       "name": "Santa Rabbit",
       "nickname": "le Gardien de Noël",
-      "rarity": "legendaire",
+      "rarity": "epique",
       "event": "noel",
       "personality": "Généreux, chaleureux, protecteur et jovial.",
       "story": "Chaque hiver, Santa Rabbit parcourt le royaume afin de distribuer des cadeaux aux jeunes lapins. Son sac magique semble contenir une réserve infinie de présents.",
@@ -633,7 +1075,33 @@
         "elfRabbit",
         "reindeerRabbit"
       ],
-      "rivals": []
+      "rivals": [],
+      "attacks": [
+        {
+          "id": "santaRabbit-attack-1",
+          "name": "Frappe des marées",
+          "kind": "damage",
+          "mult": 1.35
+        },
+        {
+          "id": "santaRabbit-attack-2",
+          "name": "Éclair des marées",
+          "kind": "damage",
+          "mult": 1.55
+        },
+        {
+          "id": "santaRabbit-attack-3",
+          "name": "Garde des marées",
+          "kind": "guard",
+          "mult": 0.85
+        },
+        {
+          "id": "santaRabbit-attack-4",
+          "name": "Assaut des marées",
+          "kind": "damage",
+          "mult": 1.85
+        }
+      ]
     },
     "mrsClaus": {
       "name": "Mrs Claus",
@@ -660,7 +1128,27 @@
       "friends": [
         "santaRabbit"
       ],
-      "rivals": []
+      "rivals": [],
+      "attacks": [
+        {
+          "id": "mrsClaus-attack-1",
+          "name": "Frappe de Mrs Claus",
+          "kind": "damage",
+          "mult": 1.35
+        },
+        {
+          "id": "mrsClaus-attack-2",
+          "name": "Éclair de Mrs Claus",
+          "kind": "damage",
+          "mult": 1.55
+        },
+        {
+          "id": "mrsClaus-attack-3",
+          "name": "Garde de Mrs Claus",
+          "kind": "guard",
+          "mult": 0.85
+        }
+      ]
     },
     "elfRabbit": {
       "name": "Elf Rabbit",
@@ -687,7 +1175,27 @@
       "friends": [
         "santaRabbit"
       ],
-      "rivals": []
+      "rivals": [],
+      "attacks": [
+        {
+          "id": "elfRabbit-attack-1",
+          "name": "Frappe de Elf Rabbit",
+          "kind": "damage",
+          "mult": 1.35
+        },
+        {
+          "id": "elfRabbit-attack-2",
+          "name": "Éclair de Elf Rabbit",
+          "kind": "damage",
+          "mult": 1.55
+        },
+        {
+          "id": "elfRabbit-attack-3",
+          "name": "Garde de Elf Rabbit",
+          "kind": "guard",
+          "mult": 0.85
+        }
+      ]
     },
     "reindeerRabbit": {
       "name": "Reindeer Rabbit",
@@ -714,7 +1222,27 @@
       "friends": [
         "santaRabbit"
       ],
-      "rivals": []
+      "rivals": [],
+      "attacks": [
+        {
+          "id": "reindeerRabbit-attack-1",
+          "name": "Frappe de givre",
+          "kind": "damage",
+          "mult": 1.35
+        },
+        {
+          "id": "reindeerRabbit-attack-2",
+          "name": "Éclair de givre",
+          "kind": "damage",
+          "mult": 1.55
+        },
+        {
+          "id": "reindeerRabbit-attack-3",
+          "name": "Garde de givre",
+          "kind": "guard",
+          "mult": 0.85
+        }
+      ]
     },
     "krampus": {
       "name": "Krampus",
@@ -737,7 +1265,27 @@
       "quote": "Une leçon apprise vaut mieux qu'une faute répétée.",
       "power": "Jugement du Solstice : réduit l'attaque des ennemis et augmente la résistance des alliés.",
       "faceImg": "./assets/img/lapin_evenement/krampus_face.png",
-      "coteImg": "./assets/img/lapin_evenement/krampus_cote.png"
+      "coteImg": "./assets/img/lapin_evenement/krampus_cote.png",
+      "attacks": [
+        {
+          "id": "krampus-attack-1",
+          "name": "Frappe de Krampus",
+          "kind": "damage",
+          "mult": 1.35
+        },
+        {
+          "id": "krampus-attack-2",
+          "name": "Éclair de Krampus",
+          "kind": "damage",
+          "mult": 1.55
+        },
+        {
+          "id": "krampus-attack-3",
+          "name": "Garde de Krampus",
+          "kind": "guard",
+          "mult": 0.85
+        }
+      ]
     },
     "vampireRabbit": {
       "name": "Lord Noctis",
@@ -765,7 +1313,39 @@
         "ladyEtheria",
         "kingOssarium"
       ],
-      "rivals": []
+      "rivals": [],
+      "attacks": [
+        {
+          "id": "vampireRabbit-attack-1",
+          "name": "Frappe de Lord Noctis",
+          "kind": "damage",
+          "mult": 1.35
+        },
+        {
+          "id": "vampireRabbit-attack-2",
+          "name": "Éclair de Lord Noctis",
+          "kind": "damage",
+          "mult": 1.55
+        },
+        {
+          "id": "vampireRabbit-attack-3",
+          "name": "Garde de Lord Noctis",
+          "kind": "guard",
+          "mult": 0.85
+        },
+        {
+          "id": "vampireRabbit-attack-4",
+          "name": "Assaut de Lord Noctis",
+          "kind": "damage",
+          "mult": 1.85
+        },
+        {
+          "id": "vampireRabbit-attack-5",
+          "name": "Souffle de Lord Noctis",
+          "kind": "heal",
+          "mult": 0.65
+        }
+      ]
     },
     "ghostRabbit": {
       "name": "Lady Etheria",
@@ -793,7 +1373,39 @@
         "lordNoctis",
         "kingOssarium"
       ],
-      "rivals": []
+      "rivals": [],
+      "attacks": [
+        {
+          "id": "ghostRabbit-attack-1",
+          "name": "Frappe de Lady Etheria",
+          "kind": "damage",
+          "mult": 1.35
+        },
+        {
+          "id": "ghostRabbit-attack-2",
+          "name": "Éclair de Lady Etheria",
+          "kind": "damage",
+          "mult": 1.55
+        },
+        {
+          "id": "ghostRabbit-attack-3",
+          "name": "Garde de Lady Etheria",
+          "kind": "guard",
+          "mult": 0.85
+        },
+        {
+          "id": "ghostRabbit-attack-4",
+          "name": "Assaut de Lady Etheria",
+          "kind": "damage",
+          "mult": 1.85
+        },
+        {
+          "id": "ghostRabbit-attack-5",
+          "name": "Souffle de Lady Etheria",
+          "kind": "heal",
+          "mult": 0.65
+        }
+      ]
     },
     "skeletonRabbit": {
       "name": "King Ossarium",
@@ -820,7 +1432,39 @@
       "friends": [
         "lordNoctis"
       ],
-      "rivals": []
+      "rivals": [],
+      "attacks": [
+        {
+          "id": "skeletonRabbit-attack-1",
+          "name": "Frappe de King Ossarium",
+          "kind": "damage",
+          "mult": 1.35
+        },
+        {
+          "id": "skeletonRabbit-attack-2",
+          "name": "Éclair de King Ossarium",
+          "kind": "damage",
+          "mult": 1.55
+        },
+        {
+          "id": "skeletonRabbit-attack-3",
+          "name": "Garde de King Ossarium",
+          "kind": "guard",
+          "mult": 0.85
+        },
+        {
+          "id": "skeletonRabbit-attack-4",
+          "name": "Assaut de King Ossarium",
+          "kind": "damage",
+          "mult": 1.85
+        },
+        {
+          "id": "skeletonRabbit-attack-5",
+          "name": "Souffle de King Ossarium",
+          "kind": "heal",
+          "mult": 0.65
+        }
+      ]
     },
     "frankensteinRabbit": {
       "name": "Doctor Stitch",
@@ -847,7 +1491,39 @@
       "friends": [
         "fenrabbit"
       ],
-      "rivals": []
+      "rivals": [],
+      "attacks": [
+        {
+          "id": "frankensteinRabbit-attack-1",
+          "name": "Frappe de Doctor Stitch",
+          "kind": "damage",
+          "mult": 1.35
+        },
+        {
+          "id": "frankensteinRabbit-attack-2",
+          "name": "Éclair de Doctor Stitch",
+          "kind": "damage",
+          "mult": 1.55
+        },
+        {
+          "id": "frankensteinRabbit-attack-3",
+          "name": "Garde de Doctor Stitch",
+          "kind": "guard",
+          "mult": 0.85
+        },
+        {
+          "id": "frankensteinRabbit-attack-4",
+          "name": "Assaut de Doctor Stitch",
+          "kind": "damage",
+          "mult": 1.85
+        },
+        {
+          "id": "frankensteinRabbit-attack-5",
+          "name": "Souffle de Doctor Stitch",
+          "kind": "heal",
+          "mult": 0.65
+        }
+      ]
     },
     "werebunnyRabbit": {
       "name": "Fenrabbit",
@@ -874,7 +1550,39 @@
       "friends": [
         "doctorStitch"
       ],
-      "rivals": []
+      "rivals": [],
+      "attacks": [
+        {
+          "id": "werebunnyRabbit-attack-1",
+          "name": "Frappe des étoiles",
+          "kind": "damage",
+          "mult": 1.35
+        },
+        {
+          "id": "werebunnyRabbit-attack-2",
+          "name": "Éclair des étoiles",
+          "kind": "damage",
+          "mult": 1.55
+        },
+        {
+          "id": "werebunnyRabbit-attack-3",
+          "name": "Garde des étoiles",
+          "kind": "guard",
+          "mult": 0.85
+        },
+        {
+          "id": "werebunnyRabbit-attack-4",
+          "name": "Assaut des étoiles",
+          "kind": "damage",
+          "mult": 1.85
+        },
+        {
+          "id": "werebunnyRabbit-attack-5",
+          "name": "Souffle des étoiles",
+          "kind": "heal",
+          "mult": 0.65
+        }
+      ]
     }
   },
   "bosses": {

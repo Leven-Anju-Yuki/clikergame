@@ -298,13 +298,18 @@ Le projet continue d'évoluer. Parmi les pistes déjà prévues :
 - nouvelles compétences de combat ;
 - nouveaux boss ;
 - nouveaux lapins communs et événementiels ;
-- événements saisonniers supplémentaires ;
+- événements saisonniers supplémentaires ;222
 - sons et ambiances propres aux événements.
 
 ## 👩‍💻 Autrice
 
 - [Florie](https://github.com/Leven-Anju-Yuki) — développeuse principale
 
-## 📄 Licence
+## 🤖 Utilisation de l’intelligence artificielle
 
-Ce projet est sous licence [MIT](https://opensource.org/licenses/MIT). Voir le fichier `LICENSE` pour plus de détails.
+Le projet a bénéficié de l’aide d’outils d’intelligence artificielle :
+
+- **Copilot** : aide à la rédaction des prompts et génération d’images.
+- **Gemini** : génération d’images.
+- **ChatGPT et Claude** : aide au développement et à l’écriture du code.
+

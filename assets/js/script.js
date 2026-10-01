@@ -548,41 +548,49 @@ document.addEventListener("DOMContentLoaded", () => {
         // ============================================================
         let savesDirHandle = null;
 
-        function timestampedFilename(customName) {
-            if (customName) return customName.replace(/[^\w\-À-ÿ ]/g, "").trim() + ".json";
-            const d = new Date();
-            const pad = (n) => String(n).padStart(2, "0");
-            const stamp = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}_${pad(d.getHours())}h${pad(d.getMinutes())}`;
-            return `lapinous-${(currentRabbitName() || "sauvegarde").toLowerCase()}-${stamp}.json`;
+        function timestampedFilename(customName, d = new Date()) {
+            const pad = n => String(n).padStart(2, '0');
+            const base = (customName || `lapinous-${currentRabbitName() || 'sauvegarde'}`)
+                .replace(/\.json$/i, '').replace(/[^\w\-À-ÿ ]/g, '').trim() || 'lapinous';
+            const stamp = `${pad(d.getDate())}-${pad(d.getMonth()+1)}-${d.getFullYear()}_${pad(d.getHours())}h${pad(d.getMinutes())}`;
+            return `${base}-${stamp}.json`;
         }
 
+        const folderSaveTarget = document.createElement('select');
+        folderSaveTarget.id = 'folderSaveTarget';
+        folderSaveTarget.setAttribute('aria-label', 'Créer une sauvegarde ou remplacer un fichier existant');
+        folderSaveTarget.style.cssText = 'display:block;max-width:100%;margin:10px 0;padding:8px';
+        document.getElementById('saveToFolderBtn').before(folderSaveTarget);
+        folderSaveTarget.innerHTML = '<option value="">Créer une nouvelle sauvegarde datée</option>';
+
         async function renderFolderSaves() {
-            const listEl = document.getElementById("folderSavesList");
-            if (!savesDirHandle) {
-                listEl.innerHTML = "";
-                return;
-            }
+            const listEl = document.getElementById('folderSavesList');
+            const selected = folderSaveTarget.value;
+            folderSaveTarget.innerHTML = '<option value="">Créer une nouvelle sauvegarde datée</option>';
+            listEl.replaceChildren();
+            if (!savesDirHandle) return;
             const files = [];
             for await (const [name, handle] of savesDirHandle.entries()) {
-                if (handle.kind === "file" && name.endsWith(".json")) files.push(name);
+                if (handle.kind === 'file' && name.toLowerCase().endsWith('.json')) {
+                    const file = await handle.getFile();
+                    files.push({name, modified: file.lastModified});
+                }
             }
-            files.sort().reverse(); // les noms datés (AAAA-MM-JJ...) remontent naturellement en haut
-            listEl.innerHTML = files.length
-                ? files
-                      .map(
-                          (name) => `
-                <div class="save-slot">
-                    <div class="save-slot-info"><strong>${name}</strong></div>
-                    <div class="save-slot-actions"><button class="slot-btn load" data-folder-load="${name}">Charger</button></div>
-                </div>`,
-                      )
-                      .join("")
-                : "<p class='dash-note'>Ce dossier est vide pour l'instant.</p>";
-            listEl
-                .querySelectorAll("[data-folder-load]")
-                .forEach((b) =>
-                    b.addEventListener("click", () => loadFromFolder(b.dataset.folderLoad)),
-                );
+            files.sort((a,b) => b.modified - a.modified || a.name.localeCompare(b.name));
+            for (const {name} of files) {
+                const option = document.createElement('option');
+                option.value = name; option.textContent = `Remplacer : ${name}`;
+                folderSaveTarget.appendChild(option);
+                const row = document.createElement('div'); row.className = 'save-slot';
+                const info = document.createElement('div'); info.className = 'save-slot-info';
+                const title = document.createElement('strong'); title.textContent = name; info.appendChild(title);
+                const actions = document.createElement('div'); actions.className = 'save-slot-actions';
+                const load = document.createElement('button'); load.className = 'slot-btn load'; load.textContent = 'Charger';
+                load.onclick = () => loadFromFolder(name);
+                actions.appendChild(load); row.append(info,actions); listEl.appendChild(row);
+            }
+            if (files.some(f => f.name === selected)) folderSaveTarget.value = selected;
+            if (!files.length) listEl.textContent = "Ce dossier est vide pour l'instant.";
         }
 
         async function loadFromFolder(filename) {
@@ -619,14 +627,28 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("saveToFolderBtn").addEventListener("click", async () => {
             if (!savesDirHandle) return;
             const customName = document.getElementById("folderSaveName").value.trim();
-            const filename = timestampedFilename(customName);
+            const replacement = folderSaveTarget.value;
+            const filename = replacement || timestampedFilename(customName);
             try {
-                const fileHandle = await savesDirHandle.getFileHandle(filename, { create: true });
+                let fileHandle;
+                if (replacement) {
+                    if (!window.confirm(`Remplacer « ${filename} » par la partie actuelle ? L'ancienne sauvegarde sera écrasée.`)) return;
+                    fileHandle = await savesDirHandle.getFileHandle(filename);
+                } else {
+                    try {
+                        fileHandle = await savesDirHandle.getFileHandle(filename);
+                        if (!window.confirm(`« ${filename} » existe déjà. Remplacer cette sauvegarde ?`)) return;
+                    } catch (error) {
+                        if (error.name !== 'NotFoundError') throw error;
+                        fileHandle = await savesDirHandle.getFileHandle(filename, {create:true});
+                    }
+                }
                 const writable = await fileHandle.createWritable();
                 await writable.write(serializeGame());
                 await writable.close();
                 showToast(`Sauvegardé sous "${filename}" 📁`, "success");
                 document.getElementById("folderSaveName").value = "";
+                folderSaveTarget.value = "";
                 renderFolderSaves();
             } catch (e) {
                 showToast("Impossible d'écrire dans ce dossier.", "warn");
@@ -860,9 +882,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const duplicates = game.duplicateCounts?.[key] || 0;
             return `
             <div class="lapin-progress-box">
-                <div><strong>⚔️ Renforcement d'attaque :</strong> +${training.bonus} puissance ${training.completed ? "· MAX" : ""}</div>
-                <div class="attack-upgrade-bar"><div style="width:${pct}%"></div></div>
-                <small>${training.points}/${training.max} fragments · ${duplicates} doublon${duplicates > 1 ? "s" : ""} obtenu${duplicates > 1 ? "s" : ""}</small>
+                ${attackListHtml(key)}
+                <small>${duplicates} doublon${duplicates > 1 ? 's' : ''} obtenu${duplicates > 1 ? 's' : ''}</small>
                 <div class="lapin-linked-puzzles"><strong>🧩 Puzzles liés :</strong>${puzzleHtml}</div>
             </div>`;
         }
@@ -883,7 +904,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <p><strong>Accessoire :</strong> ${s.accessory}</p>
                     <p><strong>Aime :</strong> ${(s.likes || []).join(", ") || "—"}</p>
                     <p><strong>N'aime pas :</strong> ${(s.dislikes || []).join(", ") || "—"}</p>
-                    <p><strong>Pouvoir :</strong> ${s.power}</p>
+                    <p><strong>Ultime (coup critique) :</strong> ${s.power}</p>
                     ${encyclopediaProgressHtml(key)}
                     <button class="action-btn" onclick="switchActiveSpecies('${key}'); $('#encyclopediaModal').modal('hide');">🐰 Choisir ce lapin</button>
                     <p class="entry-quote">« ${s.quote} »</p>
@@ -1202,8 +1223,8 @@ document.addEventListener("DOMContentLoaded", () => {
             if (ev === undefined || ev === null) {
                 // Anciennes données sans champ "event" : déduction depuis l'id
                 if (puz.id === "noel") ev = "noel";
-                else if (["paques", "paques"].includes(puz.id)) ev = "paques";
-                else if (puz.id === "halloween") ev = "halloween";
+                else if (["pacques", "paques"].includes(puz.id)) ev = "paques";
+                else if (["halloween", "fantome", "frankenstein", "lapin-bete", "squelette", "vampire-vs-nonne"].includes(puz.id)) ev = "halloween";
                 else ev = "";
             }
             const list = Array.isArray(ev) ? ev : String(ev).split(/[,+]/);
@@ -1457,57 +1478,59 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>`;
         };
 
+        function ensureTechniqueProgress(key) {
+            const pr = progressForSpecies(key), legacy = ensureAttackTraining(pr);
+            const count = raritySkillCount(getSpecies()[key]?.rarity);
+            if (!Array.isArray(pr.attackLevels)) {
+                pr.attackLevels = Array(count).fill(0);
+                pr.attackLevels[0] = Math.min(5, Math.max(0, Number(legacy.points) || 0));
+            }
+            pr.attackLevels = Array.from({length:count}, (_,i) => Math.min(5, Math.max(0, Math.floor(Number(pr.attackLevels[i]) || 0))));
+            pr.attackFragments = Math.max(0, Math.floor(Number(pr.attackFragments) || 0));
+            return pr;
+        }
+        function allAttacksMaxed(key) { return ensureTechniqueProgress(key).attackLevels.every(n => n >= 5); }
+        function attackListHtml(key, editable = true) {
+            const sp = getSpecies()[key] || {}, pr = ensureTechniqueProgress(key);
+            const owned = game.ownedSpecies?.includes(key);
+            const entries = pr.attackLevels.map((level,index) => {
+                const t = techniqueFor({key,sp,pr},index);
+                const effect = t.kind === 'heal' ? 'Soin et dégâts' : t.kind === 'guard' ? 'Dégâts et protection' : 'Dégâts';
+                return `<div style="padding:8px 0;border-bottom:1px solid #79558b33"><strong>${index+1}. ${t.name}</strong> <small>· ${effect} · amélioration ${level}/5</small>${editable && owned ? `<button type="button" class="ghost-btn" onclick="upgradeRabbitAttack('${key}',${index})" ${!pr.attackFragments || level>=5 ? 'disabled' : ''}>${level>=5 ? 'MAX' : 'Améliorer · 1 fragment'}</button>` : ''}</div>`;
+            }).join('');
+            return `<div class="lapin-attack-list"><strong>⚔️ ${pr.attackLevels.length} attaque${pr.attackLevels.length>1?'s':''}</strong>${owned?`<p>💎 ${pr.attackFragments} fragment${pr.attackFragments>1?'s':''} disponible${pr.attackFragments>1?'s':''} pour ce lapin.</p>`:''}${entries}<p><small>🌟 Ultime : ${powerName(sp)} · hors de la liste, nécessite 100 % de charge.</small></p></div>`;
+        }
+        window.upgradeRabbitAttack = function(key,index) {
+            if (!game.ownedSpecies?.includes(key) || !Number.isInteger(index)) return;
+            const pr = ensureTechniqueProgress(key);
+            if (index<0 || index>=pr.attackLevels.length || !pr.attackFragments || pr.attackLevels[index]>=5) return;
+            pr.attackFragments--; pr.attackLevels[index]++;
+            const t = techniqueFor({key,sp:getSpecies()[key],pr},index);
+            autoSave(); showToast(`✨ ${t.name} améliorée : ${pr.attackLevels[index]}/5`, 'levelup');
+            if (document.getElementById('encyclopediaDetail')?.classList.contains('active')) showEncyclopediaDetail(key);
+            else refreshCurrentZone();
+        };
         function duplicateChoiceHtml() {
             const pending = game.pendingDuplicate;
-            if (!pending) return "";
-            const s = getSpecies()[pending.speciesKey];
-            if (!s) return "";
-            const p = progressForSpecies(pending.speciesKey);
-            const training = ensureAttackTraining(p);
-            const pct = Math.round((training.points / training.max) * 100);
-            return `
-            <div class="duplicate-choice">
-                <div class="duplicate-title">✨ Doublon : ${s.name}</div>
-                <p>Que veux-tu faire de ce doublon ?</p>
-                <div class="attack-upgrade-summary">
-                    <span>⚔️ Attaque +${training.bonus}</span><span>${training.points}/${training.max}</span>
-                    <div class="attack-upgrade-bar"><div style="width:${pct}%"></div></div>
-                </div>
-                <div class="action-row">
-                    <button class="action-btn" onclick="resolveDuplicate('carrots')"><span>🥕 Recycler (+${pending.carrotReward})</span></button>
-                    <button class="action-btn adventure" onclick="resolveDuplicate('attack')" ${training.completed ? "disabled" : ""}><span>⚔️ Renforcer l'attaque</span></button>
-                </div>
-                ${training.completed ? '<p class="upgrade-locked-note">Attaque au maximum : les prochains doublons donneront automatiquement des carottes.</p>' : '<p class="upgrade-locked-note">5 fragments remplissent la barre. Chaque fragment donne immédiatement +1 puissance.</p>'}
-            </div>`;
+            if (!pending) return '';
+            const sp = getSpecies()[pending.speciesKey]; if (!sp) return '';
+            const pr = ensureTechniqueProgress(pending.speciesKey);
+            const options = pr.attackLevels.map((level,i) => `<option value="${i}" ${level>=5?'disabled':''}>${techniqueFor({key:pending.speciesKey,sp,pr},i).name} · ${level}/5${level>=5?' · MAX':''}</option>`).join('');
+            return `<div class="duplicate-choice"><div class="duplicate-title">✨ Doublon : ${sp.name}</div><p>Recycle-le ou reçois un fragment pour ce lapin.</p><div class="action-row"><button class="action-btn" onclick="resolveDuplicate('carrots')">🥕 +${pending.carrotReward} carottes</button><button class="action-btn adventure" onclick="resolveDuplicate('fragment')">💎 Garder le fragment</button></div>${!allAttacksMaxed(pending.speciesKey)?`<label>Attaque à améliorer <select id="duplicateAttackTarget">${options}</select></label><button class="action-btn adventure" onclick="resolveDuplicate('attack',Number(document.getElementById('duplicateAttackTarget').value))">⚔️ Améliorer cette attaque</button>`:'<p>Toutes les attaques sont au maximum.</p>'}<small>Les fragments conservés se dépensent dans la fiche du lapin.</small></div>`;
         }
-
-        window.resolveDuplicate = function (choice) {
-            const pending = game.pendingDuplicate;
-            if (!pending) return;
-            const s = getSpecies()[pending.speciesKey];
-            const p = progressForSpecies(pending.speciesKey);
-            const training = ensureAttackTraining(p);
-            if (choice === "attack" && !training.completed) {
-                training.points = Math.min(training.max, training.points + 1);
-                training.bonus = training.points;
-                training.completed = training.points >= training.max;
-                training.skillUnlocked = training.completed;
-                showToast(
-                    training.completed
-                        ? `⚔️ ${s.name} atteint son renforcement maximal : +${training.bonus} puissance !`
-                        : `⚔️ ${s.name} gagne un fragment d'attaque (${training.points}/${training.max}) : +${training.bonus} puissance.`,
-                    "levelup",
-                );
-            } else {
-                game.carrots += pending.carrotReward;
-                showToast(
-                    `🥕 ${s.name} est recyclé en +${pending.carrotReward} carottes.`,
-                    "success",
-                );
+        window.resolveDuplicate = function(choice,index) {
+            const pending = game.pendingDuplicate; if (!pending) return;
+            if (!['carrots','fragment','attack'].includes(choice)) return;
+            const pr = ensureTechniqueProgress(pending.speciesKey);
+            if (choice === 'attack' && (!Number.isInteger(index) || index<0 || index>=pr.attackLevels.length || pr.attackLevels[index]>=5)) return;
+            if (choice === 'carrots') { game.carrots += pending.carrotReward; showToast(`🥕 +${pending.carrotReward} carottes`, 'success'); }
+            else {
+                pr.attackFragments++;
+                if (choice === 'attack') { pr.attackFragments--; pr.attackLevels[index]++; }
+                showToast(choice==='attack'?'⚔️ Attaque choisie améliorée !':'💎 Fragment conservé pour ce lapin.', 'levelup');
             }
             game.pendingDuplicate = (game.pendingDuplicates || []).shift() || null;
-            autoSave();
-            refreshCurrentZone();
+            autoSave(); refreshCurrentZone();
         };
 
         const zones = {
@@ -2141,12 +2164,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (r.charge >= 100) window.tacticalAction('ultimate');
                 else {
                     const count = raritySkillCount(r.sp.rarity);
-                    const unlocked = ensureAttackTraining(r.pr).skillUnlocked;
+                    const unlocked = true;
                     let best = 0;
                     if (unlocked) for (let i = 1; i < count; i++) {
                         const t = techniqueFor(r, i);
                         if (t.kind === 'heal' && r.hp < r.maxHp * .45) { best = i; break; }
-                        if (t.kind === 'damage' && t.mult > techniqueFor(r, best).mult) best = i;
+                        if (t.kind === 'damage' && r.power*t.mult+r.pr.attackLevels[i]*3 > r.power*techniqueFor(r,best).mult+r.pr.attackLevels[best]*3) best = i;
                     }
                     window.tacticalAction('skill', best);
                 }
@@ -2167,23 +2190,27 @@ document.addEventListener("DOMContentLoaded", () => {
             if (tacticalFight) { tacticalFight.speed = fightSpeed; queueAutoFight(); }
         };
         function fightPause(f, ms) { return sleep(ms / f.speed); }
-        function raritySkillCount(rarity){ return ({commun:1,rare:2,epique:3,legendaire:4,mythique:5,divin:5})[rarity] || 1; }
+        function raritySkillCount(rarity){ return ({commun:1,rare:2,epique:3,legendaire:4,mythique:5,divin:6,secret:6})[rarity] || 1; }
         function rabbitCombatStats(key){
             const sp=getSpecies()[key]||{}, pr=progressForSpecies(key), tr=ensureAttackTraining(pr);
             const azTier = key === "az" ? Math.floor(pr.currentLevel / 20) : 0;
-            const basePower = 8 + pr.currentLevel*3 + (tr.bonus||0)*3 + azTier*8;
+            ensureTechniqueProgress(key);
+            const basePower = 8 + pr.currentLevel*3 + azTier*8;
             return {key,sp,pr,maxHp:80+pr.currentLevel*10,hp:80+pr.currentLevel*10,power:basePower,charge:0,azTier,guard:0};
         }
         function rabbitDisplayName(r){ return game.speciesNames?.[r.key] || r.sp.name || r.key; }
-        function techniqueFor(r,index){
-            const defaults=[
-                {name:'Frappe renforcée', kind:'damage', mult:1.35},
+        function techniqueFor(r,index) {
+            const defaults = [
+                {name:'Frappe renforcée',kind:'damage',mult:1.35},
                 {name:'Frappe éclair',kind:'damage',mult:1.55},
-                {name:'Garde héroïque',kind:'guard',mult:0.85},
+                {name:'Garde héroïque',kind:'guard',mult:.85},
                 {name:'Assaut renforcé',kind:'damage',mult:1.85},
-                {name:'Second souffle',kind:'heal',mult:0.65}
+                {name:'Second souffle',kind:'heal',mult:.65},
+                {name:'Frappe céleste',kind:'damage',mult:2.05}
             ];
-            return defaults[index]||defaults[0];
+            const configured = r.sp.attacks?.[index];
+            const fallback = defaults[index] || defaults[0];
+            return {name:String(configured?.name || fallback.name), kind:['damage','heal','guard'].includes(configured?.kind)?configured.kind:fallback.kind, mult:Number.isFinite(Number(configured?.mult)) && Number(configured?.mult)>0 ? Number(configured.mult) : fallback.mult};
         }
         function ultimateName(r){ return `${powerName(r.sp)||r.sp.name} — Coup critique`; }
         function nextLivingIndex(f,from){
@@ -2208,10 +2235,10 @@ document.addEventListener("DOMContentLoaded", () => {
         };
         function renderTacticalFight(message){
             const f=tacticalFight;if(!f)return;if(!f.team.some(x=>x.hp>0)){finishTacticalFight(false);return;}if(f.team[f.active]?.hp<=0)f.active=nextLivingIndex(f,f.active);const r=f.team[f.active];
-            const skillN=raritySkillCount(r.sp.rarity), unlocked=ensureAttackTraining(r.pr).skillUnlocked;
-            const skills=Array.from({length:skillN},(_,i)=>{const t=techniqueFor(r,i);return `<button class="fight-command" onclick="tacticalAction('skill',${i})" ${i>0&&!unlocked?'disabled title="Remplis la barre de fragments"':''}>✨ ${t.name}</button>`}).join('');
+            const skillN=raritySkillCount(r.sp.rarity);
+            const skills=Array.from({length:skillN},(_,i)=>{const t=techniqueFor(r,i);return `<button class="fight-command" onclick="tacticalAction('skill',${i})" >✨ ${t.name} · ${r.pr.attackLevels[i]}/5</button>`}).join('');
             const fighters=f.team.map((x,i)=>`<div class="team-fighter battle-slot-${i+1} ${i===f.active?'active-turn':''} ${x.hp<=0?'ko':''}" data-fighter="${i}"><div class="turn-marker">${i===f.active?'▼ TOUR':''}</div><img class="battle-sprite team-rabbit-sprite" src="${x.sp.coteImg||x.sp.faceImg||'./assets/img/species/mystery.svg'}" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';"><strong>${rabbitDisplayName(x)}</strong><small>${Math.max(0,x.hp)} / ${x.maxHp} PV</small><div class="mini-hp"><i style="width:${Math.max(0,x.hp)/x.maxHp*100}%"></i></div></div>`).join('');
-            gameArea.innerHTML=`<div class="fight-stage tactical"><div class="fight-hud-side player"><div class="fight-name">🐰 Tour de ${rabbitDisplayName(r)}</div><div class="fight-hp"><div class="fight-hp-fill player-hp" style="width:${r.hp/r.maxHp*100}%"></div></div><div class="fight-hp-text">${Math.max(0,r.hp)} / ${r.maxHp} PV</div><div class="fight-crit-label">🌟 Critique ${Math.round(r.charge)}%</div><div class="fight-crit"><div class="fight-crit-fill player-crit-fill" style="width:${r.charge}%"></div></div></div><div class="fight-hud-side boss"><div class="fight-name">🥕 ${f.boss.name}</div><div class="fight-hp"><div class="fight-hp-fill boss-hp" style="width:${f.bossHp/f.bossMaxHp*100}%"></div></div><div class="fight-hp-text">${Math.max(0,f.bossHp)} / ${f.bossMaxHp} PV</div><div class="fight-crit-label">🌟 Critique ${Math.round(f.bossCharge)}%</div><div class="fight-crit"><div class="fight-crit-fill" style="width:${f.bossCharge}%"></div></div></div><div class="team-battlefield"><div class="team-fighters">${fighters}</div><div class="vs-mark">⚔️</div><div class="boss-battle-slot"><img class="battle-sprite boss-sprite" src="${f.boss.coteImg||f.boss.faceImg}" onerror="this.onerror=null;this.src='./assets/img/bosses/mystery_boss.svg';"><strong>${f.boss.name}</strong></div></div><div id="fightLog" class="fight-log">Tour ${f.turn} · ${message}</div><div class="fight-command-grid"><button class="fight-command" onclick="tacticalAction('attack')">⚔️ Coup de patte</button>${skills}${r.charge>=100?`<button class="fight-command ultimate" onclick="tacticalAction('ultimate')">🌟 ${ultimateName(r)}</button>`:''}<button id="fightModeToggle" class="fight-command" onclick="setFightMode(tacticalFightMode())">${f.auto?'⏸ Reprendre en manuel':'▶ Combat automatique'}</button><label>Vitesse <select onchange="setFightSpeed(this.value)"><option value="1" ${f.speed===1?'selected':''}>×1</option><option value="3" ${f.speed===3?'selected':''}>×3</option></select></label></div></div>`;
+            gameArea.innerHTML=`<div class="fight-stage tactical"><div class="fight-hud-side player"><div class="fight-name">🐰 Tour de ${rabbitDisplayName(r)}</div><div class="fight-hp"><div class="fight-hp-fill player-hp" style="width:${r.hp/r.maxHp*100}%"></div></div><div class="fight-hp-text">${Math.max(0,r.hp)} / ${r.maxHp} PV</div><div class="fight-crit-label">🌟 Critique ${Math.round(r.charge)}%</div><div class="fight-crit"><div class="fight-crit-fill player-crit-fill" style="width:${r.charge}%"></div></div></div><div class="fight-hud-side boss"><div class="fight-name">🥕 ${f.boss.name}</div><div class="fight-hp"><div class="fight-hp-fill boss-hp" style="width:${f.bossHp/f.bossMaxHp*100}%"></div></div><div class="fight-hp-text">${Math.max(0,f.bossHp)} / ${f.bossMaxHp} PV</div><div class="fight-crit-label">🌟 Critique ${Math.round(f.bossCharge)}%</div><div class="fight-crit"><div class="fight-crit-fill" style="width:${f.bossCharge}%"></div></div></div><div class="team-battlefield"><div class="team-fighters">${fighters}</div><div class="vs-mark">⚔️</div><div class="boss-battle-slot"><img class="battle-sprite boss-sprite" src="${f.boss.coteImg||f.boss.faceImg}" onerror="this.onerror=null;this.src='./assets/img/bosses/mystery_boss.svg';"><strong>${f.boss.name}</strong></div></div><div id="fightLog" class="fight-log">Tour ${f.turn} · ${message}</div><div class="fight-command-grid">${skills}${r.charge>=100?`<button class="fight-command ultimate" onclick="tacticalAction('ultimate')">🌟 ${ultimateName(r)}</button>`:''}<button id="fightModeToggle" class="fight-command" onclick="setFightMode(tacticalFightMode())">${f.auto?'⏸ Reprendre en manuel':'▶ Combat automatique'}</button><label>Vitesse <select onchange="setFightSpeed(this.value)"><option value="1" ${f.speed===1?'selected':''}>×1</option><option value="3" ${f.speed===3?'selected':''}>×3</option></select></label></div></div>`;
             queueAutoFight();
         }
         window.tacticalFightMode = () => tacticalFight?.auto ? 'manual' : 'auto';
@@ -2219,15 +2246,15 @@ document.addEventListener("DOMContentLoaded", () => {
             const f=tacticalFight;if(!f||f.locked)return;const r=f.team[f.active];
             if (!['attack','skill','ultimate'].includes(type)) return;
             if (type==='ultimate' && r.charge<100) return;
-            if (type==='skill' && (!Number.isInteger(index) || index<0 || index>=raritySkillCount(r.sp.rarity) || (index>0&&!ensureAttackTraining(r.pr).skillUnlocked))) return;
+            if (type==='skill' && (!Number.isInteger(index) || index<0 || index>=raritySkillCount(r.sp.rarity))) return;
             clearTimeout(autoFightTimer);f.locked=true;const name=rabbitDisplayName(r);let dmg=0,msg='',heal=0;
             const sprite=gameArea.querySelector(`[data-fighter="${f.active}"] .team-rabbit-sprite`),bossSprite=gameArea.querySelector('.boss-sprite');
             if(type==='attack'){dmg=Math.round(r.power*.85+Math.random()*7);r.charge=Math.min(100,r.charge+criticalConfig(r.sp).chargePerTurn);msg=`🐰 ${name} utilise Coup de patte ! — ${dmg} dégâts.`;playSfx('attack');}
             else if(type==='skill'){
-                playSfx('magic');const t=techniqueFor(r,index);r.charge=Math.min(100,r.charge+criticalConfig(r.sp).chargePerTurn);
-                if(t.kind==='heal'){heal=Math.max(8,Math.round(r.maxHp*.22));r.hp=Math.min(r.maxHp,r.hp+heal);dmg=Math.round(r.power*.45);msg=`✨ ${name} utilise ${t.name} ! +${heal} PV et ${dmg} dégâts.`;}
-                else if(t.kind==='guard'){r.guard=Math.max(r.guard,0.55);dmg=Math.round(r.power*t.mult);msg=`🛡️ ${name} utilise ${t.name} ! ${dmg} dégâts et se protège.`;}
-                else {dmg=Math.round(r.power*t.mult+Math.random()*8);msg=`✨ ${name} utilise ${t.name} ! — ${dmg} dégâts.`;}
+                playSfx('magic');const t=techniqueFor(r,index), bonus=(r.pr.attackLevels[index]||0)*3;r.charge=Math.min(100,r.charge+criticalConfig(r.sp).chargePerTurn);
+                if(t.kind==='heal'){heal=Math.max(8,Math.round(r.maxHp*.22+bonus));r.hp=Math.min(r.maxHp,r.hp+heal);dmg=Math.round(r.power*.45+bonus);msg=`✨ ${name} utilise ${t.name} ! +${heal} PV et ${dmg} dégâts.`;}
+                else if(t.kind==='guard'){r.guard=Math.max(r.guard,Math.min(.75,.55+(r.pr.attackLevels[index]||0)*.04));dmg=Math.round(r.power*t.mult+bonus);msg=`🛡️ ${name} utilise ${t.name} ! ${dmg} dégâts et se protège.`;}
+                else {dmg=Math.round(r.power*t.mult+bonus+Math.random()*8);msg=`✨ ${name} utilise ${t.name} ! — ${dmg} dégâts.`;}
             } else if(type==='ultimate'){dmg=Math.round(r.power*criticalConfig(r.sp).multiplier+Math.random()*12);r.charge=0;const mode=powerMode(r.sp);if(mode==='heal'){f.team.filter(x=>x.hp>0).forEach(x=>x.hp=Math.min(x.maxHp,x.hp+Math.round(x.maxHp*.25)));}else if(mode==='support'){f.team.filter(x=>x.hp>0).forEach(x=>x.guard=Math.max(x.guard,.55));}msg=`🌟 ${name} déclenche ${ultimateName(r)} ! — ${dmg} dégâts !`;playSfx('critical');}
             gameArea.querySelectorAll('.fight-command').forEach(btn=>btn.disabled=true);
             sprite?.classList.add('fight-attack-player');await fightPause(f,240);dmg=Math.max(1,Math.round(dmg*(1-f.bossGuard)));f.bossGuard=0;f.bossHp=Math.max(0,f.bossHp-dmg);bossSprite?.classList.add(type==='ultimate'?'fight-critical-hit':'fight-hit');const log=gameArea.querySelector('#fightLog');if(log)log.textContent=msg;await fightPause(f,type==='ultimate'?650:430);sprite?.classList.remove('fight-attack-player');bossSprite?.classList.remove('fight-hit','fight-critical-hit');
@@ -2260,12 +2287,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const EGG_TAPS_TO_HATCH = 5;
         const eggStyle = document.createElement('style');
         eggStyle.textContent = `
-            .egg-shell.illustrated-egg { display: inline-flex; align-items: center; justify-content: center; position: relative; border: 0; padding: 0; background: transparent; cursor: pointer; transform-origin: 50% 85%; width: min(280px, 60vw); height: min(320px, 46vh); touch-action: manipulation; }
+            .egg-shell.illustrated-egg { display: inline-flex; align-items: center; justify-content: center; position: relative; border: 0; padding: 0; background: transparent; box-shadow: none; outline: none; appearance: none; -webkit-tap-highlight-color: transparent; cursor: pointer; transform-origin: 50% 85%; width: min(280px, 60vw); height: min(320px, 46vh); touch-action: manipulation; }
             .egg-shell.illustrated-egg img { width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
-            .egg-shell.illustrated-egg.shaking { animation: eggWiggle .5s ease-in-out; }
-            .egg-shell.illustrated-egg.hatching { animation: eggWiggle .25s ease-in-out 3; }
+            .egg-shell.illustrated-egg.shaking { animation: eggContinuousWiggle .48s ease-in-out infinite; }
+            .egg-shell.illustrated-egg.hatching { animation: eggContinuousWiggle .18s ease-in-out infinite; --egg-tilt: 22deg; --egg-shift: 9px; }
             .egg-shell.illustrated-egg[hidden], .egg-rabbit[hidden] { display: none !important; }
-            .egg-shell.illustrated-egg:focus-visible { outline: 3px solid #79558b; border-radius: 35%; }
+            .egg-shell.illustrated-egg:focus-visible { outline: none; }
+            .egg-shell.illustrated-egg:focus-visible img { filter: drop-shadow(0 0 8px #79558b); }
             .egg-batch-grid > .egg-batch-item { position: relative; min-height: 170px; justify-content: center; overflow: hidden; }
             .egg-batch-shell { width: 100%; display: flex; justify-content: center; transform-origin: 50% 85%; animation: eggWiggle .6s ease-in-out 4; animation-delay: var(--egg-delay); }
             .egg-batch-shell img { height: clamp(75px, 17vh, 150px); width: 100%; object-fit: contain; }
@@ -2275,6 +2303,7 @@ document.addEventListener("DOMContentLoaded", () => {
             @keyframes batchEggBreak { to { transform: scale(1.12); opacity: 0; } }
             @keyframes batchRabbitAppear { from { transform: scale(.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
             @media(prefers-reduced-motion:reduce) { .egg-batch-shell, .egg-batch-shell.breaking, .egg-batch-result { animation: none; } }
+            @keyframes eggContinuousWiggle { 0%,100% { transform: translateX(calc(-1 * var(--egg-shift, 3px))) rotate(calc(-1 * var(--egg-tilt, 8deg))); } 50% { transform: translateX(var(--egg-shift, 3px)) rotate(var(--egg-tilt, 8deg)); } }
             @keyframes eggWiggle { 0%,100% { transform: rotate(0); } 15% { transform: rotate(-9deg); } 35% { transform: rotate(9deg); } 55% { transform: rotate(-7deg); } 75% { transform: rotate(5deg); } }
             @media(prefers-reduced-motion:reduce) { .egg-shell.illustrated-egg.shaking, .egg-shell.illustrated-egg.hatching { animation: none; } }
         `;
@@ -2296,8 +2325,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     taps++;
                     playSfx('eggCrack');
                     hint.textContent = `Quelque chose bouge à l'intérieur… ${taps}/${EGG_TAPS_TO_HATCH}`;
-                    shell.classList.remove('shaking');
-                    void shell.offsetWidth;
+                    // La boucle continue entre les clics ; seule son amplitude augmente.
+                    shell.style.setProperty('--egg-tilt', `${8 + taps * 3}deg`);
+                    shell.style.setProperty('--egg-shift', `${3 + taps}px`);
                     if (taps < EGG_TAPS_TO_HATCH) { shell.classList.add('shaking'); return; }
                     hatching = true;
                     shell.disabled = true;
@@ -2367,10 +2397,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 };
                 const carrotReward = rewards[s.rarity] || 5;
                 const training = ensureAttackTraining(progressForSpecies(result.speciesKey));
-                if (training.completed) {
+                if (allAttacksMaxed(result.speciesKey)) {
                     game.carrots += carrotReward;
                     showToast(
-                        `🥚 Doublon : ${s.name}. Son attaque est déjà au maximum : +${carrotReward} 🥕 automatiquement.`,
+                        `🥚 Doublon : ${s.name}. Toutes ses attaques sont déjà au maximum : +${carrotReward} 🥕 automatiquement.`,
                         "levelup",
                     );
                 } else {
@@ -2407,7 +2437,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     game.duplicateCounts = game.duplicateCounts || {};
                     game.duplicateCounts[result.speciesKey] = (game.duplicateCounts[result.speciesKey] || 0) + 1;
                     const reward = rewards[sp.rarity] || 5;
-                    if (ensureAttackTraining(progressForSpecies(result.speciesKey)).completed) {
+                    if (allAttacksMaxed(result.speciesKey)) {
                         game.carrots += reward; label = `Doublon : +${reward} 🥕`;
                     } else {
                         game.pendingDuplicates.push({speciesKey:result.speciesKey,carrotReward:reward});
@@ -2801,7 +2831,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (existing) { existing.remove(); return; }
             const panel = document.createElement("div");
             panel.id = "adminTestPanel";
-            panel.innerHTML = `<strong>🛠 Tests du jeu</strong><button data-test="money">+100 000 🥕</button><button data-test="eggs">+100 œufs</button><button data-test="care">Besoins à 100 %</button><button data-test="collection">Tous les lapins</button><button data-test="skills">Débloquer les techniques</button><label>Événement <select id="adminEventSelect"><option value="auto">Calendrier normal</option><option value="none">Aucun</option><option value="halloween">Halloween</option><option value="noel">Noël</option><option value="paques">Pâques</option><option value="all">Tous</option></select></label><label>Saison <select id="adminSeasonSelect"><option value="auto">Saison actuelle</option><option value="printemps">Printemps</option><option value="ete">Été</option><option value="automne">Automne</option><option value="hiver">Hiver</option></select></label><label>Lumière <select id="adminTimeSelect"><option value="auto">Heure actuelle</option><option value="jour">Jour</option><option value="nuit">Nuit</option></select></label><small>Les événements ont priorité sur les saisons.</small><button data-test="restore">Restaurer la partie avant les tests</button><button data-test="close">Fermer</button>`;
+            panel.innerHTML = `<strong>🛠 Tests du jeu</strong><button data-test="money">+100 000 🥕</button><button data-test="eggs">+100 œufs</button><button data-test="care">Besoins à 100 %</button><button data-test="collection">Tous les lapins</button><button data-test="skills">+30 fragments par lapin</button><label>Événement <select id="adminEventSelect"><option value="auto">Calendrier normal</option><option value="none">Aucun</option><option value="halloween">Halloween</option><option value="noel">Noël</option><option value="paques">Pâques</option><option value="all">Tous</option></select></label><label>Saison <select id="adminSeasonSelect"><option value="auto">Saison actuelle</option><option value="printemps">Printemps</option><option value="ete">Été</option><option value="automne">Automne</option><option value="hiver">Hiver</option></select></label><label>Lumière <select id="adminTimeSelect"><option value="auto">Heure actuelle</option><option value="jour">Jour</option><option value="nuit">Nuit</option></select></label><small>Les événements ont priorité sur les saisons.</small><button data-test="restore">Restaurer la partie avant les tests</button><button data-test="close">Fermer</button>`;
             document.body.appendChild(panel);
             panel.querySelector('#adminEventSelect').value = adminEvent;
             panel.querySelector('#adminSeasonSelect').value = adminSeason;
@@ -2828,7 +2858,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     const pr = progressForSpecies(key); pr.food = pr.energy = pr.cleanliness = 100;
                 });
                 if (action === "skills") (game.ownedSpecies || [game.species]).forEach(key => {
-                    const training = ensureAttackTraining(progressForSpecies(key)); training.skillUnlocked = true; training.completed = true;
+                    const pr = ensureTechniqueProgress(key); pr.attackFragments += 30;
                 });
                 autoSave(); updateStatusBars(); refreshCurrentZone();
             };

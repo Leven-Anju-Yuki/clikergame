@@ -85,7 +85,12 @@ function saveEventWindows(windows) { localStorage.setItem(EVENT_WINDOWS_KEY, JSO
 //   1. BASE_SPECIES / BASE_BOSSES ci-dessus (juste Azazel, jamais perdu)
 //   2. lapinous-content.json à la racine (LE contenu du jeu, partagé)
 //   3. localStorage (modifications en cours dans le Dashboard, pas encore exportées)
-function getSpecies() { return { ...BASE_SPECIES, ...JSON_SPECIES, ...loadCustomSpecies() }; }
+function getSpecies() {
+    const base = { ...BASE_SPECIES, ...JSON_SPECIES };
+    const custom = loadCustomSpecies();
+    for (const [key, entry] of Object.entries(custom)) base[key] = { ...base[key], ...entry };
+    return base;
+}
 function getBosses() { return { ...BASE_BOSSES, ...JSON_BOSSES, ...loadCustomBosses() }; }
 
 // ============================================================

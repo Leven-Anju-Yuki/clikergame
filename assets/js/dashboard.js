@@ -147,6 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (v.faceFile) faceImg = await fileToDataUrl(v.faceFile);
                 if (v.coteFile) coteImg = await fileToDataUrl(v.coteFile);
                 const entry = {
+                    ...existing,
                     name: v.name.trim() || key,
                     nickname: v.nickname.trim(),
                     rarity: v.rarity,
@@ -377,7 +378,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (ev === undefined || ev === null) {
             if (puz.id === "noel") ev = "noel";
             else if (["pacques", "paques"].includes(puz.id)) ev = "paques";
-            else if (puz.id === "halloween") ev = "halloween";
+            else if (["halloween", "fantome", "frankenstein", "lapin-bete", "squelette", "vampire-vs-nonne"].includes(puz.id)) ev = "halloween";
             else ev = "";
         }
         const list = (Array.isArray(ev) ? ev : String(ev).split(/[,+]/)).map((e) => String(e).trim().toLowerCase().replace("pacques", "paques")).filter(Boolean);
@@ -492,6 +493,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const ctx = document.getElementById(canvasId);
         if (!ctx || typeof Chart === "undefined") return;
         if (chartInstances[canvasId]) chartInstances[canvasId].destroy();
+        lastClickedSlice[canvasId] = null;
+        hideSliceDetail(canvasId);
         chartInstances[canvasId] = new Chart(ctx, {
             type: "pie",
             data: { labels, datasets: [{ data, backgroundColor: colors || PALETTE }] },
@@ -545,42 +548,29 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    const EVENT_CHART_LABELS = { halloween: "🎃 Événement (Halloween)", noel: "🎄 Événement (Noël)", paques: "🐣 Événement (Pâques)" };
-    const EVENT_CHART_COLORS = { halloween: "#F28C28", noel: "#2E8B57", paques: "#F4A6D7", multi: "#E6C04C" };
-    function eventChartCategory(s) {
-        if (!s.event) return null;
-        const events = Array.isArray(s.event) ? s.event : String(s.event).split(",").map((e) => e.trim());
-        if (events.length > 1) return "🎉 Événement (multi-saisons)";
-        return EVENT_CHART_LABELS[events[0]] || "🎉 Événement";
-    }
-    function eventChartColor(s) {
-        if (!s.event) return null;
-        const events = Array.isArray(s.event) ? s.event : String(s.event).split(",").map((e) => e.trim());
-        if (events.length > 1) return EVENT_CHART_COLORS.multi;
-        return EVENT_CHART_COLORS[events[0]] || EVENT_CHART_COLORS.multi;
+    // Une seule répartition par rareté pour le total et chaque événement.
+    // Un événement est une disponibilité : il ne remplace jamais la rareté.
+    function rarityBreakdown(entries) {
+        const order = ['commun', 'rare', 'epique', 'legendaire', 'mythique', 'divin', 'secret'];
+        const buckets = new Map(order.map(key => [key, []]));
+        entries.forEach(s => {
+            const key = s.rarity || 'commun';
+            if (!buckets.has(key)) buckets.set(key, []);
+            buckets.get(key).push({name: s.name, img: s.faceImg || s.coteImg});
+        });
+        const keys = [...buckets.keys()].filter(key => buckets.get(key).length);
+        return {
+            labels: keys.map(key => RARITY_META[key]?.label || key),
+            data: keys.map(key => buckets.get(key).length),
+            groups: keys.map(key => buckets.get(key)),
+            colors: keys.map(key => RARITY_META[key]?.color || '#b8bcc4')
+        };
     }
 
     async function renderCharts() {
-        // Lapins par rareté — les lapins d'événement ont leur propre catégorie
-        // ET leur propre couleur (Halloween=orange, Noël=vert sapin, Pâques=rose
-        // pastel, multi-saisons=or), séparées de la rareté brute.
         const species = getSpecies();
-        const rarityCounts = {};
-        const rarityNames = {};
-        const rarityColors = {};
-        Object.values(species).forEach((s) => {
-            const category = eventChartCategory(s) || RARITY_META[s.rarity]?.label || s.rarity;
-            rarityCounts[category] = (rarityCounts[category] || 0) + 1;
-            (rarityNames[category] = rarityNames[category] || []).push({ name: s.name, img: s.faceImg || s.coteImg });
-            if (!rarityColors[category]) rarityColors[category] = eventChartColor(s) || RARITY_META[s.rarity]?.color || "#b8bcc4";
-        });
-        drawPie(
-            "chart-rarity",
-            Object.keys(rarityCounts),
-            Object.values(rarityCounts),
-            Object.keys(rarityCounts).map((r) => rarityNames[r]),
-            Object.keys(rarityCounts).map((r) => rarityColors[r])
-        );
+        const total = rarityBreakdown(Object.values(species));
+        drawPie('chart-rarity', total.labels, total.data, total.groups, total.colors);
 
         // Boss par difficulté (buckets)
         const bosses = getBosses();
@@ -595,29 +585,12 @@ document.addEventListener("DOMContentLoaded", () => {
         drawPie("chart-difficulty", Object.keys(buckets), Object.values(buckets), Object.keys(buckets).map((k) => bucketNames[k]));
 
         // Camemberts dédiés par événement : répartition par rareté au sein
-        // de chaque saison (Halloween / Noël / Pâques), pour voir en un
+        // de chaque événement (Halloween / Noël / Pâques), pour voir en un
         // coup d'œil ce que contient chacune.
         function hasEvent(s, tag) {
             if (!s.event) return false;
             const events = Array.isArray(s.event) ? s.event : String(s.event).split(",").map((e) => e.trim());
             return events.includes(tag);
-        }
-        function rarityBreakdown(entries) {
-            const counts = {};
-            const names = {};
-            const colors = {};
-            entries.forEach((s) => {
-                const label = RARITY_META[s.rarity]?.label || s.rarity;
-                counts[label] = (counts[label] || 0) + 1;
-                (names[label] = names[label] || []).push({ name: s.name, img: s.faceImg || s.coteImg });
-                if (!colors[label]) colors[label] = RARITY_META[s.rarity]?.color || "#b8bcc4";
-            });
-            return {
-                labels: Object.keys(counts),
-                data: Object.values(counts),
-                groups: Object.keys(counts).map((k) => names[k]),
-                colors: Object.keys(counts).map((k) => colors[k]),
-            };
         }
         ["halloween", "noel", "paques"].forEach((tag) => {
             const entries = Object.values(species).filter((s) => hasEvent(s, tag));
