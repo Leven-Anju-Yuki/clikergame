@@ -276,7 +276,7 @@ document.addEventListener("DOMContentLoaded", () => {
             feed: "./assets/audio/action/manger.mp3",
             sleep: "./assets/audio/action/dormir.mp3",
             clean: "./assets/audio/action/doucher.mp3",
-            defeat: null,
+            defeat: ["./assets/audio/combat/game-over-sond.mp3", "./assets/audio/combat/game-over-mot.mp3"],
             critical: "./assets/audio/combat/critical.mp3", victory: "./assets/audio/combat/victoire.mp3",
             // Ambiance d'Halloween : piano angoissant + rire de sorcière joués ensemble en boucle
             halloween: ["./assets/audio/halloween/piano_angoissant.mp3", "./assets/audio/halloween/rire_de_sorciere.mp3"],
@@ -1569,9 +1569,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 const unlocked = isTechniqueUnlocked({sp,pr}, index);
                 const t = techniqueFor({key,sp,pr},index);
                 const effect = t.kind === 'heal' ? 'Soin et dégâts' : t.kind === 'guard' ? 'Dégâts et protection' : 'Dégâts';
-                return `<div style="padding:8px 0;border-bottom:1px solid #79558b33"><strong>${index+1}. ${t.name}</strong> <small>· ${effect} · amélioration ${level}/5${!unlocked ? ' · 🔒 Termine les attaques précédentes à 5/5' : ''}</small>${editable && owned ? `<button type="button" class="ghost-btn" onclick="upgradeRabbitAttack('${key}',${index})" ${!unlocked || !pr.attackFragments || level>=5 ? 'disabled' : ''}>${!unlocked ? 'Verrouillée' : level>=5 ? 'MAX' : 'Améliorer · 1 fragment'}</button>` : ''}</div>`;
+                const maxed = level >= 5;
+                const ready = unlocked && !maxed && editable && owned && pr.attackFragments > 0;
+                return `<article class="rabbit-technique-card ${!unlocked ? 'locked' : maxed ? 'mastered' : ready ? 'ready' : ''}">
+                    <div class="rabbit-technique-info"><span class="rabbit-technique-status">${!unlocked ? '🔒 Verrouillée' : maxed ? '✓ Maîtrisée' : '✦ Disponible'} · Attaque ${index+1}</span><strong>${t.name}</strong><small>${effect}</small>
+                    <div class="rabbit-technique-progress"><span>Amélioration</span><b>${level}/5</b></div><progress value="${level}" max="5" aria-label="Amélioration de ${t.name}">${level}/5</progress>
+                    ${!unlocked ? '<small class="rabbit-technique-hint">Termine les attaques précédentes à 5/5 pour la débloquer.</small>' : ''}</div>
+                    ${editable && owned ? `<button type="button" class="rabbit-technique-upgrade" onclick="upgradeRabbitAttack('${key}',${index})" ${!ready ? 'disabled' : ''}>${!unlocked ? '🔒 Verrouillée' : maxed ? '✓ Maximum' : 'Améliorer<span>💎 1 fragment</span>'}</button>` : ''}</article>`;
             }).join('');
-            return `<div class="lapin-attack-list"><strong>⚔️ ${pr.attackLevels.length} attaque${pr.attackLevels.length>1?'s':''}</strong>${owned?`<p>💎 ${pr.attackFragments} fragment${pr.attackFragments>1?'s':''} disponible${pr.attackFragments>1?'s':''} pour ce lapin.</p>`:''}${entries}<p><small>🌟 Ultime : ${powerName(sp)} · hors de la liste, nécessite 100 % de charge.</small></p></div>`;
+            return `<section class="lapin-attack-list"><div class="rabbit-technique-heading"><strong>⚔️ Techniques du lapin</strong><span>${pr.attackLevels.length} attaque${pr.attackLevels.length>1?'s':''}</span></div>${owned?`<p class="rabbit-fragment-balance">💎 <b>${pr.attackFragments}</b> fragment${pr.attackFragments>1?'s':''} disponible${pr.attackFragments>1?'s':''}</p>`:''}${entries}<div class="rabbit-ultimate-card"><span aria-hidden="true">🌟</span><div><small>CAPACITÉ ULTIME</small><strong>${powerName(sp)}</strong><p>Se déclenche avec 100 % de charge.</p></div></div></section>`;
         }
         window.upgradeRabbitAttack = function(key,index) {
             if (!game.ownedSpecies?.includes(key) || !Number.isInteger(index)) return;
@@ -1947,24 +1953,29 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             body.classList.add("battle-scene");
             const bosses = getBosses();
-            const power = playerPower();
+            const owned = game.ownedSpecies || [game.species];
+            const comparisonTeam = selectedFightTeam.filter(key => owned.includes(key));
+            const teamKeys = comparisonTeam.length ? comparisonTeam : owned.slice(0, 3);
+            const power = teamKeys.reduce((total, key) => total + rabbitCombatStats(key).power, 0);
             const rows = Object.entries(bosses)
                 .sort((a, b) => a[1].difficulty - b[1].difficulty)
                 .map(([key, b]) => {
-                    const diff = b.difficulty - power;
+                    const stats = bossCombatStats(b);
+                    const ratio = stats.power / Math.max(1, power);
                     const label =
-                        diff > 15 ? "💀 Très dangereux" : diff > 0 ? "⚠️ Difficile" : "🙂 Faisable";
+                        ratio > 1.25 ? "💀 Très dangereux" : ratio > .7 ? "⚠️ Difficile" : "🙂 Faisable";
                     return `<button class="boss-card" onclick="prepareFight('${key}')">
                     <img src="${b.faceImg || b.coteImg}" alt="${b.name}" onerror="this.onerror=null;this.src='./assets/img/bosses/mystery_boss.svg';">
                     <div class="boss-name">${b.name}</div>
-                    <div class="boss-power">Difficulté ${b.difficulty}</div>
+                    <div class="boss-power">⚔️ Puissance ${stats.power}</div>
+                    <div class="boss-power">❤️ ${stats.maxHp} PV</div>
                     <div class="boss-diff">${label}</div>
                 </button>`;
                 })
                 .join("");
             gameArea.innerHTML = `
             <div class="action-row" style="flex-direction:column;align-items:center;">
-                <div class="agility-hint">Ta puissance actuelle : <strong>${power}</strong> — choisis un adversaire 🥕</div>
+                <div class="agility-hint">Puissance de ton équipe (${teamKeys.length} lapin${teamKeys.length > 1 ? 's' : ''}) : <strong>${power}</strong> — choisis un adversaire 🥕</div>
                 <div class="boss-grid">${rows}</div>
                 <button class="ghost-btn" onclick="leaveAdventure()" style="margin-top:10px;">← Retour au jardin</button>
             </div>`;
@@ -2293,6 +2304,35 @@ document.addEventListener("DOMContentLoaded", () => {
             return {name:String(configured?.name || fallback.name), kind:['damage','heal','guard'].includes(configured?.kind)?configured.kind:fallback.kind, mult:Number.isFinite(Number(configured?.mult)) && Number(configured?.mult)>0 ? Number(configured.mult) : fallback.mult};
         }
         function ultimateName(r){ return `${powerName(r.sp)||r.sp.name} — Coup critique`; }
+        function rabbitFightPreviewHtml(r) {
+            const skills = r.pr.attackLevels.map((level, i) => {
+                if (!isTechniqueUnlocked(r, i)) return '';
+                const t = techniqueFor(r, i), bonus = level * 3;
+                const base = r.power * (t.kind === 'heal' ? .45 : t.mult) + bonus;
+                const low = Math.round(base), high = Math.round(base + (t.kind === 'damage' ? 8 : 0));
+                const extra = t.kind === 'heal' ? ` · +${Math.max(8, Math.round(r.maxHp * .22 + bonus))} PV` : t.kind === 'guard' ? ` · protection ${Math.round(Math.min(.75, .55 + level * .04) * 100)} %` : '';
+                return `<li><b>${t.name}</b><span>${low}${high > low ? `–${high}` : ''} dégâts${extra}</span></li>`;
+            }).join('');
+            const config = criticalConfig(r.sp);
+            return `<div class="fight-preview-stats"><div class="fight-stat-chips"><span>❤️ ${r.maxHp} PV</span><span>⚔️ ${r.power} puissance</span></div><ul>${skills}<li class="preview-ultimate"><b>🌟 ${powerName(r.sp)}</b><span>${Math.round(r.power * config.multiplier)}–${Math.round(r.power * config.multiplier + 12)} dégâts · +${config.chargePerTurn} % charge/tour${powerMode(r.sp)==='heal' ? ' · soin équipe 25 %' : powerMode(r.sp)==='support' ? ' · protection équipe 55 %' : ''}</span></li></ul></div>`;
+        }
+        function bossCombatStats(boss) {
+            const difficulty = Math.max(1, Number(boss.difficulty) || 20);
+            const power = Math.round(18 + difficulty * 1.2);
+            return { power, maxHp: Math.round(200 + difficulty * 8), attackBase: power * .85, attackSpread: power * .25 };
+        }
+        function fightPowerComparisonHtml(boss) {
+            const teamPower = selectedFightTeam.reduce((total, key) => total + rabbitCombatStats(key).power, 0);
+            const bossPower = bossCombatStats(boss).power;
+            const share = teamPower / (teamPower + bossPower) * 100;
+            return `<div class="fight-power-comparison"><div class="fight-power-values"><span>🐰 Équipe <b>${teamPower}</b></span><strong>Puissance totale</strong><span>🥕 ${boss.name} <b>${bossPower}</b></span></div><div class="fight-power-meter" role="img" aria-label="Puissance de l’équipe ${teamPower}, puissance du boss ${bossPower}"><i style="width:${share}%"></i></div><small>Somme de la puissance des lapins sélectionnés. Les PV, techniques et protections comptent aussi dans le combat.</small></div>`;
+        }
+        function bossFightPreviewHtml(boss) {
+            const stats = bossCombatStats(boss), hp = stats.maxHp;
+            const low = Math.round(stats.attackBase), high = Math.round(stats.attackBase + stats.attackSpread);
+            const config = criticalConfig(boss);
+            return `<div class="fight-preview-stats"><div class="fight-stat-chips"><span>❤️ ${hp} PV</span><span>⚔️ ${stats.power} puissance</span></div><ul><li><b>Attaque du légume</b><span>${low}–${high} dégâts</span></li><li class="preview-ultimate"><b>🌟 ${powerName(boss)}</b><span>${Math.round(low * config.multiplier)}–${Math.round(high * config.multiplier)} dégâts · +${config.chargePerTurn} % charge/tour${powerMode(boss)==='heal' ? ' · soin 20 %' : powerMode(boss)==='support' ? ' · protection 40 %' : ''}</span></li></ul><small>Valeurs avant protection adverse.</small></div>`;
+        }
         function nextLivingIndex(f,from){
             if(!f.team.some(x=>x.hp>0)) return -1;
             for(let step=1;step<=f.team.length;step++){const i=(from+step)%f.team.length;if(f.team[i].hp>0)return i;}
@@ -2306,12 +2346,12 @@ document.addEventListener("DOMContentLoaded", () => {
             const boss=getBosses()[key]; if(!boss)return; if(!game.discoveredBosses)game.discoveredBosses=[];if(!game.discoveredBosses.includes(key))game.discoveredBosses.push(key);
             const owned=(game.ownedSpecies||[game.species]).slice(); if(!selectedFightTeam.length) selectedFightTeam=owned.slice(0,Math.min(3,owned.length));
             selectedFightTeam=selectedFightTeam.filter(k=>owned.includes(k)).slice(0,3);
-            const teamCards=owned.map(k=>{const sp=getSpecies()[k]||{},on=selectedFightTeam.includes(k),pr=progressForSpecies(k);return `<button class="fight-team-card ${on?'selected':''}" onclick="toggleFightTeam('${k}','${key}')"><img src="${sp.faceImg||sp.coteImg||'./assets/img/species/mystery.svg'}"><span>${game.speciesNames?.[k]||sp.name||k}<small>Niv. ${pr.currentLevel} · ${RARITY_META[sp.rarity]?.label||sp.rarity||'Commun'}</small></span></button>`}).join('');
-            const preview=selectedFightTeam.map((k,i)=>{const sp=getSpecies()[k]||{};return `<div class="team-preview-rabbit slot-${i+1}"><img src="${sp.coteImg||sp.faceImg||'./assets/img/species/mystery.svg'}"><strong>${game.speciesNames?.[k]||sp.name||k}</strong></div>`}).join('');
-            gameArea.innerHTML=`<div class="fight-stage fight-preparation"><div class="console-title">⚔️ Prépare ton équipe contre ${boss.name}</div><p class="agility-hint">Choisis jusqu’à 3 lapins. Les lapins sélectionnés apparaissent directement sur le terrain.</p><div class="fight-team-select">${teamCards}</div><div class="battlefield-preview"><div class="team-preview-side">${preview||'<span>Choisis ton équipe</span>'}</div><div class="vs-mark">VS</div><div class="preview-boss"><img src="${boss.coteImg||boss.faceImg}" onerror="this.src='./assets/img/bosses/mystery_boss.svg'"><strong>${boss.name}</strong></div></div><div class="action-row"><label>Combat <select onchange="setFightMode(this.value)"><option value="manual" ${fightMode==='manual'?'selected':''}>Manuel</option><option value="auto" ${fightMode==='auto'?'selected':''}>Automatique</option></select></label><label>Vitesse <select onchange="setFightSpeed(this.value)"><option value="1" ${fightSpeed===1?'selected':''}>×1</option><option value="3" ${fightSpeed===3?'selected':''}>×3</option></select></label><button class="action-btn adventure" onclick="startTacticalFight('${key}')" ${selectedFightTeam.length?'':'disabled'}>⚔️ Commencer</button><button class="ghost-btn" onclick="openAdventure()">← Boss</button></div></div>`; autoSave();
+            const teamCards=owned.map(k=>{const r=rabbitCombatStats(k),{sp,pr}=r,on=selectedFightTeam.includes(k);return `<button class="fight-team-card ${on?'selected':''}" aria-pressed="${on}" onclick="toggleFightTeam('${k}','${key}')"><img src="${sp.faceImg||sp.coteImg||'./assets/img/species/mystery.svg'}"><span>${rabbitDisplayName(r)}<small>Niv. ${pr.currentLevel} · ${RARITY_META[sp.rarity]?.label||sp.rarity||'Commun'}</small><small class="fight-card-power">❤️ ${r.maxHp} PV · ⚔️ ${r.power} puissance</small></span></button>`}).join('');
+            const preview=selectedFightTeam.map((k,i)=>{const r=rabbitCombatStats(k),sp=r.sp;return `<div class="team-preview-rabbit slot-${i+1}"><img src="${sp.coteImg||sp.faceImg||'./assets/img/species/mystery.svg'}"><strong>${rabbitDisplayName(r)}</strong>${rabbitFightPreviewHtml(r)}</div>`}).join('');
+            gameArea.innerHTML=`<div class="fight-stage fight-preparation"><div class="console-title">⚔️ Prépare ton équipe contre ${boss.name}</div>${fightPowerComparisonHtml(boss)}<div class="fight-team-select">${teamCards}</div><div class="battlefield-preview"><div class="team-preview-side">${preview||'<span>Choisis ton équipe</span>'}</div><div class="vs-mark">VS</div><div class="preview-boss"><img src="${boss.coteImg||boss.faceImg}" onerror="this.src='./assets/img/bosses/mystery_boss.svg'"><strong>${boss.name}</strong>${bossFightPreviewHtml(boss)}</div></div><div class="action-row"><label>Combat <select onchange="setFightMode(this.value)"><option value="manual" ${fightMode==='manual'?'selected':''}>Manuel</option><option value="auto" ${fightMode==='auto'?'selected':''}>Automatique</option></select></label><label>Vitesse <select onchange="setFightSpeed(this.value)"><option value="1" ${fightSpeed===1?'selected':''}>×1</option><option value="3" ${fightSpeed===3?'selected':''}>×3</option></select></label><button class="action-btn adventure" onclick="startTacticalFight('${key}')" ${selectedFightTeam.length?'':'disabled'}>⚔️ Commencer</button><button class="ghost-btn" onclick="openAdventure()">← Boss</button></div></div>`; autoSave();
         };
         window.startTacticalFight=function(key){
-            const boss=getBosses()[key]; if(!boss||!selectedFightTeam.length)return; const team=selectedFightTeam.map(rabbitCombatStats); tacticalFight={key,boss,team,active:0,bossMaxHp:100+(boss.difficulty||20)*3,bossHp:100+(boss.difficulty||20)*3,turn:1,locked:false,auto:fightMode==='auto',speed:fightSpeed,bossCharge:0,bossGuard:0}; clearTimeout(autoFightTimer); playSfx("monsterCombat"); renderTacticalFight(`${rabbitDisplayName(team[0])} ouvre le combat !`);
+            const boss=getBosses()[key]; if(!boss||!selectedFightTeam.length)return; const team=selectedFightTeam.map(rabbitCombatStats); tacticalFight={key,boss,team,active:0,bossMaxHp:bossCombatStats(boss).maxHp,bossHp:bossCombatStats(boss).maxHp,turn:1,locked:false,auto:fightMode==='auto',speed:fightSpeed,bossCharge:0,bossGuard:0}; clearTimeout(autoFightTimer); playSfx("monsterCombat"); renderTacticalFight(`${rabbitDisplayName(team[0])} ouvre le combat !`);
         };
         function renderTacticalFight(message){
             const f=tacticalFight;if(!f)return;if(!f.team.some(x=>x.hp>0)){finishTacticalFight(false);return;}if(f.team[f.active]?.hp<=0)f.active=nextLivingIndex(f,f.active);const r=f.team[f.active];
@@ -2342,7 +2382,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const config=criticalConfig(f.boss);
             f.bossCharge=Math.min(100,f.bossCharge+config.chargePerTurn);
             const bossCritical=f.bossCharge>=100;
-            const raw=Math.max(5,Math.round((f.boss.difficulty||20)*.30+Math.random()*8));
+            const bossStats = bossCombatStats(f.boss);
+            const raw=Math.round(bossStats.attackBase+Math.random()*bossStats.attackSpread);
             const bd=Math.max(1,Math.round(raw*(bossCritical?config.multiplier:1)*(1-(r.guard||0))));
             r.guard=0;
             const bossMessage=bossCritical ? `🌟 ${f.boss.name} déclenche ${powerName(f.boss)} : ${bd} dégâts !` : `🥕 ${f.boss.name} attaque ${name} : ${bd} dégâts.`;
@@ -2962,7 +3003,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const stage = gameArea.querySelector(".fight-stage");
             if (!stage || !body.classList.contains("battle-scene")) return;
             stage.style.transform = "none";
-            if (stage.classList.contains("fight-preparation")) return;
+            if (stage.classList.contains("fight-preparation") || stage.classList.contains("tactical")) return;
             const css = getComputedStyle(gameArea);
             const available = gameArea.clientHeight - parseFloat(css.paddingTop) - parseFloat(css.paddingBottom);
             const scale = Math.min(1, Math.max(1, available) / stage.scrollHeight);

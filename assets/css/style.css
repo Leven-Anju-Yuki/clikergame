@@ -5438,6 +5438,41 @@ body.game-running.default .salon-rabbit-friend:nth-child(6) {
 .records-card .achievement-row.ready button:hover { filter: brightness(1.06); }
 .records-card .achievement-row button:focus-visible { outline: 3px solid #896b3e; outline-offset: 3px; }
 .achievement-row.claimed { background: #edf2e4; }
+/* Les techniques reprennent les cartes de progression des succès. */
+.lapin-attack-list { margin-top: 20px; color: #594532; text-align: left; }
+.rabbit-technique-heading { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+.rabbit-technique-heading > strong { font-size: 1.1rem; }
+.rabbit-technique-heading > span, .rabbit-fragment-balance { color: #80694d; font-size: .85rem; }
+.rabbit-fragment-balance { margin: 10px 0 16px; }
+.rabbit-technique-card { display: flex; align-items: center; gap: 20px; margin: 12px 0; padding: 18px 20px; border: 1px solid #e3d6c0; border-radius: 18px; background: #fffdf8; box-shadow: 0 4px 12px #6f50200a; }
+.rabbit-technique-info { flex: 1; min-width: 0; }
+.rabbit-technique-status { display: block; margin-bottom: 6px; color: #8c765a; font-size: .7rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+.rabbit-technique-info > strong { display: block; font-size: 1.02rem; line-height: 1.4; }
+.rabbit-technique-info > small { display: block; margin-top: 4px; color: #80694d; font-size: .82rem; line-height: 1.5; }
+.rabbit-technique-progress { display: flex; justify-content: space-between; gap: 12px; margin-top: 12px; color: #80694d; font-size: .75rem; }
+.rabbit-technique-info progress { display: block; width: 100%; height: 8px; margin-top: 6px; border: 0; border-radius: 10px; overflow: hidden; appearance: none; background: #eae1d0; accent-color: #819f5b; }
+.rabbit-technique-info progress::-webkit-progress-bar { background: #eae1d0; border-radius: 10px; }
+.rabbit-technique-info progress::-webkit-progress-value { background: linear-gradient(90deg, #819f5b, #b5c980); border-radius: 10px; }
+.rabbit-technique-info progress::-moz-progress-bar { background: #819f5b; border-radius: 10px; }
+.rabbit-technique-card.ready { border-color: #d4a345; background: linear-gradient(110deg, #fff8e5, #fffdf7); }
+.rabbit-technique-card.ready .rabbit-technique-status { color: #996919; }
+.rabbit-technique-card.mastered { background: #edf2e4; border-color: #cedaba; }
+.rabbit-technique-card.mastered .rabbit-technique-status { color: #607841; }
+.rabbit-technique-card.locked { background: #f5f1e9; }
+.lapin-attack-list .rabbit-technique-upgrade { flex-shrink: 0; min-height: 44px; padding: 10px 16px; border: 1px solid #cb963c; border-radius: 12px; background: linear-gradient(135deg, #e6b758, #d49936); color: #432d12; font-family: inherit; font-size: .85rem; font-weight: 700; text-decoration: none; box-shadow: 0 3px 0 #ad7c28; cursor: pointer; }
+.rabbit-technique-upgrade span { display: block; margin-top: 3px; font-size: .72rem; font-weight: 500; }
+.rabbit-technique-upgrade:hover:not(:disabled) { filter: brightness(1.06); }
+.rabbit-technique-upgrade:focus-visible { outline: 3px solid #896b3e; outline-offset: 3px; }
+.lapin-attack-list .rabbit-technique-upgrade:disabled { background: #ede6d9; color: #806e56; border-color: #d6c7ac; box-shadow: none; cursor: default; }
+.rabbit-ultimate-card { display: flex; align-items: center; gap: 14px; margin-top: 18px; padding: 18px 20px; border: 1px solid #dfc78e; border-radius: 18px; background: linear-gradient(110deg, #fff4d6, #fffdf7); }
+.rabbit-ultimate-card > span { font-size: 1.7rem; }
+.rabbit-ultimate-card small { color: #996919; font-size: .7rem; letter-spacing: .06em; font-weight: 700; }
+.rabbit-ultimate-card strong { display: block; margin-top: 4px; }
+.rabbit-ultimate-card p { margin: 5px 0 0; color: #80694d; font-size: .82rem; }
+@media (max-width: 600px) {
+    .rabbit-technique-card { flex-direction: column; align-items: stretch; gap: 12px; padding: 16px; }
+    .rabbit-technique-upgrade { width: 100%; }
+}
 .achievement-row button:disabled { cursor: default; opacity: .8; }
 @media (max-width: 520px) {
     .achievement-row { flex-direction: column; align-items: stretch; gap: 10px; }
@@ -6207,3 +6242,101 @@ body.game-running.default .egg-shop .upgrade-locked-note { display: none; }
 .fight-preparation .preview-boss img { max-height: calc(100% - 32px); flex-shrink: 1; }
 .fight-preparation .team-preview-rabbit strong,
 .fight-preparation .preview-boss strong { flex: 0 0 auto; }
+
+/* Comparaison des combattants avant le combat. */
+.fight-preparation > .fight-power-comparison { grid-column: 2; grid-row: 2; }
+.fight-power-comparison { padding: 12px 16px; border: 1px solid #dfd0b6; border-radius: 16px; background: #fffaf2f2; color: #594532; }
+.fight-power-values { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; font-size: .85rem; }
+.fight-power-values b { margin-left: 6px; font-size: 1.2rem; }
+.fight-power-values > strong { color: #80694d; font-size: .75rem; }
+/* Les besoins ne recouvrent plus les informations des adversaires. */
+body.game-running.battle-scene #statusBars { display: none; }
+.fight-power-values > span { padding: 6px 10px; border-radius: 10px; background: #eee5d2; }
+.fight-power-values > span:last-child { background: #f3dfd2; color: #793f25; }
+.fight-power-meter { height: 10px; margin: 9px 0; border-radius: 10px; overflow: hidden; background: #ce805c; }
+.fight-power-meter i { display: block; height: 100%; background: linear-gradient(90deg, #78994f, #aecb78); transition: width .2s ease; }
+.fight-power-comparison > small { display: block; font-size: .7rem; line-height: 1.4; color: #80694d; }
+.fight-card-power { display: block; margin-top: 5px; color: #70532b; font-weight: 700; }
+.fight-preparation .battlefield-preview { min-height: 0; overflow-y: auto; align-items: stretch; }
+.fight-preparation .team-preview-side { align-items: stretch; height: auto; }
+.fight-preparation .team-preview-rabbit,
+.fight-preparation .preview-boss { height: auto; max-height: none; justify-content: flex-start; gap: 6px; }
+.fight-preparation .team-preview-rabbit img,
+.fight-preparation .preview-boss img { flex-shrink: 0; height: clamp(70px, 17vh, 150px); max-height: none; }
+.fight-preview-stats { box-sizing: border-box; width: 100%; padding: 10px; border: 1px solid #dfd0b6; border-radius: 14px; background: #fffaf2f2; color: #594532; text-align: left; }
+.fight-stat-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+.fight-stat-chips span { padding: 4px 6px; border-radius: 8px; background: #eee5d2; font-size: .72rem; font-weight: 700; }
+.fight-preview-stats ul { list-style: none; margin: 8px 0 0; padding: 0; }
+.fight-preview-stats li { padding: 7px 0; border-top: 1px solid #e7dcc8; }
+.fight-preview-stats li b, .fight-preview-stats li span { display: block; font-size: .74rem; line-height: 1.5; overflow-wrap: anywhere; }
+.fight-preview-stats li span, .fight-preview-stats > small { color: #80694d; font-size: .7rem; }
+.fight-preview-stats .preview-ultimate b { color: #946b20; }
+.fight-preparation .preview-boss { width: min(240px, 100%); }
+@media (max-width: 700px) {
+    .fight-preparation .team-preview-side { flex-wrap: wrap; }
+    .fight-preparation .team-preview-rabbit { flex: 1 1 100px; }
+    .fight-preview-stats { padding: 7px; }
+}
+
+/* Utilise toute la hauteur : personnages sur le sol et commandes en bas. */
+body.game-running:is(.cuisine, .chambre, .sdb, .jardin) #gameArea {
+    box-sizing: border-box;
+    justify-content: flex-end;
+    padding-bottom: clamp(100px, 16vh, 150px);
+    gap: 12px;
+}
+body.game-running:is(.cuisine, .chambre, .sdb, .jardin) #rabbitImage {
+    flex-shrink: 0;
+    max-height: 32vh;
+    object-fit: contain;
+}
+body.game-running.battle-scene #gameArea {
+    padding: 100px 14px 90px;
+    overflow-y: auto;
+}
+body.game-running.battle-scene .fight-stage.tactical {
+    box-sizing: border-box;
+    height: 100%;
+    min-height: 440px;
+    padding: 0;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: auto minmax(220px, 1fr) auto auto;
+    align-items: stretch;
+    gap: 10px;
+}
+body.game-running.battle-scene .fight-stage.tactical .team-battlefield {
+    height: auto;
+    min-height: 220px;
+}
+.fight-stage.tactical .team-fighters { height: 100%; bottom: 12px; }
+.fight-stage.tactical .team-fighter.active-turn {
+    transform: none;
+    filter: drop-shadow(0 0 14px #ffe873);
+}
+.fight-stage.tactical .turn-marker {
+    flex-shrink: 0;
+    height: 24px;
+    line-height: 24px;
+}
+body.game-running.battle-scene .fight-stage.tactical .fight-hud-side {
+    align-self: start;
+    min-width: 0;
+    padding: 12px 14px;
+}
+body.game-running.battle-scene .fight-stage.tactical .fight-log {
+    line-height: 1.5;
+    margin: 0;
+}
+body.game-running.battle-scene .fight-stage.tactical .fight-command-grid {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px;
+}
+@media (max-width: 700px) {
+    body.game-running.battle-scene #gameArea { padding: 90px 8px 86px; }
+    body.game-running.battle-scene .fight-stage.tactical { min-height: 410px; gap: 8px; }
+    body.game-running:is(.cuisine, .chambre, .sdb, .jardin) #gameArea { padding-bottom: 100px; }
+}
