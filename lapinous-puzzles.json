@@ -113,6 +113,7 @@
     },
     {
       "id": "reve",
+      "event": ["noel", "halloween", "paques"],
       "title": "Les Tisseurs de Songes",
       "image": "./assets/img/puzzle/reve.png",
       "linkedSpecies": [

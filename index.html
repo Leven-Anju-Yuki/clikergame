@@ -8,15 +8,10 @@
         <title>Lapinous - Jeu de collection de lapins virtuels</title>
 
         <!-- Polices & Styles -->
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Quicksand:wght@500;600;700&display=swap"
-            rel="stylesheet"
-        />
+        <!-- Polices de repli locales : aucun chargement externe requis. -->
         <link
             rel="stylesheet"
-            href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+            href="./assets/css/bootstrap.min.css"
         />
         <link rel="stylesheet" href="./assets/css/style.css" />
 
@@ -115,8 +110,8 @@
         <button
             type="button"
             class="rules-btn"
-            data-toggle="modal"
-            data-target="#myModal"
+            data-bs-toggle="modal"
+            data-bs-target="#myModal"
             aria-label="Règles du jeu"
         >
             <img src="./assets/img/regle.png" alt="" />
@@ -132,8 +127,8 @@
         <button
             type="button"
             class="save-btn"
-            data-toggle="modal"
-            data-target="#saveModal"
+            data-bs-toggle="modal"
+            data-bs-target="#saveModal"
             aria-label="Sauvegardes"
         >
             💾
@@ -145,7 +140,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Règles du jeu</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -226,7 +221,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Sauvegardes</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -287,7 +282,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Renommer ton lapin</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -318,7 +313,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">📖 Encyclopédie</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -423,9 +418,7 @@
             </button>
         </nav>
 
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script src="./assets/js/bootstrap.min.js"></script>
         <script src="./assets/js/species-data.js"></script>
         <script src="./assets/js/puzzle-data.js"></script>
         <script src="./assets/js/dashboard-access.js"></script>

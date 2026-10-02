@@ -203,16 +203,16 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const AUDIO_FILES = {
-            // Son de fond normal : placer le fichier ici pour une lecture en boucle.
-            ambience: "./assets/audio/common/ambience.mp3",
+            // Sons facultatifs absents : null emp?che toute requ?te vers un fichier inexistant.
+            ambience: "./assets/audio/ambience.mp3",
             click: "./assets/audio/common/click.mp3", purchase: "./assets/audio/common/purchase.mp3",
             levelup: "./assets/audio/common/level_up.mp3", eggCrack: "./assets/audio/egg/egg-crack.mp3",
-            eggRare: "./assets/audio/egg/rare-reveal.mp3", attack: "./assets/audio/combat/attaque_physique.mp3",
+            eggRare: null, attack: "./assets/audio/combat/attaque_physique.mp3",
             magic: "./assets/audio/combat/attaque_magique.mp3",
             feed: "./assets/audio/action/manger.mp3",
             sleep: "./assets/audio/action/dormir.mp3",
             clean: "./assets/audio/action/doucher.mp3",
-            defeat: "./assets/audio/combat/defaite.mp3",
+            defeat: null,
             critical: "./assets/audio/combat/critical.mp3", victory: "./assets/audio/combat/victoire.mp3",
             // Ambiance d'Halloween : piano angoissant + rire de sorcière joués ensemble en boucle
             halloween: ["./assets/audio/halloween/piano_angoissant.mp3", "./assets/audio/halloween/rire_de_sorciere.mp3"],
@@ -238,7 +238,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Précharge tous les sons dès le démarrage pour qu'ils soient prêts à jouer
         // instantanément (au lieu d'être téléchargés au moment où on en a besoin).
         Object.values(AUDIO_FILES).forEach((entry) => {
-            (Array.isArray(entry) ? entry : [entry]).forEach(getCachedAudio);
+            (Array.isArray(entry) ? entry : [entry]).filter(Boolean).forEach(getCachedAudio);
         });
         let activeCareAudio = null;
         let careAudioTimer = null;
@@ -384,7 +384,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             applyLoadedGame(entry.data);
             showToast(`"${entry.name}" chargée ✨`, "success");
-            $("#saveModal").modal("hide");
+            bootstrap.Modal.getOrCreateInstance(document.querySelector('#saveModal')).hide();
         }
 
         function renameSaveEntry(id) {
@@ -532,7 +532,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 try {
                     applyLoadedGame(JSON.parse(reader.result));
                     showToast("Sauvegarde importée ✨", "success");
-                    $("#saveModal").modal("hide");
+                    bootstrap.Modal.getOrCreateInstance(document.querySelector('#saveModal')).hide();
                 } catch (err) {
                     showToast("Fichier JSON invalide.", "warn");
                 }
@@ -600,7 +600,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const text = await file.text();
                 applyLoadedGame(JSON.parse(text));
                 showToast(`Sauvegarde "${filename}" chargée ✨`, "success");
-                $("#saveModal").modal("hide");
+                bootstrap.Modal.getOrCreateInstance(document.querySelector('#saveModal')).hide();
             } catch (e) {
                 showToast("Impossible de lire ce fichier.", "warn");
             }
@@ -906,7 +906,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <p><strong>N'aime pas :</strong> ${(s.dislikes || []).join(", ") || "—"}</p>
                     <p><strong>Ultime (coup critique) :</strong> ${s.power}</p>
                     ${encyclopediaProgressHtml(key)}
-                    <button class="action-btn" onclick="switchActiveSpecies('${key}'); $('#encyclopediaModal').modal('hide');">🐰 Choisir ce lapin</button>
+                    <button class="action-btn" onclick="switchActiveSpecies('${key}'); bootstrap.Modal.getOrCreateInstance(document.querySelector('#encyclopediaModal')).hide();">🐰 Choisir ce lapin</button>
                     <p class="entry-quote">« ${s.quote} »</p>
                 </div>
             </div>`;
@@ -1030,7 +1030,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         document.getElementById("encyclopediaBtn").addEventListener("click", () => {
             showEncyclopediaTab("rabbits");
-            $("#encyclopediaModal").modal("show");
+            bootstrap.Modal.getOrCreateInstance(document.querySelector('#encyclopediaModal')).show();
         });
 
         // ============================================================
@@ -1222,7 +1222,8 @@ document.addEventListener("DOMContentLoaded", () => {
             let ev = puz.event;
             if (ev === undefined || ev === null) {
                 // Anciennes données sans champ "event" : déduction depuis l'id
-                if (puz.id === "noel") ev = "noel";
+                if (puz.id === "reve") ev = ["noel", "halloween", "paques"];
+                else if (puz.id === "noel") ev = "noel";
                 else if (["pacques", "paques"].includes(puz.id)) ev = "paques";
                 else if (["halloween", "fantome", "frankenstein", "lapin-bete", "squelette", "vampire-vs-nonne"].includes(puz.id)) ev = "halloween";
                 else ev = "";
@@ -1489,14 +1490,20 @@ document.addEventListener("DOMContentLoaded", () => {
             pr.attackFragments = Math.max(0, Math.floor(Number(pr.attackFragments) || 0));
             return pr;
         }
+        // Chaque technique nécessite toutes les précédentes à 5/5.
+        function isTechniqueUnlocked(r, index) {
+            return Number.isInteger(index) && index >= 0 && index < raritySkillCount(r.sp.rarity)
+                && Array.from({length:index}, (_,i) => r.pr.attackLevels[i] || 0).every(level => level >= 5);
+        }
         function allAttacksMaxed(key) { return ensureTechniqueProgress(key).attackLevels.every(n => n >= 5); }
         function attackListHtml(key, editable = true) {
             const sp = getSpecies()[key] || {}, pr = ensureTechniqueProgress(key);
             const owned = game.ownedSpecies?.includes(key);
             const entries = pr.attackLevels.map((level,index) => {
+                const unlocked = isTechniqueUnlocked({sp,pr}, index);
                 const t = techniqueFor({key,sp,pr},index);
                 const effect = t.kind === 'heal' ? 'Soin et dégâts' : t.kind === 'guard' ? 'Dégâts et protection' : 'Dégâts';
-                return `<div style="padding:8px 0;border-bottom:1px solid #79558b33"><strong>${index+1}. ${t.name}</strong> <small>· ${effect} · amélioration ${level}/5</small>${editable && owned ? `<button type="button" class="ghost-btn" onclick="upgradeRabbitAttack('${key}',${index})" ${!pr.attackFragments || level>=5 ? 'disabled' : ''}>${level>=5 ? 'MAX' : 'Améliorer · 1 fragment'}</button>` : ''}</div>`;
+                return `<div style="padding:8px 0;border-bottom:1px solid #79558b33"><strong>${index+1}. ${t.name}</strong> <small>· ${effect} · amélioration ${level}/5${!unlocked ? ' · 🔒 Termine les attaques précédentes à 5/5' : ''}</small>${editable && owned ? `<button type="button" class="ghost-btn" onclick="upgradeRabbitAttack('${key}',${index})" ${!unlocked || !pr.attackFragments || level>=5 ? 'disabled' : ''}>${!unlocked ? 'Verrouillée' : level>=5 ? 'MAX' : 'Améliorer · 1 fragment'}</button>` : ''}</div>`;
             }).join('');
             return `<div class="lapin-attack-list"><strong>⚔️ ${pr.attackLevels.length} attaque${pr.attackLevels.length>1?'s':''}</strong>${owned?`<p>💎 ${pr.attackFragments} fragment${pr.attackFragments>1?'s':''} disponible${pr.attackFragments>1?'s':''} pour ce lapin.</p>`:''}${entries}<p><small>🌟 Ultime : ${powerName(sp)} · hors de la liste, nécessite 100 % de charge.</small></p></div>`;
         }
@@ -1504,6 +1511,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!game.ownedSpecies?.includes(key) || !Number.isInteger(index)) return;
             const pr = ensureTechniqueProgress(key);
             if (index<0 || index>=pr.attackLevels.length || !pr.attackFragments || pr.attackLevels[index]>=5) return;
+            if (!isTechniqueUnlocked({sp:getSpecies()[key],pr}, index)) return;
             pr.attackFragments--; pr.attackLevels[index]++;
             const t = techniqueFor({key,sp:getSpecies()[key],pr},index);
             autoSave(); showToast(`✨ ${t.name} améliorée : ${pr.attackLevels[index]}/5`, 'levelup');
@@ -1515,7 +1523,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!pending) return '';
             const sp = getSpecies()[pending.speciesKey]; if (!sp) return '';
             const pr = ensureTechniqueProgress(pending.speciesKey);
-            const options = pr.attackLevels.map((level,i) => `<option value="${i}" ${level>=5?'disabled':''}>${techniqueFor({key:pending.speciesKey,sp,pr},i).name} · ${level}/5${level>=5?' · MAX':''}</option>`).join('');
+            const options = pr.attackLevels.map((level,i) => isTechniqueUnlocked({sp,pr}, i) && level < 5 ? `<option value="${i}">${techniqueFor({key:pending.speciesKey,sp,pr},i).name} · ${level}/5</option>` : '').join('');
             return `<div class="duplicate-choice"><div class="duplicate-title">✨ Doublon : ${sp.name}</div><p>Recycle-le ou reçois un fragment pour ce lapin.</p><div class="action-row"><button class="action-btn" onclick="resolveDuplicate('carrots')">🥕 +${pending.carrotReward} carottes</button><button class="action-btn adventure" onclick="resolveDuplicate('fragment')">💎 Garder le fragment</button></div>${!allAttacksMaxed(pending.speciesKey)?`<label>Attaque à améliorer <select id="duplicateAttackTarget">${options}</select></label><button class="action-btn adventure" onclick="resolveDuplicate('attack',Number(document.getElementById('duplicateAttackTarget').value))">⚔️ Améliorer cette attaque</button>`:'<p>Toutes les attaques sont au maximum.</p>'}<small>Les fragments conservés se dépensent dans la fiche du lapin.</small></div>`;
         }
         window.resolveDuplicate = function(choice,index) {
@@ -1523,6 +1531,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!['carrots','fragment','attack'].includes(choice)) return;
             const pr = ensureTechniqueProgress(pending.speciesKey);
             if (choice === 'attack' && (!Number.isInteger(index) || index<0 || index>=pr.attackLevels.length || pr.attackLevels[index]>=5)) return;
+            if (choice === 'attack' && !isTechniqueUnlocked({sp:getSpecies()[pending.speciesKey],pr}, index)) return;
             if (choice === 'carrots') { game.carrots += pending.carrotReward; showToast(`🥕 +${pending.carrotReward} carottes`, 'success'); }
             else {
                 pr.attackFragments++;
@@ -2164,9 +2173,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (r.charge >= 100) window.tacticalAction('ultimate');
                 else {
                     const count = raritySkillCount(r.sp.rarity);
-                    const unlocked = true;
+
                     let best = 0;
-                    if (unlocked) for (let i = 1; i < count; i++) {
+                    for (let i = 1; i < count; i++) {
+                        if (!isTechniqueUnlocked(r, i)) continue;
                         const t = techniqueFor(r, i);
                         if (t.kind === 'heal' && r.hp < r.maxHp * .45) { best = i; break; }
                         if (t.kind === 'damage' && r.power*t.mult+r.pr.attackLevels[i]*3 > r.power*techniqueFor(r,best).mult+r.pr.attackLevels[best]*3) best = i;
@@ -2236,7 +2246,7 @@ document.addEventListener("DOMContentLoaded", () => {
         function renderTacticalFight(message){
             const f=tacticalFight;if(!f)return;if(!f.team.some(x=>x.hp>0)){finishTacticalFight(false);return;}if(f.team[f.active]?.hp<=0)f.active=nextLivingIndex(f,f.active);const r=f.team[f.active];
             const skillN=raritySkillCount(r.sp.rarity);
-            const skills=Array.from({length:skillN},(_,i)=>{const t=techniqueFor(r,i);return `<button class="fight-command" onclick="tacticalAction('skill',${i})" >✨ ${t.name} · ${r.pr.attackLevels[i]}/5</button>`}).join('');
+            const skills=Array.from({length:skillN},(_,i)=>{if (!isTechniqueUnlocked(r,i)) return ""; const t=techniqueFor(r,i);return `<button class="fight-command" onclick="tacticalAction('skill',${i})" >✨ ${t.name}</button>`}).join('');
             const fighters=f.team.map((x,i)=>`<div class="team-fighter battle-slot-${i+1} ${i===f.active?'active-turn':''} ${x.hp<=0?'ko':''}" data-fighter="${i}"><div class="turn-marker">${i===f.active?'▼ TOUR':''}</div><img class="battle-sprite team-rabbit-sprite" src="${x.sp.coteImg||x.sp.faceImg||'./assets/img/species/mystery.svg'}" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';"><strong>${rabbitDisplayName(x)}</strong><small>${Math.max(0,x.hp)} / ${x.maxHp} PV</small><div class="mini-hp"><i style="width:${Math.max(0,x.hp)/x.maxHp*100}%"></i></div></div>`).join('');
             gameArea.innerHTML=`<div class="fight-stage tactical"><div class="fight-hud-side player"><div class="fight-name">🐰 Tour de ${rabbitDisplayName(r)}</div><div class="fight-hp"><div class="fight-hp-fill player-hp" style="width:${r.hp/r.maxHp*100}%"></div></div><div class="fight-hp-text">${Math.max(0,r.hp)} / ${r.maxHp} PV</div><div class="fight-crit-label">🌟 Critique ${Math.round(r.charge)}%</div><div class="fight-crit"><div class="fight-crit-fill player-crit-fill" style="width:${r.charge}%"></div></div></div><div class="fight-hud-side boss"><div class="fight-name">🥕 ${f.boss.name}</div><div class="fight-hp"><div class="fight-hp-fill boss-hp" style="width:${f.bossHp/f.bossMaxHp*100}%"></div></div><div class="fight-hp-text">${Math.max(0,f.bossHp)} / ${f.bossMaxHp} PV</div><div class="fight-crit-label">🌟 Critique ${Math.round(f.bossCharge)}%</div><div class="fight-crit"><div class="fight-crit-fill" style="width:${f.bossCharge}%"></div></div></div><div class="team-battlefield"><div class="team-fighters">${fighters}</div><div class="vs-mark">⚔️</div><div class="boss-battle-slot"><img class="battle-sprite boss-sprite" src="${f.boss.coteImg||f.boss.faceImg}" onerror="this.onerror=null;this.src='./assets/img/bosses/mystery_boss.svg';"><strong>${f.boss.name}</strong></div></div><div id="fightLog" class="fight-log">Tour ${f.turn} · ${message}</div><div class="fight-command-grid">${skills}${r.charge>=100?`<button class="fight-command ultimate" onclick="tacticalAction('ultimate')">🌟 ${ultimateName(r)}</button>`:''}<button id="fightModeToggle" class="fight-command" onclick="setFightMode(tacticalFightMode())">${f.auto?'⏸ Reprendre en manuel':'▶ Combat automatique'}</button><label>Vitesse <select onchange="setFightSpeed(this.value)"><option value="1" ${f.speed===1?'selected':''}>×1</option><option value="3" ${f.speed===3?'selected':''}>×3</option></select></label></div></div>`;
             queueAutoFight();
@@ -2246,7 +2256,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const f=tacticalFight;if(!f||f.locked)return;const r=f.team[f.active];
             if (!['attack','skill','ultimate'].includes(type)) return;
             if (type==='ultimate' && r.charge<100) return;
-            if (type==='skill' && (!Number.isInteger(index) || index<0 || index>=raritySkillCount(r.sp.rarity))) return;
+            if (type==='skill' && !isTechniqueUnlocked(r, index)) return;
             clearTimeout(autoFightTimer);f.locked=true;const name=rabbitDisplayName(r);let dmg=0,msg='',heal=0;
             const sprite=gameArea.querySelector(`[data-fighter="${f.active}"] .team-rabbit-sprite`),bossSprite=gameArea.querySelector('.boss-sprite');
             if(type==='attack'){dmg=Math.round(r.power*.85+Math.random()*7);r.charge=Math.min(100,r.charge+criticalConfig(r.sp).chargePerTurn);msg=`🐰 ${name} utilise Coup de patte ! — ${dmg} dégâts.`;playSfx('attack');}
@@ -2533,7 +2543,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // ============================================================
         document.getElementById("renameBtn").addEventListener("click", () => {
             document.getElementById("renameInput").value = currentRabbitName();
-            $("#renameModal").modal("show");
+            bootstrap.Modal.getOrCreateInstance(document.querySelector('#renameModal')).show();
         });
         document.getElementById("renameConfirmBtn").addEventListener("click", () => {
             const val = document.getElementById("renameInput").value.trim();
@@ -2555,7 +2565,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 autoSave();
             }
-            $("#renameModal").modal("hide");
+            bootstrap.Modal.getOrCreateInstance(document.querySelector('#renameModal')).hide();
         });
 
         // ============================================================

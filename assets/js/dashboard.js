@@ -376,7 +376,8 @@ document.addEventListener("DOMContentLoaded", () => {
     function puzzleEventValue(puz) {
         let ev = puz.event;
         if (ev === undefined || ev === null) {
-            if (puz.id === "noel") ev = "noel";
+            if (puz.id === "reve") ev = ["noel", "halloween", "paques"];
+            else if (puz.id === "noel") ev = "noel";
             else if (["pacques", "paques"].includes(puz.id)) ev = "paques";
             else if (["halloween", "fantome", "frankenstein", "lapin-bete", "squelette", "vampire-vs-nonne"].includes(puz.id)) ev = "halloween";
             else ev = "";
