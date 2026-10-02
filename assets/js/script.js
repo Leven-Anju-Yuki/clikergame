@@ -200,6 +200,70 @@ document.addEventListener("DOMContentLoaded", () => {
         function ensureNewSystems() {
             game.records = { eggsOpened: 0, eggsBought: 0, bossesDefeated: 0, agilityPlayed: 0, puzzlesCompleted: 0, ...(game.records || {}) };
             game.audio = { muted: false, ambience: true, sfx: true, ...(game.audio || {}) };
+            window.LapinousAchievements.ensure(game);
+        }
+
+        function recordAchievement(metric, amount = 1, dailyAmount = amount) {
+            window.LapinousAchievements.record(game, metric, amount, new Date(), dailyAmount);
+        }
+
+        let achievementTab = 'daily';
+        function achievementPanelHtml() {
+            const entries = window.LapinousAchievements.list(game);
+            const rows = list => list.map(a => `<article class="achievement-row ${a.claimed ? 'claimed' : a.value >= a.target ? 'ready' : ''}">
+                <div><span class="achievement-status">${a.claimed ? '✓ Accompli' : a.value >= a.target ? '🎁 Récompense disponible' : 'En cours'}${a.step ? ` · Palier ${a.step}/${a.steps}` : ''}</span><strong>${a.title}</strong><small>${a.text || 'Objectif permanent'}${a.day && !entries.today.includes(a) ? ` · ${a.day}` : ''}</small>
+                <progress max="${a.target}" value="${a.value}" aria-label="${a.title}"></progress><small>${a.value} / ${a.target}</small></div>
+                <button type="button" class="ghost-btn" data-achievement="${a.id}" data-day="${a.day || ''}" ${a.claimed || a.value < a.target ? 'disabled' : ''}>${a.claimed ? '✓ Récupéré' : a.value >= a.target ? `Récupérer ${a.reward} 🥕` : `${a.reward} 🥕`}</button>
+                </article>`).join('');
+            return `<section class="achievement-section" data-records-panel="daily"><h3>☀️ Défis du jour</h3><p>Renouvelés à minuit, selon l’heure de ton appareil. Les récompenses acquises restent récupérables.</p>${rows(entries.today)}
+                ${entries.pending.length ? `<h3>🎁 Récompenses des jours précédents</h3>${rows(entries.pending)}` : ''}</section>
+                <section class="achievement-section" data-records-panel="longterm"><h3>🌟 Grands succès</h3><p>Récupère ta récompense pour révéler le palier suivant. Les jeux du Salon et l’agilité du Jardin comptent.</p>${rows(entries.permanent)}</section>`;
+        }
+
+        function attachAchievementPanel(overlay) {
+            const card = overlay.querySelector('.records-card');
+            card.setAttribute('role', 'dialog');
+            card.setAttribute('aria-modal', 'true');
+            card.setAttribute('aria-label', 'Succès et records');
+            const grid = card.querySelector('.records-grid');
+            const nav = document.createElement('nav');
+            nav.className = 'records-tabs';
+            nav.setAttribute('aria-label', 'Catégories des succès');
+            nav.innerHTML = [['daily','☀️ Par jour'],['longterm','🌟 Long terme'],['records','🏆 Records']].map(([id,label]) => `<button type="button" data-records-tab="${id}" aria-controls="records-panel-${id}">${label}</button>`).join('');
+            const content = document.createElement('div');
+            content.className = 'records-body';
+            content.innerHTML = achievementPanelHtml() + `<section data-records-panel="records"><h3>Tous tes records</h3><p class="achievement-total">Récompenses récupérées : ${game.achievements.earnedCarrots} 🥕 · ${Object.keys(game.achievements.days).length} jours enregistrés</p></section>`;
+            content.querySelector('[data-records-panel="records"]').prepend(grid);
+            card.append(nav, content);
+            const selectTab = id => {
+                achievementTab = id;
+                nav.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.recordsTab === id)));
+                content.querySelectorAll('[data-records-panel]').forEach(p => {
+                    p.id = `records-panel-${p.dataset.recordsPanel}`;
+                    p.hidden = p.dataset.recordsPanel !== id;
+                });
+                content.scrollTop = 0;
+            };
+            selectTab(achievementTab);
+            overlay.addEventListener('click', e => {
+                const tab = e.target.closest('[data-records-tab]');
+                if (tab) { selectTab(tab.dataset.recordsTab); return; }
+                const button = e.target.closest('[data-achievement]');
+                if (!button || button.disabled) return;
+                const reward = window.LapinousAchievements.claim(game, button.dataset.achievement, button.dataset.day || null);
+                if (!reward) return;
+                autoSave();
+                showToast(`Succès récupéré : +${reward} carottes !`, 'success');
+                // Met à jour le solde sans interrompre un combat ou un mini-jeu.
+                document.querySelectorAll('.carrot-counter').forEach(balance => {
+                    balance.textContent = balance.textContent.includes('🥚')
+                        ? `🥕 ${game.carrots} · 🥚 ${game.eggs}` : `🥕 ${game.carrots} carottes`;
+                });
+                const scroll = content.scrollTop;
+                overlay.remove(); window.showLapinousRecords();
+                document.querySelector('.records-body').scrollTop = scroll;
+            });
+            autoSave();
         }
 
         const AUDIO_FILES = {
@@ -326,6 +390,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const AUTOSAVE_KEY = "lapinous_autosave";
 
         function serializeGame() {
+            window.LapinousAchievements.ensure(game);
             return JSON.stringify({ ...game, savedAt: Date.now() });
         }
         function autoSave() {
@@ -1449,6 +1514,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const st = puzzleState(puz.id);
             const wasCompleted = st.completed;
             st.completed = true;
+            recordAchievement('gamesWon');
             if (!wasCompleted) { ensureNewSystems(); game.records.puzzlesCompleted += 1; }
             st.highestCompletedLevel = Math.max(st.highestCompletedLevel, levelIndex);
             const previousBest = st.bestMoves[levelIndex];
@@ -1640,7 +1706,7 @@ document.addEventListener("DOMContentLoaded", () => {
             updateGameArea(currentZone);
         }
 
-        window.showLapinousRecords=function(){ensureNewSystems();const owned=(game.ownedSpecies||[]).length;const maxLevel=Math.max(1,...Object.values(game.progress||{}).map(p=>Number(p.currentLevel)||1));const overlay=document.createElement('div');overlay.className='records-overlay';overlay.innerHTML=`<div class="records-card"><button class="records-close" aria-label="Fermer">×</button><h2>🏆 Records Lapinous</h2><div class="records-grid"><div><strong>${owned}</strong><span>Lapins collectionnés</span></div><div><strong>${game.records.eggsOpened}</strong><span>Œufs ouverts</span></div><div><strong>${game.records.eggsBought}</strong><span>Œufs achetés</span></div><div><strong>${game.records.bossesDefeated}</strong><span>Boss vaincus</span></div><div><strong>${game.records.agilityPlayed}</strong><span>Parties d’agilité</span></div><div><strong>${game.records.puzzlesCompleted}</strong><span>Jeux/puzzles terminés</span></div><div><strong>${maxLevel}</strong><span>Meilleur niveau</span></div><div><strong>${game.carrots}</strong><span>Carottes actuelles</span></div></div></div>`;document.body.appendChild(overlay);overlay.onclick=e=>{if(e.target===overlay||e.target.classList.contains('records-close'))overlay.remove();};};
+        window.showLapinousRecords=function(){document.querySelector('.records-overlay')?.remove();ensureNewSystems();const owned=(game.ownedSpecies||[]).length;const maxLevel=Math.max(1,...Object.values(game.progress||{}).map(p=>Number(p.currentLevel)||1));const overlay=document.createElement('div');overlay.className='records-overlay';overlay.innerHTML=`<div class="records-card"><button class="records-close" aria-label="Fermer">×</button><h2>🏆 Succès et records</h2><div class="records-grid"><div><strong>${owned}</strong><span>Lapins collectionnés</span></div><div><strong>${game.records.eggsOpened}</strong><span>Œufs ouverts</span></div><div><strong>${game.records.eggsBought}</strong><span>Œufs achetés</span></div><div><strong>${game.records.bossesDefeated}</strong><span>Boss vaincus</span></div><div><strong>${game.records.agilityPlayed}</strong><span>Parties d’agilité</span></div><div><strong>${game.records.puzzlesCompleted}</strong><span>Jeux/puzzles terminés</span></div><div><strong>${maxLevel}</strong><span>Meilleur niveau</span></div><div><strong>${game.carrots}</strong><span>Carottes actuelles</span></div></div></div>`;document.body.appendChild(overlay);attachAchievementPanel(overlay);overlay.onclick=e=>{if(e.target===overlay||e.target.classList.contains('records-close'))overlay.remove();};};
         function renderRecordsButton(){let b=document.getElementById('lapinousRecordsBtn');if(!b){b=document.createElement('button');b.id='lapinousRecordsBtn';b.className='records-toggle';b.textContent='🏆';b.title='Records';b.onclick=window.showLapinousRecords;document.body.appendChild(b);}}
 
         // ============================================================
@@ -1657,6 +1723,10 @@ document.addEventListener("DOMContentLoaded", () => {
         function checkLevelUp() {
             while (progress().currentLevel < 100 && progress().friendshipTotal >= progress().currentLevel * 25) {
                 progress().currentLevel += 1;
+                if (game.species === "az" && progress().currentLevel % 10 === 0) {
+                    ensureTechniqueProgress("az").attackFragments += 1;
+                    showToast(`💎 Azazel atteint le niveau ${progress().currentLevel} : +1 fragment pour améliorer ses attaques !`, "levelup");
+                }
                 if (game.species === "az" && progress().currentLevel % 20 === 0) {
                     showToast(`🌟 Azazel atteint le palier ${progress().currentLevel} : sa compétence secrète devient plus puissante !`, "levelup");
                 }
@@ -1744,7 +1814,7 @@ document.addEventListener("DOMContentLoaded", () => {
         window.flipMemory = function(i){
             const st=memoryState;if(!st||st.lock) return; const c=st.cards[i]; if(c.open||c.found)return; c.open=true;
             if(st.first===null){st.first=i;renderMemory();return;} st.moves++; const a=st.cards[st.first];
-            if(a.key===c.key){a.found=c.found=true;st.first=null;renderMemory(); if(st.cards.every(x=>x.found)){ensureMinigameProgress().memory.completed++; gainFriendship(6); game.records.puzzlesCompleted += 1; showToast('Memory terminé : +6 💛','success'); autoSave();}} else {st.lock=true;renderMemory();setTimeout(()=>{a.open=c.open=false;st.first=null;st.lock=false;renderMemory();},700);}
+            if(a.key===c.key){a.found=c.found=true;st.first=null;renderMemory(); if(st.cards.every(x=>x.found)){ensureMinigameProgress().memory.completed++; recordAchievement('gamesWon'); gainFriendship(6); game.records.puzzlesCompleted += 1; showToast('Memory terminé : +6 💛','success'); autoSave();}} else {st.lock=true;renderMemory();setTimeout(()=>{a.open=c.open=false;st.first=null;st.lock=false;renderMemory();},700);}
         };
 
         // ---- Lapidoku 4x4 ----
@@ -1755,7 +1825,7 @@ document.addEventListener("DOMContentLoaded", () => {
         };
         function renderLapidoku(){if(!lapidokuState)return;gameArea.innerHTML=`<div class="console-panel"><div class="console-title">🔢 Lapidoku</div><p class="agility-hint">Complète la grille 4×4 : chaque ligne, colonne et bloc 2×2 doit contenir 1, 2, 3 et 4.</p><div class="lapidoku-grid">${lapidokuState.board.map((v,i)=>`<button class="lapidoku-cell ${lapidokuState.holes.has(i)?'editable':'fixed'}" ${lapidokuState.holes.has(i)?`onclick="cycleLapidoku(${i})"`:'disabled'}>${v||'·'}</button>`).join('')}</div><button class="action-btn" onclick="checkLapidoku()">✓ Vérifier</button><button class="ghost-btn" onclick="openGameConsole()">← Console</button></div>`;}
         window.cycleLapidoku=function(i){if(!lapidokuState?.holes.has(i))return;lapidokuState.board[i]=(lapidokuState.board[i]%4)+1;renderLapidoku();};
-        window.checkLapidoku=function(){if(!lapidokuState)return;const ok=lapidokuState.board.every((v,i)=>v===LAPIDOKU_SOLVED[i]);if(ok){ensureMinigameProgress().lapidoku.completed++;gainFriendship(8);showToast('Lapidoku réussi : +8 💛','success');spawnParticles('💛',6);autoSave();openGameConsole();}else showToast('Il reste des erreurs dans la grille 🐰','warn');};
+        window.checkLapidoku=function(){if(!lapidokuState)return;const ok=lapidokuState.board.every((v,i)=>v===LAPIDOKU_SOLVED[i]);if(ok){ensureMinigameProgress().lapidoku.completed++; lapidokuState = null; recordAchievement('gamesWon');gainFriendship(8);showToast('Lapidoku réussi : +8 💛','success');spawnParticles('💛',6);autoSave();openGameConsole();}else showToast('Il reste des erreurs dans la grille 🐰','warn');};
 
         // ---- Mini-jeu d'agilité : mini-runner ----
         let agilityRAF = null;
@@ -1849,7 +1919,7 @@ document.addEventListener("DOMContentLoaded", () => {
         window.stopAgility = function (finished = false) {
             if (!agilityRun?.running) { refreshCurrentZone(); return; }
             agilityRun.running=false; cancelAnimationFrame(agilityRAF); window.removeEventListener('keydown', agilityKeyHandler);
-            ensureNewSystems(); game.records.agilityPlayed += 1;
+            ensureNewSystems(); recordAchievement('agilityPlayed', 1, Math.floor(agilityRun.distance) >= 20 ? 1 : 0);
             const meters=Math.floor(agilityRun.distance);
             const reward=Math.max(1, Math.min(10, Math.floor(meters/18))) + traitGain('friendship',0) + progress().boosts.friendship;
             gainFriendship(reward);
@@ -2121,7 +2191,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     2,
                     Math.round((boss.difficulty || 20) * 0.3) + Math.floor(Math.random() * 3),
                 );
-                game.carrots += reward; ensureNewSystems(); game.records.bossesDefeated += 1; playSfx("victory");
+                game.carrots += reward; ensureNewSystems(); recordAchievement('bossesDefeated'); playSfx("victory");
                 gainFriendship(3);
                 if (log) log.textContent = `🏆 Victoire ! +${reward} 🥕 et +3 💛`;
                 spawnParticles("🥕", 8);
@@ -2290,7 +2360,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if(!f.team.some(x=>x.hp>0)){finishTacticalFight(false);return;}
             f.active=nextLivingIndex(f,f.active);f.turn++;f.locked=false;renderTacticalFight(`${msg} ${bossMessage} C'est au tour de ${rabbitDisplayName(f.team[f.active])}.`);
         };
-        function finishTacticalFight(win){clearTimeout(autoFightTimer);const f=tacticalFight;if(!f)return;if(win){const reward=Math.max(2,Math.round((f.boss.difficulty||20)*.22));game.carrots+=reward;game.records.bossesDefeated++;f.team.forEach(x=>{const old=game.species;game.species=x.key;gainFriendship(3);game.species=old;});playSfx('victory');showToast(`Victoire ! +${reward} 🥕 · +3 💛 pour l’équipe`,'success');}else {playSfx('defeat');showToast('Ton équipe est K.O. Elle a besoin de repos.','warn');}f.team.forEach(x=>{x.pr.food=Math.max(0,x.pr.food-8);x.pr.energy=Math.max(0,x.pr.energy-12);x.pr.cleanliness=Math.max(0,x.pr.cleanliness-5);});updateStatusBars();autoSave();const key=f.key;tacticalFight=null;gameArea.innerHTML=`<div class="console-panel"><div class="console-title">${win?'🏆 Victoire !':'💤 Défaite'}</div><button class="action-btn" onclick="prepareFight('${key}')">🔁 Rejouer</button><button class="ghost-btn" onclick="openAdventure()">← Boss</button></div>`;}
+        function finishTacticalFight(win){clearTimeout(autoFightTimer);const f=tacticalFight;if(!f)return;if(win){const reward=Math.max(2,Math.round((f.boss.difficulty||20)*.22));game.carrots+=reward;recordAchievement('bossesDefeated');f.team.forEach(x=>{const old=game.species;game.species=x.key;gainFriendship(3);game.species=old;});playSfx('victory');showToast(`Victoire ! +${reward} 🥕 · +3 💛 pour l’équipe`,'success');}else {playSfx('defeat');showToast('Ton équipe est K.O. Elle a besoin de repos.','warn');}f.team.forEach(x=>{x.pr.food=Math.max(0,x.pr.food-8);x.pr.energy=Math.max(0,x.pr.energy-12);x.pr.cleanliness=Math.max(0,x.pr.cleanliness-5);});updateStatusBars();autoSave();const key=f.key;tacticalFight=null;gameArea.innerHTML=`<div class="console-panel"><div class="console-title">${win?'🏆 Victoire !':'💤 Défaite'}</div><button class="action-btn" onclick="prepareFight('${key}')">🔁 Rejouer</button><button class="ghost-btn" onclick="openAdventure()">← Boss</button></div>`;}
 
         // ---- Boutique à œufs (Salon) ----
         const EGG_IMAGES = Object.fromEntries(['commun','rare','epique','legendaire','mythique','divin'].map(rarity => [rarity, `./assets/img/oeuf/${rarity}.png`]));
@@ -2358,7 +2428,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
             game.carrots -= EGG_COST;
-            game.eggs += 1; ensureNewSystems(); game.records.eggsBought += 1; playSfx("purchase");
+            game.eggs += 1; ensureNewSystems(); recordAchievement('eggsBought'); playSfx("purchase");
             showToast("Œuf acheté ! 🥚", "success");
             spawnParticles("🥚", 4);
             autoSave();
@@ -2378,7 +2448,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
             openingEggs = true;
-            game.eggs -= 1; ensureNewSystems(); game.records.eggsOpened += 1;
+            game.eggs -= 1; ensureNewSystems(); recordAchievement('eggsOpened');
             const result = rollEgg();
             const s = getSpecies()[result.speciesKey];
             await eggRevealAnimation(s);
@@ -2431,7 +2501,7 @@ document.addEventListener("DOMContentLoaded", () => {
             openingEggs = true;
             ensureNewSystems();
             const results = Array.from({length:10}, () => rollEgg());
-            game.eggs -= 10; game.records.eggsOpened += 10;
+            game.eggs -= 10; recordAchievement('eggsOpened', 10);
             const rewards = {commun:5,rare:10,epique:18,legendaire:30,mythique:45,divin:70,secret:70};
             game.pendingDuplicates = game.pendingDuplicates || [];
             const cards = results.map(result => {
@@ -2841,7 +2911,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (existing) { existing.remove(); return; }
             const panel = document.createElement("div");
             panel.id = "adminTestPanel";
-            panel.innerHTML = `<strong>🛠 Tests du jeu</strong><button data-test="money">+100 000 🥕</button><button data-test="eggs">+100 œufs</button><button data-test="care">Besoins à 100 %</button><button data-test="collection">Tous les lapins</button><button data-test="skills">+30 fragments par lapin</button><label>Événement <select id="adminEventSelect"><option value="auto">Calendrier normal</option><option value="none">Aucun</option><option value="halloween">Halloween</option><option value="noel">Noël</option><option value="paques">Pâques</option><option value="all">Tous</option></select></label><label>Saison <select id="adminSeasonSelect"><option value="auto">Saison actuelle</option><option value="printemps">Printemps</option><option value="ete">Été</option><option value="automne">Automne</option><option value="hiver">Hiver</option></select></label><label>Lumière <select id="adminTimeSelect"><option value="auto">Heure actuelle</option><option value="jour">Jour</option><option value="nuit">Nuit</option></select></label><small>Les événements ont priorité sur les saisons.</small><button data-test="restore">Restaurer la partie avant les tests</button><button data-test="close">Fermer</button>`;
+            panel.innerHTML = `<strong>🛠 Tests du jeu</strong><button data-test="money">+100 000 🥕</button><button data-test="eggs">+100 œufs</button><button data-test="care">Besoins à 100 %</button><button data-test="collection">Tous les lapins</button><button data-test="level1">Lapin actif : +1 niveau</button><button data-test="level10">Lapin actif : +10 niveaux</button><button data-test="skills">+30 fragments par lapin</button><label>Événement <select id="adminEventSelect"><option value="auto">Calendrier normal</option><option value="none">Aucun</option><option value="halloween">Halloween</option><option value="noel">Noël</option><option value="paques">Pâques</option><option value="all">Tous</option></select></label><label>Saison <select id="adminSeasonSelect"><option value="auto">Saison actuelle</option><option value="printemps">Printemps</option><option value="ete">Été</option><option value="automne">Automne</option><option value="hiver">Hiver</option></select></label><label>Lumière <select id="adminTimeSelect"><option value="auto">Heure actuelle</option><option value="jour">Jour</option><option value="nuit">Nuit</option></select></label><small>Les événements ont priorité sur les saisons.</small><button data-test="restore">Restaurer la partie avant les tests</button><button data-test="close">Fermer</button>`;
             document.body.appendChild(panel);
             panel.querySelector('#adminEventSelect').value = adminEvent;
             panel.querySelector('#adminSeasonSelect').value = adminSeason;
@@ -2860,6 +2930,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 if (action === "money") game.carrots += 100000;
                 if (action === "eggs") game.eggs += 100;
+                if (action === "level1" || action === "level10") {
+                    const pr = progress();
+                    const increase = Math.min(action === "level10" ? 10 : 1, 100 - pr.currentLevel);
+                    if (increase <= 0) {
+                        showToast("Ce lapin est déjà au niveau 100.", "warn");
+                        return;
+                    }
+                    // Conserve l'avancement dans le niveau et applique les récompenses habituelles.
+                    const gained = increase * 25;
+                    pr.friendshipTotal += gained;
+                    pr.friendship = Math.min(100, pr.friendship + gained);
+                    checkLevelUp();
+                }
                 if (action === "collection") {
                     game.ownedSpecies = Object.keys(getSpecies());
                     game.ownedSpecies.forEach(key => progressForSpecies(key));

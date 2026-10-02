@@ -301,6 +301,14 @@ Le projet continue d'évoluer. Parmi les pistes déjà prévues :
 - événements saisonniers supplémentaires ;222
 - sons et ambiances propres aux événements.
 
+## 🏆 Succès et récompenses
+
+Le bouton 🏆 conserve les records et donne accès à cinq défis quotidiens : revenir jouer, réussir un jeu, vaincre un boss, parcourir au moins 20 m en agilité et ouvrir un œuf. Ils rapportent chacun de 3 à 8 carottes à récupérer manuellement et se renouvellent à minuit selon l’heure de l’appareil.
+
+Les grands succès récompensent la collection, les niveaux, les victoires, les jeux réussis et les œufs ouverts, avec des paliers allant jusqu’à 200 carottes. Chaque palier se récupère une seule fois par partie. Les records existants servent aux objectifs permanents ; les défis quotidiens comptent les actions réalisées depuis leur ajout.
+
+L’historique des jours, la progression et les récompenses récupérées sont conservés dans les sauvegardes et les exports JSON. Une récompense quotidienne gagnée reste récupérable les jours suivants. Charger une ancienne sauvegarde restaure l’état des succès de cette sauvegarde.
+
 ## 👩‍💻 Autrice
 
 - [Florie](https://github.com/Leven-Anju-Yuki) — développeuse principale
