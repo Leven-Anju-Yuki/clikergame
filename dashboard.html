@@ -100,6 +100,11 @@
                         <canvas id="chart-event-paques"></canvas>
                         <div class="slice-detail" id="detail-chart-event-paques"></div>
                     </div>
+                    <div class="chart-box">
+                        <h3>🏮 Lapins du Nouvel An chinois</h3>
+                        <canvas id="chart-event-nouvel_an_chinois"></canvas>
+                        <div class="slice-detail" id="detail-chart-event-nouvel_an_chinois"></div>
+                    </div>
                 </div>
                 <p class="panel-desc">
                     💡 Clique sur une part de camembert pour voir la liste de ce qu'elle contient,
@@ -144,6 +149,7 @@
                     <label
                         >🐣 Pâques (±j) <input type="number" id="window-paques" min="0" max="60"
                     /></label>
+                    <label>🏮 Nouvel An chinois (±j) <input type="number" id="window-nouvel_an_chinois" min="0" max="60" /></label>
                 </div>
                 <button
                     id="saveEventWindowsBtn"
@@ -193,6 +199,7 @@
                         <option value="noel">🎄 Noël</option>
                         <option value="paques">🐣 Pâques</option>
                         <option value="multi">🎉 Multi-saisons</option>
+                        <option value="nouvel_an_chinois">🏮 Nouvel An chinois</option>
                     </select>
                 </div>
                 <div class="pm-table-wrap">

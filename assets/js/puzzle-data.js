@@ -30,7 +30,12 @@ window.LapinousPuzzlesReady = fetch("./lapinous-puzzles.json", { cache: "no-stor
         JSON_PUZZLE_LEVELS = [];
     });
 
-window.getPuzzleCatalog = () => loadCustomPuzzles() || JSON_PUZZLES;
+window.getPuzzleCatalog = () => (loadCustomPuzzles() || JSON_PUZZLES).map(puzzle => {
+    // Conserve les anciens catalogues du Dashboard après le rangement des images.
+    const folders = { 'les_communs.png':'de_base', 'les_aventuriers.png':'de_base', 'les_scientifiques.png':'de_base', 'Nature.png':'de_base', 'voie_lactee.png':'de_base', 'Noel.png':'Noel', 'pacques.png':'Paques', 'reve.png':'Multi_saisons', 'fantome.png':'Halloween', 'frankenshtein.png':'Halloween', 'lapin_bete.png':'Halloween', 'Squelette.png':'Halloween', 'VampireVSNonne.png':'Halloween' };
+    const match = puzzle.image?.match(/^\.\/assets\/img\/puzzle\/([^/]+)$/);
+    return match && folders[match[1]] ? { ...puzzle, image: `./assets/img/puzzle/${folders[match[1]]}/${match[1]}` } : puzzle;
+});
 window.getPuzzleLevels = () => loadCustomPuzzleLevels() || JSON_PUZZLE_LEVELS;
 window.saveCustomPuzzles = saveCustomPuzzles;
 window.saveCustomPuzzleLevels = saveCustomPuzzleLevels;

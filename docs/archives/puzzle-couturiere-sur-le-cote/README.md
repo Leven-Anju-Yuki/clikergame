@@ -1,0 +1,1 @@
+﻿Version fonctionnelle avant l’essai du déplacement de la couturière jusqu’aux pièces. Copies de référence de script.js et style.css : pour revenir en arrière, rétablir uniquement les fonctions et styles de la couturière, afin de conserver les autres évolutions du projet.

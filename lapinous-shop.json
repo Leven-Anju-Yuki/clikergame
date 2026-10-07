@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "cashier": {
+    "name": "Le caissier du terrier",
+    "presentation": "./assets/img/magasin/caissier_presentation.png",
+    "thanks": "./assets/img/magasin/caissier_merci.png",
+    "flipPresentation": false,
+    "placeholder": false
+  },
+  "items": [
+    {
+      "id": "energy",
+      "name": "Infusion douce",
+      "emoji": "🍵",
+      "description": "À conserver dans ton inventaire. Remplit toute la barre de sommeil/énergie du lapin actif quand tu utilises ce soin.",
+      "price": 15,
+      "kind": "restore",
+      "stat": "energy",
+      "image": "./assets/img/magasin/produits/infusion_douce.png"
+    },
+    {
+      "id": "cleanliness",
+      "name": "Bain de pétales",
+      "emoji": "🫧",
+      "description": "À conserver dans ton inventaire. Remplit toute la barre de propreté du lapin actif quand tu utilises ce soin.",
+      "price": 15,
+      "kind": "restore",
+      "stat": "cleanliness",
+      "image": "./assets/img/magasin/produits/bain_petales.png"
+    },
+    {
+      "id": "food",
+      "name": "Panier gourmand",
+      "emoji": "🥕",
+      "description": "À conserver dans ton inventaire. Remplit toute la barre de nourriture du lapin actif quand tu utilises ce soin.",
+      "price": 15,
+      "kind": "restore",
+      "stat": "food",
+      "image": "./assets/img/magasin/produits/panier_gourmand.png"
+    },
+    {
+      "id": "fragments",
+      "name": "Extracteur de fragments",
+      "emoji": "🛠️",
+      "description": "Retire les améliorations de la compétence choisie. Ses fragments redeviennent disponibles pour améliorer une autre compétence débloquée de ce même lapin.",
+      "price": 30,
+      "kind": "reset",
+      "image": "./assets/img/magasin/produits/extracteur_fragments.png"
+    }
+  ],
+  "carrotPurchasesEnabled": false
+}

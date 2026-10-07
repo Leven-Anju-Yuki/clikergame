@@ -4,6 +4,13 @@ Lapinous est un jeu de collection et de gestion de lapins virtuels. Le joueur ad
 
 Le projet fonctionne comme un petit jeu web responsive, avec un univers visuel composé de plusieurs pièces, une encyclopédie, des événements saisonniers et un Dashboard permettant de gérer le contenu sans modifier directement tout le code.
 
+## Suivi du projet
+
+- [Feuille de route et nouvelles évolutions](A_FAIRE.md)
+- [Audit SEO et améliorations à prévoir](docs/AUDIT_SEO.md)
+- [Anciennes demandes archivées](docs/archives/a-faire/README.md)
+- [Concepts de futurs lapins](liste%20de%20futur%20cr%C3%A9ation/futur_lapin.md) et [futurs boss](liste%20de%20futur%20cr%C3%A9ation/future_boss.md)
+
 ## ✨ Fonctionnalités
 
 - **Adoption** : choisis un lapin commun au démarrage ou découvre certains compagnons particuliers.
@@ -16,7 +23,7 @@ Le projet fonctionne comme un petit jeu web responsive, avec un univers visuel c
 - **Coin jeux dans le Salon** : accès aux mini-jeux depuis un plateau de jeux intégré au décor.
 - **Puzzles** : plusieurs images sont proposées avec différents nombres de pièces. Les puzzles et leurs liens avec les lapins sont gérés dans un JSON séparé.
 - **Progression des puzzles** : il faut terminer un niveau pour accéder au suivant, et terminer un puzzle pour débloquer le suivant.
-- **Mini-jeux prévus** : Memory avec les personnages et Lapidoku.
+- **Memory** : 6 niveaux progressifs (3, 4, 6, 8, 10 et 12 paires), déblocage et records sauvegardés par lapin, animation des paires vers un petit tas sur le côté.
 - **Aventures & combats** : combats contre les boss légumes avec PV, animations d'attaque et jauges de pouvoir critique.
 - **Fatigue de combat** : une défaite, ou une fin de combat dans un état critique, peut faire tomber la nourriture, le sommeil et la propreté à 0.
 - **Pouvoirs** : le champ `power` du contenu décrit le pouvoir spécial / critique du lapin ou du boss.
@@ -62,7 +69,14 @@ Chaque combattant possède :
 
 Les boss utilisent leur propre visuel mystère dans l'Encyclopédie tant qu'ils n'ont pas été rencontrés.
 
+## 🛍️ Magasin
+
+Le bouton 🛍️ près des sauvegardes ouvre le comptoir du terrier : articles de soin pour remplir les barres, extracteur pour récupérer les fragments des compétences, et lapin caissier avec poses de présentation et de remerciement. Catalogue et prix dans `lapinous-shop.json`. Les achats de carottes avec de l’argent réel restent à préparer. [Fonctionnement et ajout d’articles](docs/MAGASIN.md).
+
 ## 🥚 Doublons et renforcement
+
+Les compétences se débloquent aux niveaux 1, 10, 20, 30, 40 et 50, selon la rareté du lapin. Les fragments servent uniquement à améliorer les compétences débloquées (jusqu’à 5/5). L’extracteur du magasin rend les fragments d’une compétence sans modifier les autres.
+
 
 Lorsqu'un lapin déjà possédé ressort d'un œuf :
 

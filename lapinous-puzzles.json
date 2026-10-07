@@ -43,7 +43,7 @@
     {
       "id": "communs",
       "title": "Les Compagnons de l’Aube",
-      "image": "./assets/img/puzzle/les_communs.png",
+      "image": "./assets/img/puzzle/de_base/les_communs.png",
       "linkedSpecies": [
         "azur",
         "caramel",
@@ -56,7 +56,7 @@
     {
       "id": "aventuriers",
       "title": "Les Conquérants de l’Horizon",
-      "image": "./assets/img/puzzle/les_aventuriers.png",
+      "image": "./assets/img/puzzle/de_base/les_aventuriers.png",
       "linkedSpecies": [
         "corsaire",
         "nopal"
@@ -65,7 +65,7 @@
     {
       "id": "scientifiques",
       "title": "Les Artisans de l’Impossible",
-      "image": "./assets/img/puzzle/les_scientifiques.png",
+      "image": "./assets/img/puzzle/de_base/les_scientifiques.png",
       "linkedSpecies": [
         "archy",
         "spark"
@@ -74,7 +74,7 @@
     {
       "id": "voie-lactee",
       "title": "Les Souverains du Firmament",
-      "image": "./assets/img/puzzle/voie_lactee.png",
+      "image": "./assets/img/puzzle/de_base/voie_lactee.png",
       "linkedSpecies": [
         "umbra",
         "solaria",
@@ -84,7 +84,7 @@
     {
       "id": "nature",
       "title": "Les Esprits de la Forêt",
-      "image": "./assets/img/puzzle/Nature.png",
+      "image": "./assets/img/puzzle/de_base/Nature.png",
       "linkedSpecies": [
         "meli",
         "myco",
@@ -95,7 +95,7 @@
       "id": "noel",
       "event": "noel",
       "title": "Les Légendes du Grand Hiver",
-      "image": "./assets/img/puzzle/Noel.png",
+      "image": "./assets/img/puzzle/Noel/Noel.png",
       "linkedSpecies": [
         "jackFrost",
         "santaLegend"
@@ -105,7 +105,7 @@
       "id": "pacques",
       "event": "paques",
       "title": "Les Héritiers du Printemps",
-      "image": "./assets/img/puzzle/pacques.png",
+      "image": "./assets/img/puzzle/Paques/pacques.png",
       "linkedSpecies": [
         "easterKing",
         "eggGuardian"
@@ -115,7 +115,7 @@
       "id": "reve",
       "event": ["noel", "halloween", "paques"],
       "title": "Les Tisseurs de Songes",
-      "image": "./assets/img/puzzle/reve.png",
+      "image": "./assets/img/puzzle/Multi_saisons/reve.png",
       "linkedSpecies": [
         "cauchemar",
         "sandman",
@@ -125,7 +125,7 @@
     {
       "id": "fantome",
       "title": "La Dame des Esprits",
-      "image": "./assets/img/puzzle/fantome.png",
+      "image": "./assets/img/puzzle/Halloween/fantome.png",
       "linkedSpecies": [
         "ghostRabbit"
       ],
@@ -134,7 +134,7 @@
     {
       "id": "frankenstein",
       "title": "Le Créateur",
-      "image": "./assets/img/puzzle/frankenshtein.png",
+      "image": "./assets/img/puzzle/Halloween/frankenshtein.png",
       "linkedSpecies": [
         "frankensteinRabbit"
       ],
@@ -144,7 +144,7 @@
       "id": "lapin-bete",
       "event": "halloween",
       "title": "Le Roi de la Pleine Lune",
-      "image": "./assets/img/puzzle/lapin_bete.png",
+      "image": "./assets/img/puzzle/Halloween/lapin_bete.png",
       "linkedSpecies": [
         "werebunnyRabbit"
       ]
@@ -152,7 +152,7 @@
     {
       "id": "squelette",
       "title": "Le Roi des Os",
-      "image": "./assets/img/puzzle/Squelette.png",
+      "image": "./assets/img/puzzle/Halloween/Squelette.png",
       "linkedSpecies": [
         "skeletonRabbit"
       ],
@@ -161,11 +161,53 @@
     {
       "id": "vampire-vs-nonne",
       "title": "Vampire contre Nonne",
-      "image": "./assets/img/puzzle/VampireVSNonne.png",
+      "image": "./assets/img/puzzle/Halloween/VampireVSNonne.png",
       "linkedSpecies": [
         "vampireRabbit"
       ],
       "event": "halloween"
+    },
+    {
+      "id": "nouvel-an-chinois-palais",
+      "event": "nouvel_an_chinois",
+      "title": "Le couple impérial au palais fleuri",
+      "image": "./assets/img/puzzle/Nouvel_An_Chinois/Le couple impérial au palais fleuri-1.png",
+      "linkedSpecies": ["huangdi", "yuehua"]
+    },
+    {
+      "id": "nouvel-an-chinois-dragon",
+      "event": "nouvel_an_chinois",
+      "title": "Longyun sur le pont céleste",
+      "image": "./assets/img/puzzle/Nouvel_An_Chinois/Le lapin-dragon sur le pont céleste-2.png",
+      "linkedSpecies": ["longyun"]
+    },
+    {
+      "id": "nouvel-an-chinois-lanternes",
+      "event": "nouvel_an_chinois",
+      "title": "La gardienne du lac des lanternes",
+      "image": "./assets/img/puzzle/Nouvel_An_Chinois/Gardienne lapine au lac des lanternes-3.png",
+      "linkedSpecies": ["yuehua", "denghua"]
+    },
+    {
+      "id": "nouvel-an-chinois-chance",
+      "event": "nouvel_an_chinois",
+      "title": "Jinfu sous les lanternes",
+      "image": "./assets/img/puzzle/Nouvel_An_Chinois/Lapin porte-bonheur sous les lanternes-4.png",
+      "linkedSpecies": ["jinfu"]
+    },
+    {
+      "id": "nouvel-an-chinois-wushi",
+      "event": "nouvel_an_chinois",
+      "title": "Wushi, le lapin tigre en fête",
+      "image": "./assets/img/puzzle/Nouvel_An_Chinois/Wushi, le lapin tigre en fête-5.png",
+      "linkedSpecies": ["wushi"]
+    },
+    {
+      "id": "nouvel-an-chinois-celebration",
+      "event": "nouvel_an_chinois",
+      "title": "La grande célébration des lapins",
+      "image": "./assets/img/puzzle/Nouvel_An_Chinois/La grande célébration des lapins-6.png",
+      "linkedSpecies": ["jinfu", "longyun", "huangdi", "yuehua", "denghua", "wushi"]
     }
   ]
 }

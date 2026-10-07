@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (input) input.value = rates[r];
         });
         const windows = loadEventWindows();
-        ["halloween", "noel", "paques"].forEach((e) => {
+        ["halloween", "noel", "paques", "nouvel_an_chinois"].forEach((e) => {
             const input = document.getElementById("window-" + e);
             if (input) input.value = windows[e];
         });
@@ -67,6 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
         { value: "halloween", label: "🎃 Halloween uniquement" },
         { value: "noel", label: "🎄 Noël uniquement" },
         { value: "paques", label: "🐣 Pâques uniquement" },
+        { value: "nouvel_an_chinois", label: "🏮 Nouvel An chinois uniquement" },
         { value: "paques,noel", label: "🐣🎄 Pâques + Noël (légendes)" },
     ];
     function speciesEventValue(s) {
@@ -291,6 +292,7 @@ document.addEventListener("DOMContentLoaded", () => {
             halloween: parseInt(document.getElementById("window-halloween").value, 10) || 0,
             noel: parseInt(document.getElementById("window-noel").value, 10) || 0,
             paques: parseInt(document.getElementById("window-paques").value, 10) || 0,
+            nouvel_an_chinois: parseInt(document.getElementById("window-nouvel_an_chinois").value, 10) || 0,
         };
         saveEventWindows(windows);
         showToast("Durées des événements mises à jour ✅", "success");
@@ -368,6 +370,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const PUZZLE_EVENT_CHOICES = [
+        { value: "nouvel_an_chinois", label: "🏮 Nouvel An chinois" },
         { value: "halloween", label: "🎃 Halloween" },
         { value: "noel", label: "🎄 Noël" },
         { value: "paques", label: "🐣 Pâques" },
@@ -593,7 +596,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const events = Array.isArray(s.event) ? s.event : String(s.event).split(",").map((e) => e.trim());
             return events.includes(tag);
         }
-        ["halloween", "noel", "paques"].forEach((tag) => {
+        ["halloween", "noel", "paques", "nouvel_an_chinois"].forEach((tag) => {
             const entries = Object.values(species).filter((s) => hasEvent(s, tag));
             const { labels, data, groups, colors } = rarityBreakdown(entries);
             drawPie("chart-event-" + tag, labels, data, groups, colors);

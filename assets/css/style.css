@@ -5370,7 +5370,7 @@ body.game-running.default .salon-rabbit-friend:nth-child(6) {
 
 .records-toggle {
     position: fixed;
-    right: 72px;
+    right: 128px;
     bottom: 16px;
     z-index: 5000;
     border: 0;
@@ -6279,16 +6279,51 @@ body.game-running.battle-scene #statusBars { display: none; }
 }
 
 /* Utilise toute la hauteur : personnages sur le sol et commandes en bas. */
-body.game-running:is(.cuisine, .chambre, .sdb, .jardin) #gameArea {
+body.game-running:is(.cuisine, .chambre, .sdb, .jardin):not(.battle-scene) #gameArea {
     box-sizing: border-box;
     justify-content: flex-end;
-    padding-bottom: clamp(100px, 16vh, 150px);
+    padding-bottom: 90px;
     gap: 12px;
 }
-body.game-running:is(.cuisine, .chambre, .sdb, .jardin) #rabbitImage {
+body.game-running:is(.cuisine, .chambre, .sdb, .jardin):not(.battle-scene) #rabbitImage {
+    position: absolute;
+    left: 50%;
+    bottom: 210px;
+    transform: translateX(-50%);
+    margin: 0;
+    width: clamp(130px, 18vw, 230px);
+    height: 28vh;
     flex-shrink: 0;
     max-height: 32vh;
     object-fit: contain;
+}
+body.game-running:is(.cuisine, .chambre, .sdb, .jardin):not(.battle-scene) .action-row {
+    flex-shrink: 0;
+    padding: 8px;
+    gap: 10px;
+    margin: 0;
+}
+body.game-running:is(.cuisine, .chambre, .sdb, .jardin):not(.battle-scene) .action-row .action-btn {
+    width: auto;
+    min-width: 100px;
+    min-height: 80px;
+    height: auto;
+    padding: 10px 16px;
+    gap: 5px;
+    font-size: 1rem;
+}
+body.game-running:is(.cuisine, .chambre, .sdb, .jardin):not(.battle-scene) .action-icon {
+    width: 38px;
+    height: 38px;
+    object-fit: contain;
+}
+body.game-running:is(.cuisine, .chambre, .sdb, .jardin):not(.battle-scene) .action-icon-emoji { font-size: 1.5rem; }
+body.game-running:is(.cuisine, .chambre, .sdb, .jardin):not(.battle-scene) .carrot-counter {
+    position: absolute;
+    bottom: 62px;
+    margin: 0;
+    padding: 4px 12px;
+    font-size: .85rem;
 }
 body.game-running.battle-scene #gameArea {
     padding: 100px 14px 90px;
@@ -6338,5 +6373,104 @@ body.game-running.battle-scene .fight-stage.tactical .fight-command-grid {
 @media (max-width: 700px) {
     body.game-running.battle-scene #gameArea { padding: 90px 8px 86px; }
     body.game-running.battle-scene .fight-stage.tactical { min-height: 410px; gap: 8px; }
-    body.game-running:is(.cuisine, .chambre, .sdb, .jardin) #gameArea { padding-bottom: 100px; }
+    body.game-running:is(.cuisine, .chambre, .sdb, .jardin):not(.battle-scene) #gameArea { padding-bottom: 100px; }
 }
+
+/* Fermetures des fenêtres : même cible tactile et croix dessinée pour tous les écrans. */
+.modal-header .close,
+.records-card .records-close,
+.legal-heading .legal-close {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    margin: 0;
+    padding: 0;
+    appearance: none;
+    border: 1px solid #cbb58b;
+    border-radius: 50%;
+    background: #fffaf2;
+    color: #574132;
+    font-size: 0;
+    opacity: 1;
+    cursor: pointer;
+    box-shadow: 0 3px 8px rgba(83, 58, 37, .15);
+    transition: background .15s ease, box-shadow .15s ease;
+    z-index: 2;
+}
+.modal-header .close span { display: none; }
+.modal-header .close::before, .modal-header .close::after,
+.records-card .records-close::before, .records-card .records-close::after,
+.legal-heading .legal-close::before, .legal-heading .legal-close::after {
+    content: "";
+    position: absolute;
+    width: 17px;
+    height: 2px;
+    border-radius: 2px;
+    background: currentColor;
+    pointer-events: none;
+    transform: rotate(45deg);
+}
+.modal-header .close::after,
+.records-card .records-close::after,
+.legal-heading .legal-close::after { transform: rotate(-45deg); }
+.modal-header .close:hover,
+.records-card .records-close:hover,
+.legal-heading .legal-close:hover { background: #efe5cf; box-shadow: 0 4px 12px rgba(83, 58, 37, .22); }
+.modal-header .close:focus-visible,
+.records-card .records-close:focus-visible,
+.legal-heading .legal-close:focus-visible { outline: 3px solid #bc8a2f; outline-offset: 3px; }
+.modal-header .close:active,
+.records-card .records-close:active,
+.legal-heading .legal-close:active { background: #e5d5b6; }
+.records-card .records-close { position: absolute; top: 12px; right: 12px; }
+.records-card > h2 { padding-right: 48px; }
+.modal-header .modal-title { min-width: 0; margin-right: 12px; }
+/* Memory : progression, collecte et animation des paires */
+.memory-levels{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:20px 0}.memory-level{display:flex;flex-direction:column;gap:8px;padding:18px;border:2px solid #cdbb92;border-radius:16px;background:#fffaf2;color:#574132;cursor:pointer}.memory-level:disabled{opacity:.55;cursor:default}.memory-level small{font-size:.75rem}.memory-play{display:grid;grid-template-columns:minmax(0,1fr) 115px;gap:18px;align-items:center}.memory-panel .memory-grid{width:100%;grid-template-columns:repeat(4,minmax(0,90px))}.memory-card{cursor:pointer;transition:background .18s,box-shadow .18s}.memory-card.open{background:#fffaf2;box-shadow:0 3px 12px #b9945940}.memory-card.collected{visibility:hidden;pointer-events:none}.memory-collection{display:flex;flex-direction:column;align-items:center;gap:12px;font-size:.8rem;padding:12px 4px;border-radius:16px;background:#eaf0df}.memory-pile{position:relative;width:74px;height:110px;border:2px dashed #9aaf81;border-radius:12px}.memory-pile img{position:absolute;left:var(--pile-offset);top:var(--pile-offset);width:60px;height:76px;object-fit:contain;border:2px solid #cdbb92;border-radius:9px;background:#fffaf2;transform:rotate(var(--pile-angle));box-shadow:0 3px 5px #57413230}.memory-flying{position:fixed!important;z-index:9999;pointer-events:none;margin:0!important}.memory-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}.memory-card:focus-visible,.memory-level:focus-visible{outline:3px solid #bc8a2f;outline-offset:3px}.memory-score{text-align:center}
+@media(max-width:600px){.memory-play{grid-template-columns:minmax(0,1fr) 80px;gap:8px}.memory-panel .memory-grid{gap:6px}.memory-card{border-radius:9px;font-size:20px}.memory-collection{font-size:.65rem}.memory-pile{width:56px;height:90px}.memory-pile img{width:44px;height:58px}.memory-levels{grid-template-columns:repeat(2,minmax(0,1fr))}.memory-level{padding:12px}}
+@media(prefers-reduced-motion:reduce){.memory-card{transition:none}}
+.memory-panel{box-sizing:border-box;padding:20px;border:1px solid #d8c6a4;border-radius:20px;background:#fffaf2;color:#574132}.memory-panel .console-title{color:#574132}.memory-panel .agility-hint{color:#806548}.memory-panel .ghost-btn{color:#705634}.memory-panel .memory-score{color:#574132}
+@media(max-width:600px){.memory-panel{padding:12px}.memory-panel .memory-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+/* Plateau du Memory : cartes de collection et niveaux compacts. */
+body.game-running #gameArea:has(.memory-panel){display:flex;align-items:center;justify-content:flex-start;box-sizing:border-box;overflow:auto;padding:116px 22px 86px;gap:0}
+.memory-panel{width:min(880px,100%);flex:none;margin:auto;padding:26px;gap:12px;border:2px solid #cbb78f;border-radius:26px;background:linear-gradient(135deg,#fffdf5,#f2e7d0);box-shadow:0 16px 45px #402b2630,inset 0 0 0 5px #ffffff65;color:#574132}.memory-panel>p{margin:0;text-align:center}.memory-panel .console-title{font-size:1.5rem}.memory-panel .memory-levels{width:100%;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:12px 0}.memory-panel .memory-level{position:relative;align-items:flex-start;text-align:left;min-height:132px;padding:20px;border:1px solid #cdb790;border-radius:18px;background:linear-gradient(140deg,#fffdf8,#eaeedc);box-shadow:0 4px 0 #c3b28b;transition:transform .18s,box-shadow .18s}.memory-panel .memory-level:not(:disabled):hover{transform:translateY(-3px);box-shadow:0 7px 0 #c3b28b}.memory-panel .memory-level:disabled{opacity:1;background:linear-gradient(140deg,#f5f0e5,#e5dfd2);color:#887967;box-shadow:0 3px 0 #d1c7b6;border-style:dashed}.memory-panel .memory-level span{font-size:1.1rem;font-weight:700}.memory-panel .memory-level small{line-height:1.4}.memory-panel .memory-play{width:100%;padding:20px;box-sizing:border-box;border-radius:22px;background:linear-gradient(135deg,#dcc79f,#c6ae85);box-shadow:inset 0 2px 7px #80644425;border:1px solid #bfa47a;grid-template-columns:minmax(0,1fr) 112px;gap:22px}.memory-panel .memory-grid{margin:0;gap:12px;grid-template-columns:repeat(var(--memory-columns,4),minmax(0,100px));justify-content:center}.memory-panel .memory-card{position:relative;padding:8px;border:2px solid #e7d4ac;border-radius:15px;background:radial-gradient(circle,#6e8966,#425f48);color:#f6e8c7;box-shadow:0 4px 0 #314934,0 6px 10px #4c372330;font-size:27px}.memory-panel .memory-card:not(.open)::before{content:'';position:absolute;inset:5px;border:1px solid #ead7ac88;border-radius:9px;background:repeating-linear-gradient(45deg,transparent 0 9px,#ffffff08 9px 10px);pointer-events:none}.memory-panel .memory-card.open{background:radial-gradient(circle,#fffdf6,#ecddbd);border-color:#fff0ca;box-shadow:0 4px 0 #a58c65,0 6px 10px #4c372330}.memory-panel .memory-card img{filter:drop-shadow(0 3px 2px #73533725)}.memory-panel .memory-collection{min-height:170px;padding:15px 8px;border:1px solid #fff5df99;border-radius:18px;background:#fff7e9bd;box-shadow:0 4px 12px #58432a15;text-align:center;color:#5d4933}.memory-panel .memory-pile{border-color:#bca275;background:#e9dcc255}.memory-panel .memory-score{padding:8px 18px;border-radius:999px;background:#fff9ec;border:1px solid #d9c5a0;font-size:.85rem}.memory-panel .memory-actions{width:100%;padding-top:6px}.memory-panel .ghost-btn,.memory-panel .primary-btn{padding:10px 15px;min-height:42px;border:1px solid #c8ae7d;border-radius:12px;background:#fffaf0;color:#654d31;text-decoration:none;font:600 .8rem/1.3 var(--font-body);cursor:pointer}.memory-panel .primary-btn{background:#6d895d;color:#fff;border-color:#5c754e}
+@media(max-width:600px){body.game-running #gameArea:has(.memory-panel){padding:108px 10px 82px}.memory-panel{padding:16px 12px;border-radius:20px}.memory-panel .console-title{font-size:1.2rem}.memory-panel .memory-levels{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.memory-panel .memory-level{padding:13px;min-height:118px}.memory-panel .memory-play{padding:12px 8px;gap:10px;grid-template-columns:minmax(0,1fr) 68px}.memory-panel .memory-grid{gap:7px;grid-template-columns:repeat(var(--memory-columns,4),minmax(0,1fr))}.memory-panel .memory-card{padding:4px;border-radius:10px;font-size:20px}.memory-panel .memory-collection{min-height:132px;font-size:.65rem;padding:10px 3px}.memory-panel .memory-pile{width:46px;height:78px}.memory-panel .memory-pile img{width:38px;height:50px}.memory-panel .ghost-btn{padding:9px 11px}}
+@media(prefers-reduced-motion:reduce){.memory-panel .memory-level{transition:none}}
+/* Atelier puzzle : coupelle et coutures entre pièces fixées. */
+body.game-running #gameArea:has(.puzzle-workshop){display:flex;align-items:center;justify-content:flex-start;padding:116px 18px 86px;box-sizing:border-box;overflow:auto}.puzzle-workshop{width:min(1060px,100%);padding:22px;box-sizing:border-box;background:linear-gradient(140deg,#fffaf0,#efe2c5);border:2px solid #c7af83;border-radius:24px;color:#574132;box-shadow:0 12px 35px #49322030}.puzzle-workspace{display:grid;grid-template-columns:minmax(0,1fr) 210px;gap:22px;width:100%;align-items:start}.puzzle-workshop .puzzle-board{width:100%;max-height:none;gap:0;padding:5px;border:5px solid #aa885d;border-radius:12px;background:#d8c5a4;box-shadow:inset 0 2px 12px #5e422835;overflow:hidden}.puzzle-slot{position:relative;background-color:#e9dcc3;border:1px solid #c9b791!important;border-radius:0;cursor:pointer}.puzzle-slot-mark{font-size:clamp(9px,1.5vw,20px);color:#bca985}.puzzle-workshop .puzzle-slot:hover{transform:none;background-color:#f5e8cc}.puzzle-slot.fixed{cursor:default;border-color:transparent!important;animation:puzzle-stitch-in .3s ease-out}.puzzle-slot.sewn-right::after{content:'';position:absolute;right:-1px;top:8%;height:84%;border-right:2px dashed #fff4d2;z-index:2;filter:drop-shadow(1px 0 1px #5e4228)}.puzzle-slot.sewn-bottom::before{content:'';position:absolute;bottom:-1px;left:8%;width:84%;border-bottom:2px dashed #fff4d2;z-index:2;filter:drop-shadow(0 1px 1px #5e4228)}.puzzle-bowl{padding:18px 12px;border-radius:36px 36px 60px 60px;background:radial-gradient(ellipse,#eee1c4 15%,#cfb489 75%,#ad8a5e);border:5px solid #f1dfb9;box-shadow:inset 0 4px 14px #80603940,0 5px 0 #96754c,0 10px 18px #71523225;text-align:center}.puzzle-bowl h3{font-size:1rem;margin:0 0 6px}.puzzle-bowl p{font-size:.75rem;margin:0 0 14px}.puzzle-bowl-pieces{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;max-height:330px;overflow:auto;padding:8px 4px 16px}.puzzle-loose{aspect-ratio:1.25;border:2px solid #fff4d6;border-radius:6px;box-shadow:0 3px 4px #71523250;transform:rotate(-4deg)}.puzzle-loose:nth-child(even){transform:rotate(5deg)}.puzzle-loose.selected{outline:3px solid #bc8a2f;outline-offset:2px;transform:translateY(-3px);box-shadow:0 6px 10px #71523250}.puzzle-workshop .ghost-btn{padding:10px 15px;border:1px solid #c8ae7d;border-radius:12px;background:#fffaf0;color:#654d31;text-decoration:none}.puzzle-workshop .agility-hint{color:#806548;text-align:center}.puzzle-piece:focus-visible{outline:3px solid #bc8a2f;outline-offset:-3px}
+@keyframes puzzle-stitch-in{from{filter:brightness(1.25)}to{filter:brightness(1)}}
+@media(max-width:700px){.puzzle-workshop{padding:14px 10px}.puzzle-workspace{grid-template-columns:minmax(0,1fr) 110px;gap:10px}.puzzle-bowl{padding:12px 6px;border-width:3px}.puzzle-bowl h3{font-size:.8rem}.puzzle-bowl-pieces{grid-template-columns:repeat(2,minmax(0,1fr));max-height:235px;gap:7px}.puzzle-workshop .puzzle-board{border-width:3px;padding:2px}.puzzle-play-head{font-size:.85rem}}
+@media(max-width:420px){.puzzle-workspace{grid-template-columns:minmax(0,1fr) 92px}.puzzle-bowl-pieces{gap:6px}.puzzle-workshop .puzzle-play-head{justify-content:center;text-align:center}}
+@media(prefers-reduced-motion:reduce){.puzzle-slot.fixed{animation:none}}
+.puzzle-slot.placed{cursor:grab;border-color:#bfa77d!important}.puzzle-slot.correct{border-color:transparent!important}.puzzle-slot.sewn-right::after{right:-5px;top:0;width:10px;height:100%;border:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='16' viewBox='0 0 10 16'%3E%3Cpath d='M2 0L8 8L2 16' fill='none' stroke='%23e5b332' stroke-width='2'/%3E%3C/svg%3E") repeat-y;filter:drop-shadow(1px 1px 1px #654a2a);pointer-events:none}.puzzle-slot.sewn-bottom::before{bottom:-5px;left:0;width:100%;height:10px;border:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='10' viewBox='0 0 16 10'%3E%3Cpath d='M0 2L8 8L16 2' fill='none' stroke='%23e5b332' stroke-width='2'/%3E%3C/svg%3E") repeat-x;filter:drop-shadow(1px 1px 1px #654a2a);pointer-events:none}.puzzle-slot.selected{outline:3px solid #b88a32;outline-offset:-3px;transform:none}.puzzle-side{min-width:0;display:flex;flex-direction:column;gap:12px}.puzzle-tailor{position:relative;text-align:center;min-height:150px}.puzzle-tailor>img{display:block;width:100%;height:165px;object-fit:contain;filter:drop-shadow(0 5px 5px #60452525);transform-origin:bottom center}.puzzle-tailor small{display:block;font-size:.72rem;color:#806548}.puzzle-needle{position:absolute;left:8%;top:45%;opacity:0;font-size:25px}.is-sewing .puzzle-tailor img{animation:tailor-sew .2s ease-in-out 5}.is-sewing .puzzle-needle{animation:tailor-needle 1s ease-in-out}.is-sewing .sewn-right::after,.is-sewing .sewn-bottom::before{animation:thread-appear 1s ease-out}.puzzle-workshop .puzzle-slot{overflow:visible}.puzzle-bowl-pieces{max-height:220px}
+@keyframes tailor-sew{50%{transform:rotate(-3deg) translateX(-3px)}}
+@keyframes tailor-needle{0%{opacity:0;transform:translateX(0)}20%{opacity:1}50%{transform:translateX(-45px) rotate(-25deg)}80%{opacity:1}100%{opacity:0;transform:translateX(0)}}
+@keyframes thread-appear{from{clip-path:inset(0 0 100% 0);filter:brightness(1.8)}to{clip-path:inset(0);filter:drop-shadow(1px 1px 1px #654a2a)}}
+@media(max-width:700px){.puzzle-tailor>img{height:100px}.puzzle-tailor{min-height:115px}.puzzle-tailor small{font-size:.6rem}.puzzle-bowl-pieces{max-height:180px}}
+@media(prefers-reduced-motion:reduce){.is-sewing .puzzle-tailor img,.is-sewing .puzzle-needle,.is-sewing .sewn-right::after,.is-sewing .sewn-bottom::before{animation:none}}
+/* Poses fournies : laisser le GIF animer la couture. */
+.is-sewing .puzzle-tailor img{animation:none}.puzzle-tailor.phase-stool img{animation:tailor-approach 1.08s ease-in-out both}.puzzle-tailor.phase-walking img{animation:tailor-walk .6s ease-in-out both}.puzzle-tailor.phase-sewing img{transform:translateX(-12px)}.puzzle-tailor-celebration{display:block;width:min(190px,35vw);max-height:210px;object-fit:contain;filter:drop-shadow(0 6px 5px #60452525)}
+@keyframes tailor-approach{from{transform:translateX(15px)}to{transform:translateX(-12px)}}
+@keyframes tailor-walk{0%{transform:translate(12px,0)}25%{transform:translate(6px,-4px) rotate(-2deg)}50%{transform:translate(0,0)}75%{transform:translate(-6px,-4px) rotate(2deg)}100%{transform:translate(-12px,0)}}
+@media(prefers-reduced-motion:reduce){.puzzle-tailor.phase-stool img,.puzzle-tailor.phase-walking img{animation:none}}
+/* Victoire : la couturière reste entièrement sous le HUD. */
+body.game-running #gameArea:has(.puzzle-win){display:flex;align-items:center;justify-content:flex-start;box-sizing:border-box;overflow-y:auto;padding:116px 18px 90px;gap:0}
+.puzzle-win{display:grid;grid-template-columns:minmax(0,1fr) 160px;align-items:center;gap:16px;width:min(780px,100%);flex:none;box-sizing:border-box;padding:22px;margin:0 auto;border:2px solid #cfba93;border-radius:24px;background:linear-gradient(135deg,#fffaf0f5,#efe2c5ef);color:#574132;box-shadow:0 12px 35px #49322030}
+.puzzle-win>.console-title{grid-column:1/-1;grid-row:1}.puzzle-win>.puzzle-preview{grid-column:1;grid-row:2;width:100%;max-height:38dvh;object-fit:contain;border-radius:14px}.puzzle-win>.puzzle-tailor-celebration{grid-column:2;grid-row:2;width:100%;height:auto;max-height:240px;object-fit:contain;align-self:center}.puzzle-win>p{grid-column:1/-1;margin:0;text-align:center;line-height:1.5}.puzzle-win>.agility-hint{color:#806548}.puzzle-win>button{grid-column:1/-1;justify-self:center}.puzzle-win>.ghost-btn{padding:10px 15px;border:1px solid #c8ae7d;border-radius:12px;background:#fffaf0;color:#654d31;text-decoration:none}
+@media(max-width:600px){body.game-running #gameArea:has(.puzzle-win){padding:108px 10px 82px}.puzzle-win{grid-template-columns:minmax(0,1fr) 95px;gap:12px;padding:16px 12px;border-radius:20px}.puzzle-win>.puzzle-tailor-celebration{max-height:160px}.puzzle-win>p{font-size:.8rem}.puzzle-win>.console-title{font-size:1.2rem}}
+/* Essai : la couturière traverse le plateau vers la pièce concernée. */
+.puzzle-workspace{position:relative}.puzzle-traveling-tailor{position:absolute;left:0;top:0;z-index:8;object-fit:contain;pointer-events:none;filter:drop-shadow(0 5px 5px #60452535)}.puzzle-tailor.tailor-away>img{visibility:hidden}.puzzle-tailor.tailor-away small{opacity:.65}
+/* Coupelle sous le plateau et place dédiée à la couturière. */
+.puzzle-workshop .puzzle-workspace{grid-template-columns:minmax(0,1fr) 230px;gap:18px;align-items:center}.puzzle-workspace>.puzzle-board{grid-column:1;grid-row:1}.puzzle-workspace>.puzzle-side{grid-column:2;grid-row:1/3;align-self:start;justify-content:center;min-height:260px}.puzzle-workspace>.puzzle-bowl{grid-column:1;grid-row:2;padding:12px 16px;border-radius:25px 25px 45px 45px}.puzzle-workspace>.puzzle-bowl h3{margin-bottom:4px}.puzzle-workspace>.puzzle-bowl p{margin-bottom:6px}.puzzle-workspace>.puzzle-bowl .puzzle-bowl-pieces{grid-template-columns:repeat(auto-fill,minmax(52px,1fr));max-height:145px;padding:8px;gap:10px}.puzzle-side .puzzle-tailor>img{height:245px}.puzzle-tailor.phase-returning>img{transform:scaleX(-1)}.puzzle-slot.sewn-right::after,.puzzle-slot.sewn-bottom::before{filter:drop-shadow(1px 1px 1px #77501a)}
+@media(max-width:700px){.puzzle-workshop .puzzle-workspace{grid-template-columns:minmax(0,1fr) 130px;gap:10px}.puzzle-workspace>.puzzle-side{min-height:160px}.puzzle-side .puzzle-tailor>img{height:170px}.puzzle-workspace>.puzzle-bowl{padding:10px}.puzzle-workspace>.puzzle-bowl .puzzle-bowl-pieces{grid-template-columns:repeat(auto-fill,minmax(42px,1fr));max-height:130px;gap:8px}}
+@media(max-width:420px){.puzzle-workshop .puzzle-workspace{grid-template-columns:minmax(0,1fr) 100px;gap:8px}.puzzle-side .puzzle-tailor>img{height:140px}}
+/* Grand atelier : coupelle à gauche, plateau central et couturière à droite. */
+body.game-running #gameArea:has(.puzzle-workshop){padding:104px 12px 76px}.puzzle-workshop{width:min(1400px,100%);max-height:none;padding:18px;flex:none}.puzzle-workshop .puzzle-workspace{grid-template-columns:140px minmax(0,1fr) 230px;gap:18px;align-items:start}.puzzle-workspace>.puzzle-bowl{grid-column:1;grid-row:1;padding:14px 8px}.puzzle-workspace>.puzzle-board{grid-column:2;grid-row:1;width:100%;max-height:none}.puzzle-workspace>.puzzle-side{grid-column:3;grid-row:1;min-height:280px}.puzzle-workspace>.puzzle-bowl .puzzle-bowl-pieces{grid-template-columns:repeat(2,minmax(0,1fr));max-height:clamp(200px,48dvh,550px);gap:10px;padding:8px 4px}.puzzle-side .puzzle-tailor>img{height:280px}.puzzle-tailor.phase-stool>img{scale:1 1}.puzzle-workshop .puzzle-play-head{margin-bottom:4px}
+@media(max-width:1000px){.puzzle-workshop .puzzle-workspace{grid-template-columns:110px minmax(0,1fr) 170px;gap:12px}.puzzle-side .puzzle-tailor>img{height:215px}.puzzle-workspace>.puzzle-side{min-height:230px}}
+@media(max-width:600px){body.game-running #gameArea:has(.puzzle-workshop){padding:100px 6px 72px}.puzzle-workshop{padding:12px 8px}.puzzle-workshop .puzzle-workspace{grid-template-columns:85px minmax(0,1fr);gap:10px}.puzzle-workspace>.puzzle-side{grid-column:2;grid-row:2;min-height:150px}.puzzle-side .puzzle-tailor>img{height:160px}.puzzle-workspace>.puzzle-bowl{grid-row:1/3;padding:12px 5px}.puzzle-workspace>.puzzle-bowl .puzzle-bowl-pieces{max-height:340px;gap:7px;grid-template-columns:1fr}.puzzle-workspace>.puzzle-board{grid-column:2;grid-row:1}}

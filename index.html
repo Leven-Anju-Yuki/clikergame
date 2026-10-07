@@ -13,7 +13,7 @@
             rel="stylesheet"
             href="./assets/css/bootstrap.min.css"
         />
-        <link rel="stylesheet" href="./assets/css/style.css?v=success-tabs-2" />
+        <link rel="stylesheet" href="./assets/css/style.css?v=puzzle-stool-directions-13" />
 
         <!-- Favicon -->
         <link id="favicon" rel="icon" type="image/png" href="./assets/img/az/az_assis_de_face.png" />
@@ -42,6 +42,8 @@
             content="https://leven-anju-yuki.github.io/clikergame/assets/img/az/az_assis_de_face.png"
         />
         <meta property="og:site_name" content="Lapinous" />
+            <link rel="stylesheet" href="./assets/css/legal.css?v=legal-buttons-2" />
+        <link rel="stylesheet" href="./assets/css/shop.css?v=shop-inventory-4" />
     </head>
     <body class="default">
         <!-- ===================== ÉCRAN D'ADOPTION ===================== -->
@@ -140,7 +142,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Règles du jeu</h5>
-                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Fermer la fenêtre">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -221,7 +223,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Sauvegardes</h5>
-                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Fermer la fenêtre">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -282,7 +284,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Renommer ton lapin</h5>
-                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Fermer la fenêtre">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -313,7 +315,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">📖 Encyclopédie</h5>
-                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Fermer la fenêtre">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -423,6 +425,31 @@
         <script src="./assets/js/puzzle-data.js"></script>
         <script src="./assets/js/dashboard-access.js"></script>
         <script src="./assets/js/achievements.js"></script>
-        <script src="./assets/js/script.js"></script>
+        <script src="./assets/js/shop.js?v=shop-local-admin-6"></script>
+        <script src="./assets/js/script.js?v=puzzle-stool-directions-13"></script>
+        <!-- Brouillons juridiques masqués pendant leur finalisation. -->
+        <template id="legalDrafts">
+        <button id="legalTrigger" class="legal-trigger" type="button" aria-haspopup="dialog" aria-controls="legalDialog" aria-label="Informations juridiques et conditions" title="Informations juridiques et conditions">⚖️</button>
+        <dialog id="legalDialog" class="legal-dialog" aria-labelledby="legalTitle">
+            <div class="legal-shell">
+                <header class="legal-heading"><h2 id="legalTitle">Informations et conditions</h2><button id="legalClose" class="legal-close" type="button" aria-label="Fermer les informations">✕</button></header>
+                <div id="legalMenu" class="legal-menu">
+                    <p class="legal-intro">Documents de travail en cours de finalisation. Les coordonnées et les informations indiquées à compléter doivent être renseignées avant publication. Les conditions de vente concernent les futurs achats payants.</p>
+                    <nav class="legal-grid" aria-label="Documents juridiques"><a class="legal-card" href="./Lapinous_documents_juridiques/01_CGU.html"><strong>Conditions d’utilisation</strong><span>Règles du jeu et accès au service.</span></a>
+<a class="legal-card" href="./Lapinous_documents_juridiques/03_confidentialite.html"><strong>Confidentialité</strong><span>Données, sauvegardes et vie privée.</span></a>
+<a class="legal-card" href="./Lapinous_documents_juridiques/04_mentions_legales.html"><strong>Mentions légales</strong><span>Éditeur, contact et hébergement.</span></a>
+<a class="legal-card" href="./Lapinous_documents_juridiques/05_credits_IA_licences.html"><strong>Crédits et licences</strong><span>Images, sons et ressources du jeu.</span></a>
+<a class="legal-card" href="./Lapinous_documents_juridiques/07_suppression_donnees.html"><strong>Suppression des données</strong><span>Effacement local ou demande de suppression.</span></a>
+<a class="legal-card" href="./Lapinous_documents_juridiques/02_CGV_carottes.html"><strong>Conditions de vente</strong><span>Projet pour les futurs achats de carottes.</span></a>
+<a class="legal-card" href="./Lapinous_documents_juridiques/06_retractation_remboursement.html"><strong>Rétractation et remboursement</strong><span>Projet pour les futurs achats payants.</span></a></nav>
+                </div>
+                <div id="legalPreview" class="legal-preview" hidden>
+                    <div class="legal-preview-tools"><button id="legalBack" class="legal-back" type="button">← Documents</button><a id="legalDocumentLink" href="#" target="_blank" rel="noopener">Ouvrir dans un nouvel onglet</a></div>
+                    <iframe id="legalFrame" class="legal-frame" title="Document juridique"></iframe>
+                </div>
+            </div>
+        </dialog>
+        </template>
+        <script src="./assets/js/legal.js?v=local-admin-2"></script>
     </body>
 </html>

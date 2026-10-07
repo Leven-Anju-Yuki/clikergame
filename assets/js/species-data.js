@@ -71,7 +71,33 @@ function saveEggRates(rates) { localStorage.setItem(EGG_RATES_KEY, JSON.stringif
 // ---- Durée des événements (jours avant/après la date d'ancrage), réglable
 // depuis le Dashboard. Partagé avec script.js pour le calcul de disponibilité.
 const EVENT_WINDOWS_KEY = "lapinous_event_windows";
-const DEFAULT_EVENT_WINDOWS = { halloween: 10, noel: 12, paques: 10 };
+const DEFAULT_EVENT_WINDOWS = { halloween: 10, noel: 12, paques: 10, nouvel_an_chinois: 10 };
+// Le premier jour du premier mois du calendrier chinois change chaque année.
+const CHINESE_NEW_YEAR_CACHE = new Map();
+function getChineseNewYearDate(year) {
+    if (CHINESE_NEW_YEAR_CACHE.has(year)) return CHINESE_NEW_YEAR_CACHE.get(year);
+    // HKO : https://www.hko.gov.hk/en/gts/time/calendar/pdf/files/2027e.pdf
+    // Certaines versions d'ICU décalent 2027 d'un jour : dates officielles prioritaires.
+    const officialDates = {2026: [2, 17], 2027: [2, 6], 2028: [1, 26]};
+    if (officialDates[year]) {
+        const [month, day] = officialDates[year];
+        const result = new Date(year, month - 1, day);
+        CHINESE_NEW_YEAR_CACHE.set(year, result);
+        return result;
+    }
+    const formatter = new Intl.DateTimeFormat('en-u-ca-chinese', { month: 'numeric', day: 'numeric', timeZone: 'UTC' });
+    if (formatter.resolvedOptions().calendar !== 'chinese') return null;
+    for (let day = 21; day <= 51; day++) {
+        const candidate = new Date(Date.UTC(year, 0, day));
+        const parts = formatter.formatToParts(candidate);
+        if (parts.find(p => p.type === 'month')?.value === '1' && parts.find(p => p.type === 'day')?.value === '1') {
+            const result = new Date(year, candidate.getUTCMonth(), candidate.getUTCDate());
+            CHINESE_NEW_YEAR_CACHE.set(year, result);
+            return result;
+        }
+    }
+    return null;
+}
 function loadEventWindows() {
     try {
         const stored = JSON.parse(localStorage.getItem(EVENT_WINDOWS_KEY));
@@ -89,6 +115,18 @@ function getSpecies() {
     const base = { ...BASE_SPECIES, ...JSON_SPECIES };
     const custom = loadCustomSpecies();
     for (const [key, entry] of Object.entries(custom)) base[key] = { ...base[key], ...entry };
+    // Compatibilité avec les chemins enregistrés avant le rangement des médias.
+    for (const entry of Object.values(base)) {
+        for (const field of ['faceImg', 'coteImg']) {
+            const path = entry[field];
+            const match = typeof path === 'string' && path.match(/lapin_evenement\/([^/]+)$/);
+            if (!match) continue;
+            const prefix = match[1].replace(/\.(png|webp|jpe?g)$/i, '').replace(/_(face|cote)\d*$/, '').toLowerCase();
+            const groups = {Halloween:['bete','fantome','frank','haloween','krampus','peatch','squelette','vampi'], Noel:['cerf','klaus','lutin','mnoel','noel','pnoel'], Paques:['oeuf','paques'], Multi_saisons:['5_legendes','fee','frost','reve']};
+            const group = Object.keys(groups).find(key => groups[key].includes(prefix));
+            if (group) entry[field] = path.replace('lapin_evenement/', 'lapin_evenement/' + group + '/');
+        }
+    }
     return base;
 }
 function getBosses() { return { ...BASE_BOSSES, ...JSON_BOSSES, ...loadCustomBosses() }; }
