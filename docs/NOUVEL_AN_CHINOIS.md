@@ -27,7 +27,7 @@ dépend de leur rareté et de leur progression.
 Yuehua utilise temporairement `imperatrice_cote.png` pour les deux vues.
 Les instructions suivantes servent à ajouter d'autres personnages.
 
-1. Déposer ses deux images séparées dans `assets/img/lapin_evenement/Nouvel_An_Chinois/`.
+1. Déposer ses deux images séparées dans `assets/img/lapins_jouables/lapin_evenement/Nouvel_An_Chinois/`.
 2. Dans le Dashboard, créer le lapin et choisir « Nouvel An chinois uniquement ».
 3. Indiquer sa rareté, son nom, ses pouvoirs et les chemins des deux images.
 4. Exporter le contenu du Dashboard puis remplacer `lapinous-content.json` pour partager
@@ -40,8 +40,8 @@ Champs à utiliser dans l’entrée du JSON (exemple à adapter, pas un personna
   "name": "Nom du lapin",
   "rarity": "mythique",
   "event": "nouvel_an_chinois",
-  "faceImg": "./assets/img/lapin_evenement/Nouvel_An_Chinois/nom_face.png",
-  "coteImg": "./assets/img/lapin_evenement/Nouvel_An_Chinois/nom_cote.png"
+  "faceImg": "./assets/img/lapins_jouables/lapin_evenement/Nouvel_An_Chinois/nom_face.png",
+  "coteImg": "./assets/img/lapins_jouables/lapin_evenement/Nouvel_An_Chinois/nom_cote.png"
 }
 ```
 

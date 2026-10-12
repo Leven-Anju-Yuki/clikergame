@@ -72,23 +72,23 @@ body[data-time="morning"] {
 }
 
 body.default {
-    background-image: url(../img/fond/salon.png);
+    background-image: url("https://res.cloudinary.com/dgrszi9wf/image/upload/v1791481805/lapinous/fond/salon__png_c2640fef85130c3b.png") /* lapinous-local: ../img/fond/salon.png */;
 }
 
 body.cuisine {
-    background-image: url(../img/fond/cuisine.png);
+    background-image: url("https://res.cloudinary.com/dgrszi9wf/image/upload/v1791481726/lapinous/fond/cuisine__png_573fb199f911fb7c.png") /* lapinous-local: ../img/fond/cuisine.png */;
 }
 
 body.chambre {
-    background-image: url(../img/fond/chambre.png);
+    background-image: url("https://res.cloudinary.com/dgrszi9wf/image/upload/v1791481724/lapinous/fond/chambre__png_d5f7553612795434.png") /* lapinous-local: ../img/fond/chambre.png */;
 }
 
 body.jardin {
-    background-image: url(../img/fond/jardin.png);
+    background-image: url("https://res.cloudinary.com/dgrszi9wf/image/upload/v1791481732/lapinous/fond/jardin__png_0debfbe54231b81b.png") /* lapinous-local: ../img/fond/jardin.png */;
 }
 
 body.sdb {
-    background-image: url(../img/fond/salle_de_bain.png);
+    background-image: url("https://res.cloudinary.com/dgrszi9wf/image/upload/v1791481804/lapinous/fond/salle_de_bain__png_969e2e05f3bce295.png") /* lapinous-local: ../img/fond/salle_de_bain.png */;
 }
 
 .event-banner {
@@ -2281,7 +2281,7 @@ img {
    COMBAT VISUEL + CONSOLE / PUZZLES
    ============================================================ */
 body.battle-scene {
-    background-image: url(../img/fond/combat.png) !important;
+    background-image: url("https://res.cloudinary.com/dgrszi9wf/image/upload/v1791481725/lapinous/fond/combat__png_d1e6df2518cbcab3.png") /* lapinous-local: ../img/fond/combat.png */ !important;
     background-size: cover;
     background-position: center;
 }
@@ -3341,7 +3341,7 @@ body.battle-scene #gameArea {
 body.default #gameArea {
     background-image:
         linear-gradient(180deg, rgba(255, 247, 236, 0.1), rgba(255, 247, 236, 0.3)),
-        url(../img/fond/salon.png);
+        url("https://res.cloudinary.com/dgrszi9wf/image/upload/v1791481805/lapinous/fond/salon__png_c2640fef85130c3b.png") /* lapinous-local: ../img/fond/salon.png */;
     background-size: cover;
     background-position: center;
 }
@@ -3475,7 +3475,7 @@ body.default .salon-console-object {
 
 /* Combat : le décor complet reste visible, le HUD flotte au-dessus du terrain. */
 body.battle-scene {
-    background-image: url(../img/fond/combat.png) !important;
+    background-image: url("https://res.cloudinary.com/dgrszi9wf/image/upload/v1791481725/lapinous/fond/combat__png_d1e6df2518cbcab3.png") /* lapinous-local: ../img/fond/combat.png */ !important;
     background-size: cover !important;
     background-position: center bottom !important;
     background-attachment: fixed !important;
@@ -4469,7 +4469,7 @@ body.game-running[data-time="night"]::before {
     border: 1px solid rgba(138, 106, 61, 0.35);
     background:
         linear-gradient(180deg, rgba(255, 249, 238, 0.9), rgba(239, 228, 203, 0.92)),
-        url("../img/ui/paper_dashboard_bg.jpg");
+        url("https://res.cloudinary.com/dgrszi9wf/image/upload/v1791481883/lapinous/page__jpg_b2e423a62d973115.jpg") /* lapinous-local: ../img/page.jpg */;
     background-size: cover;
     background-position: center;
     box-shadow: 0 18px 42px rgba(67, 46, 26, 0.22);
@@ -4525,7 +4525,7 @@ body.game-running[data-time="night"]::before {
 body.dashboard-page {
     background:
         linear-gradient(180deg, rgba(255, 249, 238, 0.84), rgba(240, 229, 206, 0.88)),
-        url("../img/ui/paper_dashboard_bg.jpg");
+        url("https://res.cloudinary.com/dgrszi9wf/image/upload/v1791481883/lapinous/page__jpg_b2e423a62d973115.jpg") /* lapinous-local: ../img/page.jpg */;
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -4915,7 +4915,7 @@ body.game-running.default .board-sub {
 #encyclopediaModal .encyclopedia-tab {
     background-image:
         linear-gradient(rgba(255, 249, 238, 0.82), rgba(240, 229, 206, 0.82)),
-        url("../img/ui/paper_dashboard_bg.jpg") !important;
+        url("https://res.cloudinary.com/dgrszi9wf/image/upload/v1791481883/lapinous/page__jpg_b2e423a62d973115.jpg") /* lapinous-local: ../img/page.jpg */ !important;
     background-size: cover !important;
     background-position: center !important;
     border-color: rgba(138, 106, 61, 0.16) !important;
@@ -4942,7 +4942,7 @@ body.game-running.default .board-sub {
 .chart-box {
     background-image:
         linear-gradient(rgba(255, 249, 238, 0.86), rgba(240, 229, 206, 0.86)),
-        url("../img/ui/paper_dashboard_bg.jpg") !important;
+        url("https://res.cloudinary.com/dgrszi9wf/image/upload/v1791481883/lapinous/page__jpg_b2e423a62d973115.jpg") /* lapinous-local: ../img/page.jpg */ !important;
 }
 
 .missing-none {
@@ -5748,7 +5748,7 @@ body.game-running.default .salon-rabbit-friend:nth-child(6) {
 .team-fighter strong,
 .preview-boss strong,
 .boss-battle-slot strong {
-    background: #fffde;
+    background: #fffde1;
     padding: 3px 8px;
     border-radius: 10px;
     font-size: .82rem;
@@ -6474,3 +6474,338 @@ body.game-running #gameArea:has(.puzzle-win){display:flex;align-items:center;jus
 body.game-running #gameArea:has(.puzzle-workshop){padding:104px 12px 76px}.puzzle-workshop{width:min(1400px,100%);max-height:none;padding:18px;flex:none}.puzzle-workshop .puzzle-workspace{grid-template-columns:140px minmax(0,1fr) 230px;gap:18px;align-items:start}.puzzle-workspace>.puzzle-bowl{grid-column:1;grid-row:1;padding:14px 8px}.puzzle-workspace>.puzzle-board{grid-column:2;grid-row:1;width:100%;max-height:none}.puzzle-workspace>.puzzle-side{grid-column:3;grid-row:1;min-height:280px}.puzzle-workspace>.puzzle-bowl .puzzle-bowl-pieces{grid-template-columns:repeat(2,minmax(0,1fr));max-height:clamp(200px,48dvh,550px);gap:10px;padding:8px 4px}.puzzle-side .puzzle-tailor>img{height:280px}.puzzle-tailor.phase-stool>img{scale:1 1}.puzzle-workshop .puzzle-play-head{margin-bottom:4px}
 @media(max-width:1000px){.puzzle-workshop .puzzle-workspace{grid-template-columns:110px minmax(0,1fr) 170px;gap:12px}.puzzle-side .puzzle-tailor>img{height:215px}.puzzle-workspace>.puzzle-side{min-height:230px}}
 @media(max-width:600px){body.game-running #gameArea:has(.puzzle-workshop){padding:100px 6px 72px}.puzzle-workshop{padding:12px 8px}.puzzle-workshop .puzzle-workspace{grid-template-columns:85px minmax(0,1fr);gap:10px}.puzzle-workspace>.puzzle-side{grid-column:2;grid-row:2;min-height:150px}.puzzle-side .puzzle-tailor>img{height:160px}.puzzle-workspace>.puzzle-bowl{grid-row:1/3;padding:12px 5px}.puzzle-workspace>.puzzle-bowl .puzzle-bowl-pieces{max-height:340px;gap:7px;grid-template-columns:1fr}.puzzle-workspace>.puzzle-board{grid-column:2;grid-row:1}}
+/* Grands niveaux : cartes lisibles et sélection compacte. */
+.memory-panel .memory-levels{max-height:55dvh;overflow:auto;padding:4px 4px 10px}.memory-panel .memory-grid{grid-template-columns:repeat(var(--memory-columns,4),minmax(0,90px))}
+@media(max-width:600px){.memory-panel .memory-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+/* Centrage indépendant des animations et commandes près du bas. */
+body.game-running:is(.cuisine,.chambre,.sdb,.jardin):not(.battle-scene) #gameArea:not(:has(.puzzle-workshop,.puzzle-win,.memory-panel,.fight-stage)){padding-bottom:20px;gap:6px}
+body.game-running:is(.cuisine,.chambre,.sdb,.jardin):not(.battle-scene) #rabbitImage{left:50%;translate:-50% 0;transform:none;bottom:150px}
+@media(max-width:600px){body.game-running:is(.cuisine,.chambre,.sdb,.jardin):not(.battle-scene) #gameArea:not(:has(.puzzle-workshop,.puzzle-win,.memory-panel,.fight-stage)){padding-bottom:14px}body.game-running:is(.cuisine,.chambre,.sdb,.jardin):not(.battle-scene) #rabbitImage{bottom:145px}}
+/* Pièces lisibles, même dans les grands puzzles. */
+.scene-card:has(.puzzle-workshop){max-width:none;width:100%}.puzzle-workshop{width:min(1540px,100%)}.puzzle-workshop .puzzle-workspace{grid-template-columns:240px minmax(0,1fr) 210px}.puzzle-workspace>.puzzle-bowl .puzzle-bowl-pieces{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-height:52dvh;padding:10px 6px}.puzzle-bowl .puzzle-loose{min-height:66px;aspect-ratio:1.25}.puzzle-piece-inspection{padding:10px 8px;margin:8px 0 12px;border:1px solid #bfa371;border-radius:15px;background:#fff4dacc;display:flex;flex-direction:column;align-items:center;gap:8px}.puzzle-piece-inspection strong{font-size:.8rem}.puzzle-piece-inspection small{font-size:.68rem}.puzzle-piece-inspection-image{width:100%;aspect-ratio:1.25;background-repeat:no-repeat;border:3px solid #d6ac50;border-radius:9px;box-shadow:0 3px 8px #71523225}
+@media(max-width:1100px){.puzzle-workshop .puzzle-workspace{grid-template-columns:200px minmax(0,1fr) 150px}.puzzle-side .puzzle-tailor>img{height:200px}}
+@media(max-width:700px){.puzzle-workshop .puzzle-workspace{grid-template-columns:145px minmax(0,1fr)}.puzzle-workspace>.puzzle-side{grid-column:2;grid-row:2}.puzzle-workspace>.puzzle-bowl{grid-column:1;grid-row:1/3}.puzzle-bowl .puzzle-loose{min-height:48px}.puzzle-workspace>.puzzle-bowl .puzzle-bowl-pieces{gap:8px;padding:8px 2px}.puzzle-piece-inspection{padding:7px}}
+@media(max-width:420px){.puzzle-workshop .puzzle-workspace{grid-template-columns:120px minmax(0,1fr)}.puzzle-bowl .puzzle-loose{min-height:42px}.puzzle-piece-inspection strong{font-size:.7rem}}
+/* Mini-jeux : utiliser davantage la largeur disponible. */
+.scene-card:has(.console-panel,.puzzle-hub,.puzzle-levels,.puzzle-workshop,.puzzle-win,.agility-runner){width:100%;max-width:none}
+.memory-panel{width:min(1440px,100%)}.memory-panel .memory-grid{grid-template-columns:repeat(var(--memory-columns,4),minmax(0,145px));gap:16px}.memory-panel .memory-play{grid-template-columns:minmax(0,1fr) 140px;padding:24px}.memory-panel .memory-levels{grid-template-columns:repeat(4,minmax(0,1fr))}
+.puzzle-workshop{width:min(1700px,100%)}.puzzle-hub,.puzzle-levels,.console-panel:not(.memory-panel){max-width:1440px;box-sizing:border-box}.puzzle-list{width:100%;max-width:none}.puzzle-level-buttons{width:100%;max-width:1100px}.console-games{width:100%;max-width:1200px}.lapidoku-grid{width:min(560px,90%);grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.lapidoku-grid .lapidoku-cell{width:100%;height:auto;aspect-ratio:1;font-size:clamp(24px,3vw,40px)}.agility-runner{width:min(1440px,100%);max-width:none}
+@media(max-width:900px){.memory-panel .memory-levels{grid-template-columns:repeat(3,minmax(0,1fr))}.memory-panel .memory-grid{gap:10px}}
+@media(max-width:600px){.memory-panel .memory-play{grid-template-columns:minmax(0,1fr) 68px;padding:12px 8px;gap:10px}.memory-panel .memory-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}.memory-panel .memory-levels{grid-template-columns:repeat(2,minmax(0,1fr))}.lapidoku-grid{width:95%;gap:5px}.lapidoku-grid .lapidoku-cell{font-size:clamp(22px,6vw,32px)}}
+/* Les parties utilisent la hauteur disponible ; la coupelle occupe la largeur. */
+body.game-running #gameArea:has(.puzzle-workshop,.memory-panel,.lapidoku-grid){padding:88px 12px 14px;min-height:0;gap:0;justify-content:center;box-sizing:border-box}
+.puzzle-workshop{padding:12px;display:flex;flex-direction:column;gap:8px;max-height:calc(100dvh - 110px)}
+.puzzle-workshop .puzzle-workspace{grid-template-columns:minmax(0,1fr) 170px;gap:10px;align-items:center}
+.puzzle-workspace>.puzzle-board{grid-column:1;grid-row:1;width:min(100%,calc((100dvh - 340px)*1.6));justify-self:center;aspect-ratio:16/10;max-height:calc(100dvh - 340px)}
+.puzzle-workspace>.puzzle-side{grid-column:2;grid-row:1;min-height:0}
+.puzzle-side .puzzle-tailor>img{height:min(210px,28dvh)}
+.puzzle-workspace>.puzzle-bowl{grid-column:1/3;grid-row:2;position:relative;padding:8px 12px;border-radius:20px;border-width:3px}
+.puzzle-workspace>.puzzle-bowl h3{font-size:.85rem;margin:0}
+.puzzle-workspace>.puzzle-bowl p{font-size:.65rem;margin:2px 0}
+.puzzle-workspace>.puzzle-bowl .puzzle-bowl-pieces{grid-template-columns:repeat(auto-fit,minmax(45px,1fr));max-height:none;overflow:visible;gap:6px;padding:5px;align-items:center}
+.puzzle-bowl .puzzle-loose{min-height:0;height:clamp(32px,6dvh,54px);aspect-ratio:auto}
+.puzzle-piece-inspection{position:absolute;z-index:8;bottom:100%;left:50%;transform:translateX(-50%);width:200px;margin:0 0 8px;cursor:pointer;color:#574132;box-shadow:0 8px 25px #4c321f44}
+.puzzle-workshop .agility-hint{font-size:.7rem;line-height:1.3;margin:0}
+.puzzle-workshop .puzzle-actions{display:flex;gap:8px;justify-content:center}
+.puzzle-workshop .ghost-btn{padding:6px 12px;font-size:.75rem}
+.memory-panel{padding:12px;gap:7px;max-height:calc(100dvh - 110px)}
+.memory-panel .memory-play{padding:10px;gap:12px;grid-template-columns:minmax(0,1fr) 90px}
+.memory-panel .memory-grid{grid-template-columns:repeat(var(--memory-columns,6),minmax(0,1fr));gap:6px;width:100%;height:min(390px,calc(100dvh - 295px));grid-template-rows:repeat(var(--memory-rows,4),minmax(0,1fr))}
+.memory-panel .memory-card{height:100%;width:100%;min-height:0;aspect-ratio:auto;padding:3px}
+.memory-panel .memory-card img{height:100%;width:100%;object-fit:contain}
+.memory-panel .memory-collection{min-height:0}
+.memory-panel .memory-actions{padding-top:0}
+.memory-panel .memory-levels{grid-template-columns:repeat(6,minmax(0,1fr));max-height:none;overflow:visible;gap:6px;margin:0}
+.memory-panel .memory-level{min-height:0;padding:7px;gap:2px}
+.memory-panel .memory-level span{font-size:.75rem}.memory-panel .memory-level small{font-size:.6rem}
+.lapidoku-grid{width:min(420px,calc(100dvh - 280px))}
+.admin-needs{border:1px solid #cbb58b;border-radius:10px;padding:8px;display:grid;gap:6px}
+.admin-needs label{display:grid;grid-template-columns:80px 1fr 45px;gap:6px;align-items:center;font-size:.75rem}
+@media(max-width:700px){.puzzle-workshop .puzzle-workspace{grid-template-columns:minmax(0,1fr) 90px}.puzzle-side .puzzle-tailor>img{height:130px}.puzzle-workspace>.puzzle-bowl{grid-column:1/3;grid-row:2}.puzzle-workspace>.puzzle-side{grid-column:2;grid-row:1}.puzzle-workshop .puzzle-play-head{font-size:.75rem}.memory-panel .memory-levels{grid-template-columns:repeat(5,minmax(0,1fr))}.memory-panel .memory-level{padding:5px}.memory-panel .memory-level small{display:none}.memory-panel .memory-play{grid-template-columns:minmax(0,1fr) 55px;padding:6px;gap:6px}.memory-panel .memory-grid{gap:3px}.memory-panel .memory-card{border-radius:5px}.memory-panel .memory-collection{padding:5px 2px}.memory-panel .memory-pile{width:40px}.memory-panel .console-title{font-size:1rem}}
+/* Réserver aussi la hauteur des commandes et de la coupelle, sans les couper. */
+.puzzle-workspace>.puzzle-board{width:min(100%,calc((100dvh - 405px)*1.6));max-height:calc(100dvh - 405px)}
+.puzzle-workspace>.puzzle-bowl .puzzle-bowl-pieces{grid-template-columns:repeat(var(--tray-columns,12),minmax(0,1fr));grid-template-rows:repeat(var(--tray-rows,1),minmax(0,1fr));height:clamp(45px,12dvh,90px);gap:5px}
+.puzzle-bowl .puzzle-loose{height:100%;width:100%;min-height:0;max-width:110px;justify-self:center}
+@media(max-height:600px){body.game-running #gameArea:has(.puzzle-workshop,.memory-panel,.lapidoku-grid){padding-top:70px}.puzzle-workspace>.puzzle-board{width:min(100%,calc((100dvh - 320px)*1.6));max-height:calc(100dvh - 320px)}.puzzle-workshop .agility-hint{display:none}.puzzle-workshop{padding:8px;gap:5px}.puzzle-side .puzzle-tailor>img{height:100px}}
+.puzzle-workspace>.puzzle-board{width:min(100%,calc((100dvh - 430px)*1.6));max-height:calc(100dvh - 430px)}
+@media(max-height:600px){.puzzle-workspace>.puzzle-board{width:min(100%,calc((100dvh - 345px)*1.6));max-height:calc(100dvh - 345px)}}
+
+/* L’aperçu reste dans l’espace de la couturière, jamais au-dessus du plateau. */
+.puzzle-workspace>.puzzle-side{position:relative;align-self:stretch;display:flex;align-items:center;justify-content:center}
+.puzzle-side .puzzle-piece-inspection{inset:0;bottom:auto;left:0;top:50%;transform:translateY(-50%);width:100%;box-sizing:border-box;margin:0;padding:7px;z-index:2}
+.puzzle-side:has(.puzzle-piece-inspection) .puzzle-tailor{visibility:hidden}
+.puzzle-side .puzzle-piece-inspection-image{max-height:150px}
+.puzzle-slot.correct:disabled{opacity:1;cursor:default}
+/* Cartes compactes : réserver la place du titre, du score et des commandes. */
+.memory-panel{box-sizing:border-box;min-height:0;padding:10px;gap:6px}
+.memory-panel .memory-play{padding:8px;min-height:0;gap:8px}
+.memory-panel .memory-grid{height:min(280px,calc(100dvh - 370px));min-height:0;gap:5px}
+.memory-panel .memory-card{box-sizing:border-box;min-width:0;min-height:0;height:100%;padding:2px}
+.memory-panel .memory-collection{box-sizing:border-box;min-height:0;padding:8px 4px;gap:6px}
+.memory-panel .memory-pile{height:75px}
+.memory-panel .memory-pile img{height:62px}
+.memory-panel .memory-score{padding:4px 12px;margin:0}
+.memory-panel .memory-actions .ghost-btn,.memory-panel .memory-actions .primary-btn{min-height:30px;padding:6px 10px}
+.memory-panel .console-title{font-size:1.15rem}
+.memory-panel .agility-hint{font-size:.75rem;line-height:1.3;margin:0}
+@media(max-height:600px){.memory-panel .memory-grid{height:calc(100dvh - 280px)}.memory-panel .memory-pile{height:45px}.memory-panel .memory-pile img{height:40px}.memory-panel .memory-collection{font-size:.6rem}}
+
+/* Les panneaux de besoins et d’amitié ne doivent masquer ni les cartes ni leur trajet. */
+body.game-running:has(.memory-panel,.puzzle-workshop,.lapidoku-grid) #statusBars,
+body.game-running:has(.memory-panel,.puzzle-workshop,.lapidoku-grid) #friendshipBarContainer{display:none}
+
+/* Les contrôles Admin restent à l’intérieur de leur encadré. */
+#adminTestPanel,#adminTestPanel *{box-sizing:border-box}
+#adminTestPanel .admin-needs{min-width:0;width:100%;margin:0}
+#adminTestPanel .admin-needs legend{font-size:.85rem;width:auto;max-width:100%;white-space:normal}
+#adminTestPanel .admin-needs label{grid-template-columns:70px minmax(0,1fr) 40px;font-size:.7rem;min-width:0}
+#adminTestPanel .admin-needs input{min-width:0;width:100%;margin:0}
+#adminTestPanel .admin-needs output{font-size:.7rem;white-space:nowrap}
+#adminTestPanel button{max-width:100%;white-space:normal;font-size:.75rem}
+.egg-rates-display{width:100%;font-size:.7rem;color:#624831;background:#fff7e6;padding:8px;border:1px solid #cfb98d;border-radius:12px;box-sizing:border-box}
+.egg-rates-display>div{display:flex;flex-wrap:wrap;gap:4px 12px;justify-content:center;margin-top:4px}
+.egg-reveal-card{max-height:calc(100dvh - 24px);overflow:auto}
+.puzzle-admin-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:16px}
+.puzzle-admin-card{background:#fffaf2;border:1px solid #cdb790;border-radius:18px;overflow:hidden;min-width:0}
+.puzzle-admin-cover{display:block;width:100%;height:190px;object-fit:contain;background:#e9ddc4}
+.puzzle-admin-fields{padding:12px;display:grid;gap:8px;min-width:0}
+.puzzle-admin-fields>label{display:grid;gap:3px;font-size:.75rem;margin:0}
+.puzzle-admin-fields .name-input{box-sizing:border-box;width:100%;min-width:0;padding:7px;font-size:.8rem;margin:0}
+.puzzle-admin-events{font-size:.75rem}
+.puzzle-admin-events label{display:flex;align-items:center;gap:6px;margin:5px 0}
+.puzzle-admin-fields .puzzle-species-dropdown summary{font-size:.75rem;padding:8px}
+.puzzle-card-actions{display:flex;gap:8px;flex-wrap:wrap}
+.puzzle-card-actions button{font-size:.75rem;padding:7px 10px}
+
+/* Aperçu à gauche : le plateau et la couturière gardent chacun leur zone. */
+.puzzle-workshop .puzzle-workspace{grid-template-columns:160px minmax(0,1fr) 170px}
+.puzzle-workspace>.puzzle-preview-area{grid-column:1;grid-row:1;min-width:0;align-self:center}
+.puzzle-preview-area .puzzle-piece-inspection{position:static;transform:none;width:100%;box-sizing:border-box;margin:0;padding:7px}
+.puzzle-workspace>.puzzle-board{grid-column:2;grid-row:1}
+.puzzle-workspace>.puzzle-side{grid-column:3;grid-row:1}
+.puzzle-workspace>.puzzle-bowl{grid-column:1/4;grid-row:2}
+@media(max-width:700px){.puzzle-workshop .puzzle-workspace{grid-template-columns:85px minmax(0,1fr) 80px;gap:5px}.puzzle-preview-area .puzzle-piece-inspection strong{font-size:.6rem}.puzzle-preview-area .puzzle-piece-inspection small{font-size:.55rem}.puzzle-workspace>.puzzle-board{grid-column:2}.puzzle-workspace>.puzzle-side{grid-column:3}.puzzle-workspace>.puzzle-bowl{grid-column:1/4}}
+.dashboard-jump-menu{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px}
+.dashboard-jump-menu button{padding:7px 10px;border:1px solid #cbb58b;border-radius:12px;background:#fff8e8;color:#624831;font-size:.8rem}
+.dashboard-accordion{margin:12px 0;border:1px solid #cbb58b;border-radius:16px;background:#fff8e8;scroll-margin-top:15px}
+.dashboard-accordion>summary{padding:14px 18px;cursor:pointer;font-weight:700;color:#624831}
+.dashboard-accordion>.dash-section{margin:0;border:0}
+.shop-catalog-editor{display:block;box-sizing:border-box;width:100%;height:420px;padding:12px;resize:vertical;border:1px solid #cbb58b;border-radius:12px;background:#fffdf6;color:#473629;font:13px/1.5 monospace;margin:12px 0}
+
+/* Dashboard large : les tables débordent uniquement dans leur propre conteneur. */
+body:has(.dash-main) .dash-header{position:sticky;top:0;z-index:1000;display:flex;flex-wrap:wrap;gap:8px;background:#efe1c2;padding:12px 18px}
+body:has(.dash-main) .dash-main{width:calc(100% - 32px);max-width:1800px;margin:16px auto;display:block;padding:0;min-width:0}
+body:has(.dash-main) .dash-section{width:100%;max-width:none;box-sizing:border-box;min-width:0;padding:14px}
+.dashboard-jump-menu{width:100%;margin:0;gap:4px}.dashboard-jump-menu button{padding:5px 8px;font-size:.7rem}
+.dashboard-accordion{scroll-margin-top:180px;min-width:0}.dashboard-accordion>summary{outline:none}
+.dash-main .pm-table-wrap{max-width:100%;overflow-x:auto}.dash-main table{max-width:none}
+.puzzle-admin-cards{grid-template-columns:repeat(auto-fill,minmax(230px,1fr));align-items:start}
+.puzzle-admin-card{box-sizing:border-box;min-width:0;max-width:100%}
+.catalog-card-summary{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px;cursor:pointer;list-style:none;font-size:.85rem}
+.catalog-card-summary .puzzle-admin-cover{height:160px;border-radius:12px}
+.catalog-card-summary:hover{background:#efe4ce}
+.puzzle-admin-fields{max-width:100%;box-sizing:border-box}.puzzle-admin-fields input{max-width:100%}
+.puzzle-species-menu{max-width:100%;box-sizing:border-box}
+.puzzle-admin-card[hidden]{display:none}
+.puzzle-event-filter{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+.companion-editor-table{width:100%;border-collapse:collapse}.companion-editor-table td,.companion-editor-table th{padding:8px;border-bottom:1px solid #dfceb0;font-size:.75rem}
+.companion-editor-table td img{width:65px;height:65px;object-fit:contain;vertical-align:middle;margin-right:8px}
+.companion-editor-table input:not([type=checkbox]){width:min(600px,80%);padding:6px;border:1px solid #cbb58b;border-radius:8px}
+.egg-rates-display>div>span{display:flex;align-items:center;gap:4px}.egg-rates-display img{width:24px;height:30px;object-fit:contain}
+.duplicate-choice .duplicate-attack-select{width:min(460px,100%);min-width:200px;color:#473629;background:#fffaf0;padding:8px;border:1px solid #cbb58b;border-radius:8px;font-size:.85rem}
+@media(max-width:600px){body:has(.dash-main) .dash-main{width:calc(100% - 12px)}.puzzle-admin-cards{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}.dashboard-accordion{scroll-margin-top:240px}}
+body:has(.dash-main) .pm-panel-wide{width:100%;margin-left:0;margin-right:0;padding-left:14px;padding-right:14px;border-radius:12px}
+body:has(.dash-main) .dashboard-accordion{width:100%;box-sizing:border-box;overflow:visible}
+.egg-rate-guide{margin:8px 0;max-width:100%}.egg-rate-guide>summary{cursor:pointer;font-size:.8rem;color:#624831}
+
+/* Cuisine : réserve de caisses, recettes et Chef à droite. */
+body.game-running.cuisine:has(.kitchen-workshop) #gameArea{padding:90px 230px 18px 18px;justify-content:center;box-sizing:border-box}
+body.game-running.cuisine:has(.kitchen-workshop) #rabbitImage{left:auto;right:12px;bottom:55px;translate:0;transform:none;width:210px;height:280px;object-fit:contain}
+.kitchen-workshop{width:min(1250px,100%);padding:16px;border:2px solid #cbb58b;border-radius:22px;background:#fff8e8ed;box-sizing:border-box;max-height:calc(100dvh - 125px);overflow:auto;color:#624831}
+.kitchen-workshop header h2{font-size:1.3rem;margin:0}.kitchen-workshop p{font-size:.75rem;margin:6px 0}
+.kitchen-tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}.kitchen-tools .action-btn{min-height:35px;padding:8px;font-size:.75rem}
+.kitchen-content{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(220px,1fr);gap:16px}
+.kitchen-reserve{background:linear-gradient(120deg,#a87e4d,#725334);border:5px solid #c09a65;border-radius:15px;padding:12px;box-shadow:inset 0 0 0 2px #e4c788;color:#fff3d7}
+.kitchen-content h3{font-size:1rem;margin:0 0 8px}.kitchen-crates{display:grid;grid-template-columns:repeat(auto-fill,minmax(105px,1fr));gap:8px}
+.kitchen-crates button{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px;background:#e5c698;border:3px solid #7f5b35;border-radius:8px;box-shadow:0 4px 0 #60452b;color:#513923;font-size:.7rem}
+.kitchen-crates img{height:65px;width:85px;object-fit:contain}.kitchen-recipe{width:100%;display:flex;flex-direction:column;text-align:left;gap:5px;margin:6px 0;padding:9px;border:1px solid #cbb58b;background:#fffdf6;border-radius:12px;color:#624831;font-size:.75rem}.kitchen-recipe:disabled{opacity:.5}
+@media(max-width:750px){body.game-running.cuisine:has(.kitchen-workshop) #gameArea{padding:90px 10px 100px}.kitchen-content{grid-template-columns:1fr}.kitchen-workshop{max-height:calc(100dvh - 200px)}body.game-running.cuisine:has(.kitchen-workshop) #rabbitImage{width:80px;height:95px;bottom:10px;right:10px}}
+
+.kitchen-tools .ghost-btn{padding:8px 12px;background:#eee0c7;border:1px solid #bea071;border-radius:10px;color:#624831;text-decoration:none;font-size:.75rem}
+
+/* Le frigo est une zone cliquable de la scène, pas une réserve ouverte en permanence. */
+body.game-running.cuisine #gameArea:has(.fridge-hotspot){padding:90px 12px 20px;justify-content:flex-end}
+.fridge-hotspot{position:fixed;left:77%;top:22%;width:12%;height:48%;z-index:10;background:transparent;border:0;border-radius:20px;cursor:pointer}
+.fridge-hotspot span{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);white-space:nowrap;padding:7px 10px;border-radius:12px;background:#fff7e4df;color:#624831;font-size:.75rem;border:1px solid #bba279}
+.fridge-hotspot:hover,.fridge-hotspot:focus-visible{box-shadow:inset 0 0 0 3px #e7c273;background:#fff6cf18}
+.kitchen-scene-actions{display:flex;gap:8px;align-items:center}.kitchen-scene-actions .ghost-btn{padding:10px;background:#fff7e4;border:1px solid #bba279;border-radius:12px;color:#624831}
+#kitchenFridgeDialog{width:min(900px,calc(100vw - 30px));max-height:calc(100dvh - 40px);border:2px solid #cbb58b;border-radius:22px;padding:16px;background:#fff8e8;color:#624831;overflow:auto}
+#kitchenFridgeDialog::backdrop{background:#3b2d2570;backdrop-filter:blur(3px)}
+#kitchenFridgeDialog .kitchen-workshop{width:100%;max-height:none;border:0;padding:12px;background:none}
+.fridge-close{display:block;margin-left:auto;border:1px solid #cbb58b;border-radius:50%;width:34px;height:34px;background:#fffdf6;color:#624831;font-size:22px}
+body.game-running.cuisine:has(.fridge-hotspot) #rabbitImage{left:auto;right:12px;bottom:55px;translate:0;transform:none;width:180px;height:230px;object-fit:contain}
+/* Cartes du dashboard : le recto et le formulaire occupent la même surface. */
+.puzzle-admin-cards>.puzzle-admin-card{position:relative;display:block!important;grid-template-columns:none!important;height:450px;min-width:0;padding:0;perspective:1100px;overflow:hidden}
+.puzzle-admin-card>.catalog-card-summary,.puzzle-admin-card>.puzzle-admin-fields{position:absolute;inset:0;box-sizing:border-box;width:100%;height:100%;margin:0;padding:16px;backface-visibility:hidden;transition:transform .35s ease;background:#f7efdd;border-radius:18px}
+.puzzle-admin-card>.catalog-card-summary{display:flex;flex-direction:column;justify-content:center;gap:12px;transform:rotateY(0deg);cursor:pointer;list-style:none}
+.puzzle-admin-card>.catalog-card-summary::-webkit-details-marker{display:none}
+.puzzle-admin-card>.catalog-card-summary .puzzle-admin-cover{width:100%;height:260px;object-fit:contain;flex:none}
+.puzzle-admin-card>.catalog-card-summary strong{font-size:1rem;overflow-wrap:anywhere}
+.puzzle-admin-card>.puzzle-admin-fields{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));align-content:start;gap:6px;padding:12px;transform:rotateY(180deg);pointer-events:none;overflow:auto;font-size:.78rem}
+.puzzle-admin-card[open]>.catalog-card-summary{transform:rotateY(-180deg);pointer-events:none}
+.puzzle-admin-card[open]>.puzzle-admin-fields{transform:rotateY(0deg);pointer-events:auto}
+.puzzle-admin-card>.puzzle-admin-fields label{display:flex;flex-direction:column;gap:3px;min-width:0;margin:0;font-size:.78rem}
+.puzzle-admin-card>.puzzle-admin-fields :is(input,select){box-sizing:border-box;min-width:0;width:100%;height:28px;font-size:.75rem;padding:4px 7px;border-radius:8px;margin:0}
+.puzzle-admin-card>.puzzle-admin-fields label{font-size:.72rem;line-height:1.2}
+.puzzle-admin-card>.puzzle-admin-fields>button{font-size:.75rem;padding:4px 9px;height:32px;min-height:0;line-height:1.2}
+.puzzle-admin-card>.puzzle-admin-fields>label:has([data-puzzle-field="image"]),.puzzle-admin-card>.puzzle-admin-fields>label:has([data-item-field="description"]),.puzzle-admin-card>.puzzle-admin-fields>label:has([data-item-field="image"]){grid-column:1/-1}
+.puzzle-admin-card .catalog-card-return,.puzzle-admin-card .puzzle-admin-events,.puzzle-admin-card .puzzle-species-dropdown,.puzzle-admin-card .puzzle-card-actions{grid-column:1/-1;min-width:0;max-width:100%}
+.puzzle-admin-card .catalog-card-return{font-size:.78rem;padding:6px 10px;justify-self:start;margin:0 0 4px}
+.puzzle-admin-card .puzzle-admin-events label{display:inline-flex;flex-direction:row;align-items:center;margin:3px 5px 3px 0;font-size:.72rem}
+.puzzle-admin-card .puzzle-admin-events input[type="checkbox"]{width:14px;height:14px;padding:0;flex:none}
+.puzzle-admin-card .puzzle-card-actions{display:flex;flex-wrap:wrap;gap:6px}
+@media(prefers-reduced-motion:reduce){.puzzle-admin-card>.catalog-card-summary,.puzzle-admin-card>.puzzle-admin-fields{transition:none}}
+.dashboard-accordion .dash-section [hidden]{display:none!important}
+.dashboard-section-search{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 16px;font-size:.9rem}
+.dashboard-section-search input{flex:1;min-width:180px;max-width:480px}
+.dashboard-accordion,.dashboard-accordion .dash-section{min-width:0;max-width:100%;box-sizing:border-box}
+.companion-group{margin:10px 0;border:1px solid #ccb58b;border-radius:14px;overflow:hidden}
+.companion-group>summary{padding:14px;cursor:pointer;font-weight:bold;background:#eee3ca}
+.companion-editor-table{width:100%;table-layout:fixed}
+.companion-editor-table td:first-child{width:25%;overflow-wrap:anywhere}
+.companion-editor-table img{width:70px;height:70px;object-fit:contain;vertical-align:middle}
+.companion-editor-table input{width:100%;min-width:0;box-sizing:border-box}
+.dashboard-image-picker{display:flex;flex-wrap:wrap;gap:4px;min-width:0}
+.dashboard-image-picker>input:not([type=file]){flex:1;width:0!important;min-width:0}
+.dashboard-image-picker>button{font-size:.75rem;line-height:1.2;padding:5px 8px;min-height:28px;height:auto;white-space:normal}
+.dashboard-image-picker>select,.dashboard-image-picker>small{width:100%;min-width:0;overflow-wrap:anywhere}
+/* Cartes et sélecteurs : contenir les champs sans couper leurs boutons. */
+#puzzleAdminList .puzzle-admin-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.puzzle-admin-cards>.puzzle-admin-card{height:490px}
+.puzzle-admin-card .puzzle-admin-fields>button[data-remove-item]{grid-column:1/-1;height:auto;min-height:40px;padding:9px;line-height:1.2;white-space:normal;width:100%}
+.puzzle-admin-card .puzzle-species-menu{position:static;width:100%;max-height:210px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;box-sizing:border-box}
+.puzzle-admin-card .puzzle-species-search{grid-column:1/-1;width:100%}
+.puzzle-admin-card .puzzle-species-option{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;padding:8px;min-width:0;border:2px solid transparent;border-radius:12px;cursor:pointer}
+.puzzle-admin-card .puzzle-species-option input[type=checkbox]{position:absolute;width:1px;height:1px;clip-path:inset(50%);overflow:hidden}
+.puzzle-admin-card .puzzle-species-option:has(input:checked){border-color:#8d713f;background:#e8ddbb}
+.puzzle-admin-card .puzzle-species-option:focus-within{outline:2px solid #8d713f}
+.puzzle-admin-card .puzzle-species-option img{width:60px;height:60px;object-fit:contain}
+.puzzle-admin-card .puzzle-species-option span{min-width:0;overflow-wrap:anywhere}
+@media(max-width:480px){#puzzleAdminList .puzzle-admin-cards{grid-template-columns:1fr}}
+
+/* La repr?sentation du lapin actif reste centr?e ; le Chef est un accompagnateur distinct. */
+body.game-running.cuisine:has(.fridge-hotspot) #rabbitImage{left:50%;right:auto;translate:-50% 0}
+
+.kitchen-chef-companion{position:absolute;right:3%;bottom:55px;width:clamp(95px,14vw,180px);height:clamp(130px,23vh,230px);object-fit:contain;pointer-events:none}
+@media(max-width:600px){.kitchen-chef-companion{right:8px;bottom:70px;width:80px;height:110px}}
+
+/* Garde-manger ouvert : trois planches, montants simples et provisions visibles. */
+#kitchenFridgeDialog{width:min(1200px,calc(100vw - 30px));max-height:calc(100dvh - 30px);padding:12px 20px}
+.pantry-workshop{color:#624831}.pantry-workshop header h2{margin:0;font-size:1.35rem}.pantry-workshop header p{margin:6px 0 12px;font-size:.85rem}
+.pantry-stage{display:grid;grid-template-columns:minmax(0,1fr) minmax(160px,25%);gap:20px;align-items:end;padding-bottom:45px;position:relative}
+.pantry-shelves{display:grid;grid-template-columns:repeat(var(--pantry-columns),minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));height:min(420px,55dvh);gap:0 8px;padding:0 12px;border-left:12px solid #987248;border-right:12px solid #987248;background:repeating-linear-gradient(to bottom,#70533315 0,transparent 8px,transparent calc(33.333% - 12px),#b68b58 calc(33.333% - 12px),#785331 33.333%);box-shadow:3px 4px 6px #4b321933}
+.pantry-provision{position:relative;display:flex;align-items:center;justify-content:center;min-width:0;min-height:0;margin:3px 0 13px;padding:4px;border:0;background:transparent;cursor:pointer;border-radius:8px;box-shadow:none}
+.pantry-provision:hover,.pantry-provision:focus-visible{background:#f2dfba80;outline:2px solid #b68b58}
+.pantry-picture{display:grid;place-items:center;width:100%;height:100%;font-size:2rem}.pantry-picture img{width:100%;height:100%;min-height:0;object-fit:contain}
+.pantry-provision>b{position:absolute;right:2px;top:3px;font-size:.75rem;padding:3px;background:#fff8e8dd;border-radius:6px;color:#624831}
+.pantry-details{position:absolute;bottom:15px;left:0;width:220px;max-width:65vw;padding:10px;box-sizing:border-box;display:none;gap:6px;border:1px solid #ccb58b;border-radius:12px;background:#fffaf2;color:#624831;z-index:5;text-align:left;font-size:.75rem;box-shadow:0 4px 12px #49352233;pointer-events:none}
+.pantry-provision:hover .pantry-details,.pantry-provision:focus-visible .pantry-details{display:grid}.pantry-provision:nth-child(7n) .pantry-details{left:auto;right:0}
+.pantry-chef{position:relative;z-index:6;display:flex;flex-direction:column;align-items:center;height:min(370px,48dvh);pointer-events:none}.pantry-chef>img{height:100%;width:100%;object-fit:contain;object-position:center bottom;min-height:0}.pantry-chef>p{position:absolute;top:100%;margin:8px 0 0;padding:7px 12px;border:1px solid #bac49b;border-radius:14px;background:#f3f5e9;font-size:.8rem;text-align:center;width:max-content;max-width:100%;box-sizing:border-box}
+@media(max-width:600px){.pantry-stage{gap:8px;grid-template-columns:minmax(0,1fr) 95px}.pantry-shelves{padding:0 4px;border-width:7px;gap:2px;height:45dvh}.pantry-chef{height:35dvh}.pantry-chef>p{font-size:.65rem}.pantry-picture{font-size:1.2rem}#kitchenFridgeDialog{padding:10px}}
+/* Trois vraies planches ouvertes : toutes les provisions gardent leur place. */
+#kitchenFridgeDialog{width:calc(100vw - 40px);max-width:1680px;max-height:calc(100dvh - 24px);box-sizing:border-box;padding:10px 20px;overflow-x:hidden}
+.pantry-stage{grid-template-columns:minmax(0,1fr) minmax(150px,20%);gap:22px;padding-bottom:50px}
+.pantry-shelves{display:flex;flex-direction:column;height:clamp(260px,calc(100dvh - 210px),650px);padding:0 10px;border-left:14px solid #8c603a;border-right:14px solid #8c603a;border-top:0;border-bottom:0;background:linear-gradient(90deg,#b79a7020,transparent 12%,#b79a7010 88%,#b79a7020);box-shadow:4px 6px 8px #4b321933;box-sizing:border-box}
+.pantry-shelf{position:relative;flex:1;min-height:0;display:grid;grid-template-columns:repeat(var(--pantry-columns),minmax(0,1fr));gap:8px;padding:8px 3px 0;border-bottom:16px solid #a67743;box-shadow:0 5px 0 #624122,0 12px 12px #4b321926,inset 0 -3px 0 #d7ae77;box-sizing:border-box}
+.pantry-shelf::after{content:'';position:absolute;left:-10px;right:-10px;bottom:-16px;height:16px;pointer-events:none;background:repeating-linear-gradient(2deg,transparent 0 4px,#54351c22 5px 6px);border-top:3px solid #d5aa72;box-sizing:border-box}
+.pantry-provision{margin:0;align-self:stretch;min-width:0;min-height:0;padding:0}
+.pantry-picture{position:absolute;inset:5px 3px;width:auto;height:auto;font-size:clamp(28px,4vw,65px);overflow:hidden}
+.pantry-picture img{display:block;width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain;object-position:center bottom}
+.pantry-provision:disabled{opacity:1;cursor:default}.pantry-provision:disabled .pantry-picture{filter:saturate(.75)}
+.pantry-chef{height:clamp(220px,calc(100dvh - 290px),490px)}
+@media(max-width:600px){#kitchenFridgeDialog{width:calc(100vw - 16px);padding:10px}.pantry-stage{grid-template-columns:minmax(0,1fr) 85px;gap:8px}.pantry-shelves{padding:0 3px;border-width:8px;height:calc(100dvh - 230px);min-height:240px}.pantry-shelf{gap:2px;border-bottom-width:12px}.pantry-shelf::after{bottom:-12px;height:12px}.pantry-chef{height:32dvh;min-height:140px}}
+/* Personnage près du sol et commande compacte, dégagés du bandeau supérieur. */
+body.game-running.cuisine:has(.fridge-hotspot) #rabbitImage{position:fixed;bottom:120px;top:auto;left:50%;right:auto;translate:-50% 0;width:clamp(110px,13vw,180px);height:clamp(130px,23dvh,220px);max-height:23dvh;object-fit:contain}
+body.game-running.cuisine .kitchen-scene-actions{position:fixed;bottom:26px;left:50%;translate:-50% 0;z-index:8}
+body.game-running.cuisine .kitchen-scene-actions .action-btn{min-height:65px;max-height:90px;padding:8px 16px;font-size:1rem;border-radius:18px}
+body.game-running.cuisine .kitchen-scene-actions .action-icon{width:48px;height:48px;object-fit:contain}
+#kitchenFridgeDialog,.shop-dialog.inventory-dialog{background-position:center;background-size:cover;background-repeat:no-repeat}
+.inventory-dialog .shop-body{background:transparent}
+@media(max-width:600px){body.game-running.cuisine:has(.fridge-hotspot) #rabbitImage{bottom:115px;height:150px;max-height:25dvh}.kitchen-scene-actions{max-width:90vw}}
+.pantry-meals{display:grid;grid-template-columns:minmax(200px,1fr) minmax(0,2fr) auto;gap:12px;align-items:center;margin:8px 0 14px;padding:10px 14px;border:1px solid #cbb58b;border-radius:14px;background:#fff8e8e8;color:#624831}
+.pantry-meals label{display:flex;flex-direction:column;gap:5px;font-size:.8rem;min-width:0}.pantry-meals select{width:100%;min-width:0;font-size:.85rem;padding:8px;border:1px solid #cbb58b;border-radius:9px;background:#fffdf6;color:#624831}
+.pantry-meals p{font-size:.75rem;line-height:1.4;margin:0;overflow-wrap:anywhere}.pantry-meals button{font-size:.85rem;padding:10px 14px;border:1px solid #9aad75;border-radius:12px;background:#849d62;color:white;white-space:normal}.pantry-meals button:disabled{opacity:.5;cursor:default}
+#kitchenFridgeDialog:has(.pantry-meals) .pantry-shelves{height:clamp(230px,calc(100dvh - 310px),540px)}
+#kitchenFridgeDialog:has(.pantry-meals) .pantry-chef{height:clamp(190px,calc(100dvh - 390px),390px)}
+@media(max-width:700px){.pantry-meals{grid-template-columns:minmax(0,1fr) auto}.pantry-meals p{grid-column:1/-1;grid-row:2}.pantry-meals label{min-width:0}#kitchenFridgeDialog:has(.pantry-meals) .pantry-shelves{height:40dvh}}
+.pantry-shelf-label{position:absolute;left:5px;top:2px;font-size:.65rem;color:#765333;pointer-events:none;z-index:1}
+.pantry-shelf{padding-top:20px}
+.pantry-shelf[data-shelf-kind=meals]{background:#e5c98c22;border-bottom-color:#94703f}
+body.game-running.cuisine:has(.fridge-hotspot) #rabbitImage{bottom:clamp(215px,28dvh,290px);height:clamp(150px,25dvh,245px);max-height:25dvh}
+body.game-running.cuisine .kitchen-scene-actions{bottom:110px}
+@media(max-width:600px){body.game-running.cuisine:has(.fridge-hotspot) #rabbitImage{bottom:205px;height:160px}.pantry-shelf-label{font-size:.55rem}body.game-running.cuisine .kitchen-scene-actions{bottom:105px}}
+.salon-favorites-button{position:absolute;left:18px;top:70px;z-index:12;background:#fff8e8e8;border:1px solid #cbb58b;border-radius:12px;padding:8px 12px;font-size:.8rem;color:#624831}
+#salonFavoritesDialog{width:min(450px,calc(100vw - 30px));padding:22px;border:2px solid #cbb58b;border-radius:22px;background:#fff8e8;color:#624831}
+#salonFavoritesDialog::backdrop{background:#38271b80}
+#salonFavoritesDialog h2{font-size:1.3rem;margin-top:0}#salonFavoritesDialog label{display:flex;flex-direction:column;gap:6px;margin:14px 0}#salonFavoritesDialog select{padding:10px;min-width:0;width:100%;font-size:1rem}#salonFavoritesDialog button{padding:9px 14px;margin:6px;font-size:.9rem;border-radius:10px}
+/* Ingrédients à gauche, Chef au centre, plats terminés à droite. */
+.pantry-stage{grid-template-columns:minmax(0,1.8fr) minmax(120px,.65fr) minmax(160px,1fr);gap:18px}
+.pantry-ready{align-self:stretch;min-width:0;display:flex;flex-direction:column;color:#624831}.pantry-ready h3{font-size:.95rem;margin:0 0 8px;text-align:center}
+.pantry-ready-shelves{flex:1;min-height:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(80px,1fr);gap:15px 6px;border-left:9px solid #8c603a;border-right:9px solid #8c603a;padding:6px;background:repeating-linear-gradient(to bottom,transparent 0 31%,#a67743 31% 33.33%);box-sizing:border-box}
+.pantry-ready-shelves .pantry-provision{min-height:80px;border-bottom:9px solid #a67743;border-radius:0}
+.pantry-ready-shelves>p{grid-column:1/-1;font-size:.8rem;padding:12px;text-align:center;background:#fff8e8aa;align-self:center}.pantry-ready .pantry-details{left:auto;right:0}
+.pantry-meals{grid-template-columns:minmax(230px,.9fr) minmax(0,1.7fr) auto;gap:16px;background:#fffaf1;border:1px solid #cbb58b;padding:14px 18px;box-shadow:0 3px 10px #62483115}
+#pantryIngredients{display:flex;flex-wrap:wrap;gap:6px}.pantry-ingredient{display:inline-flex;gap:8px;align-items:center;padding:6px 9px;border-radius:9px;background:#eee3ca;font-size:.75rem}.pantry-ingredient.available b{color:#557239}.pantry-ingredient.missing{background:#f4dddd}.pantry-ingredient.missing b{color:#a34444}
+@media(max-width:700px){.pantry-stage{grid-template-columns:minmax(0,1fr) 80px minmax(90px,.65fr);gap:6px}.pantry-ready-shelves{grid-template-columns:1fr;border-width:5px;gap:5px;padding:3px;max-height:40dvh;overflow:auto}.pantry-meals{grid-template-columns:minmax(0,1fr) auto}.pantry-meals p{grid-column:1/-1}.pantry-ready h3{font-size:.75rem}}
+#shopRecipeCards .puzzle-admin-fields{overflow:auto}#shopRecipeCards [data-recipe-field=image]{width:100%;min-width:0}
+.encyclopedia-card-wrap{position:relative;min-width:0}.encyclopedia-card-wrap>.encyclopedia-card{width:100%;height:100%;box-sizing:border-box}
+.rabbit-favorite-star{position:absolute;top:5px;left:5px;z-index:3;width:32px;height:32px;padding:0;border:1px solid #cbb58b;border-radius:50%;background:#fffaf0ef;color:#8b795c;font-size:24px;line-height:30px;cursor:pointer;box-shadow:0 2px 5px #62483120}
+.rabbit-favorite-star.selected{color:#bf8a24;border-color:#bf8a24;background:#fff0bb}.rabbit-favorite-star:focus-visible{outline:3px solid #bf8a24;outline-offset:2px}
+body.game-running img{-webkit-user-drag:none;user-select:none;-webkit-touch-callout:none}
+/* Favoris au sol, près du lapin actif. */
+body.game-running.default .salon-friends{inset:auto 2% 90px;height:190px;overflow:visible;pointer-events:none}
+body.game-running.default .salon-rabbit-friend,body.game-running.default .salon-rabbit-friend:hover{transform:none!important;pointer-events:auto;top:auto!important;bottom:0}
+/* Trois niveaux réguliers pour les plats ; les images restent au-dessus de leur planche. */
+.pantry-ready-shelves{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(0,1fr);grid-template-rows:repeat(3,minmax(0,1fr));gap:0 8px;padding:0 8px;position:relative;background:repeating-linear-gradient(to bottom,transparent 0 calc(33.333% - 12px),#a67743 calc(33.333% - 12px) 33.333%);height:100%;min-height:0;overflow:auto}
+.pantry-ready-shelves .pantry-provision{height:100%;min-height:0;margin:0;padding:0;border:0;background:transparent;box-sizing:border-box}
+.pantry-ready-shelves .pantry-picture{inset:8px 4px 16px;display:grid;place-items:end center;overflow:hidden}
+.pantry-ready-shelves .pantry-picture img{object-fit:contain;object-position:center bottom;width:100%;height:100%}
+.pantry-ready-shelves .pantry-provision>b{top:8px;right:5px}.pantry-ready{height:100%;max-height:100%;min-height:0}
+.pantry-chef{min-width:0;width:100%;align-self:end;z-index:4}.pantry-chef>img{display:block;min-width:0;width:100%;height:100%;object-fit:contain;object-position:center bottom}
+@media(max-width:600px){body.game-running.default .salon-friends{bottom:100px;height:140px}.pantry-ready-shelves{grid-template-columns:repeat(2,minmax(0,1fr));max-height:none}}
+/* Les provisions se posent sur les étagères déjà peintes dans le nouveau décor. */
+.pantry-stage.pantry-illustrated{display:block;width:min(100%,calc((100dvh - 265px)*1.7778));height:auto;aspect-ratio:16/9;padding:0;margin:0 auto 10px;background-size:100% 100%;background-position:center;background-repeat:no-repeat}
+.pantry-illustrated .pantry-shelves{position:absolute;left:4%;top:24%;width:30%;height:50%!important;min-height:0;border:0;background:none;padding:0;box-shadow:none}
+.pantry-illustrated .pantry-shelf{border:0;box-shadow:none;background:none;padding:0;gap:3px}.pantry-illustrated .pantry-shelf::after,.pantry-illustrated .pantry-shelf-label{display:none}
+.pantry-illustrated .pantry-chef{position:absolute;left:37%;bottom:14%;width:26%;height:55%!important;min-height:0}.pantry-illustrated .pantry-chef>p{top:auto;bottom:-15%;font-size:.7rem;background:#fffaf0e8;max-width:125%;width:max-content;margin:0}
+.pantry-illustrated .pantry-ready{position:absolute;right:4%;top:24%;width:30%;height:50%;padding:0}.pantry-illustrated .pantry-ready h3{position:absolute;bottom:100%;left:0;right:0;margin:0 0 8px;font-size:.8rem;background:#fff8e8cc;border-radius:8px}
+.pantry-illustrated .pantry-ready-shelves{height:100%;border:0;background:none;box-shadow:none;padding:0;gap:0 5px;grid-template-rows:repeat(3,minmax(0,1fr))}
+.pantry-illustrated .pantry-picture{inset:2px 2px 6px}.pantry-illustrated .pantry-provision>b{font-size:.65rem;top:2px;right:2px}
+.pantry-illustrated .pantry-ready-shelves .pantry-provision{border:0}.pantry-illustrated .pantry-empty{min-height:0}
+@media(max-width:600px){.pantry-stage.pantry-illustrated{width:100%;min-height:0}.pantry-illustrated .pantry-chef>p{font-size:.5rem;padding:3px}.pantry-illustrated .pantry-ready h3{font-size:.55rem;margin-bottom:2px}.pantry-illustrated .pantry-provision>b{font-size:.5rem;padding:1px}}
+/* Le décor remplit l'écran ; les étages restent fixes pendant le défilement. */
+#kitchenFridgeDialog{width:100vw;max-width:100vw;height:100dvh;max-height:100dvh;margin:0;padding:0;border:0;border-radius:0;overflow:hidden}
+#kitchenFridgeDialog .fridge-close{position:absolute;top:12px;right:14px;z-index:30;background:#fffaf0;width:40px;height:40px}
+.pantry-workshop{height:100%;position:relative}
+.pantry-workshop>header{position:absolute;left:2%;top:12px;z-index:12;max-width:70%;padding:10px 16px;background:#fffaf0e8;border-radius:14px;box-shadow:0 3px 10px #62483122}
+.pantry-stage.pantry-illustrated{position:absolute;inset:0;margin:0;width:100%;height:100%;aspect-ratio:auto;max-width:none;background-size:100% 100%}
+.pantry-illustrated .pantry-shelf{display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x proximity;scrollbar-width:thin;scrollbar-color:#af8856 transparent;align-items:stretch;gap:4px}
+.pantry-illustrated .pantry-shelf>.pantry-provision,.pantry-illustrated .pantry-shelf>.pantry-empty{flex:0 0 calc(33.333% - 4px);height:100%;min-width:0;scroll-snap-align:start}
+.pantry-illustrated .pantry-ready-shelves{grid-template-columns:none;grid-template-rows:repeat(3,minmax(0,1fr));grid-auto-flow:column;grid-auto-columns:calc(50% - 4px);overflow-x:auto;overflow-y:hidden;scroll-snap-type:x proximity;scrollbar-width:thin}
+.pantry-illustrated .pantry-ready-shelves>.pantry-provision{scroll-snap-align:start}
+.pantry-illustrated .pantry-picture{inset:15% 12% 8%;font-size:clamp(24px,3vw,50px)}
+.pantry-illustrated .pantry-ready .pantry-picture{inset:18% 17% 8%}
+.pantry-provision .pantry-details{display:none!important}
+.pantry-info-card{position:fixed;z-index:40;width:min(330px,calc(100vw - 24px));box-sizing:border-box;padding:16px;background:#fffdf5;border:2px solid #bda16e;border-radius:14px;box-shadow:0 6px 22px #38261440;color:#513c28;font-size:1rem;line-height:1.5;pointer-events:none;display:grid;gap:8px}.pantry-info-card[hidden]{display:none}.pantry-info-card strong{font-size:1.1rem}
+.pantry-workshop>.pantry-meals{position:absolute;left:2%;right:2%;bottom:12px;z-index:12;margin:0;padding:12px 16px;background:#fffaf0f2;grid-template-columns:minmax(180px,1fr) minmax(0,2fr) auto;max-height:18dvh;overflow:auto}
+.pantry-workshop>.ghost-btn{position:absolute;top:14px;right:70px;z-index:15;padding:10px 14px;border:1px solid #cbb58b;border-radius:12px;background:#fffaf0;color:#624831;font-size:.85rem}
+@media(max-width:700px){.pantry-workshop>header{font-size:.8rem;padding:6px;max-width:58%}.pantry-workshop>header h2{font-size:1rem}.pantry-workshop>header p{font-size:.7rem}.pantry-workshop>.pantry-meals{grid-template-columns:minmax(0,1fr) auto;max-height:23dvh;font-size:.7rem}.pantry-workshop>.ghost-btn{top:65px;right:12px;font-size:.7rem}.pantry-info-card{font-size:.85rem}.pantry-illustrated .pantry-provision>b{font-size:.7rem}}
+/* Défilement vertical par niveau : six provisions sur chaque planche sur PC. */
+.pantry-illustrated .pantry-shelves{display:block;overflow-y:auto;overflow-x:hidden;scroll-snap-type:y mandatory;scrollbar-width:thin;scrollbar-color:#af8856 transparent}
+.pantry-illustrated .pantry-shelf{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));height:33.333%;min-height:33.333%;overflow:visible;gap:2px;scroll-snap-align:start;box-sizing:border-box}
+.pantry-illustrated .pantry-shelf>.pantry-provision,.pantry-illustrated .pantry-shelf>.pantry-empty{height:100%;min-height:0;min-width:0}
+.pantry-illustrated .pantry-ready-shelves{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));grid-auto-flow:row;grid-auto-rows:33.333%;grid-auto-columns:auto;overflow-y:auto;overflow-x:hidden;gap:0 2px;scroll-snap-type:y mandatory}
+.pantry-illustrated .pantry-ready-shelves>.pantry-provision{min-height:0;scroll-snap-align:start}
+.pantry-illustrated .pantry-picture,.pantry-illustrated .pantry-ready .pantry-picture{inset:22% 8% 9%;font-size:clamp(18px,2vw,36px)}
+.pantry-illustrated .pantry-provision>b{font-size:.6rem;padding:2px;top:4px;right:1px}
+@media(max-width:700px){.pantry-illustrated .pantry-picture,.pantry-illustrated .pantry-ready .pantry-picture{inset:22% 2% 9%}.pantry-illustrated .pantry-provision>b{font-size:.5rem}}

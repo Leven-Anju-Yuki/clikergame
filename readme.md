@@ -6,6 +6,8 @@ Le projet fonctionne comme un petit jeu web responsive, avec un univers visuel c
 
 ## Suivi du projet
 
+Documentation actualisée le **8 octobre 2026**. Après chaque évolution, mettre à jour ce README, `A_FAIRE.md` et les cartes concernées du [Trello du projet](https://trello.com/b/5VmsAFi7/clikergame). Le suivi est synchronisé lors des interventions, sans automatisation en arrière-plan.
+
 - [Feuille de route et nouvelles évolutions](A_FAIRE.md)
 - [Audit SEO et améliorations à prévoir](docs/AUDIT_SEO.md)
 - [Anciennes demandes archivées](docs/archives/a-faire/README.md)
@@ -23,7 +25,7 @@ Le projet fonctionne comme un petit jeu web responsive, avec un univers visuel c
 - **Coin jeux dans le Salon** : accès aux mini-jeux depuis un plateau de jeux intégré au décor.
 - **Puzzles** : plusieurs images sont proposées avec différents nombres de pièces. Les puzzles et leurs liens avec les lapins sont gérés dans un JSON séparé.
 - **Progression des puzzles** : il faut terminer un niveau pour accéder au suivant, et terminer un puzzle pour débloquer le suivant.
-- **Memory** : 6 niveaux progressifs (3, 4, 6, 8, 10 et 12 paires), déblocage et records sauvegardés par lapin, animation des paires vers un petit tas sur le côté.
+- **Memory** : 30 niveaux progressifs, de 3 à 36 paires, avec portraits de lapins et de boss, records par lapin et animation des paires trouvées vers un tas sur le côté.
 - **Aventures & combats** : combats contre les boss légumes avec PV, animations d'attaque et jauges de pouvoir critique.
 - **Fatigue de combat** : une défaite, ou une fin de combat dans un état critique, peut faire tomber la nourriture, le sommeil et la propreté à 0.
 - **Pouvoirs** : le champ `power` du contenu décrit le pouvoir spécial / critique du lapin ou du boss.
@@ -48,12 +50,11 @@ Chaque puzzle peut notamment contenir :
 - les lapins auxquels il est lié ;
 - plusieurs niveaux de difficulté / nombres de pièces.
 
-La progression est sauvegardée séparément pour chaque lapin.
+La progression est sauvegardée séparément pour chaque lapin. Les pièces sont sélectionnées dans une coupelle horizontale sous le plateau et peuvent être placées librement, même au mauvais endroit. Les voisines correctement placées sont reliées par une couture dorée en zigzag, avec déplacement de la couturière et animation de félicitations. [Détails des puzzles](docs/PUZZLES.md).
 
-### À venir
+### Memory et Lapidoku
 
-- **Memory** : jeu de mémoire utilisant les nombreux personnages du jeu.
-- **Lapidoku** : variante de Sudoku utilisant les lapins comme symboles.
+Memory propose 30 niveaux avec lapins et boss. Lapidoku propose une grille 4×4 utilisant les lapins comme symboles.
 
 ## ⚔️ Combats
 
@@ -71,7 +72,11 @@ Les boss utilisent leur propre visuel mystère dans l'Encyclopédie tant qu'ils 
 
 ## 🛍️ Magasin
 
-Le bouton 🛍️ près des sauvegardes ouvre le comptoir du terrier : articles de soin pour remplir les barres, extracteur pour récupérer les fragments des compétences, et lapin caissier avec poses de présentation et de remerciement. Catalogue et prix dans `lapinous-shop.json`. Les achats de carottes avec de l’argent réel restent à préparer. [Fonctionnement et ajout d’articles](docs/MAGASIN.md).
+Le magasin et l’inventaire sont en travaux et accessibles en mode administrateur local. Le bouton 🛍️ ouvre les rayons Articles, Fragments, Panier et Carottes. Les consommables affichent leurs images et révèlent leurs détails au survol ou au focus. Le panier regroupe les quantités et garde le total et le paiement visibles.
+
+Les soins achetés vont dans l’inventaire 🌿 indépendant : l’apothicaire récupère un produit dans un tiroir fixe et restaure la barre du lapin actif. Ses sept poses et son GIF de marche sont configurés dans `lapinous-shop.json`, avec le caissier et la couturière. L’extracteur agit sur la compétence et le lapin choisis ; les achats de carottes avec de l’argent réel ne sont pas activés. [Détails du magasin et des accompagnateurs](docs/MAGASIN.md).
+
+Les documents juridiques restent masqués sur la version publique et consultables en local administrateur pour préparation. Leur présence ne signifie pas qu’ils sont prêts pour publication.
 
 ## 🥚 Doublons et renforcement
 
@@ -82,7 +87,7 @@ Lorsqu'un lapin déjà possédé ressort d'un œuf :
 
 - le joueur peut récupérer des carottes ;
 - ou utiliser le doublon pour renforcer son attaque ;
-- **1 fragment = +1 puissance** ;
+- un fragment améliore une compétence débloquée d’un cran, jusqu’à 5/5 ;
 - une fois la barre de renforcement terminée, les doublons suivants sont automatiquement convertis en carottes.
 
 ## 🎃 Événements
@@ -92,136 +97,383 @@ Le jeu prévoit des contenus saisonniers, notamment :
 - 🎃 Halloween ;
 - 🎄 Noël ;
 - 🐣 Pâques ;
+- 🏮 Nouvel An chinois, avec calendrier variable et médias dédiés ;
 - des personnages pouvant appartenir à plusieurs saisons.
 
 Le Dashboard permet de rechercher et filtrer les lapins par événement.
 
 ## 🗂️ Structure du projet
 
-L'arborescence ci-dessous reprend l'organisation actuelle du projet. Les dossiers contenant de très nombreux personnages sont volontairement résumés pour garder le README lisible.
+### Images hébergées sur Cloudinary
+
+Les **245 images utilisées** sont hébergées sur Cloudinary, dans le cloud `dgrszi9wf`, sous `lapinous/`. Le jeu et le Dashboard utilisent les URL de `assets/js/image-manifest.js`, chargées par le résolveur commun. Les originaux transférés ont été retirés de `assets/img/` ; les dossiers restent disponibles grâce aux `.gitkeep`. Les futures créations et les images non transférées sont conservées.
+
+Une tâche Windows, **« Lapinous - Images Cloudinary 23h »**, vérifie chaque soir à **23 h, Europe/Paris**, les nouvelles images utilisées ou modifiées. Elle transfère les nouvelles versions, puis déplace les fichiers locaux vérifiés dans `secours-images/`. Ce dossier est ignoré par Git et utilisable en secours uniquement en local. Sans nouvelle image utilisée, aucun appel Cloudinary n’est effectué. Le PC doit être allumé, éveillé et la session ouverte. Les anciennes images déjà supprimées n’ont pas été retéléchargées dans ce dossier.
+
+Pour lancer la même opération manuellement : double-cliquer sur `Synchroniser les images.cmd`, ou exécuter `node tools/update-images.mjs --backup-local`. Les images doivent être référencées dans le jeu ou un catalogue JSON. Le contrôle du quota gratuit reste actif avant tout nouvel envoi. La tâche des images est distincte du bilan documentaire de 23 h.
+
+### Comparaison avant / après
+
+Mesure du **8 octobre 2026**. Les tailles correspondent à la somme des octets des fichiers, sans mesurer l’espace alloué par Windows. Le périmètre comparable exclut `.git`, les dépendances, les configurations locales de l’agent, `.env`, `.cloudinary-local` et `secours-images`, dans les deux copies.
+
+| Référence | Poids | Octets |
+| --- | ---: | ---: |
+| Ancien chiffre du README, avant migration | 586,52 Mio | 615 007 429 |
+| Copie `clikergame_avec_image/`, mesurée sans modification | 586,52 Mio | 615 009 524 |
+| Projet actuel, même périmètre | **219,22 Mio** | **229 869 990** |
+
+**Économie par rapport à la copie avec images : 367,30 Mio (385 139 534 octets), soit 62,62 %.** Par rapport au chiffre précédent du README : 367,30 Mio (385 137 439 octets).
+
+### Poids de tous les dossiers à la racine
+
+| Dossier | Poids cumulé | Octets | Périmètre |
+| --- | ---: | ---: | --- |
+| `_a_verifier_avant_suppression/` | 173,4 Kio | 177 538 | Inclus dans le projet |
+| `.cloudinary-local/` | 44,44 Mio | 46 603 737 | Local, exclu du total comparable |
+| `.git/` | 634,01 Mio | 664 811 621 | Local, exclu du total comparable |
+| `.vscode/` | 44 octets | 44 | Inclus dans le projet |
+| `assets/` | 218,54 Mio | 229 152 226 | Inclus dans le projet |
+| `docs/` | 146,2 Kio | 149 748 | Inclus dans le projet |
+| `Lapinous_documents_juridiques/` | 84,6 Kio | 86 604 | Inclus dans le projet |
+| `liste de futur création/` | 36,9 Kio | 37 750 | Inclus dans le projet |
+| `sauvegarde/` | 21,3 Kio | 21 795 | Inclus dans le projet |
+| `secours-images/` | 0 octets | 0 | Local, exclu du total comparable |
+| `tools/` | 44,7 Kio | 45 803 | Inclus dans le projet |
+
+Les fichiers de Git gardent encore l’historique des anciennes images. Les journaux et sauvegardes locales ne sont pas envoyés avec les fichiers du projet. L’occupation locale totale, historique et fichiers privés compris, est **897,68 Mio** (941 285 466 octets), contre 1 220,22 Mio pour la copie avec images : 322,54 Mio de moins. Cette occupation locale est distincte du poids comparable du projet.
+
+### Arborescence et poids détaillés
+
+Chaque fichier et chaque sous-dossier du périmètre comparable est indiqué ci-dessous. Les dossiers vides pèsent zéro octet hors métadonnées du système de fichiers. Les détails des caches, secrets et sauvegardes privées sont omis ; leurs dossiers figurent dans le tableau précédent.
 
 ```text
-Lapinous/
-├── index.html                         # Jeu principal
-├── dashboard.html                     # Dashboard administrateur
-├── lapinous-content.json              # Lapins, boss, taux d'œufs, événements...
-├── lapinous-puzzles.json              # Catalogue et configuration des puzzles
-├── readme.md
-├── a faire.txt
-├── arborescence.txt
-│
-├── .vscode/
-│   └── settings.json
-│
-├── assets/
-│   ├── css/
-│   │   ├── bootstrap.min.css
-│   │   └── style.css                  # Styles du jeu, responsive, pièces, combats...
-│   │
-│   ├── js/
-│   │   ├── bootstrap.min.js
-│   │   ├── jquery-3.6.1.min.js
-│   │   ├── script.js                  # Logique principale du jeu
-│   │   ├── species-data.js            # Chargement et fonctions partagées du contenu
-│   │   ├── puzzle-data.js             # Chargement des puzzles
-│   │   ├── dashboard.js               # Gestion du Dashboard
-│   │   └── dashboard-access.js        # Protection par code du Dashboard
-│   │
-│   └── img/
-│       ├── page.jpg                    # Texture papier historique
-│       ├── regle.png
-│       ├── lapin_soin.gif
-│       │
-│       ├── fond/                       # Décors principaux du jeu
-│       │   ├── salon.png
-│       │   ├── cuisine.png
-│       │   ├── chambre.png
-│       │   ├── salle_de_bain.png
-│       │   ├── jardin.png
-│       │   └── combat.png
-│       │
-│       ├── ui/
-│       │   └── paper_dashboard_bg.jpg # Fond papier Dashboard / Encyclopédie
-│       │
-│       ├── species/                    # Lapins principaux
-│       │   ├── mystery.svg
-│       │   ├── azazel_face.png
-│       │   ├── azazel_cote.png
-│       │   └── ...
-│       │
-│       ├── az/                         # Visuels historiques / spécifiques d'Azazel
-│       │   └── ...
-│       │
-│       ├── lapin_evenement/            # Lapins Halloween / Noël / Pâques...
-│       │   └── ...
-│       │
-│       ├── boss/                       # Visuels des boss légumes
-│       │   ├── carotte_face.png
-│       │   ├── carotte_cote.png
-│       │   ├── mais_face.png
-│       │   └── ...
-│       │
-│       ├── bosses/
-│       │   └── mystery_boss.svg        # Visuel mystère réservé aux boss
-│       │
-│       ├── breeds/                     # Icônes des traits / profils
-│       │   ├── normal.svg
-│       │   ├── glouton.svg
-│       │   ├── grand_sportif.svg
-│       │   ├── gros_dormeur.svg
-│       │   ├── petit_dormeur.svg
-│       │   ├── petit_mangeur.svg
-│       │   └── maladroit.svg
-│       │
-│       ├── puzzle/                     # Images utilisées par les puzzles
-│       │   ├── les_communs.png
-│       │   ├── les_aventuriers.png
-│       │   ├── les_scientifiques.png
-│       │   ├── voie_lactee.png
-│       │   └── ...
-│       │
-│       ├── Zone_cuisine/
-│       │   ├── lapin_cuisine.png
-│       │   ├── carotte.png
-│       │   └── pomme.png
-│       │
-│       ├── Zone_Chambre/
-│       │   ├── dodo.png
-│       │   ├── panier.png
-│       │   └── lit.png
-│       │
-│       ├── Zone_SdB/
-│       │   ├── lapin_SdB.png
-│       │   ├── brosse.png
-│       │   └── pommeau.png
-│       │
-│       ├── Zone_jardin/
-│       │   ├── entrenement.png
-│       │   ├── dressage.png
-│       │   └── agilite.webp
-│       │
-│       └── images des futur création/  # Assets préparés pour de futurs contenus
-│           ├── boss/
-│           └── lapin/
-│               ├── commun/
-│               ├── elements/
-│               ├── haloween_2027/
-│               └── saison/
-│
-├── liste de futur création/
-│   ├── future_boss.md
-│   └── futur_lapin.md
-│
-├── sauvegarde/
-│   └── *.json
-│
-└── _a_verifier_avant_suppression/      # Anciens fichiers à contrôler avant suppression
-    └── ...
+Lapinous/ — 219,22 Mio
+├── _a_verifier_avant_suppression/ — 173,4 Kio
+│   └── assets/ — 173,4 Kio
+│       ├── img/ — 162,1 Kio
+│       │   ├── entrenement 3.gif — 29,0 Kio
+│       │   └── entrenement2.gif — 133,1 Kio
+│       └── js/ — 11,3 Kio
+│           └── a revoi.js — 11,3 Kio
+├── .vscode/ — 44 octets
+│   └── settings.json — 44 octets
+├── assets/ — 218,54 Mio
+│   ├── audio/ — 17,49 Mio
+│   │   ├── action/ — 2,35 Mio
+│   │   │   ├── dormir.mp3 — 99,8 Kio
+│   │   │   ├── doucher.mp3 — 2,23 Mio
+│   │   │   └── manger.mp3 — 18,3 Kio
+│   │   ├── combat/ — 605,8 Kio
+│   │   │   ├── attaque_magique.mp3 — 5,3 Kio
+│   │   │   ├── attaque_physique.mp3 — 23,6 Kio
+│   │   │   ├── bouclier_activation.mp3 — 43,5 Kio
+│   │   │   ├── cris_monstre_deb_combat.mp3 — 128,3 Kio
+│   │   │   ├── critical.mp3 — 22,1 Kio
+│   │   │   ├── game-over-mot.mp3 — 47,3 Kio
+│   │   │   ├── game-over-sond.mp3 — 27,2 Kio
+│   │   │   ├── impact_bouclier.mp3 — 17,3 Kio
+│   │   │   ├── soin.mp3 — 162,0 Kio
+│   │   │   └── victoire.mp3 — 129,3 Kio
+│   │   ├── common/ — 919,1 Kio
+│   │   │   ├── click.mp3 — 17,9 Kio
+│   │   │   ├── level_up.mp3 — 867,2 Kio
+│   │   │   └── purchase.mp3 — 34,0 Kio
+│   │   ├── egg/ — 32,3 Kio
+│   │   │   ├── egg-crack.mp3 — 32,1 Kio
+│   │   │   └── README.txt — 182 octets
+│   │   ├── evenements/ — 11,04 Mio
+│   │   │   ├── halloween/ — 4,30 Mio
+│   │   │   │   ├── piano_angoissant.mp3 — 646,5 Kio
+│   │   │   │   └── rire_de_sorciere.mp3 — 3,66 Mio
+│   │   │   ├── noel/ — 1,77 Mio
+│   │   │   │   ├── ho-ho-ho-merry-christmas.mp3 — 116,3 Kio
+│   │   │   │   ├── jingle-bells.mp3 — 1,00 Mio
+│   │   │   │   └── mon beau sapin.mp3 — 668,0 Kio
+│   │   │   ├── nouvel_an_chinois/ — 998,6 Kio
+│   │   │   │   ├── ambience.mp3 — 333,1 Kio
+│   │   │   │   ├── djartmusic-chinese-ident-transition-1.mp3 — 309,4 Kio
+│   │   │   │   ├── djartmusic-chinese-ident-transition-3.mp3 — 355,9 Kio
+│   │   │   │   └── README.txt — 199 octets
+│   │   │   └── paques/ — 4,00 Mio
+│   │   │       └── ambience.mp3 — 4,00 Mio
+│   │   ├── ambience.mp3 — 2,59 Mio
+│   │   └── README_AUDIO.txt — 369 octets
+│   ├── css/ — 453,3 Kio
+│   │   ├── bootstrap.min.css — 227,5 Kio
+│   │   ├── legal.css — 3,1 Kio
+│   │   ├── shop.css — 32,5 Kio
+│   │   └── style.css — 190,2 Kio
+│   ├── img/ — 200,01 Mio
+│   │   ├── accompagnateurs/ — 0 octets
+│   │   │   ├── Apothicaire/ — 0 octets
+│   │   │   │   └── .gitkeep — 0 octets
+│   │   │   ├── caissier/ — 0 octets
+│   │   │   │   └── .gitkeep — 0 octets
+│   │   │   └── couturiere/ — 0 octets
+│   │   │       └── .gitkeep — 0 octets
+│   │   ├── az/ — 6,00 Mio
+│   │   │   ├── az_assis_de_cote.png — 2,14 Mio
+│   │   │   ├── az_cote.png — 865,2 Kio
+│   │   │   ├── az_face.png — 1,10 Mio
+│   │   │   └── Azazel.png — 1,91 Mio
+│   │   ├── boss/ — 5,46 Mio
+│   │   │   ├── carotte_choux_oignon.png — 1,58 Mio
+│   │   │   ├── Gemini_Generated_Image_joczczjoczczjocz.jpg — 1 009,5 Kio
+│   │   │   ├── poivron_courgette_banane.png — 1,42 Mio
+│   │   │   └── tomate_ail_mais_aubergine_patate.png — 1,48 Mio
+│   │   ├── breeds/ — 7,3 Kio
+│   │   │   ├── glouton.svg — 1,0 Kio
+│   │   │   ├── grand_sportif.svg — 1,0 Kio
+│   │   │   ├── gros_dormeur.svg — 1,0 Kio
+│   │   │   ├── maladroit.svg — 1,0 Kio
+│   │   │   ├── normal.svg — 1,0 Kio
+│   │   │   ├── petit_dormeur.svg — 1,0 Kio
+│   │   │   └── petit_mangeur.svg — 1,0 Kio
+│   │   ├── fond/ — 13,10 Mio
+│   │   │   ├── Halloween/ — 0 octets
+│   │   │   │   └── .gitkeep — 0 octets
+│   │   │   ├── Noel/ — 0 octets
+│   │   │   │   └── .gitkeep — 0 octets
+│   │   │   ├── Nouvel_An_Chinois/ — 0 octets
+│   │   │   │   ├── jour/ — 0 octets
+│   │   │   │   │   └── .gitkeep — 0 octets
+│   │   │   │   └── nuit/ — 0 octets
+│   │   │   │       └── .gitkeep — 0 octets
+│   │   │   ├── Nuit/ — 13,10 Mio
+│   │   │   │   ├── Image ChatGPT 30 sept. 2026, 00_29_30-4.png — 1,96 Mio
+│   │   │   │   ├── Image ChatGPT 30 sept. 2026, 00_29_33-8.png — 2,29 Mio
+│   │   │   │   ├── Image ChatGPT 30 sept. 2026, 00_29_36-11.png — 2,12 Mio
+│   │   │   │   ├── Image ChatGPT 30 sept. 2026, 00_29_41-16.png — 2,53 Mio
+│   │   │   │   ├── Image ChatGPT 30 sept. 2026, 00_29_44-20.png — 2,11 Mio
+│   │   │   │   └── Image ChatGPT 30 sept. 2026, 00_29_48-24.png — 2,08 Mio
+│   │   │   ├── Paques/ — 0 octets
+│   │   │   │   └── .gitkeep — 0 octets
+│   │   │   └── Saison/ — 0 octets
+│   │   │       ├── jour/ — 0 octets
+│   │   │       │   └── .gitkeep — 0 octets
+│   │   │       └── nuit/ — 0 octets
+│   │   │           └── .gitkeep — 0 octets
+│   │   ├── images des futur création/ — 134,01 Mio
+│   │   │   ├── boss/ — 21,50 Mio
+│   │   │   │   ├── ananas.jpg — 871,3 Kio
+│   │   │   │   ├── betterave.png — 2,59 Mio
+│   │   │   │   ├── celeri.png — 2,45 Mio
+│   │   │   │   ├── cornichon.png — 2,11 Mio
+│   │   │   │   ├── fraise.png — 2,12 Mio
+│   │   │   │   ├── pissenlit.png — 3,00 Mio
+│   │   │   │   ├── poire.png — 1,40 Mio
+│   │   │   │   ├── pomme.png — 2,22 Mio
+│   │   │   │   ├── raisin.png — 2,37 Mio
+│   │   │   │   └── taupinenbour.png — 2,38 Mio
+│   │   │   └── lapin/ — 112,51 Mio
+│   │   │       ├── commun/ — 12,15 Mio
+│   │   │       │   ├── cafe_cote.png — 280,4 Kio
+│   │   │       │   ├── cafe_face.png — 294,2 Kio
+│   │   │       │   ├── cendre_cote.png — 286,9 Kio
+│   │   │       │   ├── cendre_face.png — 280,8 Kio
+│   │   │       │   ├── champi_cote.png — 1,09 Mio
+│   │   │       │   ├── champi_face.png — 1,09 Mio
+│   │   │       │   ├── champi.png — 2,22 Mio
+│   │   │       │   ├── fraise_cote.png — 179,8 Kio
+│   │   │       │   ├── fraise_cote1.png — 293,6 Kio
+│   │   │       │   ├── fraise_face.png — 173,4 Kio
+│   │   │       │   ├── fraise_face1.png — 299,4 Kio
+│   │   │       │   ├── hibou_cote.png — 303,5 Kio
+│   │   │       │   ├── hibou_face.png — 298,8 Kio
+│   │   │       │   ├── noisette_cote.png — 224,2 Kio
+│   │   │       │   ├── noisette_face.png — 210,7 Kio
+│   │   │       │   ├── Premium fantasy rabbit collectible sheet._Display 4 rabbit characters._Each rabbit appears EXACTLY T (1).png — 2,28 Mio
+│   │   │       │   ├── Premium fantasy rabbit collectible sheet._Display 4 rabbit characters._Each rabbit appears EXACTLY T.png — 1,65 Mio
+│   │   │       │   ├── tournesol_cote.png — 202,9 Kio
+│   │   │       │   ├── tournesol_face.png — 195,9 Kio
+│   │   │       │   ├── trefle_cote.png — 191,3 Kio
+│   │   │       │   └── trefle_face.png — 189,6 Kio
+│   │   │       ├── elements/ — 19,23 Mio
+│   │   │       │   ├── eclipse_cote.png — 1,04 Mio
+│   │   │       │   ├── eclipse_face.png — 1,09 Mio
+│   │   │       │   ├── elements.png — 9,65 Mio
+│   │   │       │   ├── gaia_cote.png — 1,46 Mio
+│   │   │       │   ├── gaia_face.png — 1,41 Mio
+│   │   │       │   ├── ignis_cote.png — 1 017,3 Kio
+│   │   │       │   ├── ignis_face.png — 1,21 Mio
+│   │   │       │   ├── storm_cote.png — 1,14 Mio
+│   │   │       │   └── storm_face.png — 1,25 Mio
+│   │   │       ├── haloween_2027/ — 45,91 Mio
+│   │   │       │   ├── areignée_cote.png — 1,06 Mio
+│   │   │       │   ├── areignée_face.png — 1,18 Mio
+│   │   │       │   ├── chauve_souris_cote.png — 1,28 Mio
+│   │   │       │   ├── chauve_souris_face.png — 1,31 Mio
+│   │   │       │   ├── citrouille_cote.png — 1,11 Mio
+│   │   │       │   ├── citrouille_face.png — 998,6 Kio
+│   │   │       │   ├── faucheur_cote.png — 1,22 Mio
+│   │   │       │   ├── faucheur_face.png — 1,21 Mio
+│   │   │       │   ├── haloween_2027.png — 23,05 Mio
+│   │   │       │   ├── harley_cote.png — 1,12 Mio
+│   │   │       │   ├── harley_face.png — 1,21 Mio
+│   │   │       │   ├── joker_cote.png — 978,6 Kio
+│   │   │       │   ├── joker_face.png — 1,06 Mio
+│   │   │       │   ├── lanterne_cote.png — 1 023,6 Kio
+│   │   │       │   ├── lanterne_face.png — 1,05 Mio
+│   │   │       │   ├── marionett_cote.png — 1,16 Mio
+│   │   │       │   ├── marionett_face.png — 1,06 Mio
+│   │   │       │   ├── necromencien_cote.png — 1,29 Mio
+│   │   │       │   ├── necromencien_face.png — 1,30 Mio
+│   │   │       │   ├── sans_visage_cote.png — 1,13 Mio
+│   │   │       │   └── sans_visage_face.png — 1,17 Mio
+│   │   │       ├── saison/ — 6,48 Mio
+│   │   │       │   ├── automne_cote.png — 378,7 Kio
+│   │   │       │   ├── automne_face.png — 419,5 Kio
+│   │   │       │   ├── ete_cote.png — 407,8 Kio
+│   │   │       │   ├── ete_face.png — 410,7 Kio
+│   │   │       │   ├── hiver_cote.png — 430,7 Kio
+│   │   │       │   ├── hiver_face.png — 442,6 Kio
+│   │   │       │   ├── pringtemps_cote.png — 381,1 Kio
+│   │   │       │   ├── pringtemps_face.png — 425,3 Kio
+│   │   │       │   └── saison.png — 3,26 Mio
+│   │   │       ├── banshee_cote.png — 1,19 Mio
+│   │   │       ├── banshee_face.png — 1,24 Mio
+│   │   │       ├── deesse_des_ames_cote.png — 1 022,4 Kio
+│   │   │       ├── deesse_des_ames_face.png — 1,10 Mio
+│   │   │       ├── noce_funebre_abimé_cote.png — 1,18 Mio
+│   │   │       ├── noce_funebre_abimé_face.png — 1,04 Mio
+│   │   │       ├── noce_funebre_bien_cote.png — 1,06 Mio
+│   │   │       ├── noce_funebre_bien_face.png — 1,27 Mio
+│   │   │       ├── sirene_cote.png — 1,05 Mio
+│   │   │       ├── sirene_face.png — 1,07 Mio
+│   │   │       ├── ssmmdt.png — 13,72 Mio
+│   │   │       ├── succube_cote.png — 680,7 Kio
+│   │   │       ├── succube_face.png — 835,9 Kio
+│   │   │       ├── triton_cote.png — 1,11 Mio
+│   │   │       └── triton_face.png — 1,22 Mio
+│   │   ├── lapins_jouables/ — 40,31 Mio
+│   │   │   ├── lapin_evenement/ — 32,73 Mio
+│   │   │   │   ├── Halloween/ — 12,34 Mio
+│   │   │   │   │   ├── bete.png — 1,41 Mio
+│   │   │   │   │   ├── fantome.png — 1,25 Mio
+│   │   │   │   │   ├── frank.png — 1,28 Mio
+│   │   │   │   │   ├── haloween.png — 6,94 Mio
+│   │   │   │   │   └── krampus.png — 1,47 Mio
+│   │   │   │   ├── Multi_saisons/ — 12,87 Mio
+│   │   │   │   │   └── 5_legendes.png — 12,87 Mio
+│   │   │   │   ├── Noel/ — 1,30 Mio
+│   │   │   │   │   └── noel.png — 1,30 Mio
+│   │   │   │   ├── Nouvel_An_Chinois/ — 4,97 Mio
+│   │   │   │   │   ├── Feuille de lapins fantastiques et dragon doré.png — 2,89 Mio
+│   │   │   │   │   └── Wushi, lapin guerrier mythique.png — 2,09 Mio
+│   │   │   │   └── Paques/ — 1,24 Mio
+│   │   │   │       ├── paques_cote1.png — 632,9 Kio
+│   │   │   │       └── paques_face1.png — 640,6 Kio
+│   │   │   └── sans_evenements/ — 7,58 Mio
+│   │   │       ├── bceprt.png — 1,86 Mio
+│   │   │       ├── Designer (1).png — 1,92 Mio
+│   │   │       ├── Designer.png — 2,08 Mio
+│   │   │       └── fleur.png — 1,72 Mio
+│   │   ├── magasin/ — 0 octets
+│   │   │   ├── aliments/ — 0 octets
+│   │   │   │   └── .gitkeep — 0 octets
+│   │   │   └── produits/ — 0 octets
+│   │   │       └── .gitkeep — 0 octets
+│   │   ├── oeuf/ — 0 octets
+│   │   │   └── .gitkeep — 0 octets
+│   │   ├── puzzle/ — 0 octets
+│   │   │   ├── de_base/ — 0 octets
+│   │   │   │   └── .gitkeep — 0 octets
+│   │   │   ├── Halloween/ — 0 octets
+│   │   │   │   └── .gitkeep — 0 octets
+│   │   │   ├── Multi_saisons/ — 0 octets
+│   │   │   │   └── .gitkeep — 0 octets
+│   │   │   ├── Noel/ — 0 octets
+│   │   │   │   └── .gitkeep — 0 octets
+│   │   │   ├── Nouvel_An_Chinois/ — 0 octets
+│   │   │   │   └── .gitkeep — 0 octets
+│   │   │   └── Paques/ — 0 octets
+│   │   │       └── .gitkeep — 0 octets
+│   │   ├── Zone_Chambre/ — 66,1 Kio
+│   │   │   └── dodo.gif — 66,1 Kio
+│   │   ├── Zone_cuisine/ — 60,4 Kio
+│   │   │   └── lapin_cuisine.gif — 60,4 Kio
+│   │   ├── Zone_jardin/ — 91,0 Kio
+│   │   │   └── entrenement.gif — 91,0 Kio
+│   │   ├── Zone_SdB/ — 935,8 Kio
+│   │   │   └── lapin_SdB.gif — 935,8 Kio
+│   │   └── lapin_soin.gif — 14,1 Kio
+│   ├── js/ — 554,3 Kio
+│   │   ├── achievements.js — 5,3 Kio
+│   │   ├── bootstrap.min.js — 59,2 Kio
+│   │   ├── dashboard-access.js — 5,0 Kio
+│   │   ├── dashboard.js — 46,6 Kio
+│   │   ├── image-assets.js — 6,7 Kio
+│   │   ├── image-manifest.js — 59,6 Kio
+│   │   ├── jquery-3.6.1.min.js — 87,6 Kio
+│   │   ├── legal.js — 1,5 Kio
+│   │   ├── puzzle-data.js — 2,4 Kio
+│   │   ├── script.js — 234,7 Kio
+│   │   ├── shop.js — 35,0 Kio
+│   │   └── species-data.js — 10,7 Kio
+│   └── cloudinary-images.json — 46,5 Kio
+├── docs/ — 146,2 Kio
+│   ├── archives/ — 22,0 Kio
+│   │   └── a-faire/ — 22,0 Kio
+│   │       ├── a faire - original.txt — 6,7 Kio
+│   │       ├── a faire.txt — 8,0 Kio
+│   │       ├── a faire(1).txt — 6,7 Kio
+│   │       └── README.md — 536 octets
+│   ├── AUDIT_SEO.md — 3,6 Kio
+│   ├── AUDIT_VISUELS_GOOGLE_PLAY.md — 53,1 Kio
+│   ├── CUISINE.md — 1,5 Kio
+│   ├── Lapinous_publication_et_revenus.pdf — 39,2 Kio
+│   ├── MAGASIN.md — 14,3 Kio
+│   ├── MIGRATION_CLOUDINARY.md — 4,6 Kio
+│   ├── NOUVEL_AN_CHINOIS.md — 3,1 Kio
+│   └── PUZZLES.md — 4,9 Kio
+├── Lapinous_documents_juridiques/ — 84,6 Kio
+│   ├── 00_LIRE_AVANT_PUBLICATION.md — 3,6 Kio
+│   ├── 01_CGU.html — 7,8 Kio
+│   ├── 02_CGV_carottes.html — 8,0 Kio
+│   ├── 03_confidentialite.html — 7,9 Kio
+│   ├── 04_mentions_legales.html — 2,8 Kio
+│   ├── 05_credits_IA_licences.html — 3,1 Kio
+│   ├── 06_retractation_remboursement.html — 3,8 Kio
+│   ├── 07_suppression_donnees.html — 3,0 Kio
+│   ├── 08_registre_ressources.csv — 473 octets
+│   ├── 09_integration_codex.md — 2,8 Kio
+│   ├── 10_sources.md — 2,4 Kio
+│   ├── 11_registre_traitements.csv — 2,1 Kio
+│   └── Lapinous_documents_juridiques.pdf — 36,9 Kio
+├── liste de futur création/ — 36,9 Kio
+│   ├── futur_lapin.md — 26,7 Kio
+│   └── future_boss.md — 10,2 Kio
+├── sauvegarde/ — 21,3 Kio
+│   ├── admin.json — 17,4 Kio
+│   └── lapinous-azazel-2026-09-30_21h58.json — 3,8 Kio
+├── tools/ — 44,7 Kio
+│   ├── backup-transferred-images.mjs — 1,9 Kio
+│   ├── clean-transferred-images.mjs — 2,4 Kio
+│   ├── cloudinary-activate.mjs — 3,6 Kio
+│   ├── cloudinary-sync.mjs — 13,3 Kio
+│   ├── install-image-schedule.ps1 — 1,1 Kio
+│   ├── run-image-schedule.ps1 — 466 octets
+│   ├── test-image-assets.mjs — 3,5 Kio
+│   ├── test-image-backup.mjs — 2,2 Kio
+│   ├── test-image-browser.mjs — 4,3 Kio
+│   ├── update-images.mjs — 3,7 Kio
+│   └── update-readme-sizes.mjs — 8,2 Kio
+├── .gitignore — 119 octets
+├── A_FAIRE.md — 15,4 Kio
+├── AGENTS.md — 667 octets
+├── dashboard.html — 17,2 Kio
+├── fichier_inutiliser.ipynb — 11,1 Kio
+├── index.html — 25,2 Kio
+├── lapinous-content.json — 74,6 Kio
+├── lapinous-puzzles.json — 5,4 Kio
+├── lapinous-shop.json — 8,0 Kio
+├── readme.md — 36,0 Kio
+└── Synchroniser les images.cmd — 74 octets
 ```
 
-### Remarque sur les anciens GIF
+Poids total du projet : **219,22 Mio** (229 869 990 octets), calculé le 8 octobre 2026.
 
-Les dossiers des pièces contiennent encore certains anciens `.gif`, mais le jeu utilise désormais les nouveaux visuels `.png` pour la Cuisine, la Chambre, la Salle de bain et le Jardin. Ils peuvent être conservés provisoirement avant nettoyage définitif.
+Pour recalculer cette section : `node tools/update-readme-sizes.mjs`. La copie `clikergame_avec_image` sert uniquement de référence et reste intacte.
 
 ## 🧩 Ajouter un puzzle
 
@@ -233,7 +485,7 @@ Exemple :
 {
   "id": "mon_puzzle",
   "title": "Mon puzzle",
-  "image": "./assets/img/puzzle/mon_puzzle.png",
+  "image": "./assets/img/puzzle/de_base/mon_puzzle.png",
   "linkedSpecies": ["azur", "caramel"]
 }
 ```
@@ -306,13 +558,13 @@ Les sauvegardes conservent notamment :
 
 Le projet continue d'évoluer. Parmi les pistes déjà prévues :
 
-- Memory avec les personnages ;
-- Lapidoku ;
+- nouveaux défis et équilibrage des 30 niveaux de Memory ;
+- nouvelles grilles de Lapidoku ;
 - nouveaux puzzles ;
 - nouvelles compétences de combat ;
 - nouveaux boss ;
 - nouveaux lapins communs et événementiels ;
-- événements saisonniers supplémentaires ;222
+- événements saisonniers supplémentaires ;
 - sons et ambiances propres aux événements.
 
 ## 🏆 Succès et récompenses
@@ -335,3 +587,25 @@ Le projet a bénéficié de l’aide d’outils d’intelligence artificielle :
 - **Gemini** : génération d’images.
 - **ChatGPT et Claude** : aide au développement et à l’écriture du code.
 
+
+## Tests de produits en administrateur
+
+Les curseurs Admin permettent de baisser nourriture, sommeil et propreté du lapin actif ; le bouton 25 % prépare les essais de consommables. La restauration de la partie avant tests reste disponible. Les jeux adaptent leurs grilles à la hauteur de l’écran ; l’aperçu de pièce du puzzle se referme au clic.
+
+### Administration et visibilité
+
+Depuis le bouton Admin, choisir **Ouvrir le Dashboard**. Le raccourci cadenas a été retiré de l’encyclopédie. La section **Visibilité du jeu** configure magasin, apothicairerie, documents juridiques, encyclopédie, puzzles, Memory, Lapidoku et combats. Les choix sont conservés localement ; pour les publier, exporter le contenu du Dashboard et remplacer `lapinous-content.json` à la racine par cet export. Les valeurs `public`, `admin` et `hidden` sont définies dans `visibility`. Cela pilote l’affichage, sans constituer une protection d’accès aux fichiers. Les documents juridiques restent en mode admin par défaut.
+
+Le son `assets/audio/combat/bouclier_activation.mp3` accompagne la création d’une protection (technique, ultime d’équipe et ultime du boss), indépendamment du son d’impact sur un bouclier.
+
+Les puzzles fixent désormais chaque pièce dès sa bonne pose. L’aperçu utilise la zone à droite du plateau. Le Memory utilise des cartes et commandes plus compactes pour limiter le défilement ; disposition vérifiée à 1250 × 720.
+
+Correction des noms au rechargement : `speciesNames` reste la source des noms individuels ; le nom global ancien ne migre que si ce dictionnaire était absent. Le champ de compatibilité `rabbitName` est synchronisé sur le lapin actif lors de l’enregistrement. Admin → **Tester tous les niveaux des jeux** ouvre les derniers niveaux sans modifier les verrous de progression enregistrés.
+
+À l’ouverture d’un œuf ou de dix œufs, les taux par rareté proviennent de `loadEggRates()`. L’enregistrement dans le Dashboard actualise les taux affichés, y compris dans un autre onglet du même site. Pour partager ces réglages avec les joueurs, exporter puis remplacer `lapinous-content.json`. Le catalogue puzzles du Dashboard utilise des cartes illustrées.
+
+Le Dashboard regroupe ses sections dans des accordéons et propose un menu d’accès rapide. Le catalogue magasin peut être édité et exporté dans sa section dédiée ; la version de test locale est stockée sous `lapinous_shop_catalog` et utilisée uniquement sur localhost. Recharge le jeu après enregistrement. La publication utilise toujours le fichier `lapinous-shop.json`.
+
+La cuisine propose une portion gratuite réduite, une réserve d’aliments achetés au Marché et quatre recettes à bonus temporaires. Les évolutions des pièces comptent cinq étapes avec déblocages aux niveaux d’amitié 5/10/15/20 puis achats en carottes. Voir [docs/CUISINE.md](docs/CUISINE.md). Le visuel dédié du Chef reste à fournir ; son entrée est centralisée dans le catalogue.
+
+Mise à jour cuisine : réserve ouverte uniquement au clic sur le frigo ; Marché de fraises, poires, courgettes et fleurs. Les plats spéciaux et bonus sont suspendus par `recipesEnabled: false`, en attendant la refonte du combat. Les données et stocks restent conservés.

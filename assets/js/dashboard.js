@@ -1,6 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
     if (!(["localhost", "127.0.0.1", "::1", "[::1]"].includes(window.location.hostname.toLowerCase()))) return;
-    Promise.all([window.LapinousContentReady || Promise.resolve(), window.LapinousPuzzlesReady || Promise.resolve()]).then(() => {
+    Promise.all([window.LapinousContentReady || Promise.resolve(), window.LapinousPuzzlesReady || Promise.resolve(), window.LapinousShopReady || Promise.resolve()]).then(() => {
+    // Modifier la visibilité locale ; l’export du contenu applique ces choix au site publié.
+    const visibilitySection=document.createElement('section');visibilitySection.className='dash-section';
+    visibilitySection.innerHTML='<h2>Visibilité du jeu</h2><p>Visible pour tous, réservé à l’administration locale ou masqué. Exporte le contenu JSON pour publier ces choix.</p><div id="visibilitySettings" class="dash-form"></div>';
+    document.querySelector('main').prepend(visibilitySection);
+    function renderVisibility(){const settings=window.LapinousVisibility.get();document.getElementById('visibilitySettings').innerHTML=Object.entries(window.LapinousVisibility.definitions).map(([key,def])=>'<label>'+def[0]+' <select data-visibility="'+key+'">'+[['public','Visible pour tous'],['admin','Admin local uniquement'],['hidden','Masqué']].map(([value,label])=>'<option value="'+value+'" '+(settings[key]===value?'selected':'')+'>'+label+'</option>').join('')+'</select></label>').join('');}
+    renderVisibility();
+    visibilitySection.addEventListener('change',event=>{const key=event.target.dataset.visibility;if(key)window.LapinousVisibility.save({...window.LapinousVisibility.get(),[key]:event.target.value});});
     const toastContainer = document.getElementById("toastContainer");
 
     function showToast(message, type = "") {
@@ -76,11 +83,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function speciesRowHtml(key, s) {
-        const img = (s && (s.faceImg || s.coteImg)) || "./assets/img/species/mystery.svg";
+        const img = (s && (s.faceImg || s.coteImg)) || "./assets/img/lapins_jouables/sans_evenements/mystery.svg";
         return `
-            <td><img src="${img}" class="row-thumb" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';">
-                <label class="file-preview-wrap"><input type="file" accept="image/*" data-field="faceFile" title="Photo de face" onchange="previewRowImage(this)"><img class="file-preview" alt="aperçu face" style="display:none;"></label>
-                <label class="file-preview-wrap"><input type="file" accept="image/*" data-field="coteFile" title="Photo 3/4" onchange="previewRowImage(this)"><img class="file-preview" alt="aperçu 3/4" style="display:none;"></label></td>
+            <td><img src="${img}" class="row-thumb" onerror="this.onerror=null;this.src='./assets/img/lapins_jouables/sans_evenements/mystery.svg';">
+                <label class="file-preview-wrap"><input type="text" data-field="faceImg" aria-label="Chemin image de face" value="${html(s?.faceImg || img)}"><img class="file-preview" alt="aperçu face" style="display:none;"></label>
+                <label class="file-preview-wrap"><input type="text" data-field="coteImg" aria-label="Chemin image trois quarts" value="${html(s?.coteImg || s?.faceImg || img)}"><img class="file-preview" alt="aperçu 3/4" style="display:none;"></label></td>
             <td><input type="text" data-field="key" value="${key || ""}" ${key ? "readonly" : ""} placeholder="identifiant"></td>
             <td><input type="text" data-field="name" value="${s?.name || ""}"></td>
             <td><input type="text" data-field="nickname" value="${s?.nickname || ""}"></td>
@@ -143,10 +150,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 const key = (v.key || "").trim().replace(/\s+/g, "_");
                 if (!key) { showToast("Il faut un identifiant pour ce lapin.", "warn"); return; }
                 const existing = getSpecies()[key];
-                let faceImg = existing?.faceImg || "./assets/img/species/mystery.svg";
+                let faceImg = existing?.faceImg || "./assets/img/lapins_jouables/sans_evenements/mystery.svg";
                 let coteImg = existing?.coteImg || faceImg;
-                if (v.faceFile) faceImg = await fileToDataUrl(v.faceFile);
-                if (v.coteFile) coteImg = await fileToDataUrl(v.coteFile);
+                if (v.faceImg) faceImg = v.faceImg.trim();
+                if (v.coteImg) coteImg = v.coteImg.trim();
                 const entry = {
                     ...existing,
                     name: v.name.trim() || key,
@@ -183,12 +190,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // ---- Tableau des boss ----
     function bossRowHtml(key, b) {
-        const img = (b && (b.faceImg || b.coteImg)) || "./assets/img/species/mystery.svg";
+        const img = (b && (b.faceImg || b.coteImg)) || "./assets/img/lapins_jouables/sans_evenements/mystery.svg";
         const personality = b ? (Array.isArray(b.personality) ? b.personality.join(", ") : b.personality || "") : "";
         return `
-            <td><img src="${img}" class="row-thumb" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';">
-                <label class="file-preview-wrap"><input type="file" accept="image/*" data-field="faceFile" title="Photo de face" onchange="previewRowImage(this)"><img class="file-preview" alt="aperçu face" style="display:none;"></label>
-                <label class="file-preview-wrap"><input type="file" accept="image/*" data-field="coteFile" title="Photo 3/4" onchange="previewRowImage(this)"><img class="file-preview" alt="aperçu 3/4" style="display:none;"></label></td>
+            <td><img src="${img}" class="row-thumb" onerror="this.onerror=null;this.src='./assets/img/lapins_jouables/sans_evenements/mystery.svg';">
+                <label class="file-preview-wrap"><input type="text" data-field="faceImg" aria-label="Chemin image de face" value="${html(b?.faceImg || img)}"><img class="file-preview" alt="aperçu face" style="display:none;"></label>
+                <label class="file-preview-wrap"><input type="text" data-field="coteImg" aria-label="Chemin image trois quarts" value="${html(b?.coteImg || b?.faceImg || img)}"><img class="file-preview" alt="aperçu 3/4" style="display:none;"></label></td>
             <td><input type="text" data-field="key" value="${key || ""}" ${key ? "readonly" : ""} placeholder="identifiant"></td>
             <td><input type="text" data-field="name" value="${b?.name || ""}"></td>
             <td><input type="text" data-field="nickname" value="${b?.nickname || ""}"></td>
@@ -232,10 +239,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 const key = (v.key || "").trim().replace(/\s+/g, "_");
                 if (!key) { showToast("Il faut un identifiant pour ce boss.", "warn"); return; }
                 const existing = getBosses()[key];
-                let faceImg = existing?.faceImg || "./assets/img/species/mystery.svg";
+                let faceImg = existing?.faceImg || "./assets/img/lapins_jouables/sans_evenements/mystery.svg";
                 let coteImg = existing?.coteImg || faceImg;
-                if (v.faceFile) faceImg = await fileToDataUrl(v.faceFile);
-                if (v.coteFile) coteImg = await fileToDataUrl(v.coteFile);
+                if (v.faceImg) faceImg = v.faceImg.trim();
+                if (v.coteImg) coteImg = v.coteImg.trim();
                 const entry = {
                     name: v.name.trim() || key,
                     nickname: v.nickname.trim(),
@@ -313,6 +320,7 @@ document.addEventListener("DOMContentLoaded", () => {
             bosses: getBosses(),
             eggRates: loadEggRates(),
             eventWindows: loadEventWindows(),
+            visibility: window.LapinousVisibility.get(),
         };
         delete bundle.species.az; // Azazel reste géré par le code, pas par le contenu
         const blob = new Blob([JSON.stringify(bundle, null, 2)], { type: "application/json" });
@@ -334,6 +342,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const bosses = bundle.bosses || bundle.customBosses;
                 if (species) localStorage.setItem(CUSTOM_SPECIES_KEY, JSON.stringify(species));
                 if (bosses) localStorage.setItem(CUSTOM_BOSSES_KEY, JSON.stringify(bosses));
+                if (bundle.visibility) { window.LapinousVisibility.save(bundle.visibility); renderVisibility(); }
                 if (bundle.eggRates) saveEggRates(bundle.eggRates);
                 if (bundle.eventWindows) saveEventWindows(bundle.eventWindows);
                 renderDashboard();
@@ -356,10 +365,10 @@ document.addEventListener("DOMContentLoaded", () => {
             .filter(([key, sp]) => !sp.hidden || key === "az")
             .sort((a, b) => (a[1].name || a[0]).localeCompare(b[1].name || b[0]))
             .map(([key, sp]) => {
-                const img = sp.faceImg || sp.coteImg || "./assets/img/species/mystery.svg";
+                const img = sp.faceImg || sp.coteImg || "./assets/img/lapins_jouables/sans_evenements/mystery.svg";
                 return `<label class="puzzle-species-option">
                     <input type="checkbox" value="${key}" ${set.has(key) ? "checked" : ""}>
-                    <img src="${img}" alt="" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';">
+                    <img src="${img}" alt="" onerror="this.onerror=null;this.src='./assets/img/lapins_jouables/sans_evenements/mystery.svg';">
                     <span><strong>${sp.name || key}</strong><small>${key}</small></span>
                 </label>`;
             }).join("");
@@ -389,28 +398,27 @@ document.addEventListener("DOMContentLoaded", () => {
         return list.join(",");
     }
 
-    function puzzleAdminRow(puz, index) {
-        return `<tr data-puzzle-index="${index}">
-            <td class="puzzle-admin-image-cell"><img src="${puz.image || './assets/img/species/mystery.svg'}" alt="${puz.title || ''}" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';"></td>
-            <td><input class="name-input" data-puzzle-field="id" value="${puz.id || ''}"></td>
-            <td><input class="name-input" data-puzzle-field="title" value="${puz.title || ''}"></td>
-            <td><input class="name-input puzzle-path-input" data-puzzle-field="image" value="${puz.image || ''}" placeholder="./assets/img/puzzle/mon_puzzle.png"></td>
-            <td class="puzzle-event-cell"><div style="display:flex;flex-direction:column;gap:4px;min-width:120px;">${PUZZLE_EVENT_CHOICES.map((opt) => `<label style="display:flex;align-items:center;gap:6px;cursor:pointer;white-space:nowrap;"><input type="checkbox" data-puzzle-event value="${opt.value}" ${puzzleEventValue(puz).split(",").includes(opt.value) ? "checked" : ""}>${opt.label}</label>`).join("")}<small style="opacity:.7;">Rien coché = toujours dispo</small></div></td>
-            <td class="puzzle-links-cell">${puzzleSpeciesDropdown(puz.linkedSpecies)}</td>
-            <td class="row-actions puzzle-row-actions"><button class="slot-btn save" data-save-puzzle>💾</button><button class="slot-btn clear" data-delete-puzzle>🗑️</button></td>
-        </tr>`;
+    // Une carte garde l’illustration lisible et rassemble les champs du même puzzle.
+    function puzzleAdminRow(puz,index){
+        return `<details class="puzzle-admin-card" data-puzzle-index="${index}"><summary class="catalog-card-summary">
+            <img class="puzzle-admin-cover" src="${puz.image || './assets/img/lapins_jouables/sans_evenements/mystery.svg'}" alt="${puz.title || ''}" loading="lazy"><strong>${puz.title || puz.id}</strong></summary>
+            <div class="puzzle-admin-fields"><button type="button" class="catalog-card-return" onclick="this.parentElement.parentElement.open=false">↩ Retour à l’image</button><label>Titre<input class="name-input" data-puzzle-field="title" value="${puz.title || ''}"></label>
+            <label>Identifiant<input class="name-input" data-puzzle-field="id" value="${puz.id || ''}"></label>
+            <label>Image<input class="name-input" data-puzzle-field="image" value="${puz.image || ''}"></label>
+            <details class="puzzle-admin-events"><summary>Événements</summary>${PUZZLE_EVENT_CHOICES.map(opt=>`<label><input type="checkbox" data-puzzle-event value="${opt.value}" ${puzzleEventValue(puz).split(',').includes(opt.value)?'checked':''}>${opt.label}</label>`).join('')}<small>Rien coché : toujours disponible</small></details>
+            ${puzzleSpeciesDropdown(puz.linkedSpecies)}
+            <div class="puzzle-card-actions"><button class="slot-btn save" data-save-puzzle>💾 Enregistrer</button><button class="slot-btn clear" data-delete-puzzle>🗑️ Supprimer</button></div></div></details>`;
     }
 
     function renderPuzzleAdmin() {
         const box = document.getElementById("puzzleAdminList");
         if (!box || !window.getPuzzleCatalog) return;
         const puzzles = window.getPuzzleCatalog() || [];
-        box.innerHTML = puzzles.length ? `<div class="puzzle-admin-table-wrap"><table class="puzzle-admin-table">
-            <thead><tr><th>Image</th><th>Identifiant</th><th>Titre</th><th>Chemin</th><th>Événement</th><th>Lapins liés</th><th></th></tr></thead>
-            <tbody>${puzzles.map(puzzleAdminRow).join("")}</tbody></table></div>` : '<p class="dash-note">Aucun puzzle pour le moment.</p>';
+        box.innerHTML = puzzles.length ? '<label class="puzzle-event-filter">Événement <select id="puzzleEventFilter"><option value="">Tous</option><option value="none">Sans événement</option>'+PUZZLE_EVENT_CHOICES.map(opt=>'<option value="'+opt.value+'">'+opt.label+'</option>').join('')+'</select></label><div class="puzzle-admin-cards">'+puzzles.map(puzzleAdminRow).join('')+'</div>' : '<p class="dash-note">Aucun puzzle pour le moment.</p>';
 
+        box.querySelector('#puzzleEventFilter')?.addEventListener('change',event=>{box.querySelectorAll('[data-puzzle-index]').forEach(card=>{const events=puzzleEventValue(puzzles[Number(card.dataset.puzzleIndex)]).split(',').filter(Boolean);card.hidden=event.target.value==='none'?events.length>0:Boolean(event.target.value)&&!events.includes(event.target.value);});});
         box.querySelectorAll('[data-save-puzzle]').forEach((btn) => btn.addEventListener('click', () => {
-            const row = btn.closest('tr[data-puzzle-index]');
+            const row = btn.closest('[data-puzzle-index]');
             const idx = Number(row.dataset.puzzleIndex);
             const list = [...(window.getPuzzleCatalog() || [])];
             const current = { ...(list[idx] || {}) };
@@ -424,7 +432,7 @@ document.addEventListener("DOMContentLoaded", () => {
             showToast(`Puzzle "${current.title || current.id}" enregistré ✅`, 'success');
         }));
         box.querySelectorAll('[data-delete-puzzle]').forEach((btn) => btn.addEventListener('click', () => {
-            const row = btn.closest('tr[data-puzzle-index]');
+            const row = btn.closest('[data-puzzle-index]');
             const idx = Number(row.dataset.puzzleIndex);
             const list = [...(window.getPuzzleCatalog() || [])];
             const removed = list.splice(idx, 1)[0];
@@ -692,5 +700,50 @@ document.addEventListener("DOMContentLoaded", () => {
     if (speciesEventFilter) speciesEventFilter.addEventListener("change", applySpeciesFilters);
 
     renderDashboard();
+    // Édition par cartes des articles et tableau distinct des accompagnateurs.
+    const shopSection=document.createElement('section');shopSection.className='dash-section';
+    shopSection.innerHTML='<h2>🛍️ Articles magasin</h2><div id="shopItemCards" class="puzzle-admin-cards"></div><div class="save-io-row"><button id="saveShopCatalog" class="io-btn">Enregistrer localement</button><button id="exportShopCatalog" class="io-btn">Exporter lapinous-shop.json</button><button id="addShopItem" class="io-btn">Ajouter un article</button></div><p id="shopCatalogStatus" role="status"></p>';
+    const companionSection=document.createElement('section');companionSection.className='dash-section';companionSection.innerHTML='<h2>🐰 Accompagnateurs</h2><div id="companionEditor"></div>';
+    document.querySelector('main').append(shopSection,companionSection);
+    let shopData=null;
+    function html(value){return String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));}
+    function renderShopEditor(){
+        // Traduit les champs affichés ; les valeurs du catalogue restent compatibles avec le jeu.
+        function renderItemField(key){
+            const labels={id:'Identifiant',name:'Nom',emoji:'Symbole',price:'Prix en carottes',kind:'Type de produit',stat:'Besoin',category:'Rayon',restoreAmount:'Points rendus',image:'Chemin de l’image',description:'Description'};
+            const choices={kind:{restore:'Soin ou aliment',reset:'Extracteur de fragments'},stat:{'':'Aucun',food:'Nourriture',energy:'Sommeil',cleanliness:'Propreté'},category:{'':'Articles',market:'Marché',prepared:'Plats préparés',legacy_food:'Ancienne nourriture',retired:'Masqué'}};
+            const value=itemForFields[key]??'';
+            let control;
+            if(choices[key]){const options={...choices[key]};if(!Object.hasOwn(options,value))options[value]='Autre';control='<select data-item-field="'+key+'">'+Object.entries(options).map(([id,label])=>'<option value="'+html(id)+'" '+(id===String(value)?'selected':'')+'>'+html(label)+'</option>').join('')+'</select>';}
+            else control='<input data-item-field="'+key+'" value="'+html(value)+'" '+(['price','restoreAmount'].includes(key)?'type="number" min="'+(key==='price'?1:0)+'"':'')+'>';
+            return '<label>'+labels[key]+control+'</label>';
+        }
+        let itemForFields;
+
+        document.getElementById('shopItemCards').innerHTML=shopData.items.map((item,index)=>{itemForFields=item;return '<details class="puzzle-admin-card" data-shop-index="'+index+'"><summary class="catalog-card-summary"><img class="puzzle-admin-cover" src="'+html(item.image)+'" alt=""><strong>'+html(item.name)+'</strong><span>'+item.price+' 🥕</span></summary><div class="puzzle-admin-fields"><button type="button" class="catalog-card-return" onclick="this.parentElement.parentElement.open=false">↩ Retour à l’image</button>'+['id','name','emoji','price','kind','stat','category','restoreAmount','image','description'].map(renderItemField).join('')+'<button type="button" data-remove-item="'+index+'">Supprimer cet article</button></div></details>';}).join('');
+        let recipesBox=document.getElementById('shopRecipeCards');
+        if(!recipesBox){recipesBox=document.createElement('div');recipesBox.id='shopRecipeCards';recipesBox.className='puzzle-admin-cards';const heading=document.createElement('h3');heading.textContent='Recettes du Chef';document.getElementById('shopItemCards').after(heading,recipesBox);}
+        recipesBox.innerHTML=(shopData.recipes||[]).map((recipe,index)=>'<details class="puzzle-admin-card" data-recipe-index="'+index+'"><summary class="catalog-card-summary"><img src="'+html(recipe.image)+'" alt=""><strong>'+html(recipe.name)+'</strong></summary><div class="puzzle-admin-fields"><button type="button" class="catalog-card-return" onclick="this.parentElement.parentElement.open=false">Retour</button>'+['id','item','name','emoji','image','description','price','restoreAmount'].map(key=>'<label>'+({id:'Identifiant',item:'Identifiant du plat',name:'Nom',emoji:'Symbole',image:'Image',description:'Description',price:'Prix',restoreAmount:'Nourriture'}[key])+'<input data-recipe-field="'+key+'" value="'+html(recipe[key]||'')+'"></label>').join('')+'<label>Pr?paration<select data-recipe-field="preparation"><option value="cutting" '+(recipe.preparation==='cutting'?'selected':'')+'>D?coupe</option><option value="cooking" '+(recipe.preparation==='cooking'?'selected':'')+'>Wok</option></select></label>'+Object.entries(recipe.ingredients).map(([id,count])=>'<label>'+html(shopData.items.find(item=>item.id===id)?.name||id)+'<input type="number" min="1" data-recipe-ingredient="'+html(id)+'" value="'+count+'"></label>').join('')+'</div></details>').join('');
+        const roles={cashier:shopData.cashier,apothecary:shopData.apothecary,...Object.fromEntries(Object.entries(shopData.companions||{}).map(([key,value])=>['companions.'+key,value]))};
+        document.getElementById('companionEditor').innerHTML=Object.entries(roles).map(([role,data])=>'<details class="companion-group"><summary>'+html(data?.name||role)+'</summary><div class="pm-table-wrap"><table class="companion-editor-table"><thead><tr><th>Propriété</th><th>Valeur / image</th></tr></thead><tbody>'+Object.entries(data||{}).map(([key,value])=>'<tr><td>'+html(key)+'</td><td>'+(String(value).match(/\.(png|gif|webp|svg)$/i)?'<img src="'+html(value)+'" alt="" loading="lazy">':'')+'<input data-role="'+role+'" data-pose="'+key+'" '+(typeof value==='boolean'?'type="checkbox" '+(value?'checked':''):'value="'+html(value)+'"')+'></td></tr>').join('')+'</tbody></table></div></details>').join('');
+    }
+    function collectShopEditor(){document.querySelectorAll('[data-recipe-index]').forEach(card=>{const recipe=shopData.recipes[Number(card.dataset.recipeIndex)];card.querySelectorAll('[data-recipe-field]').forEach(input=>{recipe[input.dataset.recipeField]=['price','restoreAmount'].includes(input.dataset.recipeField)?Number(input.value):input.value;});card.querySelectorAll('[data-recipe-ingredient]').forEach(input=>recipe.ingredients[input.dataset.recipeIngredient]=Number(input.value));});document.querySelectorAll('[data-shop-index]').forEach(card=>{const item=shopData.items[Number(card.dataset.shopIndex)];card.querySelectorAll('[data-item-field]').forEach(input=>{const key=input.dataset.itemField;if(key==='stat'&&!input.value)delete item.stat;else item[key]=['price','restoreAmount'].includes(key)?(input.value?Number(input.value):undefined):input.value;});});document.querySelectorAll('[data-role]').forEach(input=>{const role=input.dataset.role;const target=role.startsWith('companions.')?shopData.companions[role.slice(11)]:shopData[role];target[input.dataset.pose]=input.type==='checkbox'?input.checked:input.value;});return window.LapinousShop.validateCatalog(shopData);}
+    fetch('./lapinous-shop.json',{cache:'no-store'}).then(response=>response.json()).then(data=>{try{shopData=JSON.parse(localStorage.getItem('lapinous_shop_catalog'))||data;}catch{shopData=data;}renderShopEditor();}).catch(()=>{document.getElementById('shopCatalogStatus').textContent='Catalogue inaccessible.';});
+    shopSection.addEventListener('click',event=>{if(event.target.dataset.removeItem!==undefined){collectShopEditor();shopData.items.splice(Number(event.target.dataset.removeItem),1);renderShopEditor();}});
+    document.getElementById('addShopItem').onclick=()=>{collectShopEditor();shopData.items.push({id:'article_'+Date.now(),name:'Nouvel article',emoji:'🌿',description:'',price:15,kind:'restore',stat:'food',image:''});renderShopEditor();};
+    document.getElementById('saveShopCatalog').onclick=()=>{try{localStorage.setItem('lapinous_shop_catalog',JSON.stringify(collectShopEditor()));document.getElementById('shopCatalogStatus').textContent='Enregistré. Recharge le jeu pour tester.';}catch(error){document.getElementById('shopCatalogStatus').textContent=error.message;}};
+    document.getElementById('exportShopCatalog').onclick=()=>{try{const url=URL.createObjectURL(new Blob([JSON.stringify(collectShopEditor(),null,2)],{type:'application/json'}));const link=document.createElement('a');link.href=url;link.download='lapinous-shop.json';link.click();URL.revokeObjectURL(url);}catch(error){document.getElementById('shopCatalogStatus').textContent=error.message;}};
+    // Les mêmes sections restent en place dans les accordéons ; leurs contrôles gardent leurs événements.
+    const navigation=document.createElement('nav');navigation.className='dashboard-jump-menu';navigation.setAttribute('aria-label','Sections du Dashboard');
+    document.querySelector('.dash-header').appendChild(navigation);
+    // La sécurité reste la dernière section, y compris après ajout du magasin.
+    const securitySection=[...document.querySelectorAll('main>.dash-section')].find(section=>section.querySelector('h2')?.textContent.includes('Sécurité'));
+    if(securitySection)document.querySelector('main').appendChild(securitySection);
+    document.querySelectorAll('main>.dash-section').forEach((section,index)=>{
+        const heading=section.querySelector('h2');const title=heading?.textContent||'Section';const accordion=document.createElement('details');accordion.className='dashboard-accordion';accordion.id='dashboard-section-'+index;accordion.open=index===0;
+        const summary=document.createElement('summary');summary.textContent=title;heading?.remove();section.replaceWith(accordion);accordion.append(summary,section);
+        const button=document.createElement('button');button.type='button';button.textContent=title;button.onclick=()=>{accordion.open=true;accordion.scrollIntoView({behavior:'smooth',block:'start'});};navigation.appendChild(button);
+        accordion.addEventListener('toggle',()=>{if(accordion.open)Object.values(chartInstances).forEach(chart=>chart.resize());});
+    });
     });
 });

@@ -2,8 +2,8 @@
   "version": 1,
   "cashier": {
     "name": "Le caissier du terrier",
-    "presentation": "./assets/img/magasin/caissier_presentation.png",
-    "thanks": "./assets/img/magasin/caissier_merci.png",
+    "presentation": "assets/img/accompagnateurs/caissier/caissier_presentation.png",
+    "thanks": "assets/img/accompagnateurs/caissier/caissier_merci.png",
     "flipPresentation": false,
     "placeholder": false
   },
@@ -12,41 +12,697 @@
       "id": "energy",
       "name": "Infusion douce",
       "emoji": "🍵",
-      "description": "À conserver dans ton inventaire. Remplit toute la barre de sommeil/énergie du lapin actif quand tu utilises ce soin.",
-      "price": 15,
+      "description": "Remplit toute la barre de sommeil/énergie du lapin actif quand tu utilises ce soin.",
+      "price": 150,
       "kind": "restore",
       "stat": "energy",
-      "image": "./assets/img/magasin/produits/infusion_douce.png"
+      "image": "assets/img/magasin/produits/infusion_douce.png"
     },
     {
       "id": "cleanliness",
       "name": "Bain de pétales",
       "emoji": "🫧",
-      "description": "À conserver dans ton inventaire. Remplit toute la barre de propreté du lapin actif quand tu utilises ce soin.",
-      "price": 15,
+      "description": "Remplit toute la barre de propreté du lapin actif quand tu utilises ce soin.",
+      "price": 150,
       "kind": "restore",
       "stat": "cleanliness",
-      "image": "./assets/img/magasin/produits/bain_petales.png"
+      "image": "assets/img/magasin/produits/bain_petales.png"
     },
     {
       "id": "food",
       "name": "Panier gourmand",
       "emoji": "🥕",
-      "description": "À conserver dans ton inventaire. Remplit toute la barre de nourriture du lapin actif quand tu utilises ce soin.",
+      "description": "Remplit toute la barre de nourriture du lapin actif quand tu utilises ce soin.",
       "price": 15,
       "kind": "restore",
       "stat": "food",
-      "image": "./assets/img/magasin/produits/panier_gourmand.png"
+      "image": "assets/img/magasin/produits/panier_gourmand.png"
     },
     {
       "id": "fragments",
       "name": "Extracteur de fragments",
       "emoji": "🛠️",
       "description": "Retire les améliorations de la compétence choisie. Ses fragments redeviennent disponibles pour améliorer une autre compétence débloquée de ce même lapin.",
-      "price": 30,
+      "price": 330,
       "kind": "reset",
-      "image": "./assets/img/magasin/produits/extracteur_fragments.png"
+      "image": "assets/img/magasin/produits/extracteur_fragments.png"
+    },
+    {
+      "id": "market_carrot",
+      "name": "Carottes croquantes",
+      "emoji": "🥕",
+      "price": 12,
+      "restoreAmount": 20,
+      "image": "assets/img/Zone_cuisine/carotte.png",
+      "kind": "restore",
+      "stat": "food",
+      "category": "market",
+      "description": "Rend 20 points de nourriture. À conserver dans la réserve."
+    },
+    {
+      "id": "market_apple",
+      "name": "Pommes du verger",
+      "emoji": "🍎",
+      "price": 18,
+      "restoreAmount": 35,
+      "image": "assets/img/Zone_cuisine/pomme.png",
+      "kind": "restore",
+      "stat": "food",
+      "category": "market",
+      "description": "Rend 35 points de nourriture. À conserver dans la réserve."
+    },
+    {
+      "id": "market_strawberry",
+      "name": "Fraises du jardin",
+      "emoji": "🍓",
+      "price": 12,
+      "restoreAmount": 20,
+      "image": "assets/img/magasin/aliments/fraise.png",
+      "kind": "restore",
+      "stat": "food",
+      "category": "market",
+      "description": "Rend 20 points de nourriture. Friandise fruitée à utiliser avec modération."
+    },
+    {
+      "id": "market_pear",
+      "name": "Poire dorée",
+      "emoji": "🍐",
+      "price": 18,
+      "restoreAmount": 30,
+      "image": "assets/img/magasin/aliments/poire.png",
+      "kind": "restore",
+      "stat": "food",
+      "category": "market",
+      "description": "Rend 30 points de nourriture. Friandise fruitée à utiliser avec modération."
+    },
+    {
+      "id": "market_cucumber",
+      "name": "Concombre frais",
+      "emoji": "🥒",
+      "price": 14,
+      "restoreAmount": 25,
+      "image": "assets/img/magasin/aliments/Concombre.png",
+      "kind": "restore",
+      "stat": "food",
+      "category": "market",
+      "description": "Rend 25 points de nourriture. Concombre frais à servir en petite quantité."
+    },
+    {
+      "id": "market_courgette",
+      "name": "Courgette tendre",
+      "emoji": "🥒",
+      "price": 22,
+      "restoreAmount": 40,
+      "image": "assets/img/magasin/aliments/courgette.png",
+      "kind": "restore",
+      "stat": "food",
+      "category": "market",
+      "description": "Rend 40 points de nourriture. À utiliser depuis le frigo sur le lapin actif."
+    },
+    {
+      "id": "market_lettuce",
+      "name": "Laitue romaine",
+      "emoji": "🥬",
+      "price": 14,
+      "restoreAmount": 25,
+      "image": "assets/img/magasin/aliments/laitue.png",
+      "kind": "restore",
+      "stat": "food",
+      "category": "market",
+      "description": "Rend 25 points de nourriture. Feuilles de romaine fraîches et lavées."
+    },
+    {
+      "id": "market_herbs",
+      "name": "Herbes fraîches",
+      "emoji": "🌿",
+      "price": 16,
+      "restoreAmount": 28,
+      "image": "assets/img/magasin/aliments/herbes.png",
+      "kind": "restore",
+      "stat": "food",
+      "category": "market",
+      "description": "Rend 28 points de nourriture. Persil, coriandre et autres herbes adaptées."
+    },
+    {
+      "id": "market_hay",
+      "name": "Foin de prairie",
+      "emoji": "🌾",
+      "price": 10,
+      "restoreAmount": 30,
+      "image": "assets/img/magasin/aliments/foin.png",
+      "kind": "restore",
+      "stat": "food",
+      "category": "market",
+      "description": "Rend 30 points de nourriture. Aliment de base des lapins, disponible à volonté dans la vraie vie."
+    },
+    {
+      "id": "market_chamomile",
+      "name": "Camomille du pré",
+      "emoji": "🌼",
+      "price": 14,
+      "restoreAmount": 18,
+      "image": "assets/img/magasin/aliments/camomille.png",
+      "kind": "restore",
+      "stat": "food",
+      "category": "market",
+      "description": "Rend 18 points de nourriture. Fleurs de camomille non traitées, à offrir en petite quantité."
+    },
+    {
+      "id": "market_cornflower",
+      "name": "Bleuets des champs",
+      "emoji": "🪻",
+      "price": 16,
+      "restoreAmount": 20,
+      "image": "assets/img/magasin/aliments/bleuet.png",
+      "kind": "restore",
+      "stat": "food",
+      "category": "market",
+      "description": "Rend 20 points de nourriture. Pétales de bleuet non traités, à proposer en complément du foin."
+    },
+    {
+      "id": "market_calendula",
+      "name": "Fleurs de souci",
+      "emoji": "🌼",
+      "price": 16,
+      "restoreAmount": 20,
+      "image": "assets/img/magasin/aliments/soucis.png",
+      "kind": "restore",
+      "stat": "food",
+      "category": "market",
+      "description": "Rend 20 points de nourriture. Fleurs de souci officinal (calendula) non traitées, en petite quantité."
+    },
+    {
+      "id": "market_dandelion",
+      "name": "Pissenlits du jardin",
+      "emoji": "🌼",
+      "price": 12,
+      "restoreAmount": 22,
+      "image": "assets/img/magasin/aliments/pissenlit.png",
+      "kind": "restore",
+      "stat": "food",
+      "category": "market",
+      "description": "Rend 22 points de nourriture. Fleurs et feuilles de pissenlit non traitées, introduites progressivement."
+    },
+    {
+      "id": "market_rose",
+      "name": "Pétales de rose",
+      "emoji": "🌹",
+      "price": 18,
+      "restoreAmount": 16,
+      "image": "assets/img/magasin/aliments/rose.png",
+      "kind": "restore",
+      "stat": "food",
+      "category": "market",
+      "description": "Rend 16 points de nourriture. Pétales de rose non traités, en petite quantité."
+    },
+    {
+      "id": "market_mint",
+      "name": "Menthe fraîche",
+      "emoji": "🌿",
+      "price": 12,
+      "restoreAmount": 20,
+      "image": "assets/img/magasin/aliments/menthe.png",
+      "kind": "restore",
+      "stat": "food",
+      "category": "market",
+      "description": "Bouquet de menthe fraîche et parfumée. Rend 20 points de nourriture. À conserver dans la réserve."
+    },
+    {
+      "id": "market_dill",
+      "name": "Aneth du jardin",
+      "emoji": "🌿",
+      "price": 14,
+      "restoreAmount": 22,
+      "image": "assets/img/magasin/aliments/aneth.png",
+      "kind": "restore",
+      "stat": "food",
+      "category": "market",
+      "description": "Bouquet d'aneth aux feuilles fines et parfumées. Rend 22 points de nourriture. À conserver dans la réserve."
+    },
+    {
+      "id": "market_cilantro",
+      "name": "Coriandre fraîche",
+      "emoji": "🌱",
+      "price": 14,
+      "restoreAmount": 22,
+      "image": "assets/img/magasin/aliments/coriandre.png",
+      "kind": "restore",
+      "stat": "food",
+      "category": "market",
+      "description": "Bouquet de coriandre fraîche. Rend 22 points de nourriture. À conserver dans la réserve."
+    },
+    {
+      "id": "market_celery",
+      "name": "Céleri croquant",
+      "emoji": "🥬",
+      "price": 18,
+      "restoreAmount": 32,
+      "image": "assets/img/magasin/aliments/celeri.png",
+      "kind": "restore",
+      "stat": "food",
+      "category": "market",
+      "description": "Branches et feuilles de céleri croquant. Rend 32 points de nourriture. À conserver dans la réserve."
+    },
+    {
+      "id": "market_fennel",
+      "name": "Fenouil du potager",
+      "emoji": "🌱",
+      "price": 20,
+      "restoreAmount": 35,
+      "image": "assets/img/magasin/aliments/fenouil.png",
+      "kind": "restore",
+      "stat": "food",
+      "category": "market",
+      "description": "Fenouil frais aux tiges et feuilles parfumées. Rend 35 points de nourriture. À conserver dans la réserve."
+    },
+    {
+      "id": "market_blueberry",
+      "name": "Myrtilles sauvages",
+      "emoji": "🫐",
+      "price": 25,
+      "restoreAmount": 40,
+      "image": "assets/img/magasin/aliments/myrtilles.png",
+      "kind": "restore",
+      "stat": "food",
+      "category": "market",
+      "description": "Petites myrtilles juteuses et sucrées. Rend 40 points de nourriture. À conserver dans la réserve."
     }
   ],
-  "carrotPurchasesEnabled": false
+  "carrotPurchasesEnabled": false,
+  "companions": {
+    "tailor": {
+      "name": "La couturière",
+      "idle": "assets/img/accompagnateurs/couturiere/couturiere.png",
+      "thanks": "assets/img/accompagnateurs/couturiere/couturiere_felicitation.png",
+      "sewing": "assets/img/accompagnateurs/couturiere/cout_les_pieces.gif",
+      "stool": "assets/img/accompagnateurs/couturiere/deplace_tabouret.gif",
+      "walking": "assets/img/accompagnateurs/couturiere/marche_vers.gif"
+    },
+    "chef": {
+      "name": "Le Chef",
+      "idle": "assets/img/accompagnateurs/Chef/05_attente_droite.png",
+      "placeholder": false,
+      "greeting": "assets/img/accompagnateurs/Chef/04_bonjour.png",
+      "thanks": "assets/img/accompagnateurs/Chef/06_remise_produit.png",
+      "back": "assets/img/accompagnateurs/Chef/03_attraper_hauteur.png",
+      "crouching": "assets/img/accompagnateurs/Chef/01_accroupie.png",
+      "reaching": "assets/img/accompagnateurs/Chef/02_attraper_haut.png",
+      "walkingLeft": "assets/img/accompagnateurs/Chef/07_marche.gif",
+      "cooking": "assets/img/accompagnateurs/Chef/09_wok.gif",
+      "cutting": "assets/img/accompagnateurs/Chef/08_decoupe_legumes.gif"
+    }
+  },
+  "apothecary": {
+    "name": "L’apothicaire du terrier",
+    "greeting": "assets/img/accompagnateurs/Apothicaire/04_bonjour.png",
+    "idle": "assets/img/accompagnateurs/Apothicaire/05_attente_droite.png",
+    "thanks": "assets/img/accompagnateurs/Apothicaire/06_remise_produit.png",
+    "back": "assets/img/accompagnateurs/Apothicaire/03_attraper_hauteur.png",
+    "crouching": "assets/img/accompagnateurs/Apothicaire/01_accroupie.png",
+    "reaching": "assets/img/accompagnateurs/Apothicaire/02_attraper_haut.png",
+    "walkingLeft": "assets/img/accompagnateurs/Apothicaire/07_marche.gif"
+  },
+  "recipes": [
+    {
+      "id": "fruit_salad",
+      "name": "Salade fruitée du verger",
+      "item": "dish_fruit_salad",
+      "ingredients": {
+        "market_apple": 1,
+        "market_pear": 1,
+        "market_strawberry": 2
+      },
+      "emoji": "🍓",
+      "price": 55,
+      "restoreAmount": 70,
+      "image": "assets/img/magasin/produits/salade_fruite_du_verger.png",
+      "kind": "restore",
+      "stat": "food",
+      "description": "Rend 70 points de nourriture. Morceaux de pomme et de poire avec fraises ; friandise occasionnelle.",
+      "preparation": "cutting"
+    },
+    {
+      "id": "carrot_salad",
+      "name": "Salade croquante du lapin",
+      "item": "dish_carrot_salad",
+      "ingredients": {
+        "market_carrot": 1,
+        "market_cucumber": 1,
+        "market_lettuce": 1
+      },
+      "emoji": "🥕",
+      "price": 45,
+      "restoreAmount": 70,
+      "image": "assets/img/magasin/produits/Salade_croquante_du_lapin.png",
+      "kind": "restore",
+      "stat": "food",
+      "description": "Rend 70 points de nourriture. Bâtonnets de carotte, concombre et romaine.",
+      "preparation": "cutting"
+    },
+    {
+      "id": "fruit_bowl",
+      "name": "Mélange gourmand aux fruits",
+      "item": "dish_fruit_bowl",
+      "ingredients": {
+        "market_apple": 1,
+        "market_pear": 1,
+        "market_strawberry": 2
+      },
+      "emoji": "🍎",
+      "price": 58,
+      "restoreAmount": 75,
+      "image": "assets/img/magasin/produits/Melange_gourmand_aux_fruit.png",
+      "kind": "restore",
+      "stat": "food",
+      "description": "Rend 75 points de nourriture. Pomme, poire et fraises en morceaux ; friandise occasionnelle.",
+      "preparation": "cooking"
+    },
+    {
+      "id": "flowery_hay",
+      "name": "Mélange de foin fleuri",
+      "item": "dish_flowery_hay",
+      "ingredients": {
+        "market_hay": 2,
+        "market_herbs": 2
+      },
+      "emoji": "🌼",
+      "price": 38,
+      "restoreAmount": 55,
+      "image": "assets/img/magasin/produits/Nid_foin_aux_fleurs.png",
+      "kind": "restore",
+      "stat": "food",
+      "description": "Rend 55 points de nourriture. Foin, herbes et fleurs de pissenlit comestibles.",
+      "preparation": "cooking"
+    },
+    {
+      "id": "veggie_sticks",
+      "name": "Nid de foin aux légumes",
+      "item": "dish_veggie_sticks",
+      "ingredients": {
+        "market_carrot": 1,
+        "market_cucumber": 1,
+        "market_hay": 1
+      },
+      "emoji": "🥕",
+      "price": 46,
+      "restoreAmount": 70,
+      "image": "assets/img/magasin/produits/Nid_foin_aux_legumes.png",
+      "kind": "restore",
+      "stat": "food",
+      "description": "Rend 70 points de nourriture. Bâtonnets de carotte et concombre servis sur du foin.",
+      "preparation": "cooking"
+    },
+    {
+      "id": "cucumber_cups",
+      "name": "Bouchées de concombre garnies",
+      "item": "dish_cucumber_cups",
+      "ingredients": {
+        "market_cucumber": 2,
+        "market_carrot": 1,
+        "market_herbs": 1
+      },
+      "emoji": "🥒",
+      "price": 50,
+      "restoreAmount": 72,
+      "image": "assets/img/magasin/produits/salade_concombre.png",
+      "kind": "restore",
+      "stat": "food",
+      "description": "Rend 72 points de nourriture. Tronçons de concombre garnis de carotte et d’herbes.",
+      "preparation": "cooking"
+    },
+    {
+      "id": "floral_cucumber_salad",
+      "name": "Salade fleurie du jardin",
+      "item": "dish_floral_cucumber_salad",
+      "ingredients": {
+        "market_cucumber": 2,
+        "market_chamomile": 2,
+        "market_cornflower": 1,
+        "market_calendula": 1,
+        "market_mint": 1,
+        "market_dill": 1
+      },
+      "emoji": "🥗",
+      "price": 55,
+      "restoreAmount": 85,
+      "image": "assets/img/magasin/produits/Salade_fleurie_du_jardin.png",
+      "kind": "restore",
+      "stat": "food",
+      "description": "Salade fraîche de concombre, camomille, bleuet, souci, menthe et aneth. Rend 85 points de nourriture.",
+      "preparation": "cutting"
+    },
+    {
+      "id": "forest_fruit_salad",
+      "name": "Délice fruité des bois",
+      "item": "dish_forest_fruit_salad",
+      "ingredients": {
+        "market_apple": 1,
+        "market_pear": 1,
+        "market_strawberry": 2,
+        "market_blueberry": 2,
+        "market_mint": 1,
+        "market_cornflower": 1
+      },
+      "emoji": "🍓",
+      "price": 70,
+      "restoreAmount": 110,
+      "image": "assets/img/magasin/produits/delice_fruit_des_bois.png",
+      "kind": "restore",
+      "stat": "food",
+      "description": "Mélange gourmand de pommes, poires, fraises et myrtilles, décoré de menthe et de bleuet. Rend 110 points de nourriture.",
+      "preparation": "cooking"
+    },
+    {
+      "id": "crunchy_vegetable_salad",
+      "name": "Salade croquante du potager",
+      "item": "dish_crunchy_vegetable_salad",
+      "ingredients": {
+        "market_carrot": 2,
+        "market_cucumber": 2,
+        "market_fennel": 1,
+        "market_dill": 1,
+        "market_cilantro": 1,
+        "market_cornflower": 1
+      },
+      "emoji": "🥕",
+      "price": 58,
+      "restoreAmount": 95,
+      "image": "assets/img/magasin/produits/Salade_croquante_du_lapin.png",
+      "kind": "restore",
+      "stat": "food",
+      "description": "Salade de carottes, concombre et fenouil, parfumée à l'aneth et à la coriandre. Rend 95 points de nourriture.",
+      "preparation": "cutting"
+    },
+    {
+      "id": "green_garden_salad",
+      "name": "Salade verte du printemps",
+      "item": "dish_green_garden_salad",
+      "ingredients": {
+        "market_celery": 2,
+        "market_carrot": 1,
+        "market_cilantro": 1,
+        "market_mint": 1,
+        "market_dandelion": 2
+      },
+      "emoji": "🥗",
+      "price": 48,
+      "restoreAmount": 80,
+      "image": "assets/img/magasin/produits/salade_verte_printemps.png",
+      "kind": "restore",
+      "stat": "food",
+      "description": "Mélange de céleri, carottes et herbes fraîches, agrémenté de fleurs de pissenlit. Rend 80 points de nourriture.",
+      "preparation": "cutting"
+    },
+    {
+      "id": "flower_bouquet",
+      "name": "Bouquet gourmand des prés",
+      "item": "dish_flower_bouquet",
+      "ingredients": {
+        "market_chamomile": 2,
+        "market_cornflower": 2,
+        "market_calendula": 2,
+        "market_rose": 1,
+        "market_mint": 1
+      },
+      "emoji": "🌸",
+      "price": 65,
+      "restoreAmount": 100,
+      "image": "assets/img/magasin/produits/bouquet_gourmand.png",
+      "kind": "restore",
+      "stat": "food",
+      "description": "Composition de fleurs de camomille, bleuet, souci et rose, accompagnées de menthe. Rend 100 points de nourriture.",
+      "preparation": "cooking"
+    },
+    {
+      "id": "floral_hay_balls",
+      "name": "Boules de foin fleuries",
+      "item": "dish_floral_hay_balls",
+      "ingredients": {
+        "market_hay": 3,
+        "market_chamomile": 1,
+        "market_cornflower": 1,
+        "market_calendula": 1,
+        "market_rose": 1
+      },
+      "emoji": "🌾",
+      "price": 75,
+      "restoreAmount": 120,
+      "image": "assets/img/magasin/produits/Boules_de_foin_fleuries.png",
+      "kind": "restore",
+      "stat": "food",
+      "description": "Petites boules de foin garnies de pétales de fleurs séchées. Rend 120 points de nourriture.",
+      "preparation": "cooking"
+    },
+    {
+      "id": "floral_hay_hearts",
+      "name": "Cœurs fleuris du bonheur",
+      "item": "dish_floral_hay_hearts",
+      "ingredients": {
+        "market_hay": 3,
+        "market_cornflower": 2,
+        "market_rose": 2,
+        "market_calendula": 1,
+        "market_chamomile": 1
+      },
+      "emoji": "💜",
+      "price": 85,
+      "restoreAmount": 135,
+      "image": "assets/img/magasin/produits/Cœurs_de_foin_fleuris.png",
+      "kind": "restore",
+      "stat": "food",
+      "description": "Friandises en forme de cœur, composées de foin et de pétales colorés. Rend 135 points de nourriture.",
+      "preparation": "cooking"
+    },
+    {
+      "id": "surprise_apple",
+      "name": "Pomme surprise fleurie",
+      "item": "dish_surprise_apple",
+      "ingredients": {
+        "market_apple": 2,
+        "market_hay": 1,
+        "market_mint": 1,
+        "market_calendula": 1,
+        "market_cornflower": 1,
+        "market_rose": 1
+      },
+      "emoji": "🍎",
+      "price": 90,
+      "restoreAmount": 145,
+      "image": "assets/img/magasin/produits/surprise_apple.png",
+      "kind": "restore",
+      "stat": "food",
+      "description": "Pomme évidée et garnie de foin, menthe et pétales de fleurs. Rend 145 points de nourriture.",
+      "preparation": "cooking"
+    },
+    {
+      "id": "stuffed_cucumber",
+      "name": "Bouchées de concombre aux herbes",
+      "item": "dish_stuffed_cucumber",
+      "ingredients": {
+        "market_cucumber": 3,
+        "market_fennel": 1,
+        "market_dill": 1,
+        "market_cilantro": 1,
+        "market_cornflower": 1
+      },
+      "emoji": "🥒",
+      "price": 68,
+      "restoreAmount": 105,
+      "image": "assets/img/magasin/produits/Concombre_farci.png",
+      "kind": "restore",
+      "stat": "food",
+      "description": "Rondelles épaisses de concombre garnies de fenouil et d'herbes fraîches, décorées de bleuet. Rend 105 points de nourriture.",
+      "preparation": "cooking"
+    },
+    {
+      "id": "fruit_skewers",
+      "name": "Brochettes fruitées du verger",
+      "item": "dish_fruit_skewers",
+      "ingredients": {
+        "market_apple": 1,
+        "market_pear": 1,
+        "market_strawberry": 2,
+        "market_cucumber": 1,
+        "market_mint": 1
+      },
+      "emoji": "🍡",
+      "price": 78,
+      "restoreAmount": 125,
+      "image": "assets/img/magasin/produits/Brochettes_fruitees_du_verger.png",
+      "kind": "restore",
+      "stat": "food",
+      "description": "Brochettes décoratives de pommes, poires, fraises et concombre avec quelques feuilles de menthe. Rend 125 points de nourriture.",
+      "preparation": "cooking"
+    },
+    {
+      "id": "herb_patties",
+      "name": "Palets végétaux du jardin",
+      "item": "dish_herb_patties",
+      "ingredients": {
+        "market_carrot": 2,
+        "market_celery": 1,
+        "market_fennel": 1,
+        "market_cilantro": 1,
+        "market_dill": 1,
+        "market_dandelion": 1
+      },
+      "emoji": "🌿",
+      "price": 82,
+      "restoreAmount": 130,
+      "image": "assets/img/magasin/produits/Galettes_vegetales_aux_herbes.png",
+      "kind": "restore",
+      "stat": "food",
+      "description": "Petits palets de légumes et d'herbes, décorés de fleurs de pissenlit. Rend 130 points de nourriture.",
+      "preparation": "cooking"
+    },
+    {
+      "id": "garden_mosaic",
+      "name": "Mosaïque du potager fleuri",
+      "item": "dish_garden_mosaic",
+      "ingredients": {
+        "market_carrot": 2,
+        "market_cucumber": 2,
+        "market_apple": 1,
+        "market_pear": 1,
+        "market_celery": 1,
+        "market_chamomile": 1,
+        "market_cornflower": 1,
+        "market_calendula": 1
+      },
+      "emoji": "🌼",
+      "price": 95,
+      "restoreAmount": 150,
+      "image": "assets/img/magasin/produits/Mosaique_du_potager_fleuri.png",
+      "kind": "restore",
+      "stat": "food",
+      "description": "Composition colorée de légumes et de fruits coupés en dés, décorée de fleurs comestibles. Rend 150 points de nourriture.",
+      "preparation": "cooking"
+    },
+    {
+      "id": "herb_tartlets",
+      "name": "Tartelettes du jardin",
+      "item": "dish_herb_tartlets",
+      "ingredients": {
+        "market_celery": 1,
+        "market_fennel": 1,
+        "market_cilantro": 1,
+        "market_dill": 1,
+        "market_carrot": 1,
+        "market_dandelion": 1
+      },
+      "emoji": "🌿",
+      "price": 82,
+      "restoreAmount": 130,
+      "image": "assets/img/magasin/produits/tartelette.png",
+      "kind": "restore",
+      "stat": "food",
+      "description": "Tartelettes végétales aux herbes fraîches et légumes. Rend 130 points de nourriture.",
+      "preparation": "cooking"
+    }
+  ],
+  "recipesEnabled": true,
+  "backgrounds": {
+    "inventory": "assets/img/fond/salon.png",
+    "pantry": "assets/img/fond/Magasin/Garde-manger.png"
+  }
 }

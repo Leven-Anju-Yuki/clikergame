@@ -1,0 +1,7 @@
+# Identifiants et état privé de la migration Cloudinary
+.env
+.env.*
+!.env.example
+.cloudinary-local/
+secours-images/
+docs/223

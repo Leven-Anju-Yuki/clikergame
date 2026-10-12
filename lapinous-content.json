@@ -20,8 +20,8 @@
       ],
       "quote": "Même la plus grande tempête finit par s'apaiser.",
       "power": "Aura glaciale : diminue légèrement la vitesse des ennemis.",
-      "faceImg": "./assets/img/species/blanc_face.png",
-      "coteImg": "./assets/img/species/blanc_cote.png",
+      "faceImg": "./assets/img/lapins_jouables/sans_evenements/blanc_face.png",
+      "coteImg": "./assets/img/lapins_jouables/sans_evenements/blanc_cote.png",
       "friends": [
         "bambou"
       ],
@@ -53,8 +53,8 @@
       ],
       "quote": "On réfléchit toujours mieux après une bonne collation !",
       "power": "Cherche-Trésor : augmente les récompenses obtenues.",
-      "faceImg": "./assets/img/species/caramel_face.png",
-      "coteImg": "./assets/img/species/caramel_cote.png",
+      "faceImg": "./assets/img/lapins_jouables/sans_evenements/caramel_face.png",
+      "coteImg": "./assets/img/lapins_jouables/sans_evenements/caramel_cote.png",
       "friends": [],
       "rivals": [],
       "follows": [
@@ -87,8 +87,8 @@
       ],
       "quote": "Chaque seconde a son importance.",
       "power": "Précision parfaite : réduit les temps de recharge.",
-      "faceImg": "./assets/img/species/chocolat_face.png",
-      "coteImg": "./assets/img/species/chocolat_cote.png",
+      "faceImg": "./assets/img/lapins_jouables/sans_evenements/chocolat_face.png",
+      "coteImg": "./assets/img/lapins_jouables/sans_evenements/chocolat_cote.png",
       "friends": [],
       "rivals": [],
       "helps": [
@@ -121,8 +121,8 @@
       ],
       "quote": "La force vient souvent du silence.",
       "power": "Temps suspendu : ralentit brièvement les ennemis.",
-      "faceImg": "./assets/img/species/panda_face.png",
-      "coteImg": "./assets/img/species/panda_cote.png",
+      "faceImg": "./assets/img/lapins_jouables/sans_evenements/panda_face.png",
+      "coteImg": "./assets/img/lapins_jouables/sans_evenements/panda_cote.png",
       "friends": [
         "azur"
       ],
@@ -160,8 +160,8 @@
       ],
       "quote": "Chaque mur cache peut-être une porte.",
       "power": "Vision secrète : révèle les coffres cachés.",
-      "faceImg": "./assets/img/species/renard_face.png",
-      "coteImg": "./assets/img/species/renard_cote.png",
+      "faceImg": "./assets/img/lapins_jouables/sans_evenements/renard_face.png",
+      "coteImg": "./assets/img/lapins_jouables/sans_evenements/renard_cote.png",
       "friends": [],
       "rivals": [],
       "curiousAbout": [
@@ -200,8 +200,8 @@
       ],
       "quote": "Un vrai héros protège les siens.",
       "power": "Cri du gardien : augmente les dégâts de l'équipe.",
-      "faceImg": "./assets/img/species/tigre_face.png",
-      "coteImg": "./assets/img/species/tigre_cote.png",
+      "faceImg": "./assets/img/lapins_jouables/sans_evenements/tigre_face.png",
+      "coteImg": "./assets/img/lapins_jouables/sans_evenements/tigre_cote.png",
       "friends": [],
       "rivals": [],
       "protects": "les plus faibles",
@@ -229,7 +229,7 @@
     "nova": {
       "name": "Nova",
       "nickname": "le Lapin Galaxie",
-      "rarity": "epique",
+      "rarity": "rare",
       "personality": "Mystérieux, intelligent et rêveur.",
       "story": "Nova viendrait d'une constellation lointaine. Il semble connaître l'avenir à travers les étoiles.",
       "accessory": "Cape cosmique constellée.",
@@ -244,8 +244,8 @@
       ],
       "quote": "Les étoiles racontent des histoires que peu savent entendre.",
       "power": "Pluie d'étoiles : invoque des météores magiques.",
-      "faceImg": "./assets/img/species/etoile_face.png",
-      "coteImg": "./assets/img/species/etoile_cote.png",
+      "faceImg": "./assets/img/lapins_jouables/sans_evenements/etoile_face.png",
+      "coteImg": "./assets/img/lapins_jouables/sans_evenements/etoile_cote.png",
       "friends": [],
       "rivals": [],
       "guides": true,
@@ -255,12 +255,6 @@
           "name": "Frappe des étoiles",
           "kind": "damage",
           "mult": 1.35
-        },
-        {
-          "id": "nova-attack-2",
-          "name": "Éclair des étoiles",
-          "kind": "damage",
-          "mult": 1.55
         },
         {
           "id": "nova-attack-3",
@@ -279,7 +273,7 @@
     "sakura": {
       "name": "Sakura",
       "nickname": "la Gardienne des Cerisiers",
-      "rarity": "epique",
+      "rarity": "rare",
       "personality": "Douce, créative et bienveillante.",
       "story": "Sakura protège les Bosquets Fleuris, où les pétales magiques tombent toute l'année. Les habitants disent que les fleurs s'ouvrent sur son passage.",
       "accessory": "Couronne de fleurs éternelles.",
@@ -294,8 +288,8 @@
       ],
       "quote": "Même la plus petite fleur peut embellir le monde.",
       "power": "Pétales Curatifs : soigne progressivement les alliés.",
-      "faceImg": "./assets/img/species/fleur_face.png",
-      "coteImg": "./assets/img/species/fleur_cote.png",
+      "faceImg": "./assets/img/lapins_jouables/sans_evenements/fleur_face.png",
+      "coteImg": "./assets/img/lapins_jouables/sans_evenements/fleur_cote.png",
       "friends": [],
       "rivals": [],
       "attacks": [
@@ -304,12 +298,6 @@
           "name": "Frappe de Sakura",
           "kind": "damage",
           "mult": 1.35
-        },
-        {
-          "id": "sakura-attack-2",
-          "name": "Éclair de Sakura",
-          "kind": "damage",
-          "mult": 1.55
         },
         {
           "id": "sakura-attack-3",
@@ -337,8 +325,8 @@
       ],
       "quote": "Si ça explose, c'est que j'étais proche de réussir !",
       "power": "Turbo Éclair : augmente temporairement sa vitesse.",
-      "faceImg": "./assets/img/species/eclair_face.png",
-      "coteImg": "./assets/img/species/eclair_cote.png",
+      "faceImg": "./assets/img/lapins_jouables/sans_evenements/eclair_face.png",
+      "coteImg": "./assets/img/lapins_jouables/sans_evenements/eclair_cote.png",
       "friends": [],
       "rivals": [],
       "attacks": [
@@ -374,8 +362,8 @@
       ],
       "quote": "La forêt murmure à ceux qui savent écouter.",
       "power": "Spores Protectrices : augmente la défense de l'équipe.",
-      "faceImg": "./assets/img/species/champi_face.png",
-      "coteImg": "./assets/img/species/champi_cote.png",
+      "faceImg": "./assets/img/lapins_jouables/sans_evenements/champi_face.png",
+      "coteImg": "./assets/img/lapins_jouables/sans_evenements/champi_cote.png",
       "friends": [],
       "rivals": [],
       "attacks": [
@@ -405,8 +393,8 @@
       ],
       "quote": "Le plus beau trésor est celui qu'on n'a pas encore trouvé.",
       "power": "Fortune du Pirate : augmente les récompenses rares.",
-      "faceImg": "./assets/img/species/pirate_face.png",
-      "coteImg": "./assets/img/species/pirate_cote.png",
+      "faceImg": "./assets/img/lapins_jouables/sans_evenements/pirate_face.png",
+      "coteImg": "./assets/img/lapins_jouables/sans_evenements/pirate_cote.png",
       "friends": [],
       "rivals": [],
       "attacks": [
@@ -436,8 +424,8 @@
       ],
       "quote": "Même dans le désert, il existe toujours un chemin.",
       "power": "Résistance du Désert : réduit les dégâts subis.",
-      "faceImg": "./assets/img/species/cactus_face.png",
-      "coteImg": "./assets/img/species/cactus_cote.png",
+      "faceImg": "./assets/img/lapins_jouables/sans_evenements/cactus_face.png",
+      "coteImg": "./assets/img/lapins_jouables/sans_evenements/cactus_cote.png",
       "friends": [],
       "rivals": [],
       "attacks": [
@@ -473,8 +461,8 @@
       ],
       "quote": "La lune éclaire les secrets que le soleil ignore.",
       "power": "Voile Nocturne : devient temporairement impossible à cibler.",
-      "faceImg": "./assets/img/species/lune_face.png",
-      "coteImg": "./assets/img/species/lune_cote.png",
+      "faceImg": "./assets/img/lapins_jouables/sans_evenements/lune_face.png",
+      "coteImg": "./assets/img/lapins_jouables/sans_evenements/lune_cote.png",
       "friends": [],
       "rivals": [],
       "attacks": [
@@ -516,8 +504,8 @@
       ],
       "quote": "Scientifiquement parlant... enfin, je crois.",
       "power": "Potion Chaotique : effet aléatoire positif.",
-      "faceImg": "./assets/img/species/archy_face.png",
-      "coteImg": "./assets/img/species/archy_cote.png",
+      "faceImg": "./assets/img/lapins_jouables/sans_evenements/archy_face.png",
+      "coteImg": "./assets/img/lapins_jouables/sans_evenements/archy_cote.png",
       "friends": [],
       "rivals": [],
       "attacks": [
@@ -562,8 +550,8 @@
       ],
       "quote": "Même la nuit la plus longue finit par céder devant l'aube.",
       "power": "Une fois par combat, Solaria peut empêcher un allié de tomber K.O.",
-      "faceImg": "./assets/img/species/soleil_face.png",
-      "coteImg": "./assets/img/species/soleil_cote.png",
+      "faceImg": "./assets/img/lapins_jouables/sans_evenements/soleil_face.png",
+      "coteImg": "./assets/img/lapins_jouables/sans_evenements/soleil_cote.png",
       "friends": [],
       "rivals": [],
       "attacks": [
@@ -605,8 +593,8 @@
       ],
       "quote": "Chaque petite aide compte.",
       "power": "Essaim Protecteur : invoque des abeilles qui défendent l'équipe.",
-      "faceImg": "./assets/img/species/abeille_face.png",
-      "coteImg": "./assets/img/species/abeille_cote.png",
+      "faceImg": "./assets/img/lapins_jouables/sans_evenements/abeille_face.png",
+      "coteImg": "./assets/img/lapins_jouables/sans_evenements/abeille_cote.png",
       "friends": [],
       "rivals": [],
       "attacks": [
@@ -651,8 +639,8 @@
       ],
       "quote": "Il faut parfois traverser l'obscurité pour découvrir sa propre lumière.",
       "power": "Marche-Cauchemar : invoque des ombres vivantes qui affaiblissent les ennemis tout en renforçant les alliés.",
-      "faceImg": "./assets/img/lapin_evenement/Halloween/peatch_face.png",
-      "coteImg": "./assets/img/lapin_evenement/Halloween/peatch_cote.png",
+      "faceImg": "./assets/img/lapins_jouables/lapin_evenement/Halloween/peatch_face.png",
+      "coteImg": "./assets/img/lapins_jouables/lapin_evenement/Halloween/peatch_cote.png",
       "friends": [],
       "rivals": [
         "sandman"
@@ -704,8 +692,8 @@
       ],
       "quote": "La force protège, la générosité rassemble.",
       "power": "Miracle du Solstice : soigne toute l'équipe et accorde un puissant bonus de résistance.",
-      "faceImg": "./assets/img/lapin_evenement/Noel/Klaus_face.png",
-      "coteImg": "./assets/img/lapin_evenement/Noel/Klaus_cote.png",
+      "faceImg": "./assets/img/lapins_jouables/lapin_evenement/Noel/Klaus_face.png",
+      "coteImg": "./assets/img/lapins_jouables/lapin_evenement/Noel/Klaus_cote.png",
       "event": [
         "paques",
         "noel"
@@ -773,8 +761,8 @@
       ],
       "quote": "Même la plus petite graine peut changer le monde.",
       "power": "Éveil Printanier : soigne tous les alliés et leur donne un bouclier floral.",
-      "faceImg": "./assets/img/lapin_evenement/Paques/paques_face.png",
-      "coteImg": "./assets/img/lapin_evenement/Paques/paques_cote.png",
+      "faceImg": "./assets/img/lapins_jouables/lapin_evenement/Paques/paques_face.png",
+      "coteImg": "./assets/img/lapins_jouables/lapin_evenement/Paques/paques_cote.png",
       "friends": [
         "toothFairy",
         "jackFrost",
@@ -837,8 +825,8 @@
       ],
       "quote": "Chaque souvenir mérite d'être conservé.",
       "power": "Souvenirs Lumineux : augmente la précision et l'esquive des alliés.",
-      "faceImg": "./assets/img/lapin_evenement/Multi_saisons/fee_face.png",
-      "coteImg": "./assets/img/lapin_evenement/Multi_saisons/fee_cote.png",
+      "faceImg": "./assets/img/lapins_jouables/lapin_evenement/Multi_saisons/fee_face.png",
+      "coteImg": "./assets/img/lapins_jouables/lapin_evenement/Multi_saisons/fee_cote.png",
       "friends": [
         "easterKing",
         "sandman",
@@ -901,8 +889,8 @@
       ],
       "quote": "Le vent est mon meilleur allié.",
       "power": "Tempête de Givre : ralentit les ennemis et augmente l'esquive des alliés.",
-      "faceImg": "./assets/img/lapin_evenement/Multi_saisons/frost_face.png",
-      "coteImg": "./assets/img/lapin_evenement/Multi_saisons/frost_cote.png",
+      "faceImg": "./assets/img/lapins_jouables/lapin_evenement/Multi_saisons/frost_face.png",
+      "coteImg": "./assets/img/lapins_jouables/lapin_evenement/Multi_saisons/frost_cote.png",
       "friends": [
         "easterKing",
         "sandman",
@@ -965,8 +953,8 @@
       ],
       "quote": "Les rêves révèlent souvent ce que le cœur ignore.",
       "power": "Poussière Dorée : endort les ennemis et renforce les alliés.",
-      "faceImg": "./assets/img/lapin_evenement/Multi_saisons/reve_face.png",
-      "coteImg": "./assets/img/lapin_evenement/Multi_saisons/reve_cote.png",
+      "faceImg": "./assets/img/lapins_jouables/lapin_evenement/Multi_saisons/reve_face.png",
+      "coteImg": "./assets/img/lapins_jouables/lapin_evenement/Multi_saisons/reve_cote.png",
       "friends": [
         "jackFrost",
         "toothFairy",
@@ -1026,8 +1014,8 @@
       ],
       "quote": "Depuis l'aube du royaume, nous montons la garde.",
       "power": "Veille Éternelle : augmente la défense de tous les alliés et invoque une protection de pierre sacrée.",
-      "faceImg": "./assets/img/lapin_evenement/Paques/oeuf_face.png",
-      "coteImg": "./assets/img/lapin_evenement/Paques/oeuf_cote.png",
+      "faceImg": "./assets/img/lapins_jouables/lapin_evenement/Paques/oeuf_face.png",
+      "coteImg": "./assets/img/lapins_jouables/lapin_evenement/Paques/oeuf_cote.png",
       "friends": [
         "easterKing"
       ],
@@ -1068,8 +1056,8 @@
       ],
       "quote": "La plus belle récompense est un sourire partagé.",
       "power": "Pluie de Cadeaux : soigne et renforce toute l'équipe.",
-      "faceImg": "./assets/img/lapin_evenement/Noel/Pnoel_face.png",
-      "coteImg": "./assets/img/lapin_evenement/Noel/Pnoel_cote.png",
+      "faceImg": "./assets/img/lapins_jouables/lapin_evenement/Noel/Pnoel_face.png",
+      "coteImg": "./assets/img/lapins_jouables/lapin_evenement/Noel/Pnoel_cote.png",
       "friends": [
         "mrsClaus",
         "elfRabbit",
@@ -1123,8 +1111,8 @@
       ],
       "quote": "Chaque grande fête commence par une bonne préparation.",
       "power": "Banquet Festif : restaure progressivement la santé des alliés.",
-      "faceImg": "./assets/img/lapin_evenement/Noel/Mnoel_face.png",
-      "coteImg": "./assets/img/lapin_evenement/Noel/Mnoel_cote.png",
+      "faceImg": "./assets/img/lapins_jouables/lapin_evenement/Noel/Mnoel_face.png",
+      "coteImg": "./assets/img/lapins_jouables/lapin_evenement/Noel/Mnoel_cote.png",
       "friends": [
         "santaRabbit"
       ],
@@ -1153,7 +1141,7 @@
     "elfRabbit": {
       "name": "Elf Rabbit",
       "nickname": "le Maître Artisan",
-      "rarity": "epique",
+      "rarity": "rare",
       "event": "noel",
       "personality": "Créatif, rapide, enthousiaste et travailleur.",
       "story": "Elf Rabbit fabrique les jouets les plus réputés du royaume. Ses créations peuvent aussi bien divertir que protéger ceux qui les reçoivent.",
@@ -1170,8 +1158,8 @@
       ],
       "quote": "Chaque objet mérite d'être fabriqué avec soin.",
       "power": "Atelier Express : augmente la vitesse et la précision des alliés.",
-      "faceImg": "./assets/img/lapin_evenement/Noel/lutin_face.png",
-      "coteImg": "./assets/img/lapin_evenement/Noel/lutin_cote.png",
+      "faceImg": "./assets/img/lapins_jouables/lapin_evenement/Noel/lutin_face.png",
+      "coteImg": "./assets/img/lapins_jouables/lapin_evenement/Noel/lutin_cote.png",
       "friends": [
         "santaRabbit"
       ],
@@ -1183,12 +1171,7 @@
           "kind": "damage",
           "mult": 1.35
         },
-        {
-          "id": "elfRabbit-attack-2",
-          "name": "Éclair de Elf Rabbit",
-          "kind": "damage",
-          "mult": 1.55
-        },
+        
         {
           "id": "elfRabbit-attack-3",
           "name": "Garde de Elf Rabbit",
@@ -1200,7 +1183,7 @@
     "reindeerRabbit": {
       "name": "Reindeer Rabbit",
       "nickname": "le Messager des Neiges",
-      "rarity": "epique",
+      "rarity": "rare",
       "event": "noel",
       "personality": "Loyal, énergique, courageux et serviable.",
       "story": "Grâce à ses immenses bois magiques, Reindeer Rabbit guide les voyageurs dans les tempêtes hivernales et accompagne Santa Rabbit lors de ses expéditions.",
@@ -1217,8 +1200,8 @@
       ],
       "quote": "Même dans la tempête, il existe toujours un chemin.",
       "power": "Ruée Polaire : attaque tous les ennemis et augmente la vitesse des alliés.",
-      "faceImg": "./assets/img/lapin_evenement/Noel/cerf_face.png",
-      "coteImg": "./assets/img/lapin_evenement/Noel/cerf_cote.png",
+      "faceImg": "./assets/img/lapins_jouables/lapin_evenement/Noel/cerf_face.png",
+      "coteImg": "./assets/img/lapins_jouables/lapin_evenement/Noel/cerf_cote.png",
       "friends": [
         "santaRabbit"
       ],
@@ -1229,12 +1212,6 @@
           "name": "Frappe de givre",
           "kind": "damage",
           "mult": 1.35
-        },
-        {
-          "id": "reindeerRabbit-attack-2",
-          "name": "Éclair de givre",
-          "kind": "damage",
-          "mult": 1.55
         },
         {
           "id": "reindeerRabbit-attack-3",
@@ -1264,8 +1241,8 @@
       ],
       "quote": "Une leçon apprise vaut mieux qu'une faute répétée.",
       "power": "Jugement du Solstice : réduit l'attaque des ennemis et augmente la résistance des alliés.",
-      "faceImg": "./assets/img/lapin_evenement/Halloween/krampus_face.png",
-      "coteImg": "./assets/img/lapin_evenement/Halloween/krampus_cote.png",
+      "faceImg": "./assets/img/lapins_jouables/lapin_evenement/Halloween/krampus_face.png",
+      "coteImg": "./assets/img/lapins_jouables/lapin_evenement/Halloween/krampus_cote.png",
       "attacks": [
         {
           "id": "krampus-attack-1",
@@ -1307,8 +1284,8 @@
       ],
       "quote": "Les ombres possèdent toujours une histoire à raconter.",
       "power": "Nuée Nocturne : invoque des chauves-souris qui affaiblissent les ennemis.",
-      "faceImg": "./assets/img/lapin_evenement/Halloween/vampi_face.png",
-      "coteImg": "./assets/img/lapin_evenement/Halloween/vampi_cote.png",
+      "faceImg": "./assets/img/lapins_jouables/lapin_evenement/Halloween/vampi_face.png",
+      "coteImg": "./assets/img/lapins_jouables/lapin_evenement/Halloween/vampi_cote.png",
       "friends": [
         "ladyEtheria",
         "kingOssarium"
@@ -1367,8 +1344,8 @@
       ],
       "quote": "Une lumière suffit parfois à repousser l'obscurité.",
       "power": "Lueur Spectrale : soigne les alliés et réduit les dégâts ennemis.",
-      "faceImg": "./assets/img/lapin_evenement/Halloween/fantome_face.png",
-      "coteImg": "./assets/img/lapin_evenement/Halloween/fantome_cote.png",
+      "faceImg": "./assets/img/lapins_jouables/lapin_evenement/Halloween/fantome_face.png",
+      "coteImg": "./assets/img/lapins_jouables/lapin_evenement/Halloween/fantome_cote.png",
       "friends": [
         "lordNoctis",
         "kingOssarium"
@@ -1427,8 +1404,8 @@
       ],
       "quote": "Tant qu'un souvenir survit, un héros demeure vivant.",
       "power": "Armée des Anciens : invoque des gardiens squelettiques.",
-      "faceImg": "./assets/img/lapin_evenement/Halloween/squelette_face.png",
-      "coteImg": "./assets/img/lapin_evenement/Halloween/squelette_cote.png",
+      "faceImg": "./assets/img/lapins_jouables/lapin_evenement/Halloween/squelette_face.png",
+      "coteImg": "./assets/img/lapins_jouables/lapin_evenement/Halloween/squelette_cote.png",
       "friends": [
         "lordNoctis"
       ],
@@ -1486,8 +1463,8 @@
       ],
       "quote": "Toute invention folle mérite au moins un essai.",
       "power": "Surcharge Électrique : inflige des dégâts à plusieurs ennemis.",
-      "faceImg": "./assets/img/lapin_evenement/Halloween/frank_face.png",
-      "coteImg": "./assets/img/lapin_evenement/Halloween/frank_cote.png",
+      "faceImg": "./assets/img/lapins_jouables/lapin_evenement/Halloween/frank_face.png",
+      "coteImg": "./assets/img/lapins_jouables/lapin_evenement/Halloween/frank_cote.png",
       "friends": [
         "fenrabbit"
       ],
@@ -1545,8 +1522,8 @@
       ],
       "quote": "La lune guide toujours ceux qui protègent les leurs.",
       "power": "Rugissement Lunaire : augmente l'attaque de toute l'équipe.",
-      "faceImg": "./assets/img/lapin_evenement/Halloween/bete_face.png",
-      "coteImg": "./assets/img/lapin_evenement/Halloween/bete_cote.png",
+      "faceImg": "./assets/img/lapins_jouables/lapin_evenement/Halloween/bete_face.png",
+      "coteImg": "./assets/img/lapins_jouables/lapin_evenement/Halloween/bete_cote.png",
       "friends": [
         "doctorStitch"
       ],
@@ -1592,21 +1569,53 @@
       "personality": "Joyeux, généreux et malicieux ; il préfère partager la chance plutôt que la garder.",
       "story": "Jinfu garde les enveloppes de vœux du Pavillon des Premières Lueurs. Chaque Nouvel An, il traverse le royaume pour distribuer des souhaits écrits à ceux qui n'osent plus espérer. Il croit que la prospérité commence par un repas partagé et un geste attentionné. Lorsque les légumes envahissent les jardins de fête, il rejoint Wushi pour protéger les provisions, tandis que Denghua éclaire leur chemin.",
       "accessory": "Enveloppes rouges et talisman doré de prospérité.",
-      "likes": ["Les repas partagés", "Les vœux sincères", "Les surprises"],
-      "dislikes": ["L'avarice", "Les promesses oubliées", "Le gaspillage"],
+      "likes": [
+        "Les repas partagés",
+        "Les vœux sincères",
+        "Les surprises"
+      ],
+      "dislikes": [
+        "L'avarice",
+        "Les promesses oubliées",
+        "Le gaspillage"
+      ],
       "quote": "Une chance partagée devient une joie pour deux.",
       "power": "Vœu de Prospérité : frappe l'adversaire et restaure une partie des PV de l'équipe.",
       "powerMode": "heal",
-      "faceImg": "./assets/img/lapin_evenement/Nouvel_An_Chinois/chance_face.png",
-      "coteImg": "./assets/img/lapin_evenement/Nouvel_An_Chinois/chance_cote.png",
-      "friends": ["denghua", "wushi", "caramel"],
+      "faceImg": "./assets/img/lapins_jouables/lapin_evenement/Nouvel_An_Chinois/chance_face.png",
+      "coteImg": "./assets/img/lapins_jouables/lapin_evenement/Nouvel_An_Chinois/chance_cote.png",
+      "friends": [
+        "denghua",
+        "wushi",
+        "caramel"
+      ],
       "rivals": [],
       "attacks": [
-        {"name": "Pièce porte-bonheur", "kind": "damage", "mult": 1.35},
-        {"name": "Pluie de vœux", "kind": "damage", "mult": 1.55},
-        {"name": "Talisman protecteur", "kind": "guard", "mult": 0.85},
-        {"name": "Éclat de fortune", "kind": "damage", "mult": 1.85},
-        {"name": "Enveloppe de réconfort", "kind": "heal", "mult": 0.65}
+        {
+          "name": "Pièce porte-bonheur",
+          "kind": "damage",
+          "mult": 1.35
+        },
+        {
+          "name": "Pluie de vœux",
+          "kind": "damage",
+          "mult": 1.55
+        },
+        {
+          "name": "Talisman protecteur",
+          "kind": "guard",
+          "mult": 0.85
+        },
+        {
+          "name": "Éclat de fortune",
+          "kind": "damage",
+          "mult": 1.85
+        },
+        {
+          "name": "Enveloppe de réconfort",
+          "kind": "heal",
+          "mult": 0.65
+        }
       ]
     },
     "longyun": {
@@ -1617,21 +1626,53 @@
       "personality": "Fier, patient et protecteur ; il apprend à maîtriser sa force avant de l'utiliser.",
       "story": "Longyun veille sur les nuages qui entourent le Pavillon des Premières Lueurs. Selon une légende du royaume, un dragon lui confia une étincelle de son souffle après qu'il eut sauvé une lanterne emportée par la tempête. Depuis, il accompagne les cortèges du Nouvel An et repousse les vents menaçant la fête. Wushi est son partenaire d'entraînement ; Yuehua lui rappelle que la douceur peut protéger aussi sûrement que la puissance.",
       "accessory": "Ornements de dragon et perle lumineuse des nuages.",
-      "likes": ["Les cortèges", "Les sommets brumeux", "Les entraînements avec Wushi"],
-      "dislikes": ["La brutalité gratuite", "Les lanternes abandonnées", "L'orgueil sans courage"],
+      "likes": [
+        "Les cortèges",
+        "Les sommets brumeux",
+        "Les entraînements avec Wushi"
+      ],
+      "dislikes": [
+        "La brutalité gratuite",
+        "Les lanternes abandonnées",
+        "L'orgueil sans courage"
+      ],
       "quote": "La force n'a de valeur que si elle protège.",
       "power": "Souffle du Dragon : déchaîne une frappe critique sur l'adversaire.",
       "powerMode": "damage",
-      "faceImg": "./assets/img/lapin_evenement/Nouvel_An_Chinois/dragon_face.png",
-      "coteImg": "./assets/img/lapin_evenement/Nouvel_An_Chinois/dragon_cote.png",
-      "friends": ["wushi", "yuehua", "spark"],
+      "faceImg": "./assets/img/lapins_jouables/lapin_evenement/Nouvel_An_Chinois/dragon_face.png",
+      "coteImg": "./assets/img/lapins_jouables/lapin_evenement/Nouvel_An_Chinois/dragon_cote.png",
+      "friends": [
+        "wushi",
+        "yuehua",
+        "spark"
+      ],
       "rivals": [],
       "attacks": [
-        {"name": "Griffe des nuages", "kind": "damage", "mult": 1.35},
-        {"name": "Éclair du dragon", "kind": "damage", "mult": 1.55},
-        {"name": "Écailles de brume", "kind": "guard", "mult": 0.85},
-        {"name": "Souffle écarlate", "kind": "damage", "mult": 1.85},
-        {"name": "Repos des nuages", "kind": "heal", "mult": 0.65}
+        {
+          "name": "Griffe des nuages",
+          "kind": "damage",
+          "mult": 1.35
+        },
+        {
+          "name": "Éclair du dragon",
+          "kind": "damage",
+          "mult": 1.55
+        },
+        {
+          "name": "Écailles de brume",
+          "kind": "guard",
+          "mult": 0.85
+        },
+        {
+          "name": "Souffle écarlate",
+          "kind": "damage",
+          "mult": 1.85
+        },
+        {
+          "name": "Repos des nuages",
+          "kind": "heal",
+          "mult": 0.65
+        }
       ]
     },
     "huangdi": {
@@ -1642,21 +1683,53 @@
       "personality": "Digne, réfléchi et juste ; il écoute les plus petits avant de prendre une décision.",
       "story": "Huangdi dirige le Pavillon des Premières Lueurs, un refuge où chaque voyageur trouve une place pendant la fête. Son titre est une responsabilité : ouvrir les réserves, accueillir les familles et veiller à ce que personne ne commence l'année seul. Il prépare les festivités avec Yuehua et confie à Wushi la sécurité des chemins. Son plus grand trésor est un registre de vœux conservé depuis la fondation du pavillon.",
       "accessory": "Couronne de cérémonie et sceau du pavillon.",
-      "likes": ["Les conseils partagés", "Les archives", "Les retrouvailles"],
-      "dislikes": ["Les abus de pouvoir", "L'exclusion", "Les décisions précipitées"],
+      "likes": [
+        "Les conseils partagés",
+        "Les archives",
+        "Les retrouvailles"
+      ],
+      "dislikes": [
+        "Les abus de pouvoir",
+        "L'exclusion",
+        "Les décisions précipitées"
+      ],
       "quote": "Un royaume heureux laisse une place à chacun.",
       "power": "Décret du Pavillon : frappe l'ennemi et protège l'équipe contre sa prochaine attaque.",
       "powerMode": "support",
-      "faceImg": "./assets/img/lapin_evenement/Nouvel_An_Chinois/empereur_face.png",
-      "coteImg": "./assets/img/lapin_evenement/Nouvel_An_Chinois/empereur_cote.png",
-      "friends": ["yuehua", "wushi", "jinfu"],
+      "faceImg": "./assets/img/lapins_jouables/lapin_evenement/Nouvel_An_Chinois/empereur_face.png",
+      "coteImg": "./assets/img/lapins_jouables/lapin_evenement/Nouvel_An_Chinois/empereur_cote.png",
+      "friends": [
+        "yuehua",
+        "wushi",
+        "jinfu"
+      ],
       "rivals": [],
       "attacks": [
-        {"name": "Frappe du sceau", "kind": "damage", "mult": 1.35},
-        {"name": "Ordre lumineux", "kind": "damage", "mult": 1.55},
-        {"name": "Rempart du pavillon", "kind": "guard", "mult": 0.85},
-        {"name": "Jugement doré", "kind": "damage", "mult": 1.85},
-        {"name": "Audience bienveillante", "kind": "heal", "mult": 0.65}
+        {
+          "name": "Frappe du sceau",
+          "kind": "damage",
+          "mult": 1.35
+        },
+        {
+          "name": "Ordre lumineux",
+          "kind": "damage",
+          "mult": 1.55
+        },
+        {
+          "name": "Rempart du pavillon",
+          "kind": "guard",
+          "mult": 0.85
+        },
+        {
+          "name": "Jugement doré",
+          "kind": "damage",
+          "mult": 1.85
+        },
+        {
+          "name": "Audience bienveillante",
+          "kind": "heal",
+          "mult": 0.65
+        }
       ]
     },
     "yuehua": {
@@ -1667,21 +1740,53 @@
       "personality": "Bienveillante, déterminée et attentive ; sa sérénité cache un grand courage.",
       "story": "Yuehua veille sur le jardin intérieur du Pavillon des Premières Lueurs. Elle y cultive les fleurs offertes aux voyageurs pour symboliser un nouveau départ. Pendant le Nouvel An, elle organise les retrouvailles et aide Huangdi à entendre les souhaits de chacun. Elle a appris à Denghua à préserver une lumière douce même au cœur des tempêtes, et accueille Longyun lorsqu'il doute de sa maîtrise.",
       "accessory": "Parure de fleurs et éventail de cérémonie.",
-      "likes": ["Les fleurs de printemps", "Les chants doux", "Les familles réunies"],
-      "dislikes": ["Les querelles inutiles", "La solitude imposée", "Les jardins délaissés"],
+      "likes": [
+        "Les fleurs de printemps",
+        "Les chants doux",
+        "Les familles réunies"
+      ],
+      "dislikes": [
+        "Les querelles inutiles",
+        "La solitude imposée",
+        "Les jardins délaissés"
+      ],
       "quote": "Chaque nouveau départ mérite un peu de tendresse.",
       "power": "Floraison de l'Aube : frappe l'adversaire et rend des PV aux compagnons encore debout.",
       "powerMode": "heal",
-      "faceImg": "./assets/img/lapin_evenement/Nouvel_An_Chinois/imperatrice_face.png",
-      "coteImg": "./assets/img/lapin_evenement/Nouvel_An_Chinois/imperatrice_cote.png",
-      "friends": ["huangdi", "denghua", "sakura"],
+      "faceImg": "./assets/img/lapins_jouables/lapin_evenement/Nouvel_An_Chinois/imperatrice_face.png",
+      "coteImg": "./assets/img/lapins_jouables/lapin_evenement/Nouvel_An_Chinois/imperatrice_cote.png",
+      "friends": [
+        "huangdi",
+        "denghua",
+        "sakura"
+      ],
       "rivals": [],
       "attacks": [
-        {"name": "Pétale d'aurore", "kind": "damage", "mult": 1.35},
-        {"name": "Éventail de lumière", "kind": "damage", "mult": 1.55},
-        {"name": "Voile des fleurs", "kind": "guard", "mult": 0.85},
-        {"name": "Tempête de pétales", "kind": "damage", "mult": 1.85},
-        {"name": "Jardin du renouveau", "kind": "heal", "mult": 0.65}
+        {
+          "name": "Pétale d'aurore",
+          "kind": "damage",
+          "mult": 1.35
+        },
+        {
+          "name": "Éventail de lumière",
+          "kind": "damage",
+          "mult": 1.55
+        },
+        {
+          "name": "Voile des fleurs",
+          "kind": "guard",
+          "mult": 0.85
+        },
+        {
+          "name": "Tempête de pétales",
+          "kind": "damage",
+          "mult": 1.85
+        },
+        {
+          "name": "Jardin du renouveau",
+          "kind": "heal",
+          "mult": 0.65
+        }
       ]
     },
     "denghua": {
@@ -1692,21 +1797,53 @@
       "personality": "Rêveur, minutieux et chaleureux ; il remarque toujours ceux qui restent à l'écart.",
       "story": "Denghua fabrique les lanternes du Pavillon des Premières Lueurs. Dans chacune, il glisse un souhait confié par un habitant du royaume. Sa lumière ne réalise pas les rêves à leur place : elle guide les voyageurs et leur rappelle pourquoi ils avancent. Durant les nuits de fête, il accompagne Jinfu dans les villages et allume le chemin que Wushi protège. Umbra lui a enseigné à respecter l'obscurité plutôt qu'à vouloir l'effacer.",
       "accessory": "Lanterne enchantée et pinceau à vœux.",
-      "likes": ["Les lanternes", "Les histoires de voyageurs", "Les nuits paisibles"],
-      "dislikes": ["Les lumières gaspillées", "Les chemins abandonnés", "Les souhaits moqués"],
+      "likes": [
+        "Les lanternes",
+        "Les histoires de voyageurs",
+        "Les nuits paisibles"
+      ],
+      "dislikes": [
+        "Les lumières gaspillées",
+        "Les chemins abandonnés",
+        "Les souhaits moqués"
+      ],
       "quote": "Une petite lumière suffit pour retrouver le chemin.",
       "power": "Cortège des Lanternes : frappe l'adversaire et enveloppe l'équipe d'une protection lumineuse.",
       "powerMode": "support",
-      "faceImg": "./assets/img/lapin_evenement/Nouvel_An_Chinois/lanterne_face.png",
-      "coteImg": "./assets/img/lapin_evenement/Nouvel_An_Chinois/lanterne_cote.png",
-      "friends": ["jinfu", "yuehua", "umbra"],
+      "faceImg": "./assets/img/lapins_jouables/lapin_evenement/Nouvel_An_Chinois/lanterne_face.png",
+      "coteImg": "./assets/img/lapins_jouables/lapin_evenement/Nouvel_An_Chinois/lanterne_cote.png",
+      "friends": [
+        "jinfu",
+        "yuehua",
+        "umbra"
+      ],
       "rivals": [],
       "attacks": [
-        {"name": "Étincelle de lanterne", "kind": "damage", "mult": 1.35},
-        {"name": "Ruban lumineux", "kind": "damage", "mult": 1.55},
-        {"name": "Halo du cortège", "kind": "guard", "mult": 0.85},
-        {"name": "Mille lumières", "kind": "damage", "mult": 1.85},
-        {"name": "Lueur de réconfort", "kind": "heal", "mult": 0.65}
+        {
+          "name": "Étincelle de lanterne",
+          "kind": "damage",
+          "mult": 1.35
+        },
+        {
+          "name": "Ruban lumineux",
+          "kind": "damage",
+          "mult": 1.55
+        },
+        {
+          "name": "Halo du cortège",
+          "kind": "guard",
+          "mult": 0.85
+        },
+        {
+          "name": "Mille lumières",
+          "kind": "damage",
+          "mult": 1.85
+        },
+        {
+          "name": "Lueur de réconfort",
+          "kind": "heal",
+          "mult": 0.65
+        }
       ]
     },
     "wushi": {
@@ -1717,21 +1854,54 @@
       "personality": "Courageux, discipliné et loyal ; sous ses airs de guerrier, il adore faire rire les enfants.",
       "story": "Wushi est le gardien des portes du Pavillon des Premières Lueurs. Sa fourrure rayée lui a valu le surnom de Lapin Tigre, mais il ne cherche jamais à impressionner par la peur. Il rythme les cortèges avec son tambour et entraîne les jeunes compagnons à défendre leurs amis. Lorsque la Ligue des Légumes menace les réserves du Nouvel An, il forme la première ligne avec Longyun. Huangdi lui fait confiance, Jinfu lui rappelle de célébrer entre deux entraînements, et Koda reconnaît en lui un frère de courage.",
       "accessory": "Tenue de fête et tambour du gardien.",
-      "likes": ["Les entraînements", "Les rythmes de tambour", "Protéger ses compagnons"],
-      "dislikes": ["La lâcheté envers les faibles", "La violence gratuite", "Les fêtes interrompues"],
+      "likes": [
+        "Les entraînements",
+        "Les rythmes de tambour",
+        "Protéger ses compagnons"
+      ],
+      "dislikes": [
+        "La lâcheté envers les faibles",
+        "La violence gratuite",
+        "Les fêtes interrompues"
+      ],
       "quote": "Le vrai courage, c'est de revenir pour les autres.",
       "power": "Rugissement du Tigre : concentre le rythme du tambour dans une puissante frappe critique.",
       "powerMode": "damage",
-      "faceImg": "./assets/img/lapin_evenement/Nouvel_An_Chinois/Lapin tigre festif au tambour-1.png",
-      "coteImg": "./assets/img/lapin_evenement/Nouvel_An_Chinois/Lapin tigre en costume festif-2.png",
-      "friends": ["longyun", "huangdi", "jinfu", "koda"],
+      "faceImg": "./assets/img/lapins_jouables/lapin_evenement/Nouvel_An_Chinois/Lapin tigre festif au tambour-1.png",
+      "coteImg": "./assets/img/lapins_jouables/lapin_evenement/Nouvel_An_Chinois/Lapin tigre en costume festif-2.png",
+      "friends": [
+        "longyun",
+        "huangdi",
+        "jinfu",
+        "koda"
+      ],
       "rivals": [],
       "attacks": [
-        {"name": "Patte du tigre", "kind": "damage", "mult": 1.35},
-        {"name": "Bond du gardien", "kind": "damage", "mult": 1.55},
-        {"name": "Garde rayée", "kind": "guard", "mult": 0.85},
-        {"name": "Tambour de bravoure", "kind": "damage", "mult": 1.85},
-        {"name": "Souffle du guerrier", "kind": "heal", "mult": 0.65}
+        {
+          "name": "Patte du tigre",
+          "kind": "damage",
+          "mult": 1.35
+        },
+        {
+          "name": "Bond du gardien",
+          "kind": "damage",
+          "mult": 1.55
+        },
+        {
+          "name": "Garde rayée",
+          "kind": "guard",
+          "mult": 0.85
+        },
+        {
+          "name": "Tambour de bravoure",
+          "kind": "damage",
+          "mult": 1.85
+        },
+        {
+          "name": "Souffle du guerrier",
+          "kind": "heal",
+          "mult": 0.65
+        }
       ]
     }
   },
@@ -2127,5 +2297,15 @@
     "noel": 12,
     "paques": 10,
     "nouvel_an_chinois": 10
+  },
+  "visibility": {
+    "shop": "admin",
+    "inventory": "admin",
+    "legal": "admin",
+    "encyclopedia": "public",
+    "puzzles": "public",
+    "memory": "public",
+    "lapidoku": "public",
+    "combat": "public"
   }
 }

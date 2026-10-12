@@ -19,8 +19,8 @@ const BASE_SPECIES = {
         dislikes: ["Le chaos", "La corruption", "La destruction inutile"],
         quote: "Avant toutes les légendes, il y avait simplement la vie.",
         power: "Souffle Originel : restaure entièrement les alliés et purifie tous les effets négatifs.",
-        faceImg: "./assets/img/species/azazel_face.png",
-        coteImg: "./assets/img/species/azazel_cote.png",
+        faceImg: "./assets/img/lapins_jouables/sans_evenements/azazel_face.png",
+        coteImg: "./assets/img/lapins_jouables/sans_evenements/azazel_cote.png",
         friends: [], rivals: [], hidden: true, noMalus: true,
     },
 };
@@ -66,7 +66,7 @@ function loadEggRates() {
     } catch (e) {}
     return JSON_EGG_RATES || { commun: 68, rare: 22, epique: 6, legendaire: 2.5, mythique: 1.2, divin: 0.3 };
 }
-function saveEggRates(rates) { localStorage.setItem(EGG_RATES_KEY, JSON.stringify(rates)); }
+function saveEggRates(rates) { localStorage.setItem(EGG_RATES_KEY, JSON.stringify(rates)); window.dispatchEvent(new Event("lapinous-egg-rates-changed")); }
 
 // ---- Durée des événements (jours avant/après la date d'ancrage), réglable
 // depuis le Dashboard. Partagé avec script.js pour le calcul de disponibilité.
@@ -118,6 +118,8 @@ function getSpecies() {
     // Compatibilité avec les chemins enregistrés avant le rangement des médias.
     for (const entry of Object.values(base)) {
         for (const field of ['faceImg', 'coteImg']) {
+            // Migrer les anciens chemins sauvegardés sans modifier les données du joueur.
+            if(typeof entry[field]==='string')entry[field]=entry[field].replace('assets/img/lapins_jouables/sans_evenements/species/','assets/img/lapins_jouables/sans_evenements/').replace('assets/img/species/','assets/img/lapins_jouables/sans_evenements/').replace('assets/img/lapin_evenement/','assets/img/lapins_jouables/lapin_evenement/');
             const path = entry[field];
             const match = typeof path === 'string' && path.match(/lapin_evenement\/([^/]+)$/);
             if (!match) continue;
@@ -148,6 +150,7 @@ window.LapinousContentReady = fetch("./lapinous-content.json", { cache: "no-stor
     .then((res) => (res.ok ? res.json() : null))
     .then((data) => {
         if (data) {
+            window.LapinousVisibility.setBase(data.visibility || {});
             JSON_SPECIES = data.species || {};
             JSON_BOSSES = data.bosses || {};
             JSON_EGG_RATES = data.eggRates || null;
@@ -157,3 +160,21 @@ window.LapinousContentReady = fetch("./lapinous-content.json", { cache: "no-stor
     .catch(() => {
         // Pas de fichier, pas de serveur, ou erreur réseau : on continue normalement.
     });
+
+// Visibilité éditoriale : les réglages locaux de l’administrateur précèdent le catalogue publié.
+(() => {
+    const key='lapinous_visibility';
+    const definitions={shop:['Magasin','#shopButton','admin'],inventory:['Apothicairerie','#inventoryButton','admin'],legal:['Documents juridiques','#legalTrigger','admin'],encyclopedia:['Encyclopédie','#encyclopediaBtn','public'],puzzles:['Puzzles','[onclick="openPuzzleHub()"]','public'],memory:['Memory','[onclick="openMemory()"]','public'],lapidoku:['Lapidoku','[onclick="openLapidoku()"]','public'],combat:['Combats','[onclick="openAdventure()"]','public']};
+    let base={},local={};
+    const admin=['localhost','127.0.0.1','::1','[::1]'].includes(location.hostname.toLowerCase());
+    try {if(admin)local=JSON.parse(localStorage.getItem(key)||'{}');} catch {}
+    const style=document.createElement('style');document.head.appendChild(style);
+    // Ne garder que les fonctions et modes connus, sans injecter de contenu du JSON dans le CSS.
+    function normalize(value){const result={};for(const name in definitions)if(['public','admin','hidden'].includes(value?.[name]))result[name]=value[name];return result;}
+    function get(){return Object.fromEntries(Object.entries(definitions).map(([name,def])=>[name,local[name]||base[name]||def[2]]));}
+    function allowed(name){const mode=get()[name];return mode==='public'||(mode==='admin'&&admin);}
+    function apply(){style.textContent=Object.entries(definitions).filter(([name])=>!allowed(name)).map(([,def])=>def[1]+'{display:none!important}').join('\n');}
+    function save(value){local=normalize(value);localStorage.setItem(key,JSON.stringify(local));apply();}
+    window.LapinousVisibility={definitions,get,allowed,save,setBase(value){base=normalize(value);apply();}};
+    apply();
+})();

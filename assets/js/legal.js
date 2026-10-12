@@ -1,5 +1,5 @@
 (() => {
-    if (!document.documentElement.classList.contains("local-admin")) return;
+
     const drafts = document.getElementById("legalDrafts");
     if (drafts) drafts.replaceWith(drafts.content.cloneNode(true));
     const dialog = document.getElementById('legalDialog');

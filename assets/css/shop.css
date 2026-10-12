@@ -22,3 +22,209 @@ body.game-running .shop-trigger{display:flex}.shop-trigger:focus-visible{outline
 @media(prefers-reduced-motion:reduce){.shop-product-visual img{transition:none}}
 .shop-cart-line{grid-template-columns:88px minmax(0,1fr) auto}.shop-cart-line>img{width:88px;height:94px;object-fit:contain;filter:drop-shadow(0 4px 4px #76543025)}.shop-item .shop-rabbit-grid{grid-template-columns:repeat(auto-fill,minmax(80px,1fr));max-height:150px}.shop-item .shop-rabbit-choice img{height:50px;width:48px}.shop-item .shop-rabbit-picker h3{font-size:.8rem}
 @media(max-width:600px){.shop-cart-line{grid-template-columns:64px minmax(0,1fr) auto}.shop-cart-line>img{width:64px;height:78px}}
+.inventory-trigger{right:146px}.shop-tabs[hidden],.shop-cashier[hidden],.shop-wallet[hidden]{display:none!important}.inventory-dialog{width:min(980px,calc(100vw - 40px))}.inventory-dialog .shop-header{background:linear-gradient(135deg,#e4ead7,#c3d0ae)}.herbalist-workshop{display:grid;grid-template-columns:minmax(0,1fr) 235px;gap:24px;align-items:center}.inventory-cabinet{position:relative;padding:17px 14px 28px;border:7px solid #725033;border-radius:9px;background:repeating-linear-gradient(0deg,#745337 0,#8b6442 5px,#79573a 7px);box-shadow:inset 0 0 12px #39251280,0 9px 15px #3a261d30}.inventory-cabinet-heading{color:#fff1cf;text-align:center;font-size:.9rem;padding:0 0 14px;letter-spacing:.03em}.inventory-drawers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.inventory-drawer{position:relative;display:flex;flex-direction:column;align-items:center;gap:7px;min-width:0;padding:12px 8px 15px;border:3px solid #a17a50;border-radius:5px;color:#fff4d8;background:linear-gradient(110deg,#986c43,#77502f 70%,#8b623c);box-shadow:inset 0 0 0 1px #c99d6977,0 3px 0 #4c321f;cursor:pointer}.inventory-drawer>img{width:100%;height:110px;object-fit:contain;filter:drop-shadow(0 3px 3px #35241650);background:#f5e6c2d9;border:2px solid #d9b977;border-radius:8px}.inventory-drawer strong{font-size:.72rem;line-height:1.4}.inventory-quantity{font-size:.75rem;font-weight:700;color:#ffe7a4}.inventory-handle{display:block;width:45px;height:18px;border-radius:24px 24px 5px 5px;background:linear-gradient(#f9e6a7,#af803c);border:2px solid #68451f;box-shadow:0 2px 3px #33221166;position:relative}.inventory-handle::after{content:'';position:absolute;bottom:2px;left:8px;right:8px;height:5px;background:#624321;border-radius:9px}.inventory-drawer:disabled{cursor:default;filter:saturate(.65)}.inventory-drawer small{font-size:.65rem}.inventory-drawer:not(:disabled):hover{transform:translateY(-2px);filter:brightness(1.08)}.inventory-empty{padding:35px 12px;text-align:center;color:#fff1cf;font-size:.85rem}.inventory-cabinet-feet::before,.inventory-cabinet-feet::after{content:'';position:absolute;bottom:-17px;width:24px;height:18px;background:#725033}.inventory-cabinet-feet::before{left:12px}.inventory-cabinet-feet::after{right:12px}.inventory-herbalist{text-align:center}.inventory-herbalist img{width:100%;height:300px;object-fit:contain;filter:drop-shadow(0 6px 5px #54412625)}.inventory-herbalist p{font-size:.9rem;line-height:1.5;padding:15px;background:#f2f5e9;border:1px solid #b5c69c;border-radius:18px}.inventory-dialog .shop-body{padding-bottom:24px}
+@media(max-width:600px){.inventory-trigger{right:114px}.inventory-dialog{width:calc(100vw - 24px);max-height:calc(100dvh - 40px)}.inventory-dialog .shop-panel{max-height:calc(100dvh - 40px)}.inventory-dialog .shop-header{min-height:0;align-items:center}.inventory-dialog .shop-header>div{max-width:none}.herbalist-workshop{grid-template-columns:1fr;gap:20px}.inventory-herbalist{grid-row:1;display:flex;align-items:center;gap:12px}.inventory-herbalist img{width:105px;height:140px}.inventory-herbalist p{font-size:.8rem;padding:10px;flex:1}.inventory-drawers{grid-template-columns:repeat(2,minmax(0,1fr))}.inventory-drawer>img{height:90px}}
+.inventory-drawer.drawer-taking{animation:herbalist-drawer .9s ease-in-out}.inventory-herbalist{position:relative}.inventory-herbalist img.herbalist-gift{position:absolute;right:0;bottom:100px;width:85px;height:85px;object-fit:contain;animation:herbalist-gift .35s ease-out}
+@keyframes herbalist-drawer{50%{transform:translateY(5px) scale(1.04);box-shadow:0 9px 8px #39251280}}
+@keyframes herbalist-gift{from{opacity:0;transform:translateY(12px) scale(.8)}to{opacity:1;transform:none}}
+@media(max-width:600px){.inventory-herbalist img.herbalist-gift{width:55px;height:55px;right:auto;left:70px;bottom:0}}
+@media(prefers-reduced-motion:reduce){.inventory-drawer.drawer-taking,.inventory-herbalist img.herbalist-gift{animation:none}}
+.shop-cart-controls{grid-column:3;display:flex;flex-direction:column;align-items:center;gap:7px}.shop-cart-controls>small{font-size:.65rem;color:#7f6850}.shop-cart-line .shop-cart-controls button{grid-column:auto}.shop-quantity{display:flex;align-items:center;gap:8px;padding:3px;border:1px solid #cbb58b;border-radius:11px;background:#fffaf2}.shop-cart-line .shop-quantity button{min-width:30px;min-height:30px;padding:3px 7px;border:0;font-size:1rem;background:#eee2ca}.shop-quantity span{min-width:22px;text-align:center;font-weight:700;font-size:.85rem}
+@media(max-width:600px){.shop-cart-line{grid-template-columns:60px minmax(0,1fr) auto}.shop-quantity{gap:3px}.shop-cart-line .shop-quantity button{min-width:27px}.shop-quantity span{min-width:18px}}
+/* Meuble à tiroirs : la lapine se tient devant et rejoint le soin choisi. */
+.herbalist-workshop{position:relative;display:block;padding-bottom:225px;isolation:isolate}
+.inventory-cabinet{max-width:760px;margin:0 auto;padding-bottom:24px}
+.inventory-drawers{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.inventory-drawer{height:156px;box-sizing:border-box;padding:8px 8px 30px;gap:3px;justify-content:flex-start}
+.inventory-drawer>img{width:80px;height:76px;background:#f5e6c2;border-radius:6px}
+.inventory-drawer .inventory-handle{position:absolute;bottom:8px;left:50%;transform:translateX(-50%)}
+.inventory-drawer-empty{cursor:default;background:linear-gradient(110deg,#916640,#704a2d 70%,#805735)}
+.inventory-herbalist{position:absolute;left:50%;bottom:0;width:250px;transform:translateX(-50%);display:block;z-index:3;pointer-events:none}
+.inventory-herbalist #inventoryHerbalist{display:block;width:155px;height:185px;margin:0 auto;object-fit:contain;position:relative;z-index:2;will-change:transform}
+.inventory-herbalist p{margin:3px 0 0;padding:10px;font-size:.85rem}
+.inventory-herbalist img.herbalist-gift{right:20px;bottom:70px;width:65px;height:65px;left:auto;z-index:4}
+.inventory-empty{padding:8px;margin:8px 0 0}
+@media(max-width:600px){.inventory-cabinet{padding:10px 8px 20px;border-width:5px}.inventory-drawers{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.inventory-drawer{height:136px;padding:7px 3px 30px;border-width:2px}.inventory-drawer>img{width:60px;max-width:100%;height:60px}.inventory-drawer strong{font-size:.6rem}.inventory-drawer small{font-size:.55rem}.inventory-herbalist{width:220px}.inventory-herbalist #inventoryHerbalist{width:125px;height:155px}.herbalist-workshop{padding-bottom:195px}.inventory-herbalist img.herbalist-gift{right:25px;bottom:65px;width:55px;height:55px}}
+/* Proportions d’un meuble d’herboriste, avec la lapine au premier plan. */
+.inventory-dialog{width:min(760px,calc(100vw - 32px))}
+.inventory-dialog .shop-header{padding:12px 20px}
+.inventory-dialog .shop-body{padding:12px 20px}
+.herbalist-workshop{padding-bottom:105px;min-height:370px}
+.inventory-cabinet{width:min(470px,90%);box-sizing:border-box;padding:10px 10px 20px;border-width:6px}
+.inventory-cabinet-heading{font-size:.8rem;padding-bottom:8px}
+.inventory-drawers{gap:5px}
+.inventory-drawer{height:92px;padding:4px 5px 22px;gap:1px;border-width:2px}
+.inventory-drawer>img{width:44px;height:40px;border-width:1px;border-radius:4px}
+.inventory-drawer strong{font-size:.6rem;line-height:1.15}
+.inventory-quantity{position:absolute;right:6px;top:6px;font-size:.65rem}
+.inventory-drawer small{font-size:.5rem;line-height:1.1}
+.inventory-drawer .inventory-handle{bottom:4px;width:30px;height:12px;border-width:1px}
+.inventory-handle::after{left:5px;right:5px;height:3px}
+.inventory-herbalist{width:270px;left:58%;bottom:0}
+.inventory-herbalist #inventoryHerbalist{width:215px;height:255px}
+.inventory-herbalist p{font-size:.8rem;padding:8px;margin:0}
+.inventory-herbalist img.herbalist-gift{right:15px;bottom:85px;width:70px;height:70px}
+.inventory-dialog .shop-needs{margin:8px 0 0}
+@media(max-width:600px){.inventory-dialog .shop-header{padding:10px 14px}.inventory-dialog .shop-body{padding:10px}.inventory-cabinet{width:100%;max-width:400px;padding:8px 6px 16px}.inventory-drawer{height:88px;padding:4px 3px 20px}.inventory-drawer>img{width:40px;height:36px}.inventory-drawer strong{font-size:.55rem}.inventory-herbalist{width:235px;left:55%}.inventory-herbalist #inventoryHerbalist{width:180px;height:215px}.herbalist-workshop{padding-bottom:100px;min-height:350px}.inventory-herbalist p{font-size:.75rem}.inventory-herbalist img.herbalist-gift{bottom:65px;width:60px;height:60px}}
+/* Petit meuble sur pieds et herboriste à côté, dans une scène compacte. */
+.inventory-dialog{width:min(690px,calc(100vw - 24px));max-height:calc(100dvh - 28px)}
+.inventory-dialog .shop-panel{max-height:calc(100dvh - 28px)}
+.inventory-dialog .shop-header{padding:8px 14px;min-height:0}
+.inventory-dialog .shop-header h2{font-size:1.2rem}
+.inventory-dialog .shop-header small{font-size:.55rem}
+.inventory-dialog .shop-close{width:34px;height:34px;font-size:22px}
+.herbalist-workshop{display:grid;grid-template-columns:minmax(0,330px) minmax(0,210px);justify-content:center;align-items:end;gap:22px;min-height:0;padding:10px 0 24px}
+.inventory-cabinet{width:100%;max-width:330px;margin:0;padding:8px 7px 22px;border:5px solid #674529;border-top:12px solid #9b7148;border-bottom:12px solid #674529;border-radius:5px;background:linear-gradient(95deg,#8a603c,#b18a5c 48%,#805737);box-shadow:inset 0 0 5px #412b1b88,5px 8px 0 #4e342324,0 12px 18px #3a261d30}
+.inventory-cabinet::before{content:'';position:absolute;left:-12px;right:-12px;top:-17px;height:12px;border-radius:4px;background:linear-gradient(#b48b60,#705033);box-shadow:0 3px 3px #39251255}
+.inventory-cabinet-heading{font-size:.65rem;padding-bottom:6px}
+.inventory-drawer{height:76px;padding:3px 3px 18px;background:linear-gradient(110deg,#ab8258,#916a44 70%,#aa8054);border-color:#c49a6d;box-shadow:inset 0 0 0 1px #583d2a88,0 2px 0 #4c321f}
+.inventory-drawer>img{width:34px;height:30px}
+.inventory-drawer strong{font-size:.52rem}
+.inventory-drawer small{font-size:.45rem}
+.inventory-quantity{font-size:.55rem;right:3px;top:3px}
+.inventory-cabinet-feet::before,.inventory-cabinet-feet::after{bottom:-34px;height:25px;width:18px;border-radius:0 0 3px 3px;background:linear-gradient(90deg,#674529,#9b7148)}
+.inventory-herbalist{position:relative;left:auto;bottom:auto;transform:none;width:100%;padding:0;align-self:end}
+.inventory-herbalist #inventoryHerbalist{width:190px;max-width:100%;height:250px;object-position:bottom center}
+.inventory-herbalist p{font-size:.73rem;padding:7px;margin-top:4px}
+.inventory-herbalist img.herbalist-gift{width:55px;height:55px;right:0;bottom:65px}
+@media(max-width:600px){.inventory-dialog .shop-body{padding:10px 8px}.herbalist-workshop{grid-template-columns:minmax(0,1fr) minmax(0,.65fr);gap:12px;padding-top:12px}.inventory-cabinet{padding:6px 4px 18px;border-width:4px;border-top-width:10px;border-bottom-width:10px}.inventory-drawers{gap:3px}.inventory-drawer{height:65px;padding:3px 1px 17px}.inventory-drawer>img{width:27px;height:25px}.inventory-drawer strong{font-size:.44rem}.inventory-drawer small{display:none}.inventory-drawer .inventory-handle{width:22px;height:9px;bottom:3px}.inventory-herbalist #inventoryHerbalist{width:150px;height:210px}.inventory-herbalist p{font-size:.65rem;padding:5px}.inventory-cabinet-heading{font-size:.55rem}.inventory-quantity{font-size:.5rem}}
+/* Le catalogue reste la partie principale de la boutique. */
+.shop-dialog:not(.inventory-dialog) .shop-header{padding:9px 16px;min-height:0;align-items:center}
+.shop-dialog:not(.inventory-dialog) .shop-header h2{font-size:1.25rem}
+.shop-dialog:not(.inventory-dialog) .shop-header small{font-size:.55rem}
+.shop-wallet{padding:6px 16px;font-size:.8rem}
+.shop-tabs{padding:6px 16px 0;gap:6px}
+.shop-tabs button{padding:6px 12px;font-size:.8rem}
+.shop-dialog:not(.inventory-dialog) .shop-body{padding:10px 16px}
+.shop-cart-summary{padding:6px 16px;font-size:.75rem}
+.shop-cart-summary button{padding:6px 10px}
+.shop-cart-note{margin-bottom:6px;font-size:.7rem}
+.shop-needs{margin:6px 0 8px}
+.shop-item{padding:12px;gap:6px}
+.shop-product-visual{min-height:110px}
+.shop-product-visual img{height:125px}
+.shop-message{min-height:0;padding-bottom:8px}
+.shop-message:empty{display:none}
+/* Filets dorés, ferrures et veinage : aucun fichier graphique supplémentaire. */
+.inventory-cabinet{border-color:#805727;box-shadow:inset 0 0 0 2px #d9b65d,inset 0 0 7px #412b1b88,5px 8px 0 #4e342324,0 12px 18px #3a261d30}
+.inventory-cabinet::before{border-top:2px solid #e4c77d;border-bottom:2px solid #ad8034}
+.inventory-drawer{border-color:#bf9957;background:repeating-linear-gradient(3deg,#a77b4e22 0px,#5a3c2222 1px,transparent 2px,transparent 7px),linear-gradient(110deg,#ad8357,#87603e 70%,#ab8054);box-shadow:inset 0 0 0 1px #e8c97866,inset 0 0 8px #4b301c22,0 2px 0 #4c321f}
+.inventory-drawer::after{content:'✦';position:absolute;left:4px;bottom:3px;color:#e0bf6c;font-size:9px;pointer-events:none}
+.inventory-herbalist #inventoryHerbalist.herbalist-walk-right{transform:scaleX(-1)}
+.inventory-drawer[title]:focus-visible{outline:2px solid #f0cc73}
+@media(max-width:600px){.shop-dialog:not(.inventory-dialog) .shop-header>div{max-width:none}.shop-product-visual{min-height:95px}.shop-product-visual img{height:110px}}
+/* Rayons au niveau du titre, avec suffisamment d’air entre les commandes. */
+.shop-dialog:not(.inventory-dialog) .shop-header{padding:15px 18px;gap:12px;flex-wrap:wrap}
+.shop-header .shop-tabs{padding:0;gap:6px;margin-left:auto}
+.shop-header .shop-tabs button{padding:8px 11px;font-size:.78rem}
+.shop-dialog:not(.inventory-dialog) .shop-header h2{font-size:1.4rem;margin-top:4px}
+.shop-dialog:not(.inventory-dialog) .shop-body{padding:16px 18px}
+.shop-wallet{padding:10px 18px}
+.shop-consumables-view .shop-items{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.shop-consumables-view .shop-cart-note,.shop-consumables-view .shop-needs{display:none}
+.shop-consumable{position:relative;min-width:0;aspect-ratio:1;display:grid;place-items:center;border:1px solid #d9c49e;border-radius:18px;background:radial-gradient(ellipse,#fffdf4,#eadfc7);outline-offset:3px}
+.shop-consumable>img{width:94%;height:94%;object-fit:contain;filter:drop-shadow(0 5px 6px #76543025)}
+.shop-consumable-details{position:absolute;inset:0;padding:12px;display:flex;flex-direction:column;justify-content:center;gap:8px;border-radius:17px;background:#fffaf2f5;opacity:0;visibility:hidden;transition:opacity .15s;overflow:auto}
+.shop-consumable:hover .shop-consumable-details,.shop-consumable:focus-within .shop-consumable-details{opacity:1;visibility:visible}
+.shop-consumable-details h3{font-size:.9rem;margin:0}
+.shop-consumable-details p{font-size:.72rem;line-height:1.4;margin:0}
+.shop-consumable-details button{border:1px solid #6f8b57;border-radius:10px;padding:8px;background:#7f9c64;color:white;font-weight:700;cursor:pointer}
+.shop-cashier{bottom:0;transform:translateY(35px)}
+/* La bulle n’entre pas dans la hauteur du sprite : pieds alignés sur le sol du meuble. */
+.inventory-herbalist{transform:translateY(34px)}
+.inventory-herbalist p{position:absolute;top:100%;left:50%;transform:translateX(-50%);width:100%;box-sizing:border-box}
+.herbalist-workshop{padding-bottom:90px}
+@media(max-width:600px){.shop-header .shop-tabs{order:3;width:100%;margin:0;justify-content:center}.shop-header .shop-tabs button{padding:7px 9px}.shop-consumables-view .shop-items{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.shop-consumable-details{padding:8px;gap:5px}.shop-consumable-details p{font-size:.65rem}.shop-consumable-details h3{font-size:.78rem}.shop-consumable-details button{font-size:.65rem}.shop-cashier{transform:translateY(20px)}.inventory-herbalist{transform:translateY(34px)}}
+@media(prefers-reduced-motion:reduce){.shop-consumable-details{transition:none}}
+/* L’extracteur utilise toute la largeur ; ses destinataires sont à droite. */
+.shop-fragments-view .shop-items{grid-template-columns:minmax(0,1fr)}
+.shop-fragment-item{display:grid;grid-template-columns:minmax(0,1fr) minmax(230px,1fr);gap:20px;align-items:start;padding:18px}
+.shop-fragment-details{display:flex;flex-direction:column;gap:12px;min-width:0}
+.shop-fragment-details .shop-product-visual{min-height:145px}
+.shop-fragment-details .shop-product-visual img{height:150px}
+.shop-fragment-rabbits{border-left:1px solid #e0d0b3;padding-left:18px;min-width:0}
+.shop-fragment-rabbits .shop-rabbit-grid{grid-template-columns:repeat(auto-fill,minmax(85px,1fr));max-height:330px}
+.shop-fragment-rabbits .shop-rabbit-picker h3{font-size:.9rem}
+.shop-fragment-rabbits .shop-rabbit-choice img{width:62px;height:68px}
+.shop-fragments-view .shop-needs{display:none}
+.shop-fragments-view .shop-header{align-items:center}
+.shop-header>div:first-child{flex-shrink:0}
+.shop-header h2{line-height:1.3}
+.shop-dialog:not(.inventory-dialog) .shop-header{background:linear-gradient(135deg,#efe5cf,#d7c39d);min-height:80px;box-sizing:border-box}
+@media(max-width:600px){.shop-fragment-item{grid-template-columns:minmax(0,1fr) minmax(110px,.7fr);gap:10px;padding:10px}.shop-fragment-rabbits{padding-left:9px}.shop-fragment-rabbits .shop-rabbit-grid{grid-template-columns:1fr;max-height:340px}.shop-fragment-details .shop-product-visual img{height:110px}.shop-fragment-details .shop-product-visual{min-height:110px}}
+.shop-fragment-rabbits .shop-rabbit-choice{margin-top:0;background:#fffaf2;color:#574132;border:2px solid #e6d8bf;padding:8px;font-weight:400}
+.shop-fragment-rabbits .shop-rabbit-choice.selected{background:#eaf0df;border-color:#759455;color:#574132}
+/* Utiliser la largeur disponible tout en réservant le débord de la vendeuse. */
+.shop-dialog:not(.inventory-dialog){width:min(1180px,calc(100vw - 240px));margin-left:max(20px,calc((100vw - min(1180px,100vw - 240px) - 160px)/2));margin-right:auto}
+.shop-fragments-view .shop-fragment-item{grid-template-columns:minmax(0,1fr) minmax(0,1.15fr)}
+.shop-fragments-view .shop-fragment-rabbits .shop-rabbit-grid{grid-template-columns:repeat(auto-fill,minmax(100px,1fr));max-height:300px}
+.shop-consumables-view .shop-items{grid-template-columns:repeat(3,minmax(0,1fr));max-width:860px;margin:0 auto}
+.shop-consumable{aspect-ratio:auto;height:230px}
+@media(max-width:900px){.shop-dialog:not(.inventory-dialog){width:calc(100vw - 190px);margin-left:20px}.shop-consumable{height:190px}}
+@media(max-width:600px){.shop-dialog:not(.inventory-dialog){width:calc(100vw - 24px);margin-left:auto;margin-right:auto}.shop-fragments-view .shop-fragment-item{grid-template-columns:minmax(0,1fr) minmax(110px,.7fr)}.shop-consumables-view .shop-items{grid-template-columns:repeat(2,minmax(0,1fr))}.shop-consumable{height:180px}}
+/* Réserver la place du total avant de laisser défiler le contenu. */
+.shop-dialog:not(.inventory-dialog),.shop-dialog:not(.inventory-dialog) .shop-panel{max-height:calc(100dvh - 44px)}
+.shop-header,.shop-wallet,.shop-cart-summary,.shop-message{flex-shrink:0}
+.shop-body{flex:1 1 auto;min-height:0}
+.shop-dialog:not(.inventory-dialog) .shop-header{min-height:64px;padding:10px 16px}
+.shop-dialog:not(.inventory-dialog) .shop-body{padding:10px 16px}
+.shop-fragment-item{padding:12px;gap:16px}
+.shop-fragment-details{gap:7px}
+.shop-fragment-details .shop-product-visual{min-height:95px}
+.shop-fragment-details .shop-product-visual img{height:100px}
+.shop-fragment-details p{line-height:1.35;font-size:.75rem}
+.shop-fragments-view .shop-fragment-rabbits .shop-rabbit-grid{max-height:260px}
+.shop-fragment-rabbits .shop-rabbit-choice img{width:52px;height:54px}
+.shop-fragment-rabbits .shop-rabbit-choice{padding:5px;gap:2px}
+.shop-cart-summary{position:relative;z-index:3;padding:9px 16px;min-height:44px;box-sizing:border-box}
+.shop-cart-summary .shop-cart-payment{width:100%;margin:0;padding:0;border:0;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.shop-cart-summary .shop-cart-payment>p{margin:0;gap:10px}
+.shop-cart-summary .shop-confirm-actions button{padding:7px 11px}
+.shop-cart-line{padding:8px;gap:8px}
+.shop-cart-line>img{width:64px;height:66px}
+.shop-cashier{right:-185px;width:185px;pointer-events:none}
+@media(max-width:900px){.shop-cashier{right:-145px;width:145px}}
+@media(max-width:600px){.shop-dialog:not(.inventory-dialog),.shop-dialog:not(.inventory-dialog) .shop-panel{max-height:calc(100dvh - 24px)}.shop-cashier{right:62px;width:100px}.shop-cart-summary{padding:8px 12px}.shop-cart-summary .shop-confirm-actions{gap:6px}.shop-fragment-details .shop-product-visual img{height:85px}}
+/* Meuble plus large, douze tiroirs et détails assortis au magasin. */
+.inventory-dialog{width:min(1050px,calc(100vw - 32px));max-height:calc(100dvh - 32px)}
+.inventory-dialog .shop-panel{max-height:calc(100dvh - 32px)}
+.inventory-dialog .shop-body{padding:16px 22px 8px}
+.inventory-dialog .shop-header{padding:12px 20px}
+.herbalist-workshop{grid-template-columns:minmax(0,620px) minmax(180px,250px);gap:30px;padding:14px 0 66px;align-items:end}
+.inventory-cabinet{max-width:620px;padding:9px 10px 20px}
+.inventory-drawers{grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
+.inventory-drawer{height:92px;padding:5px 4px 20px;overflow:visible}
+.inventory-drawer>img{width:52px;height:47px}
+.inventory-drawer>strong{font-size:.6rem}
+.inventory-drawer[aria-disabled=true]{cursor:default}
+.inventory-drawer-details{position:absolute;z-index:10;left:0;bottom:0;width:240px;box-sizing:border-box;padding:12px;display:flex;flex-direction:column;gap:7px;text-align:left;border:1px solid #cbb58b;border-radius:12px;background:#fffaf2;color:#574132;box-shadow:0 6px 18px #39251240;opacity:0;visibility:hidden;pointer-events:none}
+.inventory-drawer:nth-child(4n) .inventory-drawer-details{left:auto;right:0}
+.inventory-drawer-details b{font-size:.85rem}
+.inventory-drawer-details>span{font-size:.75rem;line-height:1.4}
+.inventory-drawer-details em{font-size:.7rem;font-style:normal;color:#6f8b57}
+.inventory-drawer:hover,.inventory-drawer:focus-visible{z-index:5}
+.inventory-drawer:hover .inventory-drawer-details,.inventory-drawer:focus-visible .inventory-drawer-details{opacity:1;visibility:visible}
+.inventory-herbalist #inventoryHerbalist{height:270px;width:210px}
+.inventory-herbalist p{font-size:.78rem;padding:8px}
+.inventory-dialog .shop-needs{margin:4px 0}
+@media(max-height:700px) and (min-width:601px){.inventory-drawer{height:72px}.inventory-drawer>img{width:38px;height:33px}.inventory-herbalist #inventoryHerbalist{height:220px}.herbalist-workshop{padding-bottom:58px}.inventory-dialog .shop-header{padding:8px 18px}}
+@media(max-width:600px){.inventory-dialog{width:calc(100vw - 20px)}.inventory-dialog .shop-body{padding:12px 8px 6px}.herbalist-workshop{grid-template-columns:minmax(0,1fr) minmax(90px,.4fr);gap:12px;padding-bottom:68px}.inventory-cabinet{padding:6px 4px 16px}.inventory-drawers{gap:3px}.inventory-drawer{height:70px;padding:3px 1px 16px}.inventory-drawer>img{width:30px;height:30px}.inventory-drawer>strong{display:none}.inventory-herbalist #inventoryHerbalist{width:110px;height:190px}.inventory-herbalist p{font-size:.6rem;padding:5px}.inventory-drawer-details{width:180px;padding:9px}.inventory-drawer:nth-child(4n+3) .inventory-drawer-details{left:auto;right:0}}
+
+/* Marché compact : emojis en attendant les images fournies. */
+.shop-dialog:has([data-shop-tab="market"].active) .shop-items{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;max-width:none}
+.shop-dialog:has([data-shop-tab="market"].active) .shop-consumable{height:180px;min-height:0;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.shop-food-emoji{font-size:64px;line-height:1;display:block;text-align:center}
+.shop-consumable>img{max-width:100%;max-height:100%;object-fit:contain}
+.shop-evolution-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.shop-evolution-card{display:flex;flex-direction:column;align-items:center;gap:10px;padding:16px;border:1px solid #cbb58b;border-radius:18px;background:#fff8e8;color:#624831}
+.shop-evolution-card img{height:85px;width:100px;object-fit:contain}.shop-evolution-card button{padding:8px;border:1px solid #cbb58b;border-radius:10px;background:#ead8b3;color:#624831}
+.evolution-dots{display:flex;gap:7px}.evolution-dots i{width:13px;height:13px;border-radius:50%;background:#e6ddcc;border:1px solid #bca47b}.evolution-dots i.filled{background:#a7bd6e;border-color:#7c9850}.evolution-max{color:#789549;letter-spacing:2px}
+/* Les images restent dans leur carte ; le titre et l'achat restent visibles au survol. */
+.shop-consumable{overflow:hidden;box-sizing:border-box;min-height:0}
+.shop-consumable>img{display:block;width:100%;height:100%;max-width:100%;max-height:100%;min-width:0;min-height:0;object-fit:contain;flex-shrink:1}
+.shop-consumable .shop-consumable-details{display:grid;grid-template-rows:auto minmax(0,1fr) auto;align-content:start;justify-content:stretch;gap:8px;padding:12px;overflow:hidden;box-sizing:border-box}
+.shop-consumable-details h3{font-size:.95rem;line-height:1.25;margin:0;overflow-wrap:anywhere}
+.shop-consumable-details p{font-size:.78rem;line-height:1.35;margin:0;min-height:0;overflow:auto}
+.shop-consumable-details button{font-size:.85rem;line-height:1.25;padding:9px;min-height:38px;height:auto;min-width:0;width:100%;white-space:normal;box-sizing:border-box}
+.shop-dialog:has([data-shop-tab="market"].active) .shop-items{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+.shop-dialog:has([data-shop-tab="market"].active) .shop-consumable{height:240px}

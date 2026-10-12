@@ -170,10 +170,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         let game = freshGame();
         let currentZone = "default";
-        const BOSS_MYSTERY_IMG = "./assets/img/bosses/mystery_boss.svg";
+        const BOSS_MYSTERY_IMG = "./assets/img/boss/mystery_boss.svg";
         const UPGRADE_COST = 20;
         const EGG_COST = 45;
-        const ROOM_REQUIRED_LEVEL = { cuisine: 2, chambre: 3, sdb: 4, jardin: 5 };
+        const ROOM_REQUIRED_LEVEL = { cuisine: 5, chambre: 10, sdb: 15, jardin: 20 };
 
         // ============================================================
         // TOASTS
@@ -327,6 +327,7 @@ document.addEventListener("DOMContentLoaded", () => {
             magic: "./assets/audio/combat/attaque_magique.mp3",
             heal: "./assets/audio/combat/soin.mp3",
             shieldImpact: "./assets/audio/combat/impact_bouclier.mp3",
+            shieldActivation: "./assets/audio/combat/bouclier_activation.mp3",
             feed: "./assets/audio/action/manger.mp3",
             sleep: "./assets/audio/action/dormir.mp3",
             clean: "./assets/audio/action/doucher.mp3",
@@ -558,7 +559,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         function serializeGame() {
             window.LapinousAchievements.ensure(game);
-            return JSON.stringify({ ...game, savedAt: Date.now() });
+            return JSON.stringify({ ...game, rabbitName: currentRabbitName(), savedAt: Date.now() });
         }
         function autoSave() {
             try {
@@ -637,6 +638,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         function applyLoadedGame(data) {
+            window.LapinousSaveValidation.validate(data);
             const fresh = freshGame();
             const activeSpecies = data.species || "azur";
             let migratedProgress = data.progress || null;
@@ -679,8 +681,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 migratedProgress[key] = { ...freshSpeciesProgress(), ...migratedProgress[key] };
             });
 
-            const speciesNames = data.speciesNames || {};
-            if (data.rabbitName && !speciesNames[activeSpecies])
+            // Migrer le nom global seulement pour les sauvegardes antérieures aux noms par espèce.
+            const speciesNames = { ...(data.speciesNames || {}) };
+            if (!data.speciesNames && data.rabbitName && !speciesNames[activeSpecies])
                 speciesNames[activeSpecies] = data.rabbitName;
 
             game = {
@@ -1078,7 +1081,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const card = document.getElementById("adoptionCard");
             card.innerHTML = `
             <div class="rarity-badge" style="background:${rarity.color};">${rarity.label}</div>
-            <img src="${s.faceImg || s.coteImg}" class="adoption-photo" alt="${s.name}" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';">
+            <img src="${s.faceImg || s.coteImg}" class="adoption-photo" alt="${s.name}" onerror="this.onerror=null;this.src='./assets/img/lapins_jouables/sans_evenements/mystery.svg';">
             <div class="adoption-name">${s.name}, ${s.nickname}</div>
             <div class="adoption-personality">${s.personality}</div>
             <div class="trait-badge">${trait.emoji} ${trait.label}</div>
@@ -1157,9 +1160,9 @@ document.addEventListener("DOMContentLoaded", () => {
                       .map((puz) => {
                           const st = puzzleProgress[puz.id];
                           const done = !!st?.completed;
-                          const img = puz.image || "./assets/img/species/mystery.svg";
+                          const img = puz.image || "./assets/img/lapins_jouables/sans_evenements/mystery.svg";
                           return `<div class="lapin-puzzle-card ${done ? "done" : ""}">
-                    <img src="${img}" alt="${puz.title}" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';">
+                    <img src="${img}" alt="${puz.title}" onerror="this.onerror=null;this.src='./assets/img/lapins_jouables/sans_evenements/mystery.svg';">
                     <span><strong>${puz.title}</strong><small>${done ? "✅ Terminé" : "🧩 À découvrir"}</small></span>
                 </div>`;
                       })
@@ -1190,7 +1193,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const rarity = RARITY_META[s.rarity];
             document.getElementById("encyclopediaDetailCard").innerHTML = `
             <div class="encyclopedia-detail-card">
-                <img src="${s.faceImg || s.coteImg}" alt="${s.name}" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';">
+                <img src="${s.faceImg || s.coteImg}" alt="${s.name}" onerror="this.onerror=null;this.src='./assets/img/lapins_jouables/sans_evenements/mystery.svg';">
                 <div class="entry-body">
                     <div class="entry-header">
                         <strong>${s.name}, ${s.nickname}</strong>
@@ -1219,7 +1222,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const b = getBosses()[key];
             document.getElementById("encyclopediaDetailCard").innerHTML = `
             <div class="encyclopedia-detail-card">
-                <img src="${b.faceImg || b.coteImg}" alt="${b.name}" onerror="this.onerror=null;this.src='./assets/img/bosses/mystery_boss.svg';">
+                <img src="${b.faceImg || b.coteImg}" alt="${b.name}" onerror="this.onerror=null;this.src='./assets/img/boss/mystery_boss.svg';">
                 <div class="entry-body">
                     <div class="entry-header">
                         <strong>${b.name}${b.nickname ? ", " + b.nickname : ""}</strong>
@@ -1254,12 +1257,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 card.type = "button";
                 card.className = "encyclopedia-card" + (owned ? "" : " locked");
                 const realImg = s.faceImg || s.coteImg || "";
-                const imgSrc = realImg || "./assets/img/species/mystery.svg";
+                const imgSrc = realImg || "./assets/img/lapins_jouables/sans_evenements/mystery.svg";
                 const eventBadge =
                     s.event && !isSpeciesAvailableNow(s)
                         ? `<span class="event-badge">${eventLabelFor(s).split(" ")[0]}</span>`
                         : "";
-                card.innerHTML = `<img class="${owned ? "" : realImg ? "rabbit-silhouette" : ""}" src="${imgSrc}" alt="${owned ? s.name : "???"}" onerror="this.onerror=null;this.classList.remove('rabbit-silhouette');this.src='./assets/img/species/mystery.svg';"><span class="card-name">${owned ? s.name : "???"}</span>${owned ? '<span class="owned-badge">✓</span>' : ""}${eventBadge}`;
+                card.innerHTML = `<img class="${owned ? "" : realImg ? "rabbit-silhouette" : ""}" src="${imgSrc}" alt="${owned ? s.name : "???"}" onerror="this.onerror=null;this.classList.remove('rabbit-silhouette');this.src='./assets/img/lapins_jouables/sans_evenements/mystery.svg';"><span class="card-name">${owned ? s.name : "???"}</span>${owned ? '<span class="owned-badge">✓</span>' : ""}${eventBadge}`;
                 card.addEventListener("click", () => {
                     if (owned) showEncyclopediaDetail(key);
                     else if (s.event && !isSpeciesAvailableNow(s))
@@ -1273,7 +1276,15 @@ document.addEventListener("DOMContentLoaded", () => {
                             "warn",
                         );
                 });
-                grid.appendChild(card);
+                const wrapper=document.createElement('div');wrapper.className='encyclopedia-card-wrap';wrapper.append(card);
+                if(owned){
+                    const favorite=document.createElement('button');favorite.type='button';favorite.className='rabbit-favorite-star';
+                    const selected=(game.salonFavorites||[]).includes(key);
+                    favorite.textContent=selected?'\u2605':'\u2606';favorite.classList.toggle('selected',selected);
+                    favorite.setAttribute('aria-pressed',String(selected));favorite.setAttribute('aria-label',(selected?'Retirer des favoris : ':'Ajouter aux favoris : ')+s.name);
+                    favorite.onclick=()=>toggleSalonFavorite(key);wrapper.append(favorite);
+                }
+                grid.appendChild(wrapper);
             });
             const relBox = document.getElementById("encyclopediaRelations");
             relBox.innerHTML =
@@ -1293,7 +1304,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 card.type = "button";
                 card.className = "encyclopedia-card" + (found ? "" : " locked");
                 const imgSrc = found ? b.faceImg || b.coteImg : BOSS_MYSTERY_IMG;
-                card.innerHTML = `<img src="${imgSrc}" alt="${found ? b.name : "???"}" onerror="this.onerror=null;this.src='./assets/img/bosses/mystery_boss.svg';"><span class="card-name">${found ? b.name : "???"}</span>${found ? '<span class="owned-badge">✓</span>' : ""}`;
+                card.innerHTML = `<img src="${imgSrc}" alt="${found ? b.name : "???"}" onerror="this.onerror=null;this.src='./assets/img/boss/mystery_boss.svg';"><span class="card-name">${found ? b.name : "???"}</span>${found ? '<span class="owned-badge">✓</span>' : ""}`;
                 card.addEventListener("click", () => {
                     if (found) showBossDetail(key);
                     else
@@ -1397,27 +1408,25 @@ document.addEventListener("DOMContentLoaded", () => {
         // ============================================================
         // ZONES
         // ============================================================
-        function upgradeAvailable(room) {
-            return (
-                !progress().improvements[room] &&
-                progress().currentLevel >= ROOM_REQUIRED_LEVEL[room] &&
-                progress().currentLevel > progress().lastUpgradeLevel &&
-                progress().friendship >= UPGRADE_COST
-            );
-        }
-        function upgradeButtonHtml(room, icon, onclick) {
-            if (progress().improvements[room]) return "";
-            if (progress().currentLevel < ROOM_REQUIRED_LEVEL[room]) return "";
-            const enabled = upgradeAvailable(room);
-            return `<button class="action-btn upgrade" onclick="${onclick}" ${enabled ? "" : "disabled"}>
-            <img class="action-icon" src="${icon}" alt="">
-            <span>Améliorer (${UPGRADE_COST} 💛)</span>
-        </button>`;
-        }
+        // Les anciennes améliorations booléennes correspondent au premier palier déjà acquis.
+        function roomStage(room){return progress().improvements[room]===true?1:Math.max(0,Number(progress().improvements[room])||0);}
+        function roomUpgradeCost(room){return 25*2**Math.max(0,roomStage(room)-1);}
+        function upgradeAvailable(room){const stage=roomStage(room);return stage<5&&(stage===0?progress().currentLevel>=ROOM_REQUIRED_LEVEL[room]&&progress().friendship>=UPGRADE_COST:game.carrots>=roomUpgradeCost(room));}
+        function upgradeButtonHtml(room,icon,onclick){const stage=roomStage(room);if(stage>0)return '';return '<button class="action-btn upgrade" onclick="'+onclick+'" '+(!upgradeAvailable(room)?'disabled':'')+'><span>'+ (stage>=5?'Évolution maximum 5/5':stage===0?'Débloquer · niveau '+ROOM_REQUIRED_LEVEL[room]+' · '+UPGRADE_COST+' 💛':'Évolution '+(stage+1)+'/5 · '+roomUpgradeCost(room)+' 🥕')+'</span></button>';}
+        // Bonus temporaire du repas consommé par ce compagnon, sans cumul du même effet.
+        function mealBonus(key,type){if(!window.LapinousShop.getCatalog()?.recipesEnabled)return 0;const bonus=progressForSpecies(key).mealBonuses?.[type];return bonus&&bonus.expiresAt>Date.now()?Number(bonus.value)||0:0;}
+        // La réserve n’apparaît qu’à l’ouverture du frigo ; le stock du panier reste inchangé.
+        // Le garde-manger affiche le stock sur des etageres et son accompagnateur.
+        function kitchenHtml(){return window.LapinousPantry.html(window.LapinousShop.getCatalog(),game.inventory||{},currentRabbitName(),progress().food);}
+
+        window.openKitchenFridge=()=>{if(game.currentZone!=='cuisine'&&!body.classList.contains('cuisine'))return;let dialog=document.getElementById('kitchenFridgeDialog');if(!dialog){dialog=document.createElement('dialog');dialog.id='kitchenFridgeDialog';dialog.setAttribute('aria-label','Réserve du Chef');document.body.appendChild(dialog);}dialog.innerHTML='<button class="fridge-close" onclick="document.getElementById(\'kitchenFridgeDialog\').close()" aria-label="Fermer">×</button>'+kitchenHtml();if(!dialog.open)dialog.showModal();const sessionGame=game,sessionSpecies=game.species;window.LapinousPantry.mount(dialog,()=>window.LapinousShop.getCatalog(),id=>eatKitchenItem(id),()=>progress().food<100,{inventory:()=>game.inventory||{},valid:()=>game===sessionGame&&game.species===sessionSpecies,complete:id=>cookMeal(id)});};
+        window.eatKitchenItem=id=>{const catalog=window.LapinousShop.getCatalog();const item=catalog?.items.find(item=>item.id===id)||(catalog?.recipesEnabled?catalog.recipes.find(recipe=>recipe.item===id):null);if(!item||progress().food>=100)return;try{window.LapinousShop.useConsumable(game,progress(),item.item?{...item,id:item.item}:item);autoSave();updateStatusBars();refreshCurrentZone();if(document.getElementById('kitchenFridgeDialog')?.open)openKitchenFridge();showToast(item.name+' consommé !','success');}catch(error){showToast(error.message,'warn');}};
+        // Le stock est modifie en une seule operation apres validation de tous les ingredients.
+        window.cookMeal=id=>{const catalog=window.LapinousShop.getCatalog();if(!catalog?.recipesEnabled)return false;const recipe=catalog.recipes.find(recipe=>recipe.id===id);if(!recipe)return false;game.inventory ||= {};if(!window.LapinousPantry.craft(game.inventory,recipe)){showToast('Il manque des ingredients pour ce plat.','warn');return false;}autoSave();refreshCurrentZone();if(document.getElementById('kitchenFridgeDialog')?.open)openKitchenFridge();showToast(recipe.name+' est pret !','success');return true;};
 
         function speciesFaceImg() {
             const s = getSpecies()[game.species];
-            return (s && s.faceImg) || "./assets/img/species/mystery.svg";
+            return (s && s.faceImg) || "./assets/img/lapins_jouables/sans_evenements/mystery.svg";
         }
 
         // Tous tes lapins partagent le même niveau/stats/progression — changer ici
@@ -1431,9 +1440,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 collectionCarouselIndex = activeIndex;
             const key = owned[collectionCarouselIndex],
                 sp = getSpecies()[key];
-            const img = sp.faceImg || sp.coteImg || "./assets/img/species/mystery.svg";
+            const img = sp.faceImg || sp.coteImg || "./assets/img/lapins_jouables/sans_evenements/mystery.svg";
             const name = game.speciesNames[key] || sp.name;
-            return `<div class="collection-switcher collection-carousel"><p class="upgrade-locked-note">Tes lapins (${collectionCarouselIndex + 1}/${owned.length}) :</p><div class="collection-carousel-main"><button class="collection-arrow" onclick="moveCollectionCarousel(-1)">‹</button><button class="collection-card carousel-big ${key === game.species ? "active" : ""}" onclick="switchActiveSpecies('${key}')"><img src="${img}" alt="${name}" onerror="this.src='./assets/img/species/mystery.svg'"><span>${name}${key === game.species ? " · actif" : ""}</span></button><button class="collection-arrow" onclick="moveCollectionCarousel(1)">›</button></div></div>`;
+            return `<div class="collection-switcher collection-carousel"><p class="upgrade-locked-note">Tes lapins (${collectionCarouselIndex + 1}/${owned.length}) :</p><div class="collection-carousel-main"><button class="collection-arrow" onclick="moveCollectionCarousel(-1)">‹</button><button class="collection-card carousel-big ${key === game.species ? "active" : ""}" onclick="switchActiveSpecies('${key}')"><img src="${img}" alt="${name}" onerror="this.src='./assets/img/lapins_jouables/sans_evenements/mystery.svg'"><span>${name}${key === game.species ? " · actif" : ""}</span></button><button class="collection-arrow" onclick="moveCollectionCarousel(1)">›</button></div></div>`;
         }
         window.moveCollectionCarousel = function (dir) {
             const owned = (game.ownedSpecies || []).filter((k) => getSpecies()[k]);
@@ -1447,6 +1456,10 @@ document.addEventListener("DOMContentLoaded", () => {
             const area = gameArea.querySelector(".salon-friends");
             if (!area) return;
             const friends = [...area.querySelectorAll(".salon-rabbit-friend")];
+            // Les trois favoris partagent le sol, sans distribution sur les meubles.
+            friends.forEach((friend,index)=>{friend.style.left=`${[20,78,35][index]||50}%`;friend.style.top='auto';friend.style.bottom='0';friend.style.setProperty('--companion-size','120px');});
+            return;
+
             const width = area.clientWidth,
                 height = area.clientHeight;
             if (!friends.length || !width || !height) return;
@@ -1504,24 +1517,39 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
 
+        // Les favoris sont independants du lapin actif et conserves dans la sauvegarde.
+        window.openSalonFavorites = () => {
+            showEncyclopediaTab('rabbits');
+            bootstrap.Modal.getOrCreateInstance(document.querySelector('#encyclopediaModal')).show();
+        };
+        function toggleSalonFavorite(key) {
+            const favorites=[...new Set(game.salonFavorites||[])].filter(id=>(game.ownedSpecies||[]).includes(id));
+            const index=favorites.indexOf(key);
+            if(index>=0)favorites.splice(index,1);
+            else {if(favorites.length>=3){showToast('Tu peux choisir trois favoris. Retire une etoile pour en choisir un autre.','warn');return;}favorites.push(key);}
+            game.salonFavorites=favorites;autoSave();renderEncyclopedia();
+            if(currentZone==='default')refreshCurrentZone();
+        }
+
         function salonOwnedRabbitsSceneHtml() {
             const species = getSpecies();
-            const owned = (game.ownedSpecies || []).filter(
-                (key) => key !== game.species && species[key],
-            );
+            const owned = [...new Set(game.salonFavorites || [])].filter(
+                key => key !== game.species && species[key] && game.ownedSpecies.includes(key),
+            ).slice(0,3);
             const friends = owned
                 .map((key, index) => {
                     const sp = species[key];
-                    const img = sp.faceImg || sp.coteImg || "./assets/img/species/mystery.svg";
+                    const img = sp.faceImg || sp.coteImg || "./assets/img/lapins_jouables/sans_evenements/mystery.svg";
                     const name = game.speciesNames[key] || sp.name || key;
                     return `<button class="salon-rabbit-friend friend-${index % 8}" onclick="switchActiveSpecies('${key}')" title="Jouer avec ${name}">
-                <img src="${img}" alt="${name}" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';">
+                <img src="${img}" alt="${name}" onerror="this.onerror=null;this.src='./assets/img/lapins_jouables/sans_evenements/mystery.svg';">
                 <span>${name}</span>
             </button>`;
                 })
                 .join("");
             return `<div class="salon-world">
             <div class="salon-room-title">🐰 Le Salon de tes compagnons</div>
+            <button class="salon-favorites-button" type="button" onclick="openSalonFavorites()">Choisir mes 3 favoris</button>
             <div class="salon-friends">${friends || '<span class="salon-alone-note">Ton premier compagnon profite du Salon ✨</span>'}</div>
             <div id="salonActiveRabbitSpot" class="salon-active-rabbit-spot"><span class="active-rabbit-name">${currentRabbitName()}</span></div>
             <button class="salon-console-object board-game-object" type="button" onclick="openGameConsole()" aria-label="Ouvrir le coin jeux">
@@ -1595,6 +1623,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 .filter((e) => e && e !== "none" && e !== "aucun");
         }
         function isPuzzleAvailableNow(puz) {
+            if (isLocalAdmin && adminTesting) return true;
             const required = puzzleEvents(puz);
             if (!required.length) return true;
             const active = currentActiveEvents();
@@ -1604,6 +1633,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // précédents actuellement disponibles sont terminés (les puzzles
         // événementiels masqués ne bloquent donc pas la suite).
         function isPuzzleUnlocked(index) {
+            if (isLocalAdmin && adminTesting) return true;
             const mg = ensureMinigameProgress().puzzle;
             if (index <= (mg.unlockedPuzzle || 0)) return true;
             return puzzleCatalog()
@@ -1657,6 +1687,7 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         window.openPuzzleHub = function () {
+            if (!window.LapinousVisibility.allowed('puzzles')) return;
             const mg = ensureMinigameProgress().puzzle;
             const catalog = puzzleCatalog();
             const visible = catalog
@@ -1675,7 +1706,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         .map((key) => getSpecies()[key]?.name || key)
                         .join(", ");
                     return `<button class="puzzle-card ${unlocked ? "" : "locked"}" ${unlocked ? `onclick="openPuzzleLevels(${index})"` : "disabled"}>
-                    <img src="${puz.image}" alt="${puz.title}" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';">
+                    <img src="${puz.image}" alt="${puz.title}" onerror="this.onerror=null;this.src='./assets/img/lapins_jouables/sans_evenements/mystery.svg';">
                     <span><strong>${puz.title}</strong><small>${status}</small>${linkedNames ? `<small>🐰 ${linkedNames}</small>` : ""}</span>
                 </button>`;
                 })
@@ -1698,7 +1729,7 @@ document.addEventListener("DOMContentLoaded", () => {
             );
             const buttons = puzzleLevels()
                 .map((lvl, i) => {
-                    const unlocked = i <= maxUnlockedLevel;
+                    const unlocked = (isLocalAdmin && adminTesting) || i <= maxUnlockedLevel;
                     const done = i <= st.highestCompletedLevel;
                     return `<button class="puzzle-level-btn ${done ? "done" : ""}" ${unlocked ? `onclick="startPuzzle(${puzzleIndex},${i})"` : "disabled"}>
                 ${done ? "✅" : unlocked ? "🧩" : "🔒"} ${lvl.label}
@@ -1707,7 +1738,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 .join("");
             gameArea.innerHTML = `
             <div class="puzzle-levels">
-                <img class="puzzle-preview" src="${puz.image}" alt="${puz.title}" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';">
+                <img class="puzzle-preview" src="${puz.image}" alt="${puz.title}" onerror="this.onerror=null;this.src='./assets/img/lapins_jouables/sans_evenements/mystery.svg';">
                 <div class="console-title">${puz.title}</div>
                 <div class="puzzle-level-buttons">${buttons}</div>
                 <button class="ghost-btn" onclick="openPuzzleHub()">← Liste des puzzles</button>
@@ -1732,12 +1763,32 @@ document.addEventListener("DOMContentLoaded", () => {
             return `background-image:url('${image}');background-size:${lvl.cols * 100}% ${lvl.rows * 100}%;background-position:${x}% ${y}%;`;
         }
         function puzzleTailorPose(st, now = Date.now()) {
-            if (!st.sewStarted || now >= st.sewUntil) return {image:'couturiere.png',phase:'idle',text:'Je relie les voisines bien placées.'};
-            const elapsed=now-st.sewStarted;
-            if(now>=st.sewUntil-600)return {image:st.sewHigh?'deplace_tabouret.gif':'marche_vers.gif',phase:'returning',text:'Ces pièces sont reliées !'};
-            if (st.sewHigh && elapsed<1080) return {image:'deplace_tabouret.gif',phase:'stool',text:'Je prépare mon tabouret…'};
-            if (!st.sewHigh && elapsed<600) return {image:'marche_vers.gif',phase:'walking',text:'J’arrive près de ces pièces !'};
-            return {image:'cout_les_pieces.gif',phase:'sewing',text:'Je couds ces pièces !'};
+            if (!st.sewStarted || now >= st.sewUntil)
+                return {
+                    image: "couturiere.png",
+                    phase: "idle",
+                    text: "Je relie les voisines bien placées.",
+                };
+            const elapsed = now - st.sewStarted;
+            if (now >= st.sewUntil - 600)
+                return {
+                    image: st.sewHigh ? "deplace_tabouret.gif" : "marche_vers.gif",
+                    phase: "returning",
+                    text: "Ces pièces sont reliées !",
+                };
+            if (st.sewHigh && elapsed < 1080)
+                return {
+                    image: "deplace_tabouret.gif",
+                    phase: "stool",
+                    text: "Je prépare mon tabouret…",
+                };
+            if (!st.sewHigh && elapsed < 600)
+                return {
+                    image: "marche_vers.gif",
+                    phase: "walking",
+                    text: "J’arrive près de ces pièces !",
+                };
+            return { image: "cout_les_pieces.gif", phase: "sewing", text: "Je couds ces pièces !" };
         }
         function renderActivePuzzle() {
             if (!activePuzzle) return;
@@ -1756,32 +1807,63 @@ document.addEventListener("DOMContentLoaded", () => {
                         piece === index &&
                         index + lvl.cols < order.length &&
                         order[index + lvl.cols] === index + lvl.cols;
-                    return `<button type="button" data-puzzle-slot="${index}" class="puzzle-piece puzzle-slot ${piece !== null ? "placed" : ""} ${piece === index ? "correct" : ""} ${selectedPuzzleSlot === piece && piece !== null ? "selected" : ""} ${right ? "sewn-right" : ""} ${bottom ? "sewn-bottom" : ""}" draggable="${piece !== null}" ondragstart="puzzleDragStart(event,${piece})" onclick="puzzleBoardClick(${index})" ondragover="event.preventDefault()" ondrop="puzzleDrop(event,${index})" aria-label="Case ${index + 1}${piece !== null ? ", pièce déplaçable" : ""}" aria-pressed="${piece !== null && selectedPuzzleSlot === piece}" style="${piece !== null ? puzzlePieceStyle(piece, lvl, puz.image) : ""}">${piece === null ? '<span class="puzzle-slot-mark">✧</span>' : ""}</button>`;
+                    return `<button type="button" data-puzzle-slot="${index}" class="puzzle-piece puzzle-slot ${piece !== null ? "placed" : ""} ${piece === index ? "correct" : ""} ${selectedPuzzleSlot === piece && piece !== null ? "selected" : ""} ${right ? "sewn-right" : ""} ${bottom ? "sewn-bottom" : ""}" draggable="${piece !== null && piece !== index}" ${piece === index ? "disabled" : ""} ondragstart="puzzleDragStart(event,${piece})" onclick="puzzleBoardClick(${index})" ondragover="event.preventDefault()" ondrop="puzzleDrop(event,${index})" aria-label="Case ${index + 1}${piece === index ? ", pièce bien placée et verrouillée" : piece !== null ? ", pièce déplaçable" : ""}" aria-pressed="${piece !== null && selectedPuzzleSlot === piece}" style="${piece !== null ? puzzlePieceStyle(piece, lvl, puz.image) : ""}">${piece === null ? '<span class="puzzle-slot-mark">✧</span>' : ""}</button>`;
                 })
                 .join("");
-            gameArea.innerHTML = `<section class="puzzle-play puzzle-workshop ${activePuzzle.sewUntil > Date.now() ? "is-sewing" : ""}"><div class="puzzle-play-head"><strong>🧩 ${puz.title}</strong><span>${lvl.label} · ${moves} coups · ${placed}/${order.length} pièces</span></div><div class="puzzle-workspace"><div class="puzzle-board" style="--puzzle-cols:${lvl.cols};--puzzle-rows:${lvl.rows}">${pieces}</div><div class="puzzle-side"><div class="puzzle-tailor phase-${tailor.phase}"><img src="./assets/img/puzzle/${tailor.image}" alt="La couturière et ses accessoires"><small>${tailor.text}</small></div></div><aside class="puzzle-bowl" onclick="if(event.target===this||event.target.tagName==='H3')puzzleReturnToBowl()" ondragover="event.preventDefault()" ondrop="puzzleReturnToBowl(event)"><h3>Ta coupelle</h3><p>${tray.length} pièces à assembler</p><div class="puzzle-bowl-pieces">${tray.map((piece) => `<button type="button" draggable="true" ondragstart="puzzleDragStart(event,${piece})" onclick="selectPuzzlePiece(${piece})" class="puzzle-piece puzzle-loose ${selectedPuzzleSlot === piece ? "selected" : ""}" aria-label="Sélectionner la pièce ${piece + 1}" aria-pressed="${selectedPuzzleSlot === piece}" style="${puzzlePieceStyle(piece, lvl, puz.image)}"></button>`).join("")}</div></aside></div><p class="agility-hint" role="status">${activePuzzle.notice || "Choisis une pièce dans la coupelle, puis sa place sur le plateau. Tu peux déplacer toutes les pièces. Seules les voisines à la bonne place se cousent ensemble."}</p><div class="puzzle-actions"><button class="ghost-btn" onclick="startPuzzle(${puzzleIndex},${levelIndex})">🔀 Recommencer</button><button class="ghost-btn" onclick="openPuzzleLevels(${puzzleIndex})">← Quitter</button></div></section>`;
+            gameArea.innerHTML = `<section class="puzzle-play puzzle-workshop ${activePuzzle.sewUntil > Date.now() ? "is-sewing" : ""}"><div class="puzzle-play-head"><strong>🧩 ${puz.title}</strong><span>${lvl.label} · ${moves} coups · ${placed}/${order.length} pièces</span></div><div class="puzzle-workspace"><aside class="puzzle-preview-area">${selectedPuzzleSlot !== null ? `<button type="button" class="puzzle-piece-inspection" onclick="selectPuzzlePiece(${selectedPuzzleSlot})" aria-label="Fermer l’aperçu de la pièce sélectionnée"><strong>Pièce sélectionnée</strong><div class="puzzle-piece-inspection-image" style="${puzzlePieceStyle(selectedPuzzleSlot, lvl, puz.image)}"></div><small>Clique pour refermer l’aperçu.</small></button>` : ""}</aside><div class="puzzle-board" style="--puzzle-cols:${lvl.cols};--puzzle-rows:${lvl.rows}">${pieces}</div><div class="puzzle-side"><div class="puzzle-tailor phase-${tailor.phase}"><img src="${window.LapinousShop.companionImage('tailor',tailor.image)}" alt="La couturière et ses accessoires"><small>${tailor.text}</small></div></div><aside class="puzzle-bowl" onclick="if(event.target===this||event.target.tagName==='H3')puzzleReturnToBowl()" ondragover="event.preventDefault()" ondrop="puzzleReturnToBowl(event)"><h3>Ta coupelle</h3><p>${tray.length} pièces à assembler</p><div class="puzzle-bowl-pieces" style="--tray-columns:${Math.min(12,Math.max(1,tray.length))};--tray-rows:${Math.max(1,Math.ceil(tray.length/12))}">${tray.map((piece) => `<button type="button" draggable="true" ondragstart="puzzleDragStart(event,${piece})" onclick="selectPuzzlePiece(${piece})" class="puzzle-piece puzzle-loose ${selectedPuzzleSlot === piece ? "selected" : ""}" aria-label="Sélectionner la pièce ${piece + 1}" aria-pressed="${selectedPuzzleSlot === piece}" style="${puzzlePieceStyle(piece, lvl, puz.image)}"></button>`).join("")}</div></aside></div><p class="agility-hint" role="status">${activePuzzle.notice || "Choisis une pièce dans la coupelle, puis sa place sur le plateau. Les pièces bien placées restent fixées. Seules les voisines à la bonne place se cousent ensemble."}</p><div class="puzzle-actions"><button class="ghost-btn" onclick="startPuzzle(${puzzleIndex},${levelIndex})">🔀 Recommencer</button><button class="ghost-btn" onclick="openPuzzleLevels(${puzzleIndex})">← Quitter</button></div></section>`;
             renderTravelingTailor(activePuzzle);
         }
 
         function renderTravelingTailor(st) {
-            if(!st.sewStarted||Date.now()>=st.sewUntil)return;
-            const workspace=gameArea.querySelector('.puzzle-workspace'),home=gameArea.querySelector('.puzzle-tailor');
-            const target=gameArea.querySelector(`[data-puzzle-slot="${st.sewSlot}"]`);
-            if(!workspace||!home||!target)return;
-            const bounds=workspace.getBoundingClientRect(),start=home.getBoundingClientRect(),piece=target.getBoundingClientRect();
-            const size=Math.min(190,Math.max(90,bounds.width*.20));
-            const actor=document.createElement('img');actor.className='puzzle-traveling-tailor';
-            const pose=puzzleTailorPose(st);actor.src='./assets/img/puzzle/'+pose.image;actor.alt='La couturière se déplace pour assembler ces pièces';
-            Object.assign(actor.style,{width:size+'px',height:size+'px'});workspace.appendChild(actor);home.classList.add('tailor-away');
-            const x0=start.left-bounds.left+(start.width-size)/2,y0=start.top-bounds.top;
-            const x1=Math.max(0,Math.min(bounds.width-size,piece.left-bounds.left+piece.width/2-size/2));
-            const y1=Math.max(0,Math.min(bounds.height-size,piece.top-bounds.top+piece.height/2-size*.3));
-            const approach=st.sewHigh?1080:600,total=approach+1200+600;
-            const point=(x,y)=>`translate(${x}px,${y}px)${pose.phase==='returning'?' scaleX(-1)':''}`;
-            if(actor.animate){
-                const animation=actor.animate([{transform:point(x0,y0),offset:0},{transform:point(x1,y1),offset:approach/total},{transform:point(x1,y1),offset:(approach+1200)/total},{transform:point(x0,y0),offset:1}],{duration:total,easing:'linear',fill:'both'});
-                animation.currentTime=Math.max(0,Date.now()-st.sewStarted);
-            }else actor.style.transform=point(x1,y1);
+            if (!st.sewStarted || Date.now() >= st.sewUntil) return;
+            const workspace = gameArea.querySelector(".puzzle-workspace"),
+                home = gameArea.querySelector(".puzzle-tailor");
+            const target = gameArea.querySelector(`[data-puzzle-slot="${st.sewSlot}"]`);
+            if (!workspace || !home || !target) return;
+            const bounds = workspace.getBoundingClientRect(),
+                start = home.getBoundingClientRect(),
+                piece = target.getBoundingClientRect();
+            const size = Math.min(190, Math.max(90, bounds.width * 0.2));
+            const actor = document.createElement("img");
+            actor.className = "puzzle-traveling-tailor";
+            const pose = puzzleTailorPose(st);
+            actor.src = window.LapinousShop.companionImage('tailor',pose.image);
+            actor.alt = "La couturière se déplace pour assembler ces pièces";
+            Object.assign(actor.style, { width: size + "px", height: size + "px" });
+            workspace.appendChild(actor);
+            home.classList.add("tailor-away");
+            const x0 = start.left - bounds.left + (start.width - size) / 2,
+                y0 = start.top - bounds.top;
+            const x1 = Math.max(
+                0,
+                Math.min(
+                    bounds.width - size,
+                    piece.left - bounds.left + piece.width / 2 - size / 2,
+                ),
+            );
+            const y1 = Math.max(
+                0,
+                Math.min(
+                    bounds.height - size,
+                    piece.top - bounds.top + piece.height / 2 - size * 0.3,
+                ),
+            );
+            const approach = st.sewHigh ? 1080 : 600,
+                total = approach + 1200 + 600;
+            const point = (x, y) =>
+                `translate(${x}px,${y}px)${pose.phase === "returning" ? " scaleX(-1)" : ""}`;
+            if (actor.animate) {
+                const animation = actor.animate(
+                    [
+                        { transform: point(x0, y0), offset: 0 },
+                        { transform: point(x1, y1), offset: approach / total },
+                        { transform: point(x1, y1), offset: (approach + 1200) / total },
+                        { transform: point(x0, y0), offset: 1 },
+                    ],
+                    { duration: total, easing: "linear", fill: "both" },
+                );
+                animation.currentTime = Math.max(0, Date.now() - st.sewStarted);
+            } else actor.style.transform = point(x1, y1);
         }
 
         window.startPuzzle = function (puzzleIndex, levelIndex) {
@@ -1793,16 +1875,16 @@ document.addEventListener("DOMContentLoaded", () => {
             if (
                 !isPuzzleAvailableNow(puz) ||
                 !isPuzzleUnlocked(puzzleIndex) ||
-                levelIndex > Math.min(puzzleLevels().length - 1, st.highestCompletedLevel + 1)
+                (!(isLocalAdmin && adminTesting) && levelIndex > Math.min(puzzleLevels().length - 1, st.highestCompletedLevel + 1))
             )
                 return;
             const foodCost = Number(lvl.food || 0);
             const sleepCost = Number(lvl.energy || 0);
             const cleanCost = Number(lvl.cleanliness || 0);
             if (
-                progress().energy <= sleepCost ||
+                !(isLocalAdmin && adminTesting) && (progress().energy <= sleepCost ||
                 progress().food <= foodCost ||
-                progress().cleanliness <= cleanCost
+                progress().cleanliness <= cleanCost)
             ) {
                 showToast(
                     `${currentRabbitName()} doit manger, dormir ou se laver avant de jouer 🎮`,
@@ -1843,8 +1925,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 (activePuzzle.tray.includes(piece) || activePuzzle.order.includes(piece))
             );
         }
+        // Une pièce correcte reste fixée, même si une commande tente de la déplacer.
+        function puzzlePieceLocked(piece) {
+            return Number.isInteger(piece) && activePuzzle?.order[piece] === piece;
+        }
         window.puzzleDragStart = function (event, piece) {
-            if (!puzzleHasPiece(piece) || piece === null || activePuzzle.finishing) return;
+            if (!puzzleHasPiece(piece) || piece === null || activePuzzle.finishing || puzzlePieceLocked(piece)) { event.preventDefault(); return; }
             selectedPuzzleSlot = piece;
             if (event.dataTransfer) {
                 event.dataTransfer.effectAllowed = "move";
@@ -1856,7 +1942,7 @@ document.addEventListener("DOMContentLoaded", () => {
             window.placePuzzlePiece(slot);
         };
         window.selectPuzzlePiece = function (piece) {
-            if (!puzzleHasPiece(piece) || activePuzzle.finishing) return;
+            if (!puzzleHasPiece(piece) || activePuzzle.finishing || puzzlePieceLocked(piece)) return;
             selectedPuzzleSlot = selectedPuzzleSlot === piece ? null : piece;
             activePuzzle.notice =
                 "Choisis une case, même occupée, ou clique sur la coupelle pour y remettre la pièce.";
@@ -1874,7 +1960,7 @@ document.addEventListener("DOMContentLoaded", () => {
             event?.preventDefault();
             if (!activePuzzle || activePuzzle.finishing || selectedPuzzleSlot === null) return;
             const source = activePuzzle.order.indexOf(selectedPuzzleSlot);
-            if (source < 0) return;
+            if (source < 0 || puzzlePieceLocked(selectedPuzzleSlot)) return;
             activePuzzle.order[source] = null;
             activePuzzle.tray.push(selectedPuzzleSlot);
             selectedPuzzleSlot = null;
@@ -1889,7 +1975,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 slot < 0 ||
                 slot >= activePuzzle.order.length ||
                 selectedPuzzleSlot === null ||
-                !puzzleHasPiece(selectedPuzzleSlot)
+                !puzzleHasPiece(selectedPuzzleSlot) ||
+                puzzlePieceLocked(selectedPuzzleSlot) ||
+                puzzlePieceLocked(slot)
             )
                 return;
             const st = activePuzzle,
@@ -1911,20 +1999,29 @@ document.addEventListener("DOMContentLoaded", () => {
             selectedPuzzleSlot = null;
             const sewing = puzzleSeams(st) > seams;
             if (sewing) {
-                st.sewStarted=Date.now();
-                st.sewSlot=slot;
-                st.sewHigh=Math.floor(slot/puzzleLevels()[st.levelIndex].cols)<puzzleLevels()[st.levelIndex].rows/2;
-                const approach=st.sewHigh?1080:600;
-                st.sewUntil=st.sewStarted+approach+1200+600;
-                const stamp=st.sewStarted;
-                const redraw=()=>{if(activePuzzle===st&&st.sewStarted===stamp&&gameArea.querySelector('.puzzle-workshop'))renderActivePuzzle();};
-                setTimeout(redraw,approach);
-                setTimeout(redraw,approach+1200);
-                setTimeout(redraw,approach+1800);
+                st.sewStarted = Date.now();
+                st.sewSlot = slot;
+                st.sewHigh =
+                    Math.floor(slot / puzzleLevels()[st.levelIndex].cols) <
+                    puzzleLevels()[st.levelIndex].rows / 2;
+                const approach = st.sewHigh ? 1080 : 600;
+                st.sewUntil = st.sewStarted + approach + 1200 + 600;
+                const stamp = st.sewStarted;
+                const redraw = () => {
+                    if (
+                        activePuzzle === st &&
+                        st.sewStarted === stamp &&
+                        gameArea.querySelector(".puzzle-workshop")
+                    )
+                        renderActivePuzzle();
+                };
+                setTimeout(redraw, approach);
+                setTimeout(redraw, approach + 1200);
+                setTimeout(redraw, approach + 1800);
             }
             st.notice = sewing
                 ? "🪡 La couturière relie les pièces bien placées !"
-                : "Pièce posée. Tu peux encore la déplacer ou la remettre dans la coupelle.";
+                : st.order[slot] === slot ? "Pièce bien placée : elle est maintenant fixée !" : "Pièce posée. Tu peux encore la déplacer ou la remettre dans la coupelle.";
             renderActivePuzzle();
             if (!st.order.every((piece, index) => piece === index)) return;
             st.finishing = true;
@@ -1933,7 +2030,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (activePuzzle === st && gameArea.querySelector(".puzzle-workshop"))
                         finishActivePuzzle();
                 },
-                sewing ? st.sewUntil-Date.now() : 0,
+                sewing ? st.sewUntil - Date.now() : 0,
             );
         };
         function finishActivePuzzle() {
@@ -1969,9 +2066,9 @@ document.addEventListener("DOMContentLoaded", () => {
             activePuzzle = null;
             gameArea.innerHTML = `
             <div class="puzzle-win">
-                <img class="puzzle-tailor-celebration" src="./assets/img/puzzle/couturiere_felicitation.png" alt="La couturière te félicite pour ton puzzle">
+                <img class="puzzle-tailor-celebration" src="${window.LapinousShop.companionImage('tailor','couturiere_felicitation.png')}" alt="La couturière te félicite pour ton puzzle">
                 <div class="console-title">Puzzle terminé !</div>
-                <img class="puzzle-preview" src="${puz.image}" alt="${puz.title}" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';">
+                <img class="puzzle-preview" src="${puz.image}" alt="${puz.title}" onerror="this.onerror=null;this.src='./assets/img/lapins_jouables/sans_evenements/mystery.svg';">
                 <p><strong>${moves}</strong> coups · +${lvl.friendship} 💛 · -${Number(lvl.food || 0)} 🥕 · -${lvl.energy} 😴 · -${lvl.cleanliness} 🫧</p>
                 <p class="agility-hint">Progression enregistrée pour ${currentRabbitName()}.</p>
                 <button class="action-btn" onclick="openPuzzleLevels(${puzzleIndex})"><span>Continuer 🧩</span></button>
@@ -2066,7 +2163,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         : "",
                 )
                 .join("");
-            return `<div class="duplicate-choice"><div class="duplicate-title">✨ Doublon : ${sp.name}</div><p>Recycle-le ou reçois un fragment pour ce lapin.</p><div class="action-row"><button class="action-btn" onclick="resolveDuplicate('carrots')">🥕 +${pending.carrotReward} carottes</button><button class="action-btn adventure" onclick="resolveDuplicate('fragment')">💎 Garder le fragment</button></div>${!allAttacksMaxed(pending.speciesKey) ? `<label>Attaque à améliorer <select id="duplicateAttackTarget">${options}</select></label><button class="action-btn adventure" onclick="resolveDuplicate('attack',Number(document.getElementById('duplicateAttackTarget').value))">⚔️ Améliorer cette attaque</button>` : "<p>Toutes les attaques sont au maximum.</p>"}<small>Les fragments conservés se dépensent dans la fiche du lapin.</small></div>`;
+            return `<div class="duplicate-choice"><div class="duplicate-title">✨ Doublon : ${sp.name}</div><p>Recycle-le ou reçois un fragment pour ce lapin.</p><div class="action-row"><button class="action-btn" onclick="resolveDuplicate('carrots')">🥕 +${pending.carrotReward} carottes</button><button class="action-btn adventure" onclick="resolveDuplicate('fragment')">💎 Garder le fragment</button></div>${options ? `<label>Attaque à améliorer <select class="duplicate-attack-select" id="duplicateAttackTarget">${options}</select></label><button class="action-btn adventure" onclick="resolveDuplicate('attack',Number(document.getElementById('duplicateAttackTarget').value))">⚔️ Améliorer cette attaque</button>` : "<p>Aucune attaque débloquée à améliorer pour le moment. Garde le fragment pour plus tard.</p>"}<small>Les fragments conservés se dépensent dans la fiche du lapin.</small></div>`;
         }
         window.resolveDuplicate = function (choice, index) {
             const pending = game.pendingDuplicate;
@@ -2115,7 +2212,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <p class="welcome-msg">Te voilà à la maison avec ${currentRabbitName() || "ton lapin"} ! Clique sur un compagnon du Salon pour changer de lapin, ou sur la console pour jouer.</p>
                 ${duplicateChoiceHtml()}
                 ${salonOwnedRabbitsSceneHtml()}
-                <div class="egg-shop">
+                <div class="egg-shop"><details class="egg-rate-guide"><summary>🥚 Voir les œufs et leurs taux d’apparition</summary><div class="egg-rates-display" data-egg-rates>${eggRatesMarkup()}</div></details>
                     <div class="carrot-counter">🥕 ${game.carrots} · 🥚 ${game.eggs}</div>
                     <div class="action-row">
                         <button class="action-btn" onclick="buyEgg()"><span class="action-icon-emoji">🥚</span><span>Acheter (${EGG_COST} 🥕)</span></button>
@@ -2124,23 +2221,13 @@ document.addEventListener("DOMContentLoaded", () => {
                     <p class="upgrade-locked-note">Gagne des carottes 🥕 en combattant les boss du jardin, achète des œufs ici, puis ouvre-les pour tenter d’obtenir un nouveau compagnon rare, épique ou légendaire (visible dans l'encyclopédie).</p>
                 </div>`,
             },
-            cuisine: {
-                label: "🥕 Cuisine",
-                image: () => `./assets/img/Zone_cuisine/lapin_cuisine.png`,
-                content: () =>
-                    progress().improvements.cuisine
-                        ? `<div class="action-row"><button class="action-btn upgraded" onclick="feedRabbit()"><img class="action-icon" src="./assets/img/Zone_cuisine/pomme.png" alt=""><span>Nourrir</span></button></div>`
-                        : `<div class="action-row">
-                    <button class="action-btn" onclick="feedRabbit()"><img class="action-icon" src="./assets/img/Zone_cuisine/carotte.png" alt=""><span>Nourrir</span></button>
-                    ${upgradeButtonHtml("cuisine", "./assets/img/Zone_cuisine/pomme.png", "improveFeedRabbit()")}
-                </div>`,
-            },
+            cuisine: {label:'🍳 Cuisine',image:()=>'https://res.cloudinary.com/dgrszi9wf/image/upload/v1791481909/lapinous/Zone_cuisine/lapin_cuisine__png_dcd1e94ee86f7e8b.png',content:()=>'<button class="fridge-hotspot" onclick="openKitchenFridge()" aria-label="Ouvrir le frigo"><span>🧊 Ouvrir le frigo</span></button><div class="kitchen-scene-actions"><button class="action-btn" onclick="feedRabbit()"><img class="action-icon" src="'+(roomStage('cuisine')>0?'./assets/img/Zone_cuisine/pomme.png':'./assets/img/Zone_cuisine/carotte.png')+'" alt=""><span>'+ (roomStage('cuisine')>0?'Pomme':'Carotte')+'</span></button>'+upgradeButtonHtml('cuisine','','improveFeedRabbit()')+'</div>'},
             chambre: {
                 label: "🛏️ Chambre",
                 image: () => `./assets/img/Zone_Chambre/dodo.png`,
                 content: () =>
                     progress().improvements.chambre
-                        ? `<div class="action-row"><button class="action-btn upgraded" onclick="putRabbitToSleep()"><img class="action-icon" src="./assets/img/Zone_Chambre/lit.png" alt=""><span>Dodo</span></button></div>`
+                        ? `<div class="action-row"><button class="action-btn upgraded" onclick="putRabbitToSleep()"><img class="action-icon" src="./assets/img/Zone_Chambre/lit.png" alt=""><span>Dodo</span></button>${upgradeButtonHtml("chambre","","improvePutRabbitToSleep()")}</div>`
                         : `<div class="action-row">
                     <button class="action-btn" onclick="putRabbitToSleep()"><img class="action-icon" src="./assets/img/Zone_Chambre/panier.png" alt=""><span>Dodo</span></button>
                     ${upgradeButtonHtml("chambre", "./assets/img/Zone_Chambre/lit.png", "improvePutRabbitToSleep()")}
@@ -2151,7 +2238,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 image: () => `./assets/img/Zone_SdB/lapin_SdB.png`,
                 content: () =>
                     progress().improvements.sdb
-                        ? `<div class="action-row"><button class="action-btn upgraded" onclick="cleanRabbit()"><img class="action-icon" src="./assets/img/Zone_SdB/pommeau.png" alt=""><span>Nettoyer</span></button></div>`
+                        ? `<div class="action-row"><button class="action-btn upgraded" onclick="cleanRabbit()"><img class="action-icon" src="./assets/img/Zone_SdB/pommeau.png" alt=""><span>Nettoyer</span></button>${upgradeButtonHtml("sdb","","improveCleanRabbit()")}</div>`
                         : `<div class="action-row">
                     <button class="action-btn" onclick="cleanRabbit()"><img class="action-icon" src="./assets/img/Zone_SdB/brosse.png" alt=""><span>Nettoyer</span></button>
                     ${upgradeButtonHtml("sdb", "./assets/img/Zone_SdB/pommeau.png", "improveCleanRabbit()")}
@@ -2169,7 +2256,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         : "action-btn";
                     return `<div class="action-row">
                     <button class="${btnClass}" onclick="startAgility()"><img class="action-icon" src="${icon}" alt=""><span>Jouer</span></button>
-                    ${progress().improvements.jardin ? "" : upgradeButtonHtml("jardin", "./assets/img/Zone_jardin/agilite.webp", "improvePlayWithRabbit()")}
+                    ${upgradeButtonHtml("jardin", "./assets/img/Zone_jardin/agilite.png", "improvePlayWithRabbit()") }
                     <button class="action-btn adventure" onclick="openAdventure()"><span class="action-icon-emoji">⚔️</span><span>Aventure</span></button>
                 </div>
                 <div class="carrot-counter">🥕 ${game.carrots} carotte${game.carrots > 1 ? "s" : ""}</div>`;
@@ -2186,7 +2273,7 @@ document.addEventListener("DOMContentLoaded", () => {
             body.classList.add("game-running", zone);
             rabbitImage.onerror = () => {
                 rabbitImage.onerror = null;
-                rabbitImage.src = "./assets/img/species/mystery.svg";
+                rabbitImage.src = "./assets/img/lapins_jouables/sans_evenements/mystery.svg";
             };
             rabbitImage.src = zones[zone].image();
             rabbitImage.classList.toggle("photo-frame", zone === "default");
@@ -2278,7 +2365,7 @@ document.addEventListener("DOMContentLoaded", () => {
             updateStatusBars();
         }
         function gainFriendship(amount) {
-            const scaled = Math.max(1, Math.round(amount * 0.45));
+            const scaled = Math.max(1, Math.round(amount * 0.45 * (1+mealBonus(game.species,"experience"))));
             progress().friendshipTotal = Math.max(0, progress().friendshipTotal + scaled);
             progress().friendship = Math.max(0, Math.min(100, progress().friendship + scaled));
             checkLevelUp();
@@ -2293,7 +2380,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 showToast("Le lapin est déjà rassasié !");
             } else {
                 progress().food = Math.min(
-                    progress().food + traitGain("food", 5) + progress().boosts.food,
+                    progress().food + 2 + roomStage("cuisine"),
                     100,
                 );
                 bounceRabbit();
@@ -2337,8 +2424,15 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         // ---- Memory : niveaux et paires collectionnées ----
-        const MEMORY_LEVELS = [3, 4, 6, 8, 10, 12];
+        const MEMORY_LEVELS = [3, 4, 6, 8, 10, 12, ...Array.from({ length: 24 }, (_, i) => i + 13)];
         let memoryState = null;
+        function memoryCharacter(key) {
+            return key.startsWith("boss:") ? getBosses()[key.slice(5)] : getSpecies()[key.slice(7)];
+        }
+        function memoryPortrait(key) {
+            const character = memoryCharacter(key) || {};
+            return character.faceImg || character.coteImg || "./assets/img/lapins_jouables/sans_evenements/mystery.svg";
+        }
         function memoryProgress() {
             const mg = ensureMinigameProgress().memory;
             mg.level = Math.max(
@@ -2349,15 +2443,16 @@ document.addEventListener("DOMContentLoaded", () => {
             return mg;
         }
         window.openMemory = function () {
+            if (!window.LapinousVisibility.allowed('memory')) return;
             memoryState = null;
             const mg = memoryProgress();
-            gameArea.innerHTML = `<section class="console-panel memory-panel"><div class="console-title">🧠 Memory</div><p>Retrouve les paires pour débloquer le niveau suivant.</p><div class="memory-levels">${MEMORY_LEVELS.map((pairs, i) => `<button class="memory-level" onclick="startMemory(${i})" ${i > mg.level ? "disabled" : ""}><strong>${i > mg.level ? "🔒" : mg.bestMoves[i] ? "⭐" : "🃏"} Niveau ${i + 1}</strong><span>${pairs} paires</span><small>${mg.bestMoves[i] ? `Record : ${mg.bestMoves[i]} coups` : i > mg.level ? "Termine le niveau précédent" : "À découvrir"}</small></button>`).join("")}</div><button class="ghost-btn" onclick="openGameConsole()">← Console</button></section>`;
+            gameArea.innerHTML = `<section class="console-panel memory-panel"><div class="console-title">🧠 Memory</div><p>Retrouve les paires pour débloquer le niveau suivant.</p><div class="memory-levels">${MEMORY_LEVELS.map((pairs, i) => `<button class="memory-level" onclick="startMemory(${i})" ${(!(isLocalAdmin && adminTesting) && i > mg.level) ? "disabled" : ""}><strong>${(!(isLocalAdmin && adminTesting) && i > mg.level) ? "🔒" : mg.bestMoves[i] ? "⭐" : "🃏"} Niveau ${i + 1}</strong><span>${pairs} paires</span><small>${mg.bestMoves[i] ? `Record : ${mg.bestMoves[i]} coups` : (!(isLocalAdmin && adminTesting) && i > mg.level) ? "Termine le niveau précédent" : "À découvrir"}</small></button>`).join("")}</div><button class="ghost-btn" onclick="openGameConsole()">← Console</button></section>`;
         };
         window.startMemory = function (level) {
             if (
                 !Number.isInteger(level) ||
                 level < 0 ||
-                level > memoryProgress().level ||
+                (!(isLocalAdmin && adminTesting) && level > memoryProgress().level) ||
                 level >= MEMORY_LEVELS.length
             )
                 return;
@@ -2374,7 +2469,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 return array;
             }
-            const chosen = [...shuffle(owned), ...shuffle(others)].slice(0, MEMORY_LEVELS[level]);
+            const bossKeys = shuffle(Object.keys(getBosses())).map((key) => "boss:" + key);
+            const rabbitKeys = [...shuffle(owned), ...shuffle(others)].map(
+                (key) => "rabbit:" + key,
+            );
+            const bossCount = Math.min(
+                bossKeys.length,
+                Math.max(1, Math.floor(MEMORY_LEVELS[level] / 3)),
+            );
+            const chosen = [
+                ...bossKeys.slice(0, bossCount),
+                ...rabbitKeys.slice(0, MEMORY_LEVELS[level] - bossCount),
+            ];
+            if (chosen.length < MEMORY_LEVELS[level])
+                chosen.push(
+                    ...bossKeys.slice(bossCount, bossCount + MEMORY_LEVELS[level] - chosen.length),
+                );
             if (chosen.length < MEMORY_LEVELS[level]) {
                 showToast("Pas assez de personnages pour ce niveau.", "warn");
                 return;
@@ -2408,7 +2518,7 @@ document.addEventListener("DOMContentLoaded", () => {
         function renderMemory() {
             const st = memoryState;
             if (!st) return;
-            gameArea.innerHTML = `<section class="console-panel memory-panel"><div class="console-title">🧠 Memory · Niveau ${st.level + 1}</div><p class="agility-hint">Retrouve les ${MEMORY_LEVELS[st.level]} paires. Tes compagnons sont utilisés en priorité.</p><div class="memory-play" data-memory-board><div class="memory-grid" style="--memory-columns:${st.level === 0 ? 3 : 4}">${st.cards.map((c, i) => `<button class="memory-card ${c.open ? "open" : ""} ${c.found ? "collected" : ""}" data-memory-card="${i}" aria-label="${c.found ? "Paire trouvée" : c.open ? "Carte retournée" : `Retourner la carte ${i + 1}`}" onclick="flipMemory(${i})" ${c.found || st.lock || st.finished ? "disabled" : ""}>${c.open ? `<img src="${getSpecies()[c.key].faceImg || "./assets/img/species/mystery.svg"}" alt="Lapin">` : "🐾"}</button>`).join("")}</div><aside class="memory-collection"><strong>Paires trouvées</strong><div class="memory-pile" aria-hidden="true">${st.pairs.map((key, i) => `<img src="${getSpecies()[key].faceImg || "./assets/img/species/mystery.svg"}" alt="" style="--pile-offset:${Math.min(i, 8) * 3}px;--pile-angle:${i % 2 ? 7 : -7}deg">`).join("")}</div><span aria-live="polite">${st.pairs.length} / ${MEMORY_LEVELS[st.level]}</span></aside></div><p class="memory-score" role="status">${st.finished ? "🎉 Niveau terminé ! " : ""}${st.moves} coup(s)</p><div class="memory-actions">${st.finished && st.level < MEMORY_LEVELS.length - 1 ? `<button class="primary-btn" onclick="startMemory(${st.level + 1})">Niveau suivant →</button>` : ""}<button class="ghost-btn" onclick="startMemory(${st.level})">Recommencer</button><button class="ghost-btn" onclick="openMemory()">← Niveaux</button><button class="ghost-btn" onclick="openGameConsole()">← Console</button></div></section>`;
+            gameArea.innerHTML = `<section class="console-panel memory-panel"><div class="console-title">🧠 Memory · Niveau ${st.level + 1}</div><p class="agility-hint">Retrouve les ${MEMORY_LEVELS[st.level]} paires. Lapins et boss sont mélangés. Tes compagnons sont utilisés en priorité.</p><div class="memory-play" data-memory-board><div class="memory-grid" style="--memory-columns:${st.level === 0 ? 3 : MEMORY_LEVELS[st.level] > 12 ? 12 : 6};--memory-rows:${Math.ceil(st.cards.length/(st.level===0?3:MEMORY_LEVELS[st.level]>12?12:6))}">${st.cards.map((c, i) => `<button class="memory-card ${c.open ? "open" : ""} ${c.found ? "collected" : ""}" data-memory-card="${i}" aria-label="${c.found ? "Paire trouvée" : c.open ? "Carte retournée" : `Retourner la carte ${i + 1}`}" onclick="flipMemory(${i})" ${c.found || st.lock || st.finished ? "disabled" : ""}>${c.open ? `<img src="${memoryPortrait(c.key)}" alt="Personnage du Memory" onerror="this.onerror=null;this.src='./assets/img/lapins_jouables/sans_evenements/mystery.svg'">` : "🐾"}</button>`).join("")}</div><aside class="memory-collection"><strong>Paires trouvées</strong><div class="memory-pile" aria-hidden="true">${st.pairs.map((key, i) => `<img src="${memoryPortrait(key)}" alt="" style="--pile-offset:${Math.min(i, 8) * 3}px;--pile-angle:${i % 2 ? 7 : -7}deg">`).join("")}</div><span aria-live="polite">${st.pairs.length} / ${MEMORY_LEVELS[st.level]}</span></aside></div><p class="memory-score" role="status">${st.finished ? "🎉 Niveau terminé ! " : ""}${st.moves} coup(s)</p><div class="memory-actions">${st.finished && st.level < MEMORY_LEVELS.length - 1 ? `<button class="primary-btn" onclick="startMemory(${st.level + 1})">Niveau suivant →</button>` : ""}<button class="ghost-btn" onclick="startMemory(${st.level})">Recommencer</button><button class="ghost-btn" onclick="openMemory()">← Niveaux</button><button class="ghost-btn" onclick="openGameConsole()">← Console</button></div></section>`;
         }
         async function collectMemoryPair(st, indexes) {
             const pile = gameArea.querySelector(".memory-pile");
@@ -2502,6 +2612,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let lapidokuState = null;
         const LAPIDOKU_SOLVED = [1, 2, 3, 4, 3, 4, 1, 2, 2, 1, 4, 3, 4, 3, 2, 1];
         window.openLapidoku = function () {
+            if (!window.LapinousVisibility.allowed('lapidoku')) return;
             const holes = [1, 3, 4, 6, 9, 11, 12, 14];
             const board = LAPIDOKU_SOLVED.slice();
             holes.forEach((i) => (board[i] = 0));
@@ -2602,7 +2713,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!agilityRun?.running) return;
             const dt = Math.min(34, now - agilityRun.lastAt);
             agilityRun.lastAt = now;
-            agilityRun.distance += dt * (0.01 + agilityRun.speed * 0.012);
+            agilityRun.distance += dt * (0.01 + agilityRun.speed * 0.012) * (1+mealBonus(game.species,"speed"));
             agilityRun.speed = Math.min(0.72, agilityRun.speed + dt * 0.000006);
             agilityRun.vy -= 0.00215 * dt;
             agilityRun.y += agilityRun.vy * dt;
@@ -2691,6 +2802,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         window.openAdventure = function () {
+            if (!window.LapinousVisibility.allowed('combat')) return;
             if (progress().energy <= 10 || progress().food <= 10) {
                 showToast("Ton lapin est trop épuisé ou affamé pour partir à l'aventure !", "warn");
                 return;
@@ -2713,7 +2825,7 @@ document.addEventListener("DOMContentLoaded", () => {
                               ? "⚠️ Difficile"
                               : "🙂 Faisable";
                     return `<button class="boss-card" onclick="prepareFight('${key}')">
-                    <img src="${b.faceImg || b.coteImg}" alt="${b.name}" onerror="this.onerror=null;this.src='./assets/img/bosses/mystery_boss.svg';">
+                    <img src="${b.faceImg || b.coteImg}" alt="${b.name}" onerror="this.onerror=null;this.src='./assets/img/boss/mystery_boss.svg';">
                     <div class="boss-name">${b.name}</div>
                     <div class="boss-power">⚔️ Puissance ${stats.power}</div>
                     <div class="boss-power">❤️ ${stats.maxHp} PV</div>
@@ -2768,9 +2880,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     <div class="fight-crit"><div class="fight-crit-fill boss-crit-fill" style="width:0%"></div></div>
                 </div>
                 <div class="vs-screen battle-vs">
-                    <div class="vs-side fighter player-fighter"><img class="battle-sprite player-sprite" style="${combatSpriteStyle(s,'rabbit',game.species)}" src="${s.coteImg || s.faceImg}" alt="${s.name}" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';"><div class="vs-sub">Niveau ${progress().currentLevel}</div><div class="fight-power-name">${powerName(s)}</div></div>
+                    <div class="vs-side fighter player-fighter"><img class="battle-sprite player-sprite" style="${combatSpriteStyle(s, "rabbit", game.species)}" src="${s.coteImg || s.faceImg}" alt="${s.name}" onerror="this.onerror=null;this.src='./assets/img/lapins_jouables/sans_evenements/mystery.svg';"><div class="vs-sub">Niveau ${progress().currentLevel}</div><div class="fight-power-name">${powerName(s)}</div></div>
                     <div class="vs-mark">⚔️</div>
-                    <div class="vs-side fighter boss-fighter"><img class="battle-sprite boss-sprite" style="${combatSpriteStyle(boss,'boss')}" src="${boss.coteImg || boss.faceImg}" alt="${boss.name}" onerror="this.onerror=null;this.src='./assets/img/bosses/mystery_boss.svg';"><div class="vs-sub">Difficulté ${boss.difficulty}</div><div class="fight-power-name">${powerName(boss)}</div></div>
+                    <div class="vs-side fighter boss-fighter"><img class="battle-sprite boss-sprite" style="${combatSpriteStyle(boss, "boss")}" src="${boss.coteImg || boss.faceImg}" alt="${boss.name}" onerror="this.onerror=null;this.src='./assets/img/boss/mystery_boss.svg';"><div class="vs-sub">Difficulté ${boss.difficulty}</div><div class="fight-power-name">${powerName(boss)}</div></div>
                 </div>
                 <div id="fightLog" class="fight-log">Prêt au combat !</div>
                 <div class="action-row fight-actions"><button class="action-btn adventure" onclick="fightBoss('${key}')"><span>⚔️ Combattre !</span></button><button class="ghost-btn" onclick="openAdventure()">← Autre adversaire</button></div>
@@ -3071,7 +3183,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 pr,
                 maxHp: 80 + pr.currentLevel * 10,
                 hp: 80 + pr.currentLevel * 10,
-                power: basePower,
+                power: Math.round(basePower*(1+mealBonus(key,"combat"))),
                 charge: 0,
                 azTier,
                 guard: 0,
@@ -3106,9 +3218,17 @@ document.addEventListener("DOMContentLoaded", () => {
             return `${powerName(r.sp) || r.sp.name} — Coup critique`;
         }
         function combatSpriteStyle(character, side, key) {
-            const leftRabbits=['toothFairy','jackFrost','ghostRabbit','skeletonRabbit','frankensteinRabbit'];
-            const facing=character.combatFacing || (side==='rabbit' ? (leftRabbits.includes(key)?'left':'right') : 'left');
-            return `scale:${facing===(side==='rabbit'?'right':'left')?'1 1':'-1 1'};`;
+            const leftRabbits = [
+                "toothFairy",
+                "jackFrost",
+                "ghostRabbit",
+                "skeletonRabbit",
+                "frankensteinRabbit",
+            ];
+            const facing =
+                character.combatFacing ||
+                (side === "rabbit" ? (leftRabbits.includes(key) ? "left" : "right") : "left");
+            return `scale:${facing === (side === "rabbit" ? "right" : "left") ? "1 1" : "-1 1"};`;
         }
         function rabbitFightPreviewHtml(r) {
             const skills = r.pr.attackLevels
@@ -3187,17 +3307,17 @@ document.addEventListener("DOMContentLoaded", () => {
                     const r = rabbitCombatStats(k),
                         { sp, pr } = r,
                         on = selectedFightTeam.includes(k);
-                    return `<button class="fight-team-card ${on ? "selected" : ""}" aria-pressed="${on}" onclick="toggleFightTeam('${k}','${key}')"><img src="${sp.faceImg || sp.coteImg || "./assets/img/species/mystery.svg"}"><span>${rabbitDisplayName(r)}<small>Niv. ${pr.currentLevel} · ${RARITY_META[sp.rarity]?.label || sp.rarity || "Commun"}</small><small class="fight-card-power">❤️ ${r.maxHp} PV · ⚔️ ${r.power} puissance</small></span></button>`;
+                    return `<button class="fight-team-card ${on ? "selected" : ""}" aria-pressed="${on}" onclick="toggleFightTeam('${k}','${key}')"><img src="${sp.faceImg || sp.coteImg || "./assets/img/lapins_jouables/sans_evenements/mystery.svg"}"><span>${rabbitDisplayName(r)}<small>Niv. ${pr.currentLevel} · ${RARITY_META[sp.rarity]?.label || sp.rarity || "Commun"}</small><small class="fight-card-power">❤️ ${r.maxHp} PV · ⚔️ ${r.power} puissance</small></span></button>`;
                 })
                 .join("");
             const preview = selectedFightTeam
                 .map((k, i) => {
                     const r = rabbitCombatStats(k),
                         sp = r.sp;
-                    return `<div class="team-preview-rabbit slot-${i + 1}"><img style="${combatSpriteStyle(sp,'rabbit',r.key)}" src="${sp.coteImg || sp.faceImg || "./assets/img/species/mystery.svg"}"><strong>${rabbitDisplayName(r)}</strong>${rabbitFightPreviewHtml(r)}</div>`;
+                    return `<div class="team-preview-rabbit slot-${i + 1}"><img style="${combatSpriteStyle(sp, "rabbit", r.key)}" src="${sp.coteImg || sp.faceImg || "./assets/img/lapins_jouables/sans_evenements/mystery.svg"}"><strong>${rabbitDisplayName(r)}</strong>${rabbitFightPreviewHtml(r)}</div>`;
                 })
                 .join("");
-            gameArea.innerHTML = `<div class="fight-stage fight-preparation"><div class="console-title">⚔️ Prépare ton équipe contre ${boss.name}</div>${fightPowerComparisonHtml(boss)}<div class="fight-team-select">${teamCards}</div><div class="battlefield-preview"><div class="team-preview-side">${preview || "<span>Choisis ton équipe</span>"}</div><div class="vs-mark">VS</div><div class="preview-boss"><img style="${combatSpriteStyle(boss,'boss')}" src="${boss.coteImg || boss.faceImg}" onerror="this.src='./assets/img/bosses/mystery_boss.svg'"><strong>${boss.name}</strong>${bossFightPreviewHtml(boss)}</div></div><div class="action-row"><label>Combat <select onchange="setFightMode(this.value)"><option value="manual" ${fightMode === "manual" ? "selected" : ""}>Manuel</option><option value="auto" ${fightMode === "auto" ? "selected" : ""}>Automatique</option></select></label><label>Vitesse <select onchange="setFightSpeed(this.value)"><option value="1" ${fightSpeed === 1 ? "selected" : ""}>×1</option><option value="3" ${fightSpeed === 3 ? "selected" : ""}>×3</option></select></label><button class="action-btn adventure" onclick="startTacticalFight('${key}')" ${selectedFightTeam.length ? "" : "disabled"}>⚔️ Commencer</button><button class="ghost-btn" onclick="openAdventure()">← Boss</button></div></div>`;
+            gameArea.innerHTML = `<div class="fight-stage fight-preparation"><div class="console-title">⚔️ Prépare ton équipe contre ${boss.name}</div>${fightPowerComparisonHtml(boss)}<div class="fight-team-select">${teamCards}</div><div class="battlefield-preview"><div class="team-preview-side">${preview || "<span>Choisis ton équipe</span>"}</div><div class="vs-mark">VS</div><div class="preview-boss"><img style="${combatSpriteStyle(boss, "boss")}" src="${boss.coteImg || boss.faceImg}" onerror="this.src='./assets/img/boss/mystery_boss.svg'"><strong>${boss.name}</strong>${bossFightPreviewHtml(boss)}</div></div><div class="action-row"><label>Combat <select onchange="setFightMode(this.value)"><option value="manual" ${fightMode === "manual" ? "selected" : ""}>Manuel</option><option value="auto" ${fightMode === "auto" ? "selected" : ""}>Automatique</option></select></label><label>Vitesse <select onchange="setFightSpeed(this.value)"><option value="1" ${fightSpeed === 1 ? "selected" : ""}>×1</option><option value="3" ${fightSpeed === 3 ? "selected" : ""}>×3</option></select></label><button class="action-btn adventure" onclick="startTacticalFight('${key}')" ${selectedFightTeam.length ? "" : "disabled"}>⚔️ Commencer</button><button class="ghost-btn" onclick="openAdventure()">← Boss</button></div></div>`;
             autoSave();
         };
         window.startTacticalFight = function (key) {
@@ -3240,10 +3360,10 @@ document.addEventListener("DOMContentLoaded", () => {
             const fighters = f.team
                 .map(
                     (x, i) =>
-                        `<div class="team-fighter battle-slot-${i + 1} ${i === f.active ? "active-turn" : ""} ${x.hp <= 0 ? "ko" : ""}" data-fighter="${i}"><div class="turn-marker">${i === f.active ? "▼ TOUR" : ""}</div><img class="battle-sprite team-rabbit-sprite" style="${combatSpriteStyle(x.sp,'rabbit',x.key)}" src="${x.sp.coteImg || x.sp.faceImg || "./assets/img/species/mystery.svg"}" onerror="this.onerror=null;this.src='./assets/img/species/mystery.svg';"><strong>${rabbitDisplayName(x)}</strong><small>${Math.max(0, x.hp)} / ${x.maxHp} PV</small><div class="mini-hp"><i style="width:${(Math.max(0, x.hp) / x.maxHp) * 100}%"></i></div></div>`,
+                        `<div class="team-fighter battle-slot-${i + 1} ${i === f.active ? "active-turn" : ""} ${x.hp <= 0 ? "ko" : ""}" data-fighter="${i}"><div class="turn-marker">${i === f.active ? "▼ TOUR" : ""}</div><img class="battle-sprite team-rabbit-sprite" style="${combatSpriteStyle(x.sp, "rabbit", x.key)}" src="${x.sp.coteImg || x.sp.faceImg || "./assets/img/lapins_jouables/sans_evenements/mystery.svg"}" onerror="this.onerror=null;this.src='./assets/img/lapins_jouables/sans_evenements/mystery.svg';"><strong>${rabbitDisplayName(x)}</strong><small>${Math.max(0, x.hp)} / ${x.maxHp} PV</small><div class="mini-hp"><i style="width:${(Math.max(0, x.hp) / x.maxHp) * 100}%"></i></div></div>`,
                 )
                 .join("");
-            gameArea.innerHTML = `<div class="fight-stage tactical"><div class="fight-hud-side player"><div class="fight-name">🐰 Tour de ${rabbitDisplayName(r)}</div><div class="fight-hp"><div class="fight-hp-fill player-hp" style="width:${(r.hp / r.maxHp) * 100}%"></div></div><div class="fight-hp-text">${Math.max(0, r.hp)} / ${r.maxHp} PV</div><div class="fight-crit-label">🌟 Critique ${Math.round(r.charge)}%</div><div class="fight-crit"><div class="fight-crit-fill player-crit-fill" style="width:${r.charge}%"></div></div></div><div class="fight-hud-side boss"><div class="fight-name">🥕 ${f.boss.name}</div><div class="fight-hp"><div class="fight-hp-fill boss-hp" style="width:${(f.bossHp / f.bossMaxHp) * 100}%"></div></div><div class="fight-hp-text">${Math.max(0, f.bossHp)} / ${f.bossMaxHp} PV</div><div class="fight-crit-label">🌟 Critique ${Math.round(f.bossCharge)}%</div><div class="fight-crit"><div class="fight-crit-fill" style="width:${f.bossCharge}%"></div></div></div><div class="team-battlefield"><div class="team-fighters">${fighters}</div><div class="vs-mark">⚔️</div><div class="boss-battle-slot"><img class="battle-sprite boss-sprite" style="${combatSpriteStyle(f.boss,'boss')}" src="${f.boss.coteImg || f.boss.faceImg}" onerror="this.onerror=null;this.src='./assets/img/bosses/mystery_boss.svg';"><strong>${f.boss.name}</strong></div></div><div id="fightLog" class="fight-log">Tour ${f.turn} · ${message}</div><div class="fight-command-grid">${skills}${r.charge >= 100 ? `<button class="fight-command ultimate" onclick="tacticalAction('ultimate')">🌟 ${ultimateName(r)}</button>` : ""}<button id="fightModeToggle" class="fight-command" onclick="setFightMode(tacticalFightMode())">${f.auto ? "⏸ Reprendre en manuel" : "▶ Combat automatique"}</button><label>Vitesse <select onchange="setFightSpeed(this.value)"><option value="1" ${f.speed === 1 ? "selected" : ""}>×1</option><option value="3" ${f.speed === 3 ? "selected" : ""}>×3</option></select></label></div></div>`;
+            gameArea.innerHTML = `<div class="fight-stage tactical"><div class="fight-hud-side player"><div class="fight-name">🐰 Tour de ${rabbitDisplayName(r)}</div><div class="fight-hp"><div class="fight-hp-fill player-hp" style="width:${(r.hp / r.maxHp) * 100}%"></div></div><div class="fight-hp-text">${Math.max(0, r.hp)} / ${r.maxHp} PV</div><div class="fight-crit-label">🌟 Critique ${Math.round(r.charge)}%</div><div class="fight-crit"><div class="fight-crit-fill player-crit-fill" style="width:${r.charge}%"></div></div></div><div class="fight-hud-side boss"><div class="fight-name">🥕 ${f.boss.name}</div><div class="fight-hp"><div class="fight-hp-fill boss-hp" style="width:${(f.bossHp / f.bossMaxHp) * 100}%"></div></div><div class="fight-hp-text">${Math.max(0, f.bossHp)} / ${f.bossMaxHp} PV</div><div class="fight-crit-label">🌟 Critique ${Math.round(f.bossCharge)}%</div><div class="fight-crit"><div class="fight-crit-fill" style="width:${f.bossCharge}%"></div></div></div><div class="team-battlefield"><div class="team-fighters">${fighters}</div><div class="vs-mark">⚔️</div><div class="boss-battle-slot"><img class="battle-sprite boss-sprite" style="${combatSpriteStyle(f.boss, "boss")}" src="${f.boss.coteImg || f.boss.faceImg}" onerror="this.onerror=null;this.src='./assets/img/boss/mystery_boss.svg';"><strong>${f.boss.name}</strong></div></div><div id="fightLog" class="fight-log">Tour ${f.turn} · ${message}</div><div class="fight-command-grid">${skills}${r.charge >= 100 ? `<button class="fight-command ultimate" onclick="tacticalAction('ultimate')">🌟 ${ultimateName(r)}</button>` : ""}<button id="fightModeToggle" class="fight-command" onclick="setFightMode(tacticalFightMode())">${f.auto ? "⏸ Reprendre en manuel" : "▶ Combat automatique"}</button><label>Vitesse <select onchange="setFightSpeed(this.value)"><option value="1" ${f.speed === 1 ? "selected" : ""}>×1</option><option value="3" ${f.speed === 3 ? "selected" : ""}>×3</option></select></label></div></div>`;
             queueAutoFight();
         }
         window.tacticalFightMode = () => (tacticalFight?.auto ? "manual" : "auto");
@@ -3281,6 +3401,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     dmg = Math.round(r.power * 0.45 + bonus);
                     msg = `✨ ${name} utilise ${t.name} ! +${heal} PV et ${dmg} dégâts.`;
                 } else if (t.kind === "guard") {
+                    playSfx("shieldActivation");
                     r.guard = Math.max(
                         r.guard,
                         Math.min(0.75, 0.55 + (r.pr.attackLevels[index] || 0) * 0.04),
@@ -3303,6 +3424,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             (x) => (x.hp = Math.min(x.maxHp, x.hp + Math.round(x.maxHp * 0.25))),
                         );
                 } else if (mode === "support") {
+                    playSfx("shieldActivation");
                     f.team
                         .filter((x) => x.hp > 0)
                         .forEach((x) => (x.guard = Math.max(x.guard, 0.55)));
@@ -3334,7 +3456,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const raw = Math.round(bossStats.attackBase + Math.random() * bossStats.attackSpread);
             const bd = Math.max(
                 1,
-                Math.round(raw * (bossCritical ? config.multiplier : 1) * (1 - (r.guard || 0))),
+                Math.round(raw * (bossCritical ? config.multiplier : 1) * (1 - (r.guard || 0)) * (1-mealBonus(r.key,"resistance"))),
             );
             const hitShield = (r.guard || 0) > 0;
             r.guard = 0;
@@ -3347,7 +3469,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (mode === "heal") {
                     playSfx("heal");
                     f.bossHp = Math.min(f.bossMaxHp, f.bossHp + Math.round(f.bossMaxHp * 0.2));
-                } else if (mode === "support") f.bossGuard = 0.4;
+                } else if (mode === "support") { f.bossGuard = 0.4; playSfx("shieldActivation"); }
             }
             const bossImg = gameArea.querySelector(".boss-sprite");
             bossImg?.classList.add("fight-attack-boss");
@@ -3434,14 +3556,21 @@ document.addEventListener("DOMContentLoaded", () => {
             @media(prefers-reduced-motion:reduce) { .egg-shell.illustrated-egg.shaking, .egg-shell.illustrated-egg.hatching { animation: none; } }
         `;
         document.head.appendChild(eggStyle);
+        // Lire les taux au moment de l’ouverture et refléter les modifications du Dashboard.
+        function eggRatesMarkup(){const rates=loadEggRates();return '<strong>Taux d’apparition par rareté</strong><div>'+['commun','rare','epique','legendaire','mythique','divin'].map(key=>'<span><img src="'+EGG_IMAGES[key]+'" alt="">'+RARITY_META[key].label+' : '+Number(rates[key]||0).toLocaleString('fr-FR')+' %</span>').join('')+'</div>';}
+        function updateEggRateDisplays(){document.querySelectorAll('[data-egg-rates]').forEach(box=>box.innerHTML=eggRatesMarkup());}
+        window.addEventListener('storage',event=>{if(event.key===EGG_RATES_KEY)updateEggRateDisplays();});
+        window.addEventListener('lapinous-egg-rates-changed',updateEggRateDisplays);
+        window.addEventListener('focus',updateEggRateDisplays);
         function eggRevealAnimation(speciesData) {
             return new Promise((resolve) => {
                 const rarity = speciesData.rarity || "commun";
                 const image = EGG_IMAGES[rarity] || EGG_IMAGES.divin;
                 const overlay = document.createElement("div");
                 overlay.className = `egg-reveal-overlay rarity-${rarity}`;
-                overlay.innerHTML = `<div class="egg-reveal-card"><button type="button" class="egg-shell illustrated-egg" aria-label="Toucher l'œuf pour le faire éclore"><img src="${image}" alt="Œuf ${RARITY_META[rarity]?.label || rarity}" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span hidden aria-hidden="true">🥚</span></button><div class="egg-reveal-hint" role="status">Touche l'œuf plusieurs fois : 0/${EGG_TAPS_TO_HATCH}</div><div class="egg-rabbit" hidden><img src="${speciesData.faceImg || speciesData.coteImg}" alt="${speciesData.name}"><strong>${speciesData.name}</strong><span>${RARITY_META[rarity]?.label || rarity}</span><button type="button" class="action-btn">Continuer</button></div></div>`;
+                overlay.innerHTML = `<div class="egg-reveal-card"><div class="egg-rates-display" data-egg-rates></div><button type="button" class="egg-shell illustrated-egg" aria-label="Toucher l'œuf pour le faire éclore"><img src="${image}" alt="Œuf ${RARITY_META[rarity]?.label || rarity}" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span hidden aria-hidden="true">🥚</span></button><div class="egg-reveal-hint" role="status">Touche l'œuf plusieurs fois : 0/${EGG_TAPS_TO_HATCH}</div><div class="egg-rabbit" hidden><img src="${speciesData.faceImg || speciesData.coteImg}" alt="${speciesData.name}"><strong>${speciesData.name}</strong><span>${RARITY_META[rarity]?.label || rarity}</span><button type="button" class="action-btn">Continuer</button></div></div>`;
                 document.body.appendChild(overlay);
+                updateEggRateDisplays();
                 const shell = overlay.querySelector(".egg-shell");
                 const hint = overlay.querySelector(".egg-reveal-hint");
                 const rabbit = overlay.querySelector(".egg-rabbit");
@@ -3610,6 +3739,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const title = document.createElement("h2");
             title.textContent = "🥚 Tes 10 œufs remuent…";
             panel.appendChild(title);
+            const ratesDisplay=document.createElement("div");ratesDisplay.className="egg-rates-display";ratesDisplay.dataset.eggRates="";panel.appendChild(ratesDisplay);
+            ratesDisplay.innerHTML=eggRatesMarkup();
             const grid = document.createElement("div");
             grid.className = "egg-batch-grid";
             const animatedCards = cards.map(({ sp, label }, index) => {
@@ -3692,9 +3823,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 );
                 return;
             }
-            progress().friendship -= UPGRADE_COST;
+            const stage=roomStage(room);
+            if(stage===0)progress().friendship -= UPGRADE_COST;else game.carrots-=roomUpgradeCost(room);
             progress().boosts[statKey] += 2;
-            progress().improvements[room] = true;
+            progress().improvements[room] = stage+1;
             progress().lastUpgradeLevel = progress().currentLevel;
             showToast(message, "success");
             spawnParticles("✨", 8);
@@ -3706,7 +3838,7 @@ document.addEventListener("DOMContentLoaded", () => {
             purchaseUpgrade(
                 "cuisine",
                 "food",
-                "La carotte devient une pomme : votre lapin se nourrit mieux !",
+                "La cuisine passe au palier suivant !",
             );
         window.improvePutRabbitToSleep = () =>
             purchaseUpgrade(
@@ -4175,7 +4307,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 const panel = document.createElement("div");
                 panel.id = "adminTestPanel";
-                panel.innerHTML = `<strong>🛠 Tests du jeu</strong><button data-test="money">+100 000 🥕</button><button data-test="eggs">+100 œufs</button><button data-test="care">Besoins à 100 %</button><button data-test="collection">Tous les lapins</button><button data-test="level1">Lapin actif : +1 niveau</button><button data-test="level10">Lapin actif : +10 niveaux</button><button data-test="skills">+30 fragments par lapin</button><label>Événement <select id="adminEventSelect"><option value="auto">Calendrier normal</option><option value="none">Aucun</option><option value="halloween">Halloween</option><option value="noel">Noël</option><option value="nouvel_an_chinois">Nouvel An chinois</option><option value="paques">Pâques</option><option value="all">Tous</option></select></label><label>Saison <select id="adminSeasonSelect"><option value="auto">Saison actuelle</option><option value="printemps">Printemps</option><option value="ete">Été</option><option value="automne">Automne</option><option value="hiver">Hiver</option></select></label><label>Lumière <select id="adminTimeSelect"><option value="auto">Heure actuelle</option><option value="jour">Jour</option><option value="nuit">Nuit</option></select></label><small>Les événements ont priorité sur les saisons.</small><button data-test="restore">Restaurer la partie avant les tests</button><button data-test="close">Fermer</button>`;
+                panel.innerHTML = `<strong>🛠 Tests du jeu</strong><button data-test="dashboard">Ouvrir le Dashboard</button><button data-test="games">Tester tous les niveaux des jeux</button><small>Tous les niveaux et puzzles événementiels sont accessibles pendant les tests Admin.</small><button data-test="money">+100 000 🥕</button><button data-test="eggs">+100 œufs</button><button data-test="care">Besoins à 100 %</button><fieldset class="admin-needs"><legend>Besoins du lapin actif</legend>${[["food","Nourriture"],["energy","Sommeil"],["cleanliness","Propreté"]].map(([stat,label])=>`<label>${label}<input type="range" data-admin-need="${stat}" min="0" max="100" step="5" value="${Math.round(progress()[stat])}"><output>${Math.round(progress()[stat])} %</output></label>`).join("")}<button data-test="needs-low">Les trois à 25 %</button></fieldset><button data-test="collection">Tous les lapins</button><button data-test="level1">Lapin actif : +1 niveau</button><button data-test="level10">Lapin actif : +10 niveaux</button><button data-test="skills">+30 fragments par lapin</button><label>Événement <select id="adminEventSelect"><option value="auto">Calendrier normal</option><option value="none">Aucun</option><option value="halloween">Halloween</option><option value="noel">Noël</option><option value="nouvel_an_chinois">Nouvel An chinois</option><option value="paques">Pâques</option><option value="all">Tous</option></select></label><label>Saison <select id="adminSeasonSelect"><option value="auto">Saison actuelle</option><option value="printemps">Printemps</option><option value="ete">Été</option><option value="automne">Automne</option><option value="hiver">Hiver</option></select></label><label>Lumière <select id="adminTimeSelect"><option value="auto">Heure actuelle</option><option value="jour">Jour</option><option value="nuit">Nuit</option></select></label><small>Les événements ont priorité sur les saisons.</small><button data-test="restore">Restaurer la partie avant les tests</button><button data-test="close">Fermer</button>`;
                 document.body.appendChild(panel);
                 panel.querySelector("#adminEventSelect").value = adminEvent;
                 panel.querySelector("#adminSeasonSelect").value = adminSeason;
@@ -4195,9 +4327,20 @@ document.addEventListener("DOMContentLoaded", () => {
                     adminTime = e.target.value;
                     updateSceneBackground();
                 };
+                // Ajuster uniquement le compagnon actif, en conservant la restauration des tests.
+                panel.addEventListener('input',e=>{
+                    const stat=e.target.dataset.adminNeed;
+                    if(!isLocalAdmin||!adminTesting||!['food','energy','cleanliness'].includes(stat))return;
+                    const value=Math.max(0,Math.min(100,Number(e.target.value)));
+                    if(!Number.isFinite(value))return;
+                    progress()[stat]=value;e.target.nextElementSibling.textContent=value+' %';
+                    autoSave();updateStatusBars();
+                });
                 panel.onclick = (e) => {
                     const action = e.target.dataset.test;
                     if (!action || !adminTesting) return;
+                    if (action === "games") { panel.remove(); window.openGameConsole(); return; }
+                    if (action === "dashboard") { window.location.href="./dashboard.html"; return; }
                     if (action === "close") {
                         panel.remove();
                         return;
@@ -4215,6 +4358,10 @@ document.addEventListener("DOMContentLoaded", () => {
                         refreshCurrentZone();
                         panel.remove();
                         return;
+                    }
+                    if(action==='needs-low'){
+                        progress().food=progress().energy=progress().cleanliness=25;
+                        panel.querySelectorAll('[data-admin-need]').forEach(input=>{input.value=25;input.nextElementSibling.textContent='25 %';});
                     }
                     if (action === "money") game.carrots += 100000;
                     if (action === "eggs") game.eggs += 100;
@@ -4305,6 +4452,8 @@ document.addEventListener("DOMContentLoaded", () => {
         renderAudioButton();
         window.LapinousShop.init({
             game: () => game,
+            evolutions:()=>[['cuisine','Pomme','./assets/img/Zone_cuisine/pomme.png','food'],['chambre','Lit','./assets/img/Zone_Chambre/lit.png','energy'],['sdb','Douche','./assets/img/Zone_SdB/pommeau.png','cleanliness'],['jardin','Agilité','./assets/img/Zone_jardin/agilite.png','friendship']].map(([room,name,image,stat])=>({room,name,image,stat,stage:roomStage(room),cost:roomUpgradeCost(room)})),
+            buyEvolution:room=>{if(roomStage(room)<1)return;const stat={cuisine:'food',chambre:'energy',sdb:'cleanliness',jardin:'friendship'}[room];if(stat)purchaseUpgrade(room,stat,'Évolution améliorée !');},
             species: getSpecies,
             progress: ensureTechniqueProgress,
             technique: (key, index) =>
