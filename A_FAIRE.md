@@ -167,3 +167,46 @@ Après chaque changement : actualiser ce fichier, les fonctionnalités et l’ar
 - [x] Retirer le panier du Marché et suspendre plats/bonus sans supprimer leurs données.
 - [ ] Revoir attaques, défenses et soins avant de reprendre les plats spéciaux.
 - [ ] Valider la zone du frigo sur tous les fonds saisonniers et écrans étroits.
+
+<!-- LAPINOUS_AGENT_DEBUT -->
+### Suivi automatique du projet
+
+_Dernier bilan : 13/10/2026 11:06_
+
+Fichiers modifiés ou non suivis par Git : **34**
+
+- `.gitignore`
+- `AGENTS.md`
+- `A_FAIRE.md`
+- `allimentation.pdf`
+- `arborescence.txt`
+- `assets/css/shop.css`
+- `assets/css/style.css`
+- `assets/img/Boite_Mini_Jeu/LapinouDoku.png`
+- `assets/img/accompagnateurs/Artisan/.gitkeep`
+- `assets/img/accompagnateurs/Fragments/.gitkeep`
+- `assets/img/accompagnateurs/Fragments/assemblage_cristaux.gif`
+- `assets/img/accompagnateurs/Fragments/marche_droite.gif`
+- `assets/img/accompagnateurs/caissier/exec-030757bc-ec79-452d-83d8-00b99494ec7f.png`
+- `assets/js/dashboard-ui.js`
+- `assets/js/dashboard.js`
+- `assets/js/image-manifest.js`
+- `assets/js/pantry.js`
+- `assets/js/quiz-dashboard.js`
+- `assets/js/quiz.js`
+- `assets/js/script.js`
+- `assets/js/shop.js`
+- `assets/js/species-data.js`
+- `dashboard.html`
+- `index.html`
+- `lapinous-content.json`
+- `lapinous-quiz.json`
+- `lapinous-shop.json`
+- `readme.md`
+- `tools/image-manifest-store.mjs`
+- `tools/test-image-browser.mjs`
+- `tools/test-market-layout.mjs`
+- `tools/test-pantry-eating.mjs`
+- `tools/test-pantry-route.mjs`
+- `tools/test-quiz.mjs`
+<!-- LAPINOUS_AGENT_FIN -->

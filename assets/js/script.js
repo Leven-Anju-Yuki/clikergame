@@ -1419,10 +1419,10 @@ document.addEventListener("DOMContentLoaded", () => {
         // Le garde-manger affiche le stock sur des etageres et son accompagnateur.
         function kitchenHtml(){return window.LapinousPantry.html(window.LapinousShop.getCatalog(),game.inventory||{},currentRabbitName(),progress().food);}
 
-        window.openKitchenFridge=()=>{if(game.currentZone!=='cuisine'&&!body.classList.contains('cuisine'))return;let dialog=document.getElementById('kitchenFridgeDialog');if(!dialog){dialog=document.createElement('dialog');dialog.id='kitchenFridgeDialog';dialog.setAttribute('aria-label','Réserve du Chef');document.body.appendChild(dialog);}dialog.innerHTML='<button class="fridge-close" onclick="document.getElementById(\'kitchenFridgeDialog\').close()" aria-label="Fermer">×</button>'+kitchenHtml();if(!dialog.open)dialog.showModal();const sessionGame=game,sessionSpecies=game.species;window.LapinousPantry.mount(dialog,()=>window.LapinousShop.getCatalog(),id=>eatKitchenItem(id),()=>progress().food<100,{inventory:()=>game.inventory||{},valid:()=>game===sessionGame&&game.species===sessionSpecies,complete:id=>cookMeal(id)});};
-        window.eatKitchenItem=id=>{const catalog=window.LapinousShop.getCatalog();const item=catalog?.items.find(item=>item.id===id)||(catalog?.recipesEnabled?catalog.recipes.find(recipe=>recipe.item===id):null);if(!item||progress().food>=100)return;try{window.LapinousShop.useConsumable(game,progress(),item.item?{...item,id:item.item}:item);autoSave();updateStatusBars();refreshCurrentZone();if(document.getElementById('kitchenFridgeDialog')?.open)openKitchenFridge();showToast(item.name+' consommé !','success');}catch(error){showToast(error.message,'warn');}};
+        window.openKitchenFridge=()=>{if(!window.LapinousVisibility.allowed('pantry'))return;if(game.currentZone!=='cuisine'&&!body.classList.contains('cuisine'))return;let dialog=document.getElementById('kitchenFridgeDialog');if(!dialog){dialog=document.createElement('dialog');dialog.id='kitchenFridgeDialog';dialog.setAttribute('aria-label','Réserve du Chef');document.body.appendChild(dialog);}dialog.innerHTML='<button class="fridge-close" onclick="document.getElementById(\'kitchenFridgeDialog\').close()" aria-label="Fermer">×</button>'+kitchenHtml();if(!dialog.open)dialog.showModal();const sessionGame=game,sessionSpecies=game.species;window.LapinousPantry.mount(dialog,()=>window.LapinousShop.getCatalog(),id=>eatKitchenItem(id),()=>progress().food<100,{inventory:()=>game.inventory||{},valid:()=>window.LapinousVisibility.allowed('pantry')&&game===sessionGame&&game.species===sessionSpecies,complete:id=>cookMeal(id)});};
+        window.eatKitchenItem=id=>{if(!window.LapinousVisibility.allowed('pantry'))return;const catalog=window.LapinousShop.getCatalog();const item=catalog?.items.find(item=>item.id===id)||(catalog?.recipesEnabled?catalog.recipes.find(recipe=>recipe.item===id):null);if(!item||progress().food>=100)return;try{window.LapinousShop.useConsumable(game,progress(),item.item?{...item,id:item.item}:item);autoSave();updateStatusBars();refreshCurrentZone();if(document.getElementById('kitchenFridgeDialog')?.open)openKitchenFridge();showToast(item.name+' consommé !','success');}catch(error){showToast(error.message,'warn');}};
         // Le stock est modifie en une seule operation apres validation de tous les ingredients.
-        window.cookMeal=id=>{const catalog=window.LapinousShop.getCatalog();if(!catalog?.recipesEnabled)return false;const recipe=catalog.recipes.find(recipe=>recipe.id===id);if(!recipe)return false;game.inventory ||= {};if(!window.LapinousPantry.craft(game.inventory,recipe)){showToast('Il manque des ingredients pour ce plat.','warn');return false;}autoSave();refreshCurrentZone();if(document.getElementById('kitchenFridgeDialog')?.open)openKitchenFridge();showToast(recipe.name+' est pret !','success');return true;};
+        window.cookMeal=id=>{if(!window.LapinousVisibility.allowed('pantry'))return false;const catalog=window.LapinousShop.getCatalog();if(!catalog?.recipesEnabled||!window.LapinousVisibility.allowed('recipes'))return false;const recipe=catalog.recipes.find(recipe=>recipe.id===id);if(!recipe)return false;game.inventory ||= {};if(!window.LapinousPantry.craft(game.inventory,recipe)){showToast('Il manque des ingredients pour ce plat.','warn');return false;}autoSave();refreshCurrentZone();if(document.getElementById('kitchenFridgeDialog')?.open)openKitchenFridge();showToast(recipe.name+' est pret !','success');return true;};
 
         function speciesFaceImg() {
             const s = getSpecies()[game.species];
@@ -1519,10 +1519,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Les favoris sont independants du lapin actif et conserves dans la sauvegarde.
         window.openSalonFavorites = () => {
+            if(!window.LapinousVisibility.allowed('favorites'))return;
             showEncyclopediaTab('rabbits');
             bootstrap.Modal.getOrCreateInstance(document.querySelector('#encyclopediaModal')).show();
         };
         function toggleSalonFavorite(key) {
+            if(!window.LapinousVisibility.allowed('favorites'))return;
             const favorites=[...new Set(game.salonFavorites||[])].filter(id=>(game.ownedSpecies||[]).includes(id));
             const index=favorites.indexOf(key);
             if(index>=0)favorites.splice(index,1);
@@ -1660,30 +1662,37 @@ document.addEventListener("DOMContentLoaded", () => {
             return state.puzzles[id];
         }
 
+        // Les r?sultats du quiz sont propres au lapin et inclus dans la sauvegarde.
+        window.openRabbitQuiz=()=>{
+            if(!window.LapinousVisibility.allowed('quiz'))return;
+            const session=game,species=game.species,quizZone=currentZone;
+            window.LapinousQuiz.open({root:gameArea,valid:()=>game===session&&game.species===species&&currentZone===quizZone&&window.LapinousVisibility.allowed('quiz'),toast:message=>showToast(message,'warn'),back:()=>openGameConsole(),complete:(score,total)=>{
+                const mg=ensureMinigameProgress();mg.quiz ||= {completed:0,bestScore:0};mg.quiz.completed++;mg.quiz.bestScore=Math.max(mg.quiz.bestScore,score/total);if(score>0)gainFriendship(score);progress().energy=Math.max(0,progress().energy-2);autoSave();updateStatusBars();
+            }});
+        };
+
         window.openGameConsole = function () {
+            if(!window.LapinousVisibility.allowed('games'))return;
             const mg = ensureMinigameProgress();
             const availablePuzzles = puzzleCatalog().filter(isPuzzleAvailableNow);
             const completed = availablePuzzles.filter(
                 (puz) => mg.puzzle.puzzles[puz.id]?.completed,
             ).length;
-            gameArea.innerHTML = `
-            <div class="console-panel">
-                <div class="console-title">🎮 Console Lapinous</div>
-                <p class="agility-hint">Joue avec ${currentRabbitName()} pour gagner de l'amitié. Jouer fatigue aussi ton lapin et peut le salir.</p>
-                <div class="console-games">
-                    <button class="console-game-card" onclick="openPuzzleHub()">
-                        <span class="console-game-icon">🧩</span><strong>Puzzles</strong>
-                        <small>${completed}/${availablePuzzles.length} images terminées au moins une fois</small>
-                    </button>
-                    <button class="console-game-card" type="button" onclick="openMemory()">
-                        <span class="console-game-icon">🧠</span><strong>Memory</strong><small>${mg.memory.completed || 0} partie(s) terminée(s)</small>
-                    </button>
-                    <button class="console-game-card" type="button" onclick="openLapidoku()">
-                        <span class="console-game-icon">🔢</span><strong>Lapidoku</strong><small>${mg.lapidoku.completed || 0} grille(s) terminée(s)</small>
-                    </button>
-                </div>
-                <button class="ghost-btn" onclick="refreshCurrentZone()">← Retour au Salon</button>
-            </div>`;
+            const boxes=window.LapinousShop.getCatalog()?.gameBoxes||{};
+            const games=[['puzzles','Puzzles','openPuzzleHub()',`${completed}/${availablePuzzles.length} images terminees`],['memory','Memory','openMemory()',`${mg.memory.completed||0} parties terminees`],['lapidoku','Lapidoku','openLapidoku()',`${mg.lapidoku.completed||0} grilles terminees`],['quiz','Quiz des lapins','openRabbitQuiz()','Alimentation et comportement']];
+            const cupboard=document.createElement('section');cupboard.className='game-cupboard';
+            const title=document.createElement('h2');title.textContent='Le placard des jeux';cupboard.append(title);
+            const shelf=document.createElement('div');shelf.className='game-cupboard-shelves';
+            games.forEach(([key,name,action,description])=>{
+                if(!window.LapinousVisibility.allowed(key))return;
+                const button=document.createElement('button');button.type='button';button.className='game-box';button.setAttribute('onclick',action);
+                const image=document.createElement('img');image.src=boxes[key]||'';image.alt=name;image.loading='lazy';button.append(image);
+                const label=document.createElement('strong');label.textContent=name;button.append(label);
+                const detail=document.createElement('small');detail.textContent=description;button.append(detail);shelf.append(button);
+            });
+            cupboard.append(shelf);
+            const back=document.createElement('button');back.className='ghost-btn';back.textContent='Retour au Salon';back.onclick=()=>refreshCurrentZone();cupboard.append(back);
+            gameArea.replaceChildren(cupboard);
         };
 
         window.openPuzzleHub = function () {
@@ -2293,6 +2302,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         window.showLapinousRecords = function () {
+            if(!window.LapinousVisibility.allowed('records'))return;
             document.querySelector(".records-overlay")?.remove();
             ensureNewSystems();
             const owned = (game.ownedSpecies || []).length;
@@ -2648,6 +2658,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let agilityRun = null;
 
         window.startAgility = function () {
+            if(!window.LapinousVisibility.allowed('agility'))return;
             if (progress().food <= 5 || progress().energy <= 5 || progress().cleanliness <= 5) {
                 showToast("Votre lapin n'est pas en état de jouer maintenant !", "warn");
                 return;

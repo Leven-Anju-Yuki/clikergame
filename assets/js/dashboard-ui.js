@@ -5,7 +5,7 @@
   /** Recherche dans les cartes, tableaux ou champs de l’accordéon, en conservant le filtre événement. */
   function filter(section) {
     const query = normalized(section.querySelector(':scope > .dashboard-section-search input')?.value || '');
-    let units = [...section.querySelectorAll('.puzzle-admin-card, .companion-group')];
+    let units = [...section.querySelectorAll('.puzzle-admin-card, .companion-group, .quiz-admin-card')];
     if (!units.length) units = [...section.querySelectorAll('tbody > tr')];
     if (!units.length) units = [...section.querySelectorAll('label:not(.dashboard-section-search), .chart-container')];
     const event = section.querySelector('#puzzleEventFilter')?.value;
@@ -39,7 +39,8 @@
     const browse = document.createElement('button'); browse.type = 'button'; browse.textContent = 'Parcourir';
     const file = document.createElement('input'); file.type = 'file'; file.accept = 'image/*'; file.hidden = true;
     const folder = document.createElement('select'); folder.className = 'dashboard-image-folder'; folder.setAttribute('aria-label', 'Dossier de l’image dans assets'); folder.hidden = true;
-    const defaults = input.hasAttribute('data-puzzle-field') ? 'assets/img/puzzle/de_base' : input.hasAttribute('data-item-field') ? 'assets/img/magasin/aliments' : input.closest('#bossTable') ? 'assets/img/boss' : 'assets/img/lapins_jouables/sans_evenements';
+    const roleFolder=input.dataset.role==='companions.artisan'?'assets/img/accompagnateurs/Artisan':input.dataset.role==='companions.fragmentKeeper'?'assets/img/accompagnateurs/Fragments':null;
+    const defaults = roleFolder || (input.hasAttribute('data-shop-background')?'assets/img/fond/Magasin':input.hasAttribute('data-game-box')?'assets/img/Boite_Mini_Jeu':input.hasAttribute('data-puzzle-field')?'assets/img/puzzle/de_base':input.hasAttribute('data-recipe-field')?'assets/img/magasin/produits':input.hasAttribute('data-item-field')?'assets/img/magasin/aliments':input.closest('#bossTable')?'assets/img/boss':'assets/img/lapins_jouables/sans_evenements');
     const current = input.value.replace(/^\.\//, '').split('/').slice(0, -1).join('/');
     const folders = [...new Set([defaults, current, ...Object.keys(window.LapinousImageManifest || {}).map(key => key.split('/').slice(0, -1).join('/'))])].filter(value => value.startsWith('assets/img/')).sort();
     folders.forEach(value => { const option = document.createElement('option'); option.value = value; option.textContent = value; folder.append(option); }); folder.value = current || defaults;
@@ -73,8 +74,9 @@
       filter(section);
     });
     document.querySelectorAll('.puzzle-species-dropdown').forEach(enhanceSpecies);
-    document.querySelectorAll('[data-puzzle-field="image"],[data-item-field="image"],[data-recipe-field="image"],[data-field="faceImg"],[data-field="coteImg"],input[data-role]:not([type=checkbox])').forEach(input => {
-      if (input.hasAttribute('data-role') && !/\.(png|gif|webp|jpe?g|svg)$/i.test(input.value)) return;
+    document.querySelectorAll('[data-puzzle-field="image"],[data-item-field="image"],[data-recipe-field="image"],[data-shop-background],[data-game-box],[data-field="faceImg"],[data-field="coteImg"],input[data-role]:not([type=checkbox])').forEach(input => {
+      if (input.hasAttribute('data-role') && input.dataset.pose === 'name') return;
+      if (input.hasAttribute('data-role') && input.value && !/\.(png|gif|webp|jpe?g|svg)$/i.test(input.value)) return;
       enhanceImage(input);
     });
   }

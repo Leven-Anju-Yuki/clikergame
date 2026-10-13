@@ -90,7 +90,7 @@
     }).then(data => {
         // Les essais locaux du Dashboard ne remplacent pas le fichier publié.
         if(document.documentElement.classList.contains('local-admin')){
-            try {const saved=JSON.parse(localStorage.getItem('lapinous_shop_catalog'));if(saved){validateCatalog(saved);saved.items.forEach(item=>{const base=data.items.find(value=>value.id===item.id);if(base?.category==='market'){item.category=base.category;item.image=base.image;}});saved.items.push(...data.items.filter(item=>!saved.items.some(existing=>existing.id===item.id)));saved.items=saved.items.filter(item=>item.category!=='prepared');saved.backgrounds=data.backgrounds;if(!Array.isArray(saved.recipes)||saved.recipes.some(recipe=>!('image' in recipe)))saved.recipes=data.recipes;saved.recipesEnabled=data.recipesEnabled;saved.items.forEach(item=>{if(["market_carrot","market_apple"].includes(item.id)){item.category="market";item.image="";}if(item.id==="market_basket")item.category="retired";});saved.companions={...data.companions,...saved.companions};if(saved.companions.chef?.placeholder||saved.companions.chef?.idle?.endsWith("chef.svg"))saved.companions.chef=data.companions.chef;saved.apothecary={...data.apothecary,...saved.apothecary};data=saved;}} catch {}
+            try {const saved=JSON.parse(localStorage.getItem('lapinous_shop_catalog'));if(saved){validateCatalog(saved);saved.items.forEach(item=>{const base=data.items.find(value=>value.id===item.id);if(base?.category==='market'){item.category=base.category;item.image=base.image;}});saved.items.push(...data.items.filter(item=>!saved.items.some(existing=>existing.id===item.id)));saved.items=saved.items.filter(item=>item.category!=='prepared');saved.backgrounds={...data.backgrounds,...saved.backgrounds};if(saved.backgrounds.cart?.includes('Comptoir vide'))saved.backgrounds.cart=data.backgrounds.cart;if(['assets/img/fond/salon.png','./assets/img/fond/salon.png'].includes(saved.backgrounds.inventory))saved.backgrounds.inventory=data.backgrounds.inventory;saved.gameBoxes={...data.gameBoxes,...saved.gameBoxes};if(!Array.isArray(saved.recipes)||saved.recipes.some(recipe=>!('image' in recipe)))saved.recipes=data.recipes;if(typeof saved.recipesEnabled!=='boolean')saved.recipesEnabled=data.recipesEnabled;saved.items.forEach(item=>{if(["market_carrot","market_apple"].includes(item.id)){item.category="market";item.image=data.items.find(base=>base.id===item.id)?.image||item.image||"";}if(item.id==="market_basket")item.category="retired";});saved.companions={...data.companions,...saved.companions};if(saved.companions.fragmentKeeper?.working?.endsWith('-10.png'))saved.companions.fragmentKeeper=data.companions.fragmentKeeper;for(const role of ['artisan','fragmentKeeper'])if(!saved.companions[role]?.idle||saved.companions[role]?.placeholder)saved.companions[role]=data.companions[role];if(saved.companions.chef?.placeholder||saved.companions.chef?.idle?.endsWith("chef.svg"))saved.companions.chef=data.companions.chef;saved.apothecary={...data.apothecary,...saved.apothecary};if(!saved.cashier.idle||/caissier_(presentation|merci)\.png$/.test(saved.cashier.presentation))saved.cashier=data.cashier;data=saved;}} catch {}
         }
         catalog = validateCatalog(data);
     }).catch(error => { console.warn('Magasin indisponible', error); });
@@ -133,24 +133,102 @@
         const total=()=>cart.reduce((sum,line)=>sum+(getItem(line.id)?.price||0),0);
         const alreadyAdded=(item,key,index)=>item.kind==='reset'&&cart.some(line=>line.id===item.id&&line.target===key&&(item.kind!=='reset'||line.index===index));
         // Afficher la présentation ou le remerciement du caissier.
-        function cashier(thanks=false) {
+        function cashier(thanks=false,greeting=false) {
             if(!catalog)return;clearTimeout(thankTimer);
-            image.src=thanks?catalog.cashier.thanks:catalog.cashier.presentation;
+            image.src=thanks?catalog.cashier.thanks:greeting?(catalog.cashier.greeting||catalog.cashier.presentation):(catalog.cashier.idle||catalog.cashier.presentation);
             image.classList.toggle('shop-cashier-flipped',!thanks&&catalog.cashier.flipPresentation);
-            image.alt=thanks?'Le lapin caissier te remercie':'Le lapin caissier présente les articles';
+            image.alt=thanks?'La caissière te remercie':greeting?'La caissière te salue':'La caissière présente les articles';
             speech.textContent=thanks?'Merci pour tes achats ! Prends bien soin de tes compagnons ✨':'Bienvenue ! Choisis tes articles, puis retrouve-les dans ton panier.';
             if(thanks)thankTimer=setTimeout(()=>cashier(false),4000);
+            else if(greeting)thankTimer=setTimeout(()=>{if(dialog.open)cashier(false);},1200);
+        }
+        let workshopTimer,workshopPose='idle',workshopUntil=0;
+        const workshopRole=()=>tab==='evolution'?'artisan':tab==='fragments'?'fragmentKeeper':null;
+        // Les planches 3x2 sont découpées par le CSS, sans créer six fichiers supplémentaires.
+        function showWorkshopPose(pose){
+            const actor=content.querySelector('.shop-zone-companion');const companion=catalog.companions?.[workshopRole()];if(!actor||!companion)return;
+            const sheet=['working','walkingLeft'].includes(pose)&&!companion[pose]?.toLowerCase().endsWith('.gif')&&companion.sheetColumns===3&&companion.sheetRows===2;
+            actor.replaceChildren();
+            if(sheet){const sprite=document.createElement('span');sprite.className='shop-zone-sprite';sprite.setAttribute('role','img');sprite.setAttribute('aria-label',companion.name);sprite.style.backgroundImage=`url("${window.LapinousImages?.url(companion[pose])||companion[pose]}")`;actor.append(sprite);}
+            else {const image=document.createElement('img');image.src=companion[pose]||companion.idle;image.alt=companion.name;actor.append(image);}
+        }
+        // Une pose temporaire revient à l'attente et s'annule quand on change de rayon.
+        function workshopAction(pose,duration=1800){
+            const role=workshopRole();if(!role)return;clearTimeout(workshopTimer);workshopPose=pose;workshopUntil=Date.now()+duration;showWorkshopPose(pose);
+            workshopTimer=setTimeout(()=>{if(workshopRole()===role){workshopPose='idle';workshopUntil=0;showWorkshopPose('idle');}},duration);
+        }
+        function appendZoneCompanion(){
+            const companion=catalog.companions?.[workshopRole()];if(!companion?.idle)return;
+            const aside=document.createElement('aside');aside.className='shop-zone-companion';content.append(aside);
+            showWorkshopPose(Date.now()<workshopUntil?workshopPose:'idle');
+        }
+        let forging=false;
+        let cashierMoving=false;
+        async function cashierCollect(button){
+            if(tab!=='market'||cashierMoving)return;
+            cashierMoving=true;clearTimeout(thankTimer);
+            const original=image.getBoundingClientRect(),destination=button.getBoundingClientRect();
+            const offset=destination.left+destination.width/2-original.left-original.width/2;
+            const valid=()=>dialog.open&&tab==='market';
+            const move=async(from,to)=>{
+                image.src=catalog.cashier.walkingLeft||catalog.cashier.presentation;
+                image.style.transform=to<from?'':'scaleX(-1)';
+                const animation=image.parentElement.animate([{transform:`translateX(${from}px)`},{transform:`translateX(${to}px)`}],{duration:window.matchMedia('(prefers-reduced-motion: reduce)').matches?1:1100,fill:'forwards',easing:'ease-in-out'});
+                try{await animation.finished;}finally{image.parentElement.style.transform=`translateX(${to}px)`;animation.cancel();}
+            };
+            try{await move(0,offset);if(!valid())return;image.src=catalog.cashier.back||catalog.cashier.presentation;await new Promise(resolve=>setTimeout(resolve,500));if(!valid())return;await move(offset,0);}
+            finally{image.parentElement.style.transform='';image.style.transform='';cashierMoving=false;if(dialog.open)cashier(false);}
+        }
+        async function forgeEvolution(room){
+            if(forging)return;
+            api.buyEvolution(room);render();
+            const actor=content.querySelector('.shop-zone-companion');
+            const selected=content.querySelector(`[data-shop-evolve="${room}"]`)?.closest('.shop-evolution-card');
+            if(!actor||!selected)return;
+            clearTimeout(workshopTimer);workshopUntil=0;forging=true;
+            const buttons=[...content.querySelectorAll('[data-shop-evolve]')];
+            const states=buttons.map(button=>button.disabled);buttons.forEach(button=>button.disabled=true);
+            const valid=()=>dialog.open&&tab==='evolution'&&actor.isConnected;
+            const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const origin=actor.getBoundingClientRect(),item=selected.getBoundingClientRect();
+            const distance=item.left+item.width/2-(origin.left+origin.width/2);
+            const walk=async(from,to,returning=false)=>{
+                showWorkshopPose('walkingLeft');
+                const sprite=actor.querySelector('.shop-zone-sprite');
+                if(sprite)sprite.style.transform=returning?'':'scaleX(-1)';
+                const movement=actor.animate([{transform:`translateX(${from}px)`},{transform:`translateX(${to}px)`}],{duration:reduced?1:1400,easing:'ease-in-out',fill:'forwards'});
+                try{await movement.finished;}finally{actor.style.transform=`translateX(${to}px)`;movement.cancel();}
+            };
+            try{
+                await walk(0,distance);if(!valid())return;
+                showWorkshopPose('thanks');await new Promise(resolve=>setTimeout(resolve,600));if(!valid())return;
+                await walk(distance,0,true);if(!valid())return;
+                showWorkshopPose('working');await new Promise(resolve=>setTimeout(resolve,8000));if(!valid())return;
+                showWorkshopPose('thanks');await new Promise(resolve=>setTimeout(resolve,1000));
+            }finally{
+                forging=false;
+                if(valid()){actor.style.transform='';showWorkshopPose('idle');buttons.forEach((button,index)=>button.disabled=states[index]);}
+            }
         }
         // Actualiser uniquement le contenu du rayon ouvert.
+        let marketSizingObserver;
         function render() {
             const game=api.game(),keys=owned();
             dialog.classList.toggle('inventory-dialog',tab==='inventory');
-            const inventoryBackground=tab==='inventory'?catalog.backgrounds?.inventory:null;
-            dialog.style.backgroundImage=inventoryBackground?`linear-gradient(#fff8e8aa,#fff8e8aa),url("${inventoryBackground}")`:'';
+            const inventoryBackground=tab==='inventory'?catalog.backgrounds?.inventory:tab==='market'?catalog.backgrounds?.market:null;
+            dialog.style.backgroundImage=inventoryBackground?`linear-gradient(#fff8e833,#fff8e833),url("${window.LapinousImages?.url(inventoryBackground)||inventoryBackground}")`:'';
+            const marketScene=tab==='market'&&!!catalog.backgrounds?.market;
+            dialog.classList.toggle('market-illustrated',marketScene);
+            const zoneScene=['items','evolution','fragments','cart'].includes(tab)&&!!catalog.backgrounds?.[tab];
+            dialog.classList.toggle('shop-zone-illustrated',zoneScene);
+            for(const zone of ['items','evolution','fragments','cart'])dialog.classList.toggle('zone-'+zone,zoneScene&&tab===zone);
+            content.style.backgroundImage=marketScene?`url("${window.LapinousImages?.url(catalog.backgrounds.market)||catalog.backgrounds.market}")`:'';
+            if(zoneScene)content.style.backgroundImage=`url("${window.LapinousImages?.url(catalog.backgrounds[tab])||catalog.backgrounds[tab]}")`;
+            if(marketScene||zoneScene)dialog.style.backgroundImage='';
             dialog.classList.toggle('shop-consumables-view',['items','market','evolution'].includes(tab));
             dialog.classList.toggle('shop-fragments-view',tab==='fragments');
             dialog.querySelector('#shopTitle').textContent=tab==='inventory'?'L’apothicairerie':'Magasin';
-            dialog.querySelector('.shop-cashier').hidden=tab==='inventory';
+            dialog.querySelector('.shop-cashier').hidden=['inventory','evolution','fragments'].includes(tab);
             dialog.querySelector('.shop-tabs').hidden=tab==='inventory';
             dialog.querySelector('#shopWallet').hidden=tab==='inventory';
             if(cartGame!==game){cart=[];cartGame=game;}
@@ -161,7 +239,9 @@
             const summary=dialog.querySelector('#shopCartSummary');summary.hidden=tab==='cart'||tab==='inventory';
             summary.innerHTML=`<span>🛒 <b>${cart.length}</b> article${cart.length>1?'s':''} · <b>${total()} 🥕</b></span><button type="button" data-shop-tab="cart" ${!cart.length?'disabled':''}>Voir le panier</button>`;
             if(tab==='evolution'){
-                content.innerHTML='<p class="shop-cart-note">Les dernières versions débloquées par l’amitié se renforcent ici, pour le lapin actif.</p><div class="shop-evolution-grid">'+api.evolutions().map(evo=>'<article class="shop-evolution-card"><img src="'+escape(evo.image)+'" alt=""><strong>'+escape(evo.name)+'</strong>'+(evo.stage>=5?'<b class="evolution-max">MAX</b>':'<div class="evolution-dots" aria-label="'+Math.max(0,evo.stage-1)+' améliorations sur 4">'+Array.from({length:4},(_,index)=>'<i class="'+(index<evo.stage-1?'filled':'')+'"></i>').join('')+'</div>')+'<button data-shop-evolve="'+evo.room+'" '+(evo.stage<1||evo.stage>=5||game.carrots<evo.cost?'disabled':'')+'>'+(evo.stage<1?'À débloquer avec l’amitié':evo.stage>=5?'Maximum':evo.cost+' 🥕 · Améliorer')+'</button></article>').join('')+'</div>';return;
+                const evolutions=api.evolutions();
+
+                content.innerHTML='<p class="shop-cart-note">Les dernières versions débloquées par l’amitié se renforcent ici, pour le lapin actif.</p><div class="shop-evolution-grid">'+evolutions.map(evo=>'<article class="shop-evolution-card"><img src="'+escape(evo.image)+'" alt=""><strong>'+escape(evo.name)+'</strong>'+(evo.stage>=5?'<b class="evolution-max">MAX</b>':'<div class="evolution-dots" aria-label="'+Math.max(0,evo.stage-1)+' améliorations sur 4">'+Array.from({length:4},(_,index)=>'<i class="'+(index<evo.stage-1?'filled':'')+'"></i>').join('')+'</div>')+'<button data-shop-evolve="'+evo.room+'" '+(evo.stage<1||evo.stage>=5||game.carrots<evo.cost?'disabled':'')+'>'+(evo.stage<1?'À débloquer avec l’amitié':evo.stage>=5?'Maximum':evo.cost+' 🥕 · Améliorer')+'</button></article>').join('')+'</div>';appendZoneCompanion();return;
             }
             if(tab==='inventory') {
                 const active=game.species,pr=api.progress(active);
@@ -204,15 +284,39 @@
                 if(!reset)return `<article class="shop-consumable" tabindex="0" aria-label="${escape(item.name)}">${item.image?`<img src="${escape(item.image)}" alt="${escape(item.name)}" loading="lazy">`:`<span class="shop-food-emoji" aria-hidden="true">${escape(item.emoji)}</span>`}<div class="shop-consumable-details"><h3>${escape(item.emoji)} ${escape(item.name)}</h3><p>${escape(item.description)}</p><button type="button" data-shop-add="${escape(item.id)}">${item.price} 🥕 · Ajouter au panier</button></div></article>`;
                 return `<article class="shop-item shop-fragment-item"><div class="shop-fragment-details">${item.image ? `<div class="shop-product-visual"><img src="${escape(item.image)}" alt="${escape(item.name)}" loading="lazy"></div>` : `<span class="shop-item-icon" aria-hidden="true">${escape(item.emoji)}</span>`}<h3>${escape(item.name)}</h3><p>${escape(item.description)}</p>${skills}<button type="button" data-shop-add="${escape(item.id)}" ${unavailable?'disabled':''}>${full?'Barre déjà pleine':inCart?'✓ Au panier':`${item.price} 🥕 · Ajouter au panier`}</button></div><aside class="shop-fragment-rabbits">${selector}</aside></article>`;
             }).join('')}</div>`;
+            if(tab==='market'){
+                // Rayons compacts : les etals remplacent la succession de grandes cartes.
+                const grid=content.querySelector('.shop-items');
+                const groups=[['Fruits du verger',['market_apple','market_pear','market_strawberry','market_blueberry']],['Legumes du jardin',['market_carrot','market_cucumber','market_courgette','market_lettuce','market_celery','market_fennel']],['Herbes, fleurs et foin',[]]];
+                const articles=[...grid.children];
+                groups.forEach(([name,ids],index)=>{
+                    const cards=articles.filter(card=>{const id=card.querySelector('[data-shop-add]').dataset.shopAdd;return index===2?!groups.slice(0,2).some(group=>group[1].includes(id)):ids.includes(id);});
+                    if(!cards.length)return;
+                    const section=document.createElement('section');section.className='market-stall';
+                    const heading=document.createElement('h3');heading.textContent=name;section.append(heading);
+                    const shelf=document.createElement('div');shelf.className='market-stall-products';
+                    cards.forEach(card=>{const item=catalog.items.find(item=>item.id===card.querySelector('[data-shop-add]').dataset.shopAdd);const label=document.createElement('span');label.className='market-price-tag';label.textContent=item.price+' \u{1F955}';label.title=item.name;card.append(label);shelf.append(card);});
+                    section.append(shelf);grid.append(section);
+                });
+                marketSizingObserver ||= new ResizeObserver(()=>content.querySelectorAll('.market-stall').forEach(stall=>stall.style.setProperty('--market-row-height',(stall.getBoundingClientRect().height/2)+'px')));
+                marketSizingObserver.disconnect();content.querySelectorAll('.market-stall').forEach(stall=>marketSizingObserver.observe(stall));
+            }
+            if(tab==='fragments'){
+                const visual=content.querySelector('.shop-fragment-details .shop-product-visual');if(visual)content.querySelector('.shop-fragment-item').append(visual);
+                const description=content.querySelector('.shop-fragment-details>p');
+                if(description){const details=document.createElement('details');details.className='fragment-description';const summary=document.createElement('summary');summary.textContent='Comment fonctionne l\u2019extracteur ?';details.append(summary,description.cloneNode(true));description.replaceWith(details);}
+            }
+            appendZoneCompanion();
         }
         // Ouvrir le rayon demandé après les contrôles de partie.
+        const rayAllowed=ray=>window.LapinousVisibility.allowed(({market:'market',evolution:'evolution',fragments:'fragments',carrots:'carrotShop'})[ray]||'shop');
         function open(initialTab='items') {
-            if(!window.LapinousVisibility.allowed(initialTab==='inventory'?'inventory':'shop'))return;
+            if(!window.LapinousVisibility.allowed(initialTab==='inventory'?'inventory':'shop')||(initialTab!=='inventory'&&!rayAllowed(initialTab)))return;
             if(!catalog){api.toast('Le catalogue n’a pas pu charger.','warn');return;}
             if(!owned().length){api.toast('Adopte un compagnon avant de visiter le magasin.','warn');return;}
             if(api.inCombat()){api.toast('Termine le combat avant de visiter le magasin.','warn');return;}
             clearTimeout(apothecaryTimer);
-            target=api.game().species;tab=initialTab;chosenIndex=0;message.textContent='';cashier();render();if(!dialog.open)dialog.showModal();
+            target=api.game().species;tab=initialTab;chosenIndex=0;message.textContent='';cashier(false,true);render();if(!dialog.open)dialog.showModal();workshopAction('greeting',1000);
             if(tab==='inventory'){
                 const actor=content.querySelector('#inventoryHerbalist');
                 actor.src=herbalistPoses.greeting;
@@ -226,22 +330,24 @@
         window.openLapinousMarket=()=>{document.getElementById('kitchenFridgeDialog')?.close();open('market');};
         window.openLapinousInventory=()=>open('inventory');inventoryButton.addEventListener('click',window.openLapinousInventory);
         dialog.querySelector('.shop-close').addEventListener('click',()=>dialog.close());
-        dialog.addEventListener('close',()=>{clearTimeout(thankTimer);clearTimeout(apothecaryTimer);retrieveVersion++;retrieveAnimation?.cancel();retrieving=false;(tab==='inventory'?inventoryButton:button).focus();});
+        dialog.addEventListener('close',()=>{clearTimeout(workshopTimer);workshopUntil=0;clearTimeout(thankTimer);clearTimeout(apothecaryTimer);retrieveVersion++;retrieveAnimation?.cancel();retrieving=false;(tab==='inventory'?inventoryButton:button).focus();});
         dialog.addEventListener('change',event=>{if(event.target.id==='shopSkill'){chosenIndex=Number(event.target.value);render();}});
         dialog.addEventListener('error',event=>{if(event.target.id==='inventoryHerbalist'&&(window.LapinousImages?.local(event.target.getAttribute('src'))||event.target.getAttribute('src'))===walkingSrc){walkingAvailable=false;event.target.src=herbalistPoses.back;return;}if(event.target.matches('img')&&(window.LapinousImages?.local(event.target.getAttribute('src'))||event.target.getAttribute('src'))!=='./assets/img/lapins_jouables/sans_evenements/mystery.svg')event.target.src='./assets/img/lapins_jouables/sans_evenements/mystery.svg';},true);
         dialog.addEventListener('click',async event=>{
             const clicked=event.target.closest('button');if(!clicked||clicked.disabled)return;
-            if(clicked.dataset.shopEvolve){api.buyEvolution(clicked.dataset.shopEvolve);render();}
-            if(clicked.dataset.shopTab){tab=clicked.dataset.shopTab;message.textContent='';render();}
+            if(clicked.dataset.shopEvolve){await forgeEvolution(clicked.dataset.shopEvolve);}
+            if(clicked.dataset.shopTab&&rayAllowed(clicked.dataset.shopTab)){clearTimeout(workshopTimer);workshopUntil=0;tab=clicked.dataset.shopTab;message.textContent='';render();workshopAction('greeting',1000);}
             if(clicked.dataset.shopRabbit){target=clicked.dataset.shopRabbit;chosenIndex=0;message.textContent='';render();content.querySelector('.shop-rabbit-choice.selected')?.focus();}
             if(clicked.dataset.shopAdd){
+                if(cashierMoving)return;
                 const item=getItem(clicked.dataset.shopAdd);
                 if(!item||alreadyAdded(item,target,chosenIndex))return;
+                if(tab==='market'){await cashierCollect(clicked);if(!dialog.open||tab!=='market')return;}
                 const pr=api.progress(target);
                 
                 if(item.kind==='reset'&&!resetPlan(pr,chosenIndex).refund)return;
                 cart.push({id:item.id,target:item.kind==='reset'?target:null,index:item.kind==='reset'?chosenIndex:null});
-                render();message.textContent=`${item.name} ajouté${item.kind==='reset'?` pour ${name(target)}`:' pour ton inventaire'}.`;
+                render();if(item.kind==='reset')workshopAction('working',6500);message.textContent=`${item.name} ajouté${item.kind==='reset'?` pour ${name(target)}`:' pour ton inventaire'}.`;
                 dialog.querySelector('#shopCartSummary button').focus();
             }
             if(clicked.hasAttribute('data-shop-plus')||clicked.hasAttribute('data-shop-minus')){
@@ -275,11 +381,11 @@
                     // Le GIF regarde à gauche ; le miroir regarde à droite au retour.
                     const setWalking=returning=>{
                         herbalist.src=walkingAvailable===false?herbalistPoses.back:walkingSrc;
-                        herbalist.classList.toggle('herbalist-walk-right',returning);
+                        herbalist.classList.add('herbalist-walking');herbalist.classList.toggle('herbalist-walk-right',returning);
                         herbalist.alt='La lapine marche '+(returning?'vers la droite':'vers le meuble');
                     };
                     // Animer le conteneur conserve le miroir du sprite sans changer sa hauteur.
-                    const groundTransform=getComputedStyle(herbalist.parentElement).transform;
+                    const groundTransform=getComputedStyle(herbalist.parentElement).transform.replace(/^none$/,'');
                     const move=async(from,to)=>{
                         retrieveAnimation=herbalist.parentElement.animate([{transform:groundTransform+' '+from},{transform:groundTransform+' '+to}],{duration,easing:'ease-in-out',fill:'forwards'});
                         await retrieveAnimation.finished;
@@ -291,7 +397,7 @@
                     const cabinet=content.querySelector('.inventory-drawers').getBoundingClientRect();
                     const heightRatio=(destination.top+destination.height/2-cabinet.top)/cabinet.height;
                     herbalist.src=heightRatio>0.66?herbalistPoses.crouching:heightRatio<0.34?herbalistPoses.reaching:herbalistPoses.back;
-                    herbalist.classList.remove('herbalist-walk-right');
+                    herbalist.classList.remove('herbalist-walk-right','herbalist-walking');
                     herbalist.alt='La lapine se tourne vers le tiroir choisi';
                     drawer.classList.add('drawer-taking');
                     content.querySelector('#inventorySpeech').textContent='Je te prépare ça…';

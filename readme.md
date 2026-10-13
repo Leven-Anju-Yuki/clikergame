@@ -609,3 +609,15 @@ Le Dashboard regroupe ses sections dans des accordéons et propose un menu d’a
 La cuisine propose une portion gratuite réduite, une réserve d’aliments achetés au Marché et quatre recettes à bonus temporaires. Les évolutions des pièces comptent cinq étapes avec déblocages aux niveaux d’amitié 5/10/15/20 puis achats en carottes. Voir [docs/CUISINE.md](docs/CUISINE.md). Le visuel dédié du Chef reste à fournir ; son entrée est centralisée dans le catalogue.
 
 Mise à jour cuisine : réserve ouverte uniquement au clic sur le frigo ; Marché de fraises, poires, courgettes et fleurs. Les plats spéciaux et bonus sont suspendus par `recipesEnabled: false`, en attendant la refonte du combat. Les données et stocks restent conservés.
+
+<!-- LAPINOUS_AGENT_DEBUT -->
+### Inventaire automatique
+
+| Dossier | Fichiers | Taille |
+|---|---:|---:|
+| `assets/` | 209 | 232.31 Mo |
+| `docs/` | 12 | 0.14 Mo |
+| `tools/` | 25 | 0.10 Mo |
+
+_Inventaire local uniquement : les images déjà archivées ne sont pas considérées manquantes._
+<!-- LAPINOUS_AGENT_FIN -->

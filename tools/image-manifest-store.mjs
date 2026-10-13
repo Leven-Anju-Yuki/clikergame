@@ -2,12 +2,27 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const file = 'assets/js/image-manifest.js';
+/** Accepte les virgules finales ajoutées par un formateur JS sans toucher aux chaînes. */
+function jsonLiteral(source) {
+  let result='', quoted=false, escaped=false;
+  for(let i=0;i<source.length;i++){
+    const char=source[i];
+    if(quoted){result+=char;if(escaped)escaped=false;else if(char==='\\')escaped=true;else if(char==='"')quoted=false;continue;}
+    if(char==='"')quoted=true;
+    if(char===','){
+      let next=i+1;while(/\s/.test(source[next]||'')&&next<source.length)next++;
+      if(source[next]==='}'||source[next]===']')continue;
+    }
+    result+=char;
+  }
+  return JSON.parse(result);
+}
 /** Lit les données JSON du manifeste JavaScript sans exécuter son code. */
 export function readImageManifest() {
   const source = fs.readFileSync(file, 'utf8');
   function data(name, fallback) {
     const match = source.match(new RegExp('window\\.' + name + '\\s*=\\s*([\\s\\S]*?);(?:\\r?\\n|$)'));
-    return match ? JSON.parse(match[1]) : fallback;
+    return match ? jsonLiteral(match[1]) : fallback;
   }
   const images = data('LapinousImageManifest', {});
   if (!images || typeof images !== 'object' || Array.isArray(images)) throw new Error('Manifeste images incorrect.');

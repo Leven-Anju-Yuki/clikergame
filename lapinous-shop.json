@@ -1,9 +1,15 @@
 {
   "version": 1,
   "cashier": {
-    "name": "Le caissier du terrier",
-    "presentation": "assets/img/accompagnateurs/caissier/caissier_presentation.png",
-    "thanks": "assets/img/accompagnateurs/caissier/caissier_merci.png",
+    "name": "La caissière du terrier",
+    "presentation": "assets/img/accompagnateurs/caissier/05_attente_droite.png",
+    "greeting": "assets/img/accompagnateurs/caissier/04_bonjour.png",
+    "idle": "assets/img/accompagnateurs/caissier/05_attente_droite.png",
+    "thanks": "assets/img/accompagnateurs/caissier/06_remise_produit.png",
+    "crouching": "assets/img/accompagnateurs/caissier/01_accroupie.png",
+    "reaching": "assets/img/accompagnateurs/caissier/02_attraper_haut.png",
+    "back": "assets/img/accompagnateurs/caissier/03_attraper_hauteur.png",
+    "walkingLeft": "assets/img/accompagnateurs/caissier/07_marche_lapine_artisane.gif",
     "flipPresentation": false,
     "placeholder": false
   },
@@ -310,6 +316,30 @@
       "walkingLeft": "assets/img/accompagnateurs/Chef/07_marche.gif",
       "cooking": "assets/img/accompagnateurs/Chef/09_wok.gif",
       "cutting": "assets/img/accompagnateurs/Chef/08_decoupe_legumes.gif"
+    },
+    "artisan": {
+      "name": "Artisan du terrier",
+      "placeholder": false,
+      "greeting": "assets/img/accompagnateurs/Artisan/Lapin forgeron en salut respectueux-1.png",
+      "idle": "assets/img/accompagnateurs/Artisan/Lapin forgeron brun, pose confiante-4.png",
+      "thanks": "assets/img/accompagnateurs/Artisan/Le lapin forgeron présente son engrenage-3.png",
+      "working": "assets/img/accompagnateurs/Artisan/Sprite sheet d’un lapin forgeron-9.png",
+      "walkingLeft": "assets/img/accompagnateurs/Artisan/Cycle de marche en six poses-7.png",
+      "sheetColumns": 3,
+      "sheetRows": 2,
+      "workingFrames": 6
+    },
+    "fragmentKeeper": {
+      "name": "Spécialiste des fragments",
+      "placeholder": false,
+      "greeting": "assets/img/accompagnateurs/Fragments/Artisan lapin mystique en révérence-2.png",
+      "idle": "assets/img/accompagnateurs/Fragments/Lapin mystique blanc, bras croisés-5.png",
+      "thanks": "assets/img/accompagnateurs/Fragments/Lapin mystique offrant un cristal d’améthyste-6.png",
+      "working": "assets/img/accompagnateurs/Fragments/assemblage_cristaux.gif",
+      "walkingLeft": "assets/img/accompagnateurs/Fragments/marche_droite.gif",
+      "sheetColumns": 3,
+      "sheetRows": 2,
+      "workingFrames": 6
     }
   },
   "apothecary": {
@@ -702,7 +732,18 @@
   ],
   "recipesEnabled": true,
   "backgrounds": {
-    "inventory": "assets/img/fond/salon.png",
-    "pantry": "assets/img/fond/Magasin/Garde-manger.png"
+    "inventory": "assets/img/fond/Magasin/herboristerie.png",
+    "pantry": "assets/img/fond/Magasin/Garde-manger.png",
+    "market": "assets/img/fond/Magasin/Marche.png",
+    "items": "assets/img/fond/Magasin/Boutique chaleureuse aux trois niches vides-1.png",
+    "evolution": "assets/img/fond/Magasin/Petite forge chaleureuse dans un terrier-1.png",
+    "fragments": "assets/img/fond/Magasin/Atelier de forge mystique au terrier-2.png",
+    "cart": "assets/img/fond/Magasin/Comptoir.png"
+  },
+  "gameBoxes": {
+    "quiz": "assets/img/Boite_Mini_Jeu/Quiz-1.png",
+    "puzzles": "assets/img/Boite_Mini_Jeu/puzzles.png",
+    "memory": "assets/img/Boite_Mini_Jeu/Memory.png",
+    "lapidoku": "assets/img/Boite_Mini_Jeu/Lapidoku.png"
   }
 }

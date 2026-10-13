@@ -11,7 +11,7 @@ const samples = ['png', 'gif', 'svg'].map(ext => Object.keys(map).find(x => x.en
 const fallbackPath = 'assets/img/az/Azazel.png';
 const testMap = { ...map, [fallbackPath]: 'https://res.cloudinary.com/dgrszi9wf/image/upload/lapinous/never-created-fallback-test-image.png' };
 const fixture = `<img src="./${samples[0]}"><span style="background-image:url('./${samples[0]}');background-size:300% 200%;background-position:50% 100%;"></span>`;
-const page = `<!doctype html><html><head><script>window.LapinousImageManifest=${JSON.stringify(testMap)};</script><script src="/assets/js/image-assets.js"></script><script src="/assets/js/shop.js"></script></head><body><pre id="result">PENDING</pre><script>
+const page = `<!doctype html><html><head><link rel="stylesheet" href="/assets/css/style.css"><link rel="stylesheet" href="/assets/css/shop.css"><script>window.LapinousImageManifest=${JSON.stringify(testMap)};</script><script src="/assets/js/image-assets.js"></script><script src="/assets/js/shop.js"></script></head><body><pre id="result">PENDING</pre><script>
 (async()=>{
 const result={browser:true,loads:[],fallback:false,template:false,background:false,errors:[]};
 try{
@@ -26,6 +26,9 @@ window.LapinousVisibility={allowed:()=>true};
 const game={species:'test',ownedSpecies:['test'],carrots:100,inventory:{}};
 window.LapinousShop.init({game:()=>game,species:()=>({test:{name:'Test'}}),progress:()=>({food:25,energy:25,cleanliness:25,attackFragments:0,attackLevels:[0]}),inCombat:()=>false,toast:()=>{},evolutions:()=>[]});
 document.getElementById('shopButton').click();result.shopOpened=document.getElementById('shopDialog').open&&document.getElementById('shopBody').children.length>0;
+window.openLapinousMarket();await new Promise(resolve=>setTimeout(resolve,150));const market=document.getElementById('shopDialog');result.marketPlaced=market.classList.contains('market-illustrated')&&[...market.querySelectorAll('.market-stall')].every(stall=>getComputedStyle(stall).position==='absolute'&&getComputedStyle(stall.querySelector('.market-stall-products')).gridTemplateColumns.split(' ').length===3);
+
+result.marketReadable=[...market.querySelectorAll('.market-stall .shop-consumable')].every(card=>card.clientHeight>15&&card.clientHeight<=card.parentElement.clientHeight/2+2&&getComputedStyle(card).paddingTop==='0px'&&getComputedStyle(card).borderTopWidth==='0px');
 document.getElementById('shopDialog').close();document.getElementById('inventoryButton').click();result.apothecaryOpened=document.getElementById('shopDialog').open&&!!document.getElementById('inventoryHerbalist');document.getElementById('shopDialog').close();
 }catch(e){result.errors.push(e.message)}
 document.getElementById('result').textContent=JSON.stringify(result);
@@ -37,7 +40,7 @@ const server = http.createServer(async (req, res) => {
     if (req.url === '/cloudinary-smoke') { res.setHeader('Content-Type', 'text/html'); res.end(page); return; }
     const file = path.resolve(root, '.' + decodeURIComponent(new URL(req.url, 'http://localhost').pathname));
     if (!file.startsWith(root + path.sep)) { res.writeHead(403).end(); return; }
-    res.setHeader('Content-Type', file.endsWith('.js') ? 'text/javascript' : file.endsWith('.png') ? 'image/png' : 'application/octet-stream');
+    res.setHeader('Content-Type', file.endsWith('.js') ? 'text/javascript' : file.endsWith('.css') ? 'text/css' : file.endsWith('.png') ? 'image/png' : 'application/octet-stream');
     res.end(await fs.readFile(file));
   } catch { res.writeHead(404).end(); }
 });
@@ -59,5 +62,5 @@ try {
   const result = JSON.parse(match[1].replaceAll('&quot;', '"').replaceAll('&amp;', '&'));
   console.log(JSON.stringify(result));
   assert.deepEqual(result.errors, []); assert.ok(result.loads.every(x => x.loaded && x.cloud));
-  assert.ok(result.fallback && result.template && result.background && result.shopOpened && result.apothecaryOpened);
+  assert.ok(result.fallback && result.template && result.background && result.shopOpened && result.marketPlaced && result.marketReadable && result.apothecaryOpened);
 } finally { server.close(); }

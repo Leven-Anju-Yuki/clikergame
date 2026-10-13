@@ -1171,7 +1171,6 @@
           "kind": "damage",
           "mult": 1.35
         },
-        
         {
           "id": "elfRabbit-attack-3",
           "name": "Garde de Elf Rabbit",
@@ -2306,6 +2305,17 @@
     "puzzles": "public",
     "memory": "public",
     "lapidoku": "public",
-    "combat": "public"
+    "combat": "public",
+    "pantry": "admin",
+    "market": "admin",
+    "evolution": "admin",
+    "fragments": "admin",
+    "carrotShop": "admin",
+    "recipes": "admin",
+    "agility": "public",
+    "games": "public",
+    "favorites": "public",
+    "records": "public",
+    "quiz": "admin"
   }
 }
