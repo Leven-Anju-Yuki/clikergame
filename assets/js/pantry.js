@@ -5,7 +5,7 @@
   function html(catalog, inventory, name, food = 0) {
     const foods = (catalog?.items || []).filter(item => item.category === 'market');
     const meals = catalog?.recipesEnabled ? (catalog.recipes || []).filter(recipe => inventory[recipe.item] > 0).map(recipe => ({...recipe,id:recipe.item})) : [];
-    const columns = 6;
+    const columns = window.matchMedia?.('(max-width: 600px)')?.matches ? 3 : 6;
     const full = food >= 100;
     const stocked = foods.filter(item => inventory[item.id] > 0);
     const rows = Math.max(3,Math.ceil(stocked.length/columns));

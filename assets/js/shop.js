@@ -196,7 +196,7 @@
         async function cashierDeposit(){
             if(cashierMoving)return false;
             cashierMoving=true;clearTimeout(thankTimer);const version=cashierTrip;
-            try{speech.textContent='Je pose tes achats sur la table.';await cashierWalk(0);if(version!==cashierTrip||!dialog.open)return false;image.src=catalog.cashier.thanks;image.style.transform='';await new Promise(resolve=>setTimeout(resolve,700));return version===cashierTrip&&dialog.open;}
+            try{speech.textContent='Je rassemble tes articles sur le comptoir.';await cashierWalk(0);if(version!==cashierTrip||!dialog.open)return false;image.src=catalog.cashier.idle||catalog.cashier.presentation;image.style.transform='';speech.textContent='Tes articles sont prêts. Vérifie ton panier avant de payer.';return true;}
             finally{cashierMoving=false;}
         }
         async function forgeEvolution(room){
@@ -287,7 +287,7 @@
                     const index=line.cartIndex;
                     const item=getItem(line.id);let detail='Ajouté à l’inventaire · à utiliser sur le lapin actif de ton choix';
                     if(item.kind==='reset'){const pr=api.progress(line.target);detail=`${api.technique(line.target,line.index).name} : ${resetPlan(pr,line.index).refund} fragments récupérés, compétence à 0/5. Les autres restent intactes.`;}
-                    return `<article class="shop-cart-line cart-counter-item"><button type="button" class="cart-counter-inspect" data-cart-inspect="${index}" aria-label="Options de ${escape(item.name)}, quantit? ${line.quantity}" aria-haspopup="true"><img src="${escape(item.image||'./assets/img/lapins_jouables/sans_evenements/mystery.svg')}" alt="${escape(item.name)}"><b class="cart-counter-count">?${line.quantity}</b></button><div class="cart-counter-options" id="cartOptions${index}" popover="auto"><strong>${escape(item.emoji)} ${escape(item.name)}</strong><small>${item.price*line.quantity} ?? ? ${escape(detail)}</small><div class="shop-cart-controls">${item.kind==='restore'?`<div class="shop-quantity"><button type="button" data-shop-minus="${index}" aria-label="Retirer une unit? de ${escape(item.name)}">?</button><span aria-label="Quantit?">${line.quantity}</span><button type="button" data-shop-plus="${index}" aria-label="Ajouter une unit? de ${escape(item.name)}">+</button></div><small>${item.price} ?? / unit?</small>`:''}<button type="button" data-shop-remove="${index}" aria-label="Supprimer ${escape(item.name)} du panier">Supprimer</button></div></div></article>`;
+                    return `<article class="shop-cart-line cart-counter-item"><button type="button" class="cart-counter-inspect" data-cart-inspect="${index}" aria-label="Options de ${escape(item.name)}, quantité ${line.quantity}" aria-haspopup="true"><img src="${escape(item.image||'./assets/img/lapins_jouables/sans_evenements/mystery.svg')}" alt=""><b class="cart-counter-count">×${line.quantity}</b><span class="cart-counter-name">${escape(item.name)}</span></button><div class="cart-counter-options" id="cartOptions${index}" popover="auto"><strong>${escape(item.name)}</strong><span>${item.price*line.quantity} carottes au total</span><div class="shop-cart-controls">${item.kind==='restore'?`<div class="shop-quantity"><button type="button" data-shop-minus="${index}" aria-label="Retirer une unité de ${escape(item.name)}">− 1</button><span aria-label="Quantité">${line.quantity}</span><button type="button" data-shop-plus="${index}" aria-label="Ajouter une unité de ${escape(item.name)}">+ 1</button></div><small>${item.price} carottes par unité</small>`:''}<button type="button" data-shop-remove="${index}" aria-label="Supprimer ${escape(item.name)} du panier">Supprimer du panier</button></div></div></article>`;
                 }).join('')}</div><section class="shop-cart-payment"><p>Total : <b>${total()} 🥕</b></p>${total()>game.carrots?'<p class="shop-cart-note">Tu n’as pas assez de carottes pour ce panier.</p>':''}<div class="shop-confirm-actions"><button type="button" data-shop-pay ${total()>game.carrots?'disabled':''}>Confirmer et payer ${total()} 🥕</button><button type="button" data-shop-tab="items">Continuer mes achats</button></div></section>`;
                 // Le total et la confirmation restent hors de la zone qui défile.
                 content.querySelectorAll('[data-cart-inspect]').forEach(trigger=>trigger.addEventListener('pointerenter',()=>inspectCartItem(trigger)));
@@ -325,7 +325,7 @@
                 const table=document.createElement('aside');table.className='market-purchase-table';table.setAttribute('aria-label','Table des achats');
                 const marketLines=cart.filter(line=>getItem(line.id)?.category==='market');
                 table.innerHTML='<strong>Table des achats</strong><div>'+[...new Set(marketLines.map(line=>line.id))].map(id=>{const item=getItem(id),quantity=marketLines.filter(line=>line.id===id).length;return '<span title="'+escape(item.name)+'">'+(item.image?'<img src="'+escape(item.image)+'" alt="'+escape(item.name)+'">':escape(item.emoji))+'<b>×'+quantity+'</b></span>';}).join('')+'</div>';content.append(table);
-                marketSizingObserver ||= new ResizeObserver(()=>content.querySelectorAll('.market-stall').forEach(stall=>stall.style.setProperty('--market-row-height',(stall.getBoundingClientRect().height/2)+'px')));
+                marketSizingObserver ||= new ResizeObserver(()=>content.querySelectorAll('.market-stall').forEach(stall=>stall.style.setProperty('--market-row-height',((stall.querySelector('.market-stall-products')||stall).getBoundingClientRect().height/2)+'px')));
                 marketSizingObserver.disconnect();content.querySelectorAll('.market-stall').forEach(stall=>marketSizingObserver.observe(stall));
             }
             if(tab==='fragments'){
@@ -361,6 +361,14 @@
         dialog.addEventListener('change',event=>{if(event.target.id==='shopSkill'){chosenIndex=Number(event.target.value);render();}});
         dialog.addEventListener('error',event=>{if(event.target.id==='inventoryHerbalist'&&(window.LapinousImages?.local(event.target.getAttribute('src'))||event.target.getAttribute('src'))===walkingSrc){walkingAvailable=false;event.target.src=herbalistPoses.back;return;}if(event.target.matches('img')&&(window.LapinousImages?.local(event.target.getAttribute('src'))||event.target.getAttribute('src'))!=='./assets/img/lapins_jouables/sans_evenements/mystery.svg')event.target.src='./assets/img/lapins_jouables/sans_evenements/mystery.svg';},true);
         dialog.addEventListener('click',async event=>{
+            const product=event.target.closest('.shop-consumable');
+            if(tab==='market'&&product&&!event.target.closest('[data-shop-add]')){
+                event.preventDefault();
+                const touch=window.matchMedia('(hover: none), (pointer: coarse)').matches;
+                if(touch&&!product.classList.contains('market-armed')){content.querySelectorAll('.market-armed').forEach(card=>card.classList.remove('market-armed'));product.classList.add('market-armed');product.focus();return;}
+                product.classList.remove('market-armed');product.querySelector('[data-shop-add]')?.click();return;
+            }
+
             const clicked=event.target.closest('button');if(!clicked||clicked.disabled)return;
             if(clicked.dataset.cartInspect!==undefined){inspectCartItem(clicked);return;}
             if(clicked.dataset.shopEvolve){await forgeEvolution(clicked.dataset.shopEvolve);}

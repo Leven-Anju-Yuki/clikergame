@@ -1129,7 +1129,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         document
             .getElementById("loadInsteadBtn")
-            .addEventListener("click", () => document.getElementById("importInput").click());
+             .addEventListener("click", async () => {
+                if(!window.showOpenFilePicker){document.getElementById('importInput').click();return;}
+                try{const folder=await window.LapinousLocalFiles.recall('player')||await window.LapinousLocalFiles.chooseSaves();const [handle]=await window.showOpenFilePicker({startIn:folder,id:'lapinous-load-save',types:[{description:'Sauvegarde Lapinous',accept:{'application/json':['.json']}}],multiple:false});applyLoadedGame(JSON.parse(await (await handle.getFile()).text()));}catch(error){if(error.name!=='AbortError')showToast('Impossible de charger cette sauvegarde.','warn');}
+            });
 
         // ============================================================
         // ENCYCLOPÉDIE — cartes cliquables (photo + nom), détails au clic
@@ -1375,6 +1378,7 @@ document.addEventListener("DOMContentLoaded", () => {
             updateStatusBars();
             document.getElementById("level").innerText = progress().currentLevel;
             updateGameArea("default");
+            window.LapinousPreloadScene?.();
             // Petit ho-ho-ho d'accueil dans le salon, si Noël est actif
             if (currentActiveEvents().includes("noel")) playSfx("hohoho");
         }

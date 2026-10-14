@@ -75,7 +75,9 @@
       "chemins": [
         "assets/js/script.js",
         "assets/css/style.css",
-        "index.html"
+        "index.html",
+        "assets/css/mobile.css",
+        "tools/test-mobile-game.mjs"
       ]
     },
     {
@@ -84,7 +86,9 @@
       "chemins": [
         "assets/js/script.js",
         "assets/css/style.css",
-        "index.html"
+        "index.html",
+        "assets/css/mobile.css",
+        "tools/test-mobile-game.mjs"
       ]
     },
     {
@@ -94,7 +98,9 @@
         "assets/js/script.js",
         "assets/js/save-validation.js",
         "assets/js/local-files.js",
-        "index.html"
+        "index.html",
+        "assets/css/mobile.css",
+        "tools/test-mobile-game.mjs"
       ]
     },
     {
@@ -318,7 +324,9 @@
         "assets/js/script.js",
         "assets/js/quiz.js",
         "assets/js/quiz-dashboard.js",
-        "lapinous-quiz.json"
+        "lapinous-quiz.json",
+        "assets/css/mobile.css",
+        "tools/test-mobile-game.mjs"
       ]
     },
     {
@@ -449,7 +457,9 @@
       "chemins": [
         "assets/js/shop.js",
         "assets/css/shop.css",
-        "lapinous-shop.json"
+        "lapinous-shop.json",
+        "assets/css/mobile.css",
+        "tools/test-mobile-game.mjs"
       ]
     },
     {
@@ -469,7 +479,9 @@
         "assets/js/dashboard-ui.js",
         "dashboard.html",
         "assets/js/species-data.js",
-        "lapinous-content.json"
+        "lapinous-content.json",
+        "assets/css/mobile.css",
+        "tools/test-mobile-game.mjs"
       ]
     },
     {
@@ -522,7 +534,9 @@
         "assets/js/dashboard-ui.js",
         "dashboard.html",
         "assets/js/species-data.js",
-        "lapinous-content.json"
+        "lapinous-content.json",
+        "assets/css/mobile.css",
+        "tools/test-mobile-game.mjs"
       ]
     },
     {
@@ -544,7 +558,9 @@
         "assets/css/shop.css",
         "lapinous-shop.json",
         "assets/js/pantry.js",
-        "assets/js/script.js"
+        "assets/js/script.js",
+        "assets/css/mobile.css",
+        "tools/test-mobile-game.mjs"
       ]
     },
     {
@@ -554,7 +570,9 @@
         "assets/js/pantry.js",
         "assets/js/shop.js",
         "assets/css/shop.css",
-        "lapinous-shop.json"
+        "lapinous-shop.json",
+        "assets/css/mobile.css",
+        "tools/test-mobile-game.mjs"
       ]
     },
     {

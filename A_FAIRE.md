@@ -54,11 +54,11 @@ Les cases principales des cartes restent ouvertes tant que leur validation ou le
 - [ ] P1 — Progression et déblocage des équipements [trello:6661a5d73e3f5fce205eae72] - [Carte](https://trello.com/c/6661a5d73e3f5fce205eae72)
   Fichiers : `assets/js/shop.js`, `assets/css/shop.css`, `lapinous-shop.json`, `assets/js/pantry.js`, `assets/js/script.js`
 - [ ] P1 — Placement des lapins et commandes [trello:6ac39d846f4f8d11b7da6ab0] - [Carte](https://trello.com/c/6ac39d846f4f8d11b7da6ab0)
-  Fichiers : `assets/js/script.js`, `assets/css/style.css`, `index.html`
+  Fichiers : `assets/js/script.js`, `assets/css/style.css`, `index.html`, `assets/css/mobile.css`, `tools/test-mobile-game.mjs`
 - [ ] P1 — Préparation du combat [trello:6ac39d8793f1039486b67a20] - [Carte](https://trello.com/c/6ac39d8793f1039486b67a20)
-  Fichiers : `assets/js/script.js`, `assets/css/style.css`, `index.html`
+  Fichiers : `assets/js/script.js`, `assets/css/style.css`, `index.html`, `assets/css/mobile.css`, `tools/test-mobile-game.mjs`
 - [ ] P1 — Sauvegardes [trello:6ac39d911abc6a7d2a71273e] - [Carte](https://trello.com/c/6ac39d911abc6a7d2a71273e)
-  Fichiers : `assets/js/script.js`, `assets/js/save-validation.js`, `assets/js/local-files.js`, `index.html`
+  Fichiers : `assets/js/script.js`, `assets/js/save-validation.js`, `assets/js/local-files.js`, `index.html`, `assets/css/mobile.css`, `tools/test-mobile-game.mjs`
 - [ ] P1 — Sons [trello:6ac39d93be4e45379ca8247f] - [Carte](https://trello.com/c/6ac39d93be4e45379ca8247f)
   Fichiers : `assets/js/script.js`, `assets/audio/`
 - [ ] P2 — Notifications [trello:6ac39dbef4faf8125adc099b] - [Carte](https://trello.com/c/6ac39dbef4faf8125adc099b)
@@ -98,71 +98,71 @@ Les cases principales des cartes restent ouvertes tant que leur validation ou le
   Fichiers : `assets/js/species-data.js`, `lapinous-content.json`, `assets/css/style.css`, `index.html`
 - [ ] thème sur les lapins [trello:6661a423f3b0f23f486d3590] - [Carte](https://trello.com/c/6661a423f3b0f23f486d3590)
   Fichiers : `assets/js/species-data.js`, `lapinous-content.json`, `assets/css/style.css`, `index.html`
-- [ ] faire un salon avec des bouton de base  pour les diffèrent lieu et une fleche pour revenir en arriere [trello:6661b4124754141925b73499] - [Carte](https://trello.com/c/6661b4124754141925b73499)
+- [x] faire un salon avec des bouton de base  pour les diffèrent lieu et une fleche pour revenir en arriere [trello:6661b4124754141925b73499] - [Carte](https://trello.com/c/6661b4124754141925b73499)
   Fichiers : `assets/js/script.js`, `assets/css/style.css`, `index.html`
-- [ ] Adoption, traits, collection et encyclopédie [trello:6ac39e3c28d335cd92c8cc95] - [Carte](https://trello.com/c/6ac39e3c28d335cd92c8cc95)
+- [x] Adoption, traits, collection et encyclopédie [trello:6ac39e3c28d335cd92c8cc95] - [Carte](https://trello.com/c/6ac39e3c28d335cd92c8cc95)
   Fichiers : `assets/js/species-data.js`, `lapinous-content.json`, `assets/js/script.js`
-- [ ] Progression indépendante par lapin [trello:6ac39e3f09478ebeda38c92d] - [Carte](https://trello.com/c/6ac39e3f09478ebeda38c92d)
+- [x] Progression indépendante par lapin [trello:6ac39e3f09478ebeda38c92d] - [Carte](https://trello.com/c/6ac39e3f09478ebeda38c92d)
   Fichiers : `assets/js/script.js`, `assets/css/style.css`, `index.html`
-- [ ] Combat tactique — équipe, mode manuel et automatique [trello:6ac39e4258234f0f6df5def5] - [Carte](https://trello.com/c/6ac39e4258234f0f6df5def5)
+- [x] Combat tactique — équipe, mode manuel et automatique [trello:6ac39e4258234f0f6df5def5] - [Carte](https://trello.com/c/6ac39e4258234f0f6df5def5)
   Fichiers : `assets/js/script.js`, `assets/css/style.css`, `index.html`
-- [ ] Ultimes et barres de charge — lapins et boss [trello:6ac39e452732a48b7581df6e] - [Carte](https://trello.com/c/6ac39e452732a48b7581df6e)
+- [x] Ultimes et barres de charge — lapins et boss [trello:6ac39e452732a48b7581df6e] - [Carte](https://trello.com/c/6ac39e452732a48b7581df6e)
   Fichiers : `assets/js/script.js`, `assets/css/style.css`, `index.html`
-- [ ] Listes de 1 à 6 attaques selon la rareté [trello:6ac39e5cff0d2d466b27ecbb] - [Carte](https://trello.com/c/6ac39e5cff0d2d466b27ecbb)
+- [x] Listes de 1 à 6 attaques selon la rareté [trello:6ac39e5cff0d2d466b27ecbb] - [Carte](https://trello.com/c/6ac39e5cff0d2d466b27ecbb)
   Fichiers : `assets/js/script.js`, `assets/css/style.css`, `index.html`
-- [ ] Fragments — amélioration de la technique choisie [trello:6ac39e5fd921b05e95245ff0] - [Carte](https://trello.com/c/6ac39e5fd921b05e95245ff0)
+- [x] Fragments — amélioration de la technique choisie [trello:6ac39e5fd921b05e95245ff0] - [Carte](https://trello.com/c/6ac39e5fd921b05e95245ff0)
   Fichiers : `assets/js/shop.js`, `assets/css/shop.css`, `lapinous-shop.json`, `assets/js/script.js`
-- [ ] Œufs illustrés — ouverture individuelle et par 10 [trello:6ac39e61cbe7415819b24df8] - [Carte](https://trello.com/c/6ac39e61cbe7415819b24df8)
+- [x] Œufs illustrés — ouverture individuelle et par 10 [trello:6ac39e61cbe7415819b24df8] - [Carte](https://trello.com/c/6ac39e61cbe7415819b24df8)
   Fichiers : `assets/js/script.js`, `assets/js/dashboard.js`, `assets/js/dashboard-ui.js`, `dashboard.html`
-- [ ] Décors de saisons jour/nuit et événements prioritaires [trello:6ac39efb4988b40cec255170] - [Carte](https://trello.com/c/6ac39efb4988b40cec255170)
+- [x] Décors de saisons jour/nuit et événements prioritaires [trello:6ac39efb4988b40cec255170] - [Carte](https://trello.com/c/6ac39efb4988b40cec255170)
   Fichiers : `assets/js/species-data.js`, `lapinous-content.json`, `assets/css/style.css`, `index.html`
-- [ ] Admin local — tests rapides et Dashboard [trello:6ac39efeb8e60614e640ad49] - [Carte](https://trello.com/c/6ac39efeb8e60614e640ad49)
+- [x] Admin local — tests rapides et Dashboard [trello:6ac39efeb8e60614e640ad49] - [Carte](https://trello.com/c/6ac39efeb8e60614e640ad49)
   Fichiers : `assets/js/dashboard.js`, `assets/js/dashboard-ui.js`, `dashboard.html`, `assets/js/species-data.js`, `lapinous-content.json`
-- [ ] Dashboard — graphiques de rareté harmonisés [trello:6ac39f0129a42ce3c535a196] - [Carte](https://trello.com/c/6ac39f0129a42ce3c535a196)
+- [x] Dashboard — graphiques de rareté harmonisés [trello:6ac39f0129a42ce3c535a196] - [Carte](https://trello.com/c/6ac39f0129a42ce3c535a196)
   Fichiers : `assets/js/dashboard.js`, `assets/js/dashboard-ui.js`, `dashboard.html`, `assets/js/species-data.js`, `lapinous-content.json`
-- [ ] Sauvegardes nommées, datées et remplacement confirmé [trello:6ac39f0465d01dcee2c8411d] - [Carte](https://trello.com/c/6ac39f0465d01dcee2c8411d)
+- [x] Sauvegardes nommées, datées et remplacement confirmé [trello:6ac39f0465d01dcee2c8411d] - [Carte](https://trello.com/c/6ac39f0465d01dcee2c8411d)
   Fichiers : `assets/js/script.js`, `assets/js/save-validation.js`, `assets/js/local-files.js`, `index.html`
-- [ ] Mini-jeux — Memory 30 niveaux et puzzles cousus [trello:6ac39f1ffd16599635e62ae9] - [Carte](https://trello.com/c/6ac39f1ffd16599635e62ae9)
-  Fichiers : `assets/js/puzzle-data.js`, `lapinous-puzzles.json`, `assets/js/script.js`, `assets/js/quiz.js`, `assets/js/quiz-dashboard.js`, `lapinous-quiz.json`
-- [ ] Défis quotidiens, succès et récompenses [trello:6ac39f233ae89c6d7a24fb0c] - [Carte](https://trello.com/c/6ac39f233ae89c6d7a24fb0c)
+- [x] Mini-jeux — Memory 30 niveaux et puzzles cousus [trello:6ac39f1ffd16599635e62ae9] - [Carte](https://trello.com/c/6ac39f1ffd16599635e62ae9)
+  Fichiers : `assets/js/puzzle-data.js`, `lapinous-puzzles.json`, `assets/js/script.js`, `assets/js/quiz.js`, `assets/js/quiz-dashboard.js`, `lapinous-quiz.json`, `assets/css/mobile.css`, `tools/test-mobile-game.mjs`
+- [x] Défis quotidiens, succès et récompenses [trello:6ac39f233ae89c6d7a24fb0c] - [Carte](https://trello.com/c/6ac39f233ae89c6d7a24fb0c)
   Fichiers : `assets/js/achievements.js`
-- [ ] Audio — soins courts, volumes et défaite [trello:6ac39f2681968bcd0d9b086d] - [Carte](https://trello.com/c/6ac39f2681968bcd0d9b086d)
+- [x] Audio — soins courts, volumes et défaite [trello:6ac39f2681968bcd0d9b086d] - [Carte](https://trello.com/c/6ac39f2681968bcd0d9b086d)
   Fichiers : `assets/js/script.js`, `assets/audio/`
-- [ ] Audio original livré — ambiance et sommeil [trello:6ac39f295fcf0100cf51e1cd] - [Carte](https://trello.com/c/6ac39f295fcf0100cf51e1cd)
+- [x] Audio original livré — ambiance et sommeil [trello:6ac39f295fcf0100cf51e1cd] - [Carte](https://trello.com/c/6ac39f295fcf0100cf51e1cd)
   Fichiers : `assets/js/script.js`, `assets/audio/`
-- [ ] Notifications et combat lisible — corrections livrées [trello:6ac39f2b43bb87374c9f2e22] - [Carte](https://trello.com/c/6ac39f2b43bb87374c9f2e22)
+- [x] Notifications et combat lisible — corrections livrées [trello:6ac39f2b43bb87374c9f2e22] - [Carte](https://trello.com/c/6ac39f2b43bb87374c9f2e22)
   Fichiers : `assets/js/script.js`, `assets/css/style.css`, `index.html`
-- [ ] Salon — compagnons ensemble et placement corrigé [trello:6ac39f2fa02c69b499e17ea8] - [Carte](https://trello.com/c/6ac39f2fa02c69b499e17ea8)
+- [x] Salon — compagnons ensemble et placement corrigé [trello:6ac39f2fa02c69b499e17ea8] - [Carte](https://trello.com/c/6ac39f2fa02c69b499e17ea8)
   Fichiers : `assets/js/script.js`, `assets/css/style.css`, `index.html`
 - [ ] Repères — feuille de route du 08-10-2026 [trello:6ac39f30bfe4848ec3eca940] - [Carte](https://trello.com/c/6ac39f30bfe4848ec3eca940)
   Fichiers : `readme.md`, `A_FAIRE.md`
 
 ## Tests manuels a effectuer
 
-- [ ] À valider — Puzzle à coupelle et couturière [trello:6ac39db7ff0d2d466b26fe7b] - [Carte](https://trello.com/c/6ac39db7ff0d2d466b26fe7b)
+- [x] À valider — Puzzle à coupelle et couturière [trello:6ac39db7ff0d2d466b26fe7b] - [Carte](https://trello.com/c/6ac39db7ff0d2d466b26fe7b)
   Fichiers : `assets/js/puzzle-data.js`, `lapinous-puzzles.json`, `assets/js/script.js`
 - [ ] À valider — Boutique et apothicaire [trello:6ac75d423df6f3af4d7dffa3] - [Carte](https://trello.com/c/6ac75d423df6f3af4d7dffa3)
-  Fichiers : `assets/js/shop.js`, `assets/css/shop.css`, `lapinous-shop.json`
-- [ ] À valider — Memory 30 niveaux [trello:6ac75d4306880ab48923dd1c] - [Carte](https://trello.com/c/6ac75d4306880ab48923dd1c)
+  Fichiers : `assets/js/shop.js`, `assets/css/shop.css`, `lapinous-shop.json`, `assets/css/mobile.css`, `tools/test-mobile-game.mjs`
+- [x] À valider — Memory 30 niveaux [trello:6ac75d4306880ab48923dd1c] - [Carte](https://trello.com/c/6ac75d4306880ab48923dd1c)
   Fichiers : `assets/js/puzzle-data.js`, `lapinous-puzzles.json`, `assets/js/script.js`
 - [ ] À valider — Besoins admin et jeux adaptés à l’écran [trello:6ac75fbda79c4c777508987e] - [Carte](https://trello.com/c/6ac75fbda79c4c777508987e)
+  Fichiers : `assets/js/dashboard.js`, `assets/js/dashboard-ui.js`, `dashboard.html`, `assets/js/species-data.js`, `lapinous-content.json`, `assets/css/mobile.css`, `tools/test-mobile-game.mjs`
+- [x] Valider accueil apothicaire, bouclier et visibilité du Dashboard [trello:6ac761f58b664d27cb2e9cd5] - [Carte](https://trello.com/c/6ac761f58b664d27cb2e9cd5)
   Fichiers : `assets/js/dashboard.js`, `assets/js/dashboard-ui.js`, `dashboard.html`, `assets/js/species-data.js`, `lapinous-content.json`
-- [ ] Valider accueil apothicaire, bouclier et visibilité du Dashboard [trello:6ac761f58b664d27cb2e9cd5] - [Carte](https://trello.com/c/6ac761f58b664d27cb2e9cd5)
-  Fichiers : `assets/js/dashboard.js`, `assets/js/dashboard-ui.js`, `dashboard.html`, `assets/js/species-data.js`, `lapinous-content.json`
-- [ ] Valider puzzles verrouillés et Memory compact [trello:6ac763f9346a0a7e6149d7fb] - [Carte](https://trello.com/c/6ac763f9346a0a7e6149d7fb)
+- [x] Valider puzzles verrouillés et Memory compact [trello:6ac763f9346a0a7e6149d7fb] - [Carte](https://trello.com/c/6ac763f9346a0a7e6149d7fb)
   Fichiers : `assets/js/puzzle-data.js`, `lapinous-puzzles.json`, `assets/js/script.js`
-- [ ] Valider accès Admin aux derniers niveaux et noms après rechargement [trello:6ac7652bc8ce084387e31ecc] - [Carte](https://trello.com/c/6ac7652bc8ce084387e31ecc)
+- [x] Valider accès Admin aux derniers niveaux et noms après rechargement [trello:6ac7652bc8ce084387e31ecc] - [Carte](https://trello.com/c/6ac7652bc8ce084387e31ecc)
   Fichiers : `assets/js/dashboard.js`, `assets/js/dashboard-ui.js`, `dashboard.html`, `assets/js/species-data.js`, `lapinous-content.json`
-- [ ] Valider cartes puzzles Dashboard et taux des œufs [trello:6ac76646894f17c16d8646d1] - [Carte](https://trello.com/c/6ac76646894f17c16d8646d1)
+- [x] Valider cartes puzzles Dashboard et taux des œufs [trello:6ac76646894f17c16d8646d1] - [Carte](https://trello.com/c/6ac76646894f17c16d8646d1)
   Fichiers : `assets/js/dashboard.js`, `assets/js/dashboard-ui.js`, `dashboard.html`, `assets/js/species-data.js`, `lapinous-content.json`
-- [ ] Valider Dashboard en accordéons et catalogue magasin [trello:6ac76741ba45b4cc22e9893c] - [Carte](https://trello.com/c/6ac76741ba45b4cc22e9893c)
-  Fichiers : `assets/js/dashboard.js`, `assets/js/dashboard-ui.js`, `dashboard.html`, `assets/js/species-data.js`, `lapinous-content.json`
-- [ ] Valider Dashboard visuel, taux des œufs et poids README [trello:6ac76ac51940e93ee2c2d397] - [Carte](https://trello.com/c/6ac76ac51940e93ee2c2d397)
+- [x] Valider Dashboard en accordéons et catalogue magasin [trello:6ac76741ba45b4cc22e9893c] - [Carte](https://trello.com/c/6ac76741ba45b4cc22e9893c)
+  Fichiers : `assets/js/dashboard.js`, `assets/js/dashboard-ui.js`, `dashboard.html`, `assets/js/species-data.js`, `lapinous-content.json`, `assets/css/mobile.css`, `tools/test-mobile-game.mjs`
+- [x] Valider Dashboard visuel, taux des œufs et poids README [trello:6ac76ac51940e93ee2c2d397] - [Carte](https://trello.com/c/6ac76ac51940e93ee2c2d397)
   Fichiers : `assets/js/dashboard.js`, `assets/js/dashboard-ui.js`, `dashboard.html`, `assets/js/species-data.js`, `lapinous-content.json`
 - [ ] Valider cuisine, Marché et évolutions progressives [trello:6ac775a5d9cc9195c78cfc47] - [Carte](https://trello.com/c/6ac775a5d9cc9195c78cfc47)
-  Fichiers : `assets/js/shop.js`, `assets/css/shop.css`, `lapinous-shop.json`, `assets/js/pantry.js`, `assets/js/script.js`
-- [ ] Valider frigo cliquable et nouveaux aliments du Marché [trello:6ac7808c657c947629f42e6e] - [Carte](https://trello.com/c/6ac7808c657c947629f42e6e)
-  Fichiers : `assets/js/pantry.js`, `assets/js/shop.js`, `assets/css/shop.css`, `lapinous-shop.json`
+  Fichiers : `assets/js/shop.js`, `assets/css/shop.css`, `lapinous-shop.json`, `assets/js/pantry.js`, `assets/js/script.js`, `assets/css/mobile.css`, `tools/test-mobile-game.mjs`
+- [x] Valider frigo cliquable et nouveaux aliments du Marché [trello:6ac7808c657c947629f42e6e] - [Carte](https://trello.com/c/6ac7808c657c947629f42e6e)
+  Fichiers : `assets/js/pantry.js`, `assets/js/shop.js`, `assets/css/shop.css`, `lapinous-shop.json`, `assets/css/mobile.css`, `tools/test-mobile-game.mjs`
 
 ## Idees conservees
 
@@ -181,7 +181,7 @@ Les cases principales des cartes restent ouvertes tant que leur validation ou le
 
 ## Suivi historique et code livre
 
-- [ ] README et arborescence — actualisés le 08-10-2026 [trello:6ac39d96335bf1dad3b0d2f2] - [Carte](https://trello.com/c/6ac39d96335bf1dad3b0d2f2)
+- [x] README et arborescence — actualisés le 08-10-2026 [trello:6ac39d96335bf1dad3b0d2f2] - [Carte](https://trello.com/c/6ac39d96335bf1dad3b0d2f2)
   Fichiers : `readme.md`, `A_FAIRE.md`, `tools/agent_lapinous/agent.py`, `tools/agent_lapinous/installer_taches.ps1`, `tools/agent_lapinous/liaisons_trello.json`
 - [x] Magasin et inventaire — code livré [trello:6ac75d3f821f8ecfbfefd1b3] - [Carte](https://trello.com/c/6ac75d3f821f8ecfbfefd1b3)
   Fichiers : `assets/js/shop.js`, `assets/css/shop.css`, `lapinous-shop.json`
@@ -190,13 +190,31 @@ Les cases principales des cartes restent ouvertes tant que leur validation ou le
 
 ## Criteres de validation conserves
 
-- [ ] Combats : equipes de 1/2/3, niveaux 1/20/40/60/80/100, puissance lisible, ultimes, soins, protections et difficulte reelle.
-- [ ] Progression : plafond 100, oeufs 20/40/60/80/100 et fragments d’Azazel sans recompense repetee au chargement.
-- [ ] Memory : 30 niveaux, 36 paires, records et anciennes sauvegardes ; puzzles : verrouillage, evenements, clavier/toucher et couturiere.
-- [ ] Audio : game over double, bouclier, soins courts, volumes et sons saisonniers sans superposition incorrecte.
-- [ ] Evenements : dates du Nouvel An chinois apres 2028, vue de face de Yuehua, calendrier et filtres Dashboard.
+- [x] Combats : equipes de 1/2/3, niveaux 1/20/40/60/80/100, puissance lisible, ultimes, soins, protections et difficulte reelle.
+- [x] Progression : plafond 100, oeufs 20/40/60/80/100 et fragments d’Azazel sans recompense repetee au chargement.
+- [x] Memory : 30 niveaux, 36 paires, records et anciennes sauvegardes ; puzzles : verrouillage, evenements, clavier/toucher et couturiere.
+- [x] Audio : game over double, bouclier, soins courts, volumes et sons saisonniers sans superposition incorrecte.
+- [x] Evenements : dates du Nouvel An chinois apres 2028, vue de face de Yuehua, calendrier et filtres Dashboard.
 - [ ] Publication : droits des images et musiques, documents juridiques, confidentialite et paiement avant ouverture des packs Carottes.
 - [ ] Randonneur : nouvelles images a integrer si confirmees dans une fonctionnalite ; ne pas supprimer les creations futures.
+
+
+## Adaptation telephone - 14 octobre 2026
+
+- [x] Feuille responsive commune `assets/css/mobile.css` chargee par le jeu et le Dashboard ; champs a 16 px, boutons principaux tactiles, marges et deplacements compatibles avec les petits ecrans.
+- [x] Fenetres et sauvegardes : hauteur bornee au viewport, contenu defilant, commandes qui se replient ; carte [Sauvegardes](https://trello.com/c/6ac39d911abc6a7d2a71273e).
+- [x] Cuisine : trois provisions par etagere sur telephone, six sur ordinateur ; etageres et plats separables et recettes defilantes ; carte [Cuisine / Marche / evolutions](https://trello.com/c/6ac775a5d9cc9195c78cfc47).
+- [x] Fragments et magasin : commandes tactiles plus grandes, liste des lapins sur deux colonnes, dialogues defilants en paysage ; carte [Boutique et apothicaire](https://trello.com/c/6ac75d423df6f3af4d7dffa3).
+- [x] Combat : preparation et commandes empilees en portrait, liste equipe defilante et terrain compact ; carte [Preparation du combat](https://trello.com/c/6ac39d8793f1039486b67a20).
+- [x] Mini-jeux : panneaux contenus dans le viewport et defilement conserve en petite hauteur ; carte [Memory et puzzles](https://trello.com/c/6ac39f1ffd16599635e62ae9).
+- [x] Test de la page reelle avec profils Chrome isoles et emulation tactile : `tools/test-mobile-game.mjs`. Les images sont remplacees par une image de controle : ce test mesure les panneaux et les erreurs JavaScript, pas la qualite des illustrations.
+- [x] Emulation Chrome : 24 etats ouverts dans chacun des formats 390 x 844, 360 x 640 et 844 x 390 ; aucun debordement horizontal des panneaux controles ni erreur JavaScript. Ne valide pas une partie complete ni le rendu avec les vraies illustrations.
+- [ ] Sur un vrai Android Chrome et un iPhone Safari, valider le toucher, le clavier virtuel, les textes longs, les encoches et la rotation pendant une partie ; carte [Placement et commandes](https://trello.com/c/6ac39d846f4f8d11b7da6ab0).
+- [ ] Tester tous les niveaux des puzzles et du Memory, y compris 36 paires, puis Lapidoku, quiz et agilite sur appareil reel ; carte [Jeux adaptes a l ecran](https://trello.com/c/6ac75fbda79c4c777508987e).
+- [x] Jouer un combat complet en manuel et automatique avec 1/2/3 lapins et verifier attaques, logs, fin de combat et recompenses ; carte [Preparation du combat](https://trello.com/c/6ac39d8793f1039486b67a20).
+- [ ] Verifier la consommation et la preparation de chaque recette, les animations des accompagnateurs et les informations au toucher ; carte [Frigo et Marche](https://trello.com/c/6ac7808c657c947629f42e6e).
+- [ ] Valider le telechargement/import JSON de secours sur les navigateurs mobiles sans acces aux dossiers ; carte [Sauvegardes](https://trello.com/c/6ac39d911abc6a7d2a71273e).
+- [ ] Tester les accordeons, les cartes retournees et tous les champs du Dashboard sur telephone ; carte [Dashboard et catalogue](https://trello.com/c/6ac76741ba45b4cc22e9893c).
 
 ## Bilan quotidien
 
@@ -206,5 +224,15 @@ Les cases principales des cartes restent ouvertes tant que leur validation ou le
 <!-- LAPINOUS_AGENT_DEBUT -->
 ### Suivi automatique du projet
 
-Prochain bilan : l’agent actualisera cette section sans remplacer les cases de validation.
+_Dernier bilan : 14/10/2026 13:39_
+
+Fichiers modifiés ou non suivis par Git : **7**
+
+- `assets/css/shop.css`
+- `assets/js/shop.js`
+- `dashboard.html`
+- `index.html`
+- `tools/run-image-schedule.ps1`
+- `tools/test-cashier-route.mjs`
+- `tools/test-market-layout.mjs`
 <!-- LAPINOUS_AGENT_FIN -->

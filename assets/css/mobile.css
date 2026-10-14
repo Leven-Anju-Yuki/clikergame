@@ -1,0 +1,51 @@
+/* Ajustements tactiles ; le défilement conserve l'accès aux commandes. */
+@media (max-width:700px), (max-height:500px) and (pointer:coarse) {
+  input,select,textarea{font-size:16px}
+  button,a,[role=button]{touch-action:manipulation}
+  .io-btn,.ghost-btn,.action-btn,.slot-btn,.shop-close,.fridge-close,.modal .close{min-height:44px}
+  .modal-dialog{width:calc(100% - 16px);max-width:100%;margin:8px auto}
+  .modal-content{max-height:calc(100dvh - 16px)}
+  .modal-body{min-height:0;overflow-y:auto;overscroll-behavior:contain}
+  .save-io-row{flex-wrap:wrap}.save-io-row>*{min-width:0;max-width:100%}
+  .save-slot-info{min-width:0;overflow-wrap:anywhere}
+  #mainNav{padding-bottom:env(safe-area-inset-bottom,0px)}
+  .shop-dialog{max-width:calc(100vw - 12px);max-height:calc(100dvh - 12px)}
+  .shop-dialog .shop-panel{max-height:calc(100dvh - 16px);overflow-y:auto;min-width:0}
+  .shop-header{gap:8px;flex-wrap:wrap}.shop-tabs{max-width:100%;overflow-x:auto;flex-wrap:nowrap;flex-shrink:0}
+  .shop-tabs button{min-height:44px;flex-shrink:0}
+  .shop-cart-summary{flex-wrap:wrap;gap:8px}.shop-cart-summary .shop-cart-payment{width:100%;margin:0}
+  .shop-confirm-actions{flex-wrap:wrap}.shop-confirm-actions button{min-height:44px;white-space:normal}
+  .shop-dialog.zone-fragments .shop-fragment-details{max-height:none;height:auto;overflow:visible;font-size:.85rem}
+  .shop-dialog.zone-fragments .shop-fragment-details button{min-height:44px}
+  .console-panel,.quiz-panel,.puzzle-workshop,.fight-stage{min-width:0;max-width:100%;box-sizing:border-box}
+  body.game-running #gameArea:has(.console-panel,.quiz-panel,.puzzle-workshop,.fight-stage){overflow-y:auto;overscroll-behavior:contain}
+  .quiz-panel,.game-cupboard{overflow-y:auto;max-height:calc(100dvh - 155px)}
+  .quiz-choices button{min-height:48px}
+  .pantry-meals select,.pantry-meals button{min-height:44px;min-width:0;max-width:100%}
+}
+@media(max-width:600px){
+  .shop-dialog.zone-fragments .shop-fragment-details{left:2%;right:auto;top:3%;width:56%}
+  .shop-dialog.zone-fragments .shop-fragment-rabbits{left:2%;right:auto;top:53%;bottom:3%;width:56%}
+  .shop-dialog.zone-fragments .shop-zone-companion{left:auto;right:1%;width:39%;height:60%}
+  .shop-dialog.zone-fragments .shop-product-visual{left:72%;top:15%;width:20%;height:18%}
+  .shop-dialog.zone-fragments .shop-rabbits{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .pantry-illustrated .pantry-shelves{left:2%;width:36%;top:23%;height:43%}
+  .pantry-illustrated .pantry-shelf{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .pantry-illustrated .pantry-ready{left:auto;right:2%;width:36%;top:23%;height:43%}
+  .pantry-illustrated .pantry-ready-shelves{grid-template-columns:repeat(3,minmax(0,1fr));height:100%}
+  .pantry-illustrated .pantry-chef{width:24%;left:38%;height:38%;bottom:26%;min-height:0}
+  .pantry-workshop>.pantry-meals{grid-template-columns:minmax(0,1fr);max-height:29dvh;overflow-y:auto;gap:8px}
+  .pantry-workshop>.pantry-meals p{grid-column:1;grid-row:auto;margin:0}
+  body.game-running.battle-scene .fight-stage.fight-preparation,
+  body.game-running.battle-scene .fight-stage.tactical{display:flex;flex-direction:column;height:auto;max-height:none;min-height:0;width:100%;gap:12px;padding:10px}
+  .fight-preparation>.fight-team-select{height:auto;max-height:35dvh;overflow-y:auto}
+  .fight-stage .battlefield-preview{min-height:160px;width:100%;box-sizing:border-box}
+  .fight-stage.tactical .team-battlefield{height:190px;min-height:190px}
+  .fight-command-grid{width:100%;box-sizing:border-box}.fight-command-grid button{min-height:44px;white-space:normal}
+}
+@media(max-height:500px) and (orientation:landscape){
+  .shop-dialog .shop-body{flex-shrink:0}
+  .adoption-screen{height:auto;min-height:100dvh;overflow-y:auto}
+  .quiz-panel,.game-cupboard,.memory-panel{max-height:calc(100dvh - 100px);overflow-y:auto}
+  body.game-running #gameArea:has(.fight-stage,.puzzle-workshop,.lapidoku-grid){justify-content:flex-start;overflow-y:auto}
+}
