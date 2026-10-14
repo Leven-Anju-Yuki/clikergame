@@ -5,3 +5,10 @@
 .cloudinary-local/
 secours-images/
 docs/
+
+# Copies locales des catalogues et sauvegardes des joueurs
+/Sauvegardes JSON/
+# /Lapinous sauvegarde/
+# /lapinous_sauvegardes/
+
+

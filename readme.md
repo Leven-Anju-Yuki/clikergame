@@ -615,9 +615,9 @@ Mise à jour cuisine : réserve ouverte uniquement au clic sur le frigo ; March�
 
 | Dossier | Fichiers | Taille |
 |---|---:|---:|
-| `assets/` | 209 | 232.31 Mo |
+| `assets/` | 212 | 240.97 Mo |
 | `docs/` | 12 | 0.14 Mo |
-| `tools/` | 25 | 0.10 Mo |
+| `tools/` | 28 | 0.12 Mo |
 
 _Inventaire local uniquement : les images déjà archivées ne sont pas considérées manquantes._
 <!-- LAPINOUS_AGENT_FIN -->

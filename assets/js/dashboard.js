@@ -312,7 +312,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // du projet sous le nom "lapinous-content.json" pour que tous les
     // joueurs voient tes changements. Volontairement séparé de la
     // sauvegarde du joueur : aucune donnée de progression ici.
-    document.getElementById("exportContentBtn").addEventListener("click", () => {
+    document.getElementById("exportContentBtn").addEventListener("click", async () => {
         const bundle = {
             type: "lapinous-content",
             exportedAt: Date.now(),
@@ -323,12 +323,7 @@ document.addEventListener("DOMContentLoaded", () => {
             visibility: window.LapinousVisibility.get(),
         };
         delete bundle.species.az; // Azazel reste géré par le code, pas par le contenu
-        const blob = new Blob([JSON.stringify(bundle, null, 2)], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url; a.download = "lapinous-content.json"; a.click();
-        URL.revokeObjectURL(url);
-        showToast("Contenu complet exporté ⬇️ — dépose-le à la racine du projet sous le nom lapinous-content.json", "success");
+        try { const mode=await window.LapinousLocalFiles.exportJSON('lapinous-content.json',bundle);showToast(mode==='written'?'Contenu enregistré dans le projet. Recharge le jeu.':'Contenu téléchargé.','success'); } catch(error){if(error.name!=='AbortError')showToast(error.message,'warn');}
     });
 
     document.getElementById("importContentInput").addEventListener("change", (e) => {
@@ -454,12 +449,9 @@ document.addEventListener("DOMContentLoaded", () => {
         renderPuzzleAdmin();
     });
 
-    document.getElementById('exportPuzzlesBtn')?.addEventListener('click', () => {
+    document.getElementById('exportPuzzlesBtn')?.addEventListener('click', async () => {
         const bundle = { type: 'lapinous-puzzles', version: 1, levels: window.getPuzzleLevels ? window.getPuzzleLevels() : [], puzzles: window.getPuzzleCatalog ? window.getPuzzleCatalog() : [] };
-        const blob = new Blob([JSON.stringify(bundle, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob); const a = document.createElement('a');
-        a.href = url; a.download = 'lapinous-puzzles.json'; a.click(); URL.revokeObjectURL(url);
-        showToast('Catalogue des puzzles exporté ✅', 'success');
+        try{const mode=await window.LapinousLocalFiles.exportJSON('lapinous-puzzles.json',bundle);showToast(mode==='written'?'Puzzles enregistrés dans le projet.':'Puzzles téléchargés.','success');}catch(error){if(error.name!=='AbortError')showToast(error.message,'warn');}
     });
 
     document.getElementById('importPuzzlesInput')?.addEventListener('change', (e) => {
@@ -737,7 +729,7 @@ document.addEventListener("DOMContentLoaded", () => {
     shopSection.addEventListener('click',event=>{if(event.target.dataset.removeItem!==undefined){collectShopEditor();shopData.items.splice(Number(event.target.dataset.removeItem),1);renderShopEditor();}});
     document.getElementById('addShopItem').onclick=()=>{collectShopEditor();shopData.items.push({id:'article_'+Date.now(),name:'Nouvel article',emoji:'🌿',description:'',price:15,kind:'restore',stat:'food',image:''});renderShopEditor();};
     document.getElementById('saveShopCatalog').onclick=()=>{try{localStorage.setItem('lapinous_shop_catalog',JSON.stringify(collectShopEditor()));document.getElementById('shopCatalogStatus').textContent='Enregistré. Recharge le jeu pour tester.';}catch(error){document.getElementById('shopCatalogStatus').textContent=error.message;}};
-    document.getElementById('exportShopCatalog').onclick=()=>{try{const url=URL.createObjectURL(new Blob([JSON.stringify(collectShopEditor(),null,2)],{type:'application/json'}));const link=document.createElement('a');link.href=url;link.download='lapinous-shop.json';link.click();URL.revokeObjectURL(url);}catch(error){document.getElementById('shopCatalogStatus').textContent=error.message;}};
+    document.getElementById('exportShopCatalog').onclick=async()=>{try{const mode=await window.LapinousLocalFiles.exportJSON('lapinous-shop.json',collectShopEditor());document.getElementById('shopCatalogStatus').textContent=mode==='written'?'Catalogue enregistré dans le projet. Recharge le jeu.':'Catalogue téléchargé.';}catch(error){if(error.name!=='AbortError')document.getElementById('shopCatalogStatus').textContent=error.message;}};
     document.getElementById('saveShopSettings').onclick=()=>document.getElementById('saveShopCatalog').click();
     document.getElementById('exportShopSettings').onclick=()=>document.getElementById('exportShopCatalog').click();
     // Les mêmes sections restent en place dans les accordéons ; leurs contrôles gardent leurs événements.

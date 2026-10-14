@@ -138,11 +138,17 @@
             image.src=thanks?catalog.cashier.thanks:greeting?(catalog.cashier.greeting||catalog.cashier.presentation):(catalog.cashier.idle||catalog.cashier.presentation);
             image.classList.toggle('shop-cashier-flipped',!thanks&&catalog.cashier.flipPresentation);
             image.alt=thanks?'La caissière te remercie':greeting?'La caissière te salue':'La caissière présente les articles';
-            speech.textContent=thanks?'Merci pour tes achats ! Prends bien soin de tes compagnons ✨':'Bienvenue ! Choisis tes articles, puis retrouve-les dans ton panier.';
+            speech.textContent=thanks?'Merci pour tes achats !':greeting?'Bonjour ! Choisis tes articles.':'Quels articles souhaites-tu ?';
             if(thanks)thankTimer=setTimeout(()=>cashier(false),4000);
             else if(greeting)thankTimer=setTimeout(()=>{if(dialog.open)cashier(false);},1200);
         }
         let workshopTimer,workshopPose='idle',workshopUntil=0;
+        const workshopImages=new Map();
+        for(const role of ['artisan','fragmentKeeper'])for(const pose of ['working','walkingLeft']){
+            const source=catalog.companions?.[role]?.[pose];if(!source)continue;
+            const preload=new Image();
+            workshopImages.set(source,new Promise(resolve=>{preload.onload=()=>resolve(true);preload.onerror=()=>resolve(false);preload.src=source;}));
+        }
         const workshopRole=()=>tab==='evolution'?'artisan':tab==='fragments'?'fragmentKeeper':null;
         // Les planches 3x2 sont découpées par le CSS, sans créer six fichiers supplémentaires.
         function showWorkshopPose(pose){
@@ -163,28 +169,45 @@
             showWorkshopPose(Date.now()<workshopUntil?workshopPose:'idle');
         }
         let forging=false;
-        let cashierMoving=false;
+        function inspectCartItem(trigger){
+            const panel=content.querySelector('#cartOptions'+trigger.dataset.cartInspect);if(!panel)return;
+            if(!panel.matches(':popover-open'))panel.showPopover();
+            const rect=trigger.getBoundingClientRect(),box=panel.getBoundingClientRect();
+            panel.style.left=Math.max(8,Math.min(rect.left,window.innerWidth-box.width-8))+'px';
+            panel.style.top=Math.max(8,rect.top-box.height-8)+'px';
+        }
+        let cashierMoving=false,cashierX=0,cashierTrip=0,cashierMovement;
+        async function cashierWalk(to){
+            const from=cashierX,version=cashierTrip;
+            if(Math.abs(to-from)<3)return;
+            image.src=catalog.cashier.walkingLeft||catalog.cashier.presentation;
+            image.style.transform=to<from?'':'scaleX(-1)';
+            const movement=image.parentElement.animate([{transform:`translateX(${from}px)`},{transform:`translateX(${to}px)`}],{duration:window.matchMedia('(prefers-reduced-motion: reduce)').matches?1:Math.max(700,Math.abs(to-from)*3),fill:'forwards',easing:'linear'});
+            cashierMovement=movement;try{await movement.finished;}catch(error){if(error.name!=='AbortError')throw error;}finally{if(version===cashierTrip){cashierX=to;image.parentElement.style.transform=`translateX(${to}px)`;}movement.cancel();}
+        }
         async function cashierCollect(button){
             if(tab!=='market'||cashierMoving)return;
-            cashierMoving=true;clearTimeout(thankTimer);
-            const original=image.getBoundingClientRect(),destination=button.getBoundingClientRect();
-            const offset=destination.left+destination.width/2-original.left-original.width/2;
-            const valid=()=>dialog.open&&tab==='market';
-            const move=async(from,to)=>{
-                image.src=catalog.cashier.walkingLeft||catalog.cashier.presentation;
-                image.style.transform=to<from?'':'scaleX(-1)';
-                const animation=image.parentElement.animate([{transform:`translateX(${from}px)`},{transform:`translateX(${to}px)`}],{duration:window.matchMedia('(prefers-reduced-motion: reduce)').matches?1:1100,fill:'forwards',easing:'ease-in-out'});
-                try{await animation.finished;}finally{image.parentElement.style.transform=`translateX(${to}px)`;animation.cancel();}
-            };
-            try{await move(0,offset);if(!valid())return;image.src=catalog.cashier.back||catalog.cashier.presentation;await new Promise(resolve=>setTimeout(resolve,500));if(!valid())return;await move(offset,0);}
-            finally{image.parentElement.style.transform='';image.style.transform='';cashierMoving=false;if(dialog.open)cashier(false);}
+            cashierMoving=true;clearTimeout(thankTimer);const version=cashierTrip;
+            const original=image.getBoundingClientRect(),destination=(button.closest('.shop-consumable')||button).getBoundingClientRect();
+            const offset=cashierX+destination.left+destination.width/2-original.left-original.width/2;
+            try{await cashierWalk(offset);if(!dialog.open||tab!=='market'||version!==cashierTrip)return;image.src=catalog.cashier.back||catalog.cashier.presentation;await new Promise(resolve=>setTimeout(resolve,500));}
+            finally{cashierMoving=false;if(version===cashierTrip&&dialog.open&&tab==='market'){image.src=catalog.cashier.idle||catalog.cashier.presentation;image.style.transform='';speech.textContent='Je garde tes articles. Que veux-tu ajouter ?';}}
+        }
+        async function cashierDeposit(){
+            if(cashierMoving)return false;
+            cashierMoving=true;clearTimeout(thankTimer);const version=cashierTrip;
+            try{speech.textContent='Je pose tes achats sur la table.';await cashierWalk(0);if(version!==cashierTrip||!dialog.open)return false;image.src=catalog.cashier.thanks;image.style.transform='';await new Promise(resolve=>setTimeout(resolve,700));return version===cashierTrip&&dialog.open;}
+            finally{cashierMoving=false;}
         }
         async function forgeEvolution(room){
             if(forging)return;
+            forging=true;
+            await Promise.race([Promise.all(['working','walkingLeft'].map(pose=>workshopImages.get(catalog.companions?.artisan?.[pose]))),new Promise(resolve=>setTimeout(resolve,1500))]);
+            if(!dialog.open||tab!=='evolution'){forging=false;return;}
             api.buyEvolution(room);render();
             const actor=content.querySelector('.shop-zone-companion');
             const selected=content.querySelector(`[data-shop-evolve="${room}"]`)?.closest('.shop-evolution-card');
-            if(!actor||!selected)return;
+            if(!actor||!selected){forging=false;return;}
             clearTimeout(workshopTimer);workshopUntil=0;forging=true;
             const buttons=[...content.querySelectorAll('[data-shop-evolve]')];
             const states=buttons.map(button=>button.disabled);buttons.forEach(button=>button.disabled=true);
@@ -264,9 +287,10 @@
                     const index=line.cartIndex;
                     const item=getItem(line.id);let detail='Ajouté à l’inventaire · à utiliser sur le lapin actif de ton choix';
                     if(item.kind==='reset'){const pr=api.progress(line.target);detail=`${api.technique(line.target,line.index).name} : ${resetPlan(pr,line.index).refund} fragments récupérés, compétence à 0/5. Les autres restent intactes.`;}
-                    return `<article class="shop-cart-line"><img src="${escape(item.image||'./assets/img/lapins_jouables/sans_evenements/mystery.svg')}" alt=""><div><strong>${escape(item.emoji)} ${escape(item.name)}</strong><span>${item.kind==='reset'?`Pour ${escape(name(line.target))}`:'Pour ton inventaire'}</span><small>${escape(detail)}</small></div><b>${item.price*line.quantity} 🥕</b><div class="shop-cart-controls">${item.kind==='restore'?`<div class="shop-quantity"><button type="button" data-shop-minus="${index}" aria-label="Diminuer la quantité de ${escape(item.name)}">−</button><span aria-label="Quantité">${line.quantity}</span><button type="button" data-shop-plus="${index}" aria-label="Augmenter la quantité de ${escape(item.name)}">+</button></div><small>${item.price} 🥕 / unité</small>`:''}<button type="button" data-shop-remove="${index}" aria-label="Retirer ${escape(item.name)}">Retirer</button></div></article>`;
+                    return `<article class="shop-cart-line cart-counter-item"><button type="button" class="cart-counter-inspect" data-cart-inspect="${index}" aria-label="Options de ${escape(item.name)}, quantit? ${line.quantity}" aria-haspopup="true"><img src="${escape(item.image||'./assets/img/lapins_jouables/sans_evenements/mystery.svg')}" alt="${escape(item.name)}"><b class="cart-counter-count">?${line.quantity}</b></button><div class="cart-counter-options" id="cartOptions${index}" popover="auto"><strong>${escape(item.emoji)} ${escape(item.name)}</strong><small>${item.price*line.quantity} ?? ? ${escape(detail)}</small><div class="shop-cart-controls">${item.kind==='restore'?`<div class="shop-quantity"><button type="button" data-shop-minus="${index}" aria-label="Retirer une unit? de ${escape(item.name)}">?</button><span aria-label="Quantit?">${line.quantity}</span><button type="button" data-shop-plus="${index}" aria-label="Ajouter une unit? de ${escape(item.name)}">+</button></div><small>${item.price} ?? / unit?</small>`:''}<button type="button" data-shop-remove="${index}" aria-label="Supprimer ${escape(item.name)} du panier">Supprimer</button></div></div></article>`;
                 }).join('')}</div><section class="shop-cart-payment"><p>Total : <b>${total()} 🥕</b></p>${total()>game.carrots?'<p class="shop-cart-note">Tu n’as pas assez de carottes pour ce panier.</p>':''}<div class="shop-confirm-actions"><button type="button" data-shop-pay ${total()>game.carrots?'disabled':''}>Confirmer et payer ${total()} 🥕</button><button type="button" data-shop-tab="items">Continuer mes achats</button></div></section>`;
                 // Le total et la confirmation restent hors de la zone qui défile.
+                content.querySelectorAll('[data-cart-inspect]').forEach(trigger=>trigger.addEventListener('pointerenter',()=>inspectCartItem(trigger)));
                 summary.hidden=false;
                 summary.replaceChildren(content.querySelector('.shop-cart-payment'));
                 return;
@@ -278,11 +302,11 @@
             content.innerHTML=`<p class="shop-cart-note">${tab==='fragments'?'Choisis un lapin et sa compétence.':tab==='market'?'Les aliments sont conservés dans la réserve de la cuisine.':'Les soins se conservent dans ton inventaire.'}</p><div class="shop-needs"><span>🥕 ${Math.round(pr.food)} %</span><span>😴 ${Math.round(pr.energy)} %</span><span>🫧 ${Math.round(pr.cleanliness)} %</span><span>💎 ${pr.attackFragments} fragments</span></div><div class="shop-items">${catalog.items.filter(item=>tab==='fragments'?item.kind==='reset':tab==='market'?item.category==='market':item.kind==='restore'&&!['market','prepared'].includes(item.category)).map(item=>{
                 const reset=item.kind==='reset',plan=reset?resetPlan(pr,chosenIndex):null;
                 const full=false,inCart=alreadyAdded(item,target,chosenIndex);
-                const unavailable=full||inCart||(reset&&!plan.refund);
+                const unavailable=full||(!reset&&inCart)||(reset&&(!plan.refund||game.carrots<item.price));
                 const skills=reset?`<label>Compétence à réinitialiser<select id="shopSkill">${pr.attackLevels.map((level,index)=>`<option value="${index}" ${chosenIndex===index?'selected':''}>${escape(api.technique(target,index).name)} · ${level}/5</option>`).join('')}</select></label><small>${plan.refund} fragments récupérables sur cette compétence, pour ce lapin.</small>`:'';
                 // Les soins affichent leur image ; survol, focus et toucher révèlent les détails.
                 if(!reset)return `<article class="shop-consumable" tabindex="0" aria-label="${escape(item.name)}">${item.image?`<img src="${escape(item.image)}" alt="${escape(item.name)}" loading="lazy">`:`<span class="shop-food-emoji" aria-hidden="true">${escape(item.emoji)}</span>`}<div class="shop-consumable-details"><h3>${escape(item.emoji)} ${escape(item.name)}</h3><p>${escape(item.description)}</p><button type="button" data-shop-add="${escape(item.id)}">${item.price} 🥕 · Ajouter au panier</button></div></article>`;
-                return `<article class="shop-item shop-fragment-item"><div class="shop-fragment-details">${item.image ? `<div class="shop-product-visual"><img src="${escape(item.image)}" alt="${escape(item.name)}" loading="lazy"></div>` : `<span class="shop-item-icon" aria-hidden="true">${escape(item.emoji)}</span>`}<h3>${escape(item.name)}</h3><p>${escape(item.description)}</p>${skills}<button type="button" data-shop-add="${escape(item.id)}" ${unavailable?'disabled':''}>${full?'Barre déjà pleine':inCart?'✓ Au panier':`${item.price} 🥕 · Ajouter au panier`}</button></div><aside class="shop-fragment-rabbits">${selector}</aside></article>`;
+                return `<article class="shop-item shop-fragment-item"><div class="shop-fragment-details">${item.image ? `<div class="shop-product-visual"><img src="${escape(item.image)}" alt="${escape(item.name)}" loading="lazy"></div>` : `<span class="shop-item-icon" aria-hidden="true">${escape(item.emoji)}</span>`}<h3>${escape(item.name)}</h3><p>${escape(item.description)}</p>${skills}<button type="button" data-shop-add="${escape(item.id)}" ${unavailable?'disabled':''}>${full?'Barre déjà pleine':`${item.price} 🥕 · Payer et récupérer`}</button></div><aside class="shop-fragment-rabbits">${selector}</aside></article>`;
             }).join('')}</div>`;
             if(tab==='market'){
                 // Rayons compacts : les etals remplacent la succession de grandes cartes.
@@ -298,6 +322,9 @@
                     cards.forEach(card=>{const item=catalog.items.find(item=>item.id===card.querySelector('[data-shop-add]').dataset.shopAdd);const label=document.createElement('span');label.className='market-price-tag';label.textContent=item.price+' \u{1F955}';label.title=item.name;card.append(label);shelf.append(card);});
                     section.append(shelf);grid.append(section);
                 });
+                const table=document.createElement('aside');table.className='market-purchase-table';table.setAttribute('aria-label','Table des achats');
+                const marketLines=cart.filter(line=>getItem(line.id)?.category==='market');
+                table.innerHTML='<strong>Table des achats</strong><div>'+[...new Set(marketLines.map(line=>line.id))].map(id=>{const item=getItem(id),quantity=marketLines.filter(line=>line.id===id).length;return '<span title="'+escape(item.name)+'">'+(item.image?'<img src="'+escape(item.image)+'" alt="'+escape(item.name)+'">':escape(item.emoji))+'<b>×'+quantity+'</b></span>';}).join('')+'</div>';content.append(table);
                 marketSizingObserver ||= new ResizeObserver(()=>content.querySelectorAll('.market-stall').forEach(stall=>stall.style.setProperty('--market-row-height',(stall.getBoundingClientRect().height/2)+'px')));
                 marketSizingObserver.disconnect();content.querySelectorAll('.market-stall').forEach(stall=>marketSizingObserver.observe(stall));
             }
@@ -316,7 +343,7 @@
             if(!owned().length){api.toast('Adopte un compagnon avant de visiter le magasin.','warn');return;}
             if(api.inCombat()){api.toast('Termine le combat avant de visiter le magasin.','warn');return;}
             clearTimeout(apothecaryTimer);
-            target=api.game().species;tab=initialTab;chosenIndex=0;message.textContent='';cashier(false,true);render();if(!dialog.open)dialog.showModal();workshopAction('greeting',1000);
+            cashierTrip++;cashierX=0;image.parentElement.style.transform='';image.style.transform='';target=api.game().species;tab=initialTab;chosenIndex=0;message.textContent='';cashier(false,true);render();if(!dialog.open)dialog.showModal();workshopAction('greeting',1000);
             if(tab==='inventory'){
                 const actor=content.querySelector('#inventoryHerbalist');
                 actor.src=herbalistPoses.greeting;
@@ -330,13 +357,14 @@
         window.openLapinousMarket=()=>{document.getElementById('kitchenFridgeDialog')?.close();open('market');};
         window.openLapinousInventory=()=>open('inventory');inventoryButton.addEventListener('click',window.openLapinousInventory);
         dialog.querySelector('.shop-close').addEventListener('click',()=>dialog.close());
-        dialog.addEventListener('close',()=>{clearTimeout(workshopTimer);workshopUntil=0;clearTimeout(thankTimer);clearTimeout(apothecaryTimer);retrieveVersion++;retrieveAnimation?.cancel();retrieving=false;(tab==='inventory'?inventoryButton:button).focus();});
+        dialog.addEventListener('close',()=>{cashierTrip++;cashierMovement?.cancel();cashierMoving=false;clearTimeout(workshopTimer);workshopUntil=0;clearTimeout(thankTimer);clearTimeout(apothecaryTimer);retrieveVersion++;retrieveAnimation?.cancel();retrieving=false;(tab==='inventory'?inventoryButton:button).focus();});
         dialog.addEventListener('change',event=>{if(event.target.id==='shopSkill'){chosenIndex=Number(event.target.value);render();}});
         dialog.addEventListener('error',event=>{if(event.target.id==='inventoryHerbalist'&&(window.LapinousImages?.local(event.target.getAttribute('src'))||event.target.getAttribute('src'))===walkingSrc){walkingAvailable=false;event.target.src=herbalistPoses.back;return;}if(event.target.matches('img')&&(window.LapinousImages?.local(event.target.getAttribute('src'))||event.target.getAttribute('src'))!=='./assets/img/lapins_jouables/sans_evenements/mystery.svg')event.target.src='./assets/img/lapins_jouables/sans_evenements/mystery.svg';},true);
         dialog.addEventListener('click',async event=>{
             const clicked=event.target.closest('button');if(!clicked||clicked.disabled)return;
+            if(clicked.dataset.cartInspect!==undefined){inspectCartItem(clicked);return;}
             if(clicked.dataset.shopEvolve){await forgeEvolution(clicked.dataset.shopEvolve);}
-            if(clicked.dataset.shopTab&&rayAllowed(clicked.dataset.shopTab)){clearTimeout(workshopTimer);workshopUntil=0;tab=clicked.dataset.shopTab;message.textContent='';render();workshopAction('greeting',1000);}
+            if(clicked.dataset.shopTab&&rayAllowed(clicked.dataset.shopTab)){if(tab==='market'&&clicked.dataset.shopTab==='cart'&&cart.length){if(!await cashierDeposit())return;}else if(cashierMoving)return;if(tab==='market'&&clicked.dataset.shopTab!=='market'){cashierX=0;cashierTrip++;image.parentElement.style.transform='';image.style.transform='';}clearTimeout(workshopTimer);workshopUntil=0;tab=clicked.dataset.shopTab;message.textContent='';render();workshopAction('greeting',1000);}
             if(clicked.dataset.shopRabbit){target=clicked.dataset.shopRabbit;chosenIndex=0;message.textContent='';render();content.querySelector('.shop-rabbit-choice.selected')?.focus();}
             if(clicked.dataset.shopAdd){
                 if(cashierMoving)return;
@@ -344,6 +372,15 @@
                 if(!item||alreadyAdded(item,target,chosenIndex))return;
                 if(tab==='market'){await cashierCollect(clicked);if(!dialog.open||tab!=='market')return;}
                 const pr=api.progress(target);
+                if(item.kind==='reset'){
+                    try{
+                        transact(api.game(),pr,item,chosenIndex);
+                        api.save();api.refresh();api.sound('purchase');render();
+                        message.textContent='Fragments récupérés. Achat payé directement.';
+                        workshopAction('working',8000);
+                    }catch(error){message.textContent=error.message;}
+                    return;
+                }
                 
                 if(item.kind==='reset'&&!resetPlan(pr,chosenIndex).refund)return;
                 cart.push({id:item.id,target:item.kind==='reset'?target:null,index:item.kind==='reset'?chosenIndex:null});
@@ -355,7 +392,7 @@
                 const index=Number(increase?clicked.dataset.shopPlus:clicked.dataset.shopMinus),line=cart[index];
                 if(!line||getItem(line.id)?.kind!=='restore')return;
                 if(increase)cart.push({...line});else cart.splice(index,1);
-                render();content.querySelector('[data-shop-plus],button')?.focus();
+                render();const updated=content.querySelector('[data-cart-inspect="'+Math.min(index,groupCartLines(cart).length-1)+'"]');updated?.focus();if(updated)inspectCartItem(updated);
             }
             if(clicked.hasAttribute('data-shop-remove')){
                 const line=cart[Number(clicked.dataset.shopRemove)];

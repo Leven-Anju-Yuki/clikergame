@@ -945,7 +945,13 @@ body.battle-scene .boss-diff {
 .save-slot-actions {
     display: flex;
     gap: 8px;
+    flex-wrap: wrap;
+    flex-shrink: 0;
 }
+
+#folderSavesList .save-slot-info{min-width:0;overflow-wrap:anywhere}
+#folderSavesList .save-slot-actions .slot-btn{min-height:40px}
+@media(max-width:600px){#folderSavesList .save-slot{align-items:stretch;flex-direction:column}#folderSavesList .save-slot-actions .slot-btn{flex:1}}
 
 .slot-btn {
     border: none;

@@ -15,13 +15,15 @@ from urllib.parse import quote
 
 import requests
 from dotenv import load_dotenv
+from cloudinary_rapport import build as cloudinary_report
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent.parent
 load_dotenv(ROOT / '.env')  # Un seul .env, à la racine du projet
 ROOT = Path(os.getenv('PROJECT_ROOT') or ROOT).expanduser().resolve()
 CONFIG = HERE / 'liaisons_trello.json'
-REPORTS = HERE / 'rapports'
+REPORTS = ROOT.parent / 'clikergame_avec_image' / 'rapports'
+REPORTS.mkdir(parents=True, exist_ok=True)
 START = '<!-- LAPINOUS_AGENT_DEBUT -->'
 END = '<!-- LAPINOUS_AGENT_FIN -->'
 SKIP = {'.git', '.venv', 'node_modules', '__pycache__', '.cloudinary-local', 'rapports'}
@@ -219,6 +221,55 @@ def discord(channel, message):
     return True
 
 
+
+
+def quarantine_discord_summary():
+    """Résumé lisible J-X à 21h. Lecture seule, aucun appel Cloudinary."""
+    from datetime import datetime, timedelta, timezone
+    state = ROOT / '.cloudinary-local'
+    queue_file = state / 'quarantaine.json'
+    report_file = state / 'corbeille-report.json'
+    if not queue_file.exists():
+        return '📦 **Corbeille Cloudinary** : suivi non initialisé.'
+    try:
+        queue = json.loads(queue_file.read_text(encoding='utf-8'))
+        items = queue.get('items', {})
+        if not isinstance(items, dict):
+            raise ValueError('Format items invalide')
+        now = datetime.now(timezone.utc)
+        lines = ['📦 **Corbeille Cloudinary — suivi quotidien J-X**',
+                 f'Images en attente : **{len(items)}**',
+                 'Quarantaine logique : URL et public_id inchangés.']
+        for ident, item in sorted(items.items(), key=lambda pair: pair[1].get('since', '')):
+            entered = datetime.fromisoformat(item['since'].replace('Z', '+00:00'))
+            if entered.tzinfo is None:
+                entered = entered.replace(tzinfo=timezone.utc)
+            due = entered + timedelta(days=7)
+            remaining = max(0, (due - now).total_seconds())
+            # J-7 au départ, J-0 dès échéance ; arrondi supérieur pour ne pas annoncer trop tôt.
+            import math
+            j = math.ceil(remaining / 86400)
+            name = Path(item.get('path') or ident).name
+            when = due.astimezone().strftime('%d/%m/%Y %H:%M')
+            label = 'J-0 (échéance atteinte)' if j == 0 else f'J-{j}'
+            lines.append(f'• **{name}** — **{label}** — échéance : {when}')
+        if not items:
+            lines.append('Aucune image en attente.')
+        if report_file.exists():
+            report = json.loads(report_file.read_text(encoding='utf-8'))
+            blocked = report.get('blocked', [])
+            errors = report.get('errors', [])
+            lines.append(f'Images bloquées : **{len(blocked)}** ; erreurs : **{len(errors)}**.')
+            for entry in blocked:
+                lines.append(f'🔒 {Path(entry.get("path") or entry.get("id", "?")).name} : {entry.get("reason", "bloquée")}')
+            for entry in errors:
+                lines.append(f'⚠️ {Path(entry.get("path") or entry.get("id", "?")).name} : erreur (voir rapport)')
+        lines.append('J-0 ne signifie pas supprimée : la suppression doit être autorisée et confirmée.')
+        return '\n'.join(lines)
+    except (OSError, ValueError, TypeError, KeyError) as exc:
+        return f'⚠️ Suivi J-X indisponible : {type(exc).__name__} (vérifier quarantaine.json).'
+
+
 def bilan(apply):
     changes = git_changes()
     stamp = dt.datetime.now().astimezone().strftime('%d/%m/%Y %H:%M')
@@ -255,14 +306,33 @@ def bilan(apply):
     REPORTS.mkdir(parents=True, exist_ok=True)
     report_file = REPORTS / (dt.datetime.now().strftime('%Y-%m-%d_%H%M%S') + '_bilan.md')
     report_file.write_text(report + '\n', encoding='utf-8')
+    cloud_report, cloud_ok = cloudinary_report(ROOT)
+    cloud_file = REPORTS / (dt.datetime.now().strftime('%Y-%m-%d_%H%M%S') + '_images.md')
+    cloud_file.write_text(cloud_report, encoding='utf-8')
     print(report)
     discord('bilan', '🐰 **Bilan Lapinous**\n' + report)
+    # Rapport intégral en pièce jointe, sans troncature, dans le salon dédié.
+    send_report_file('images', cloud_file, cloud_report, cloud_ok)
+    discord('images', quarantine_discord_summary())
+    if not cloud_ok:
+        discord('erreurs', '⚠️ Synchronisation Cloudinary non confirmée à 20 h. Voir le rapport détaillé dans #cloudinary-images.')
     if updates:
         discord('trello', '📋 **Actions Trello**\n' + '\n'.join(updates))
     if errors:
         discord('erreurs', '⚠️ **Erreurs Lapinous**\n' + '\n'.join(errors))
         return 1
-    return 0
+    return 0 if cloud_ok else 1
+
+
+def send_report_file(channel, file, text, ok):
+    url = webhook(channel)
+    if not url:
+        print('Webhook images absent ; rapport conservé : ' + str(file))
+        return
+    with file.open('rb') as stream:
+        response = requests.post(url, data={'payload_json': json.dumps({'content': ('✅' if ok else '⚠️') + ' Rapport Cloudinary complet en pièce jointe.', 'allowed_mentions': {'parse': []}})}, files={'files[0]': (file.name, stream, 'text/markdown')}, timeout=60)
+    if not response.ok:
+        raise RuntimeError(f'Discord {channel} : HTTP {response.status_code}')
 
 
 def main():

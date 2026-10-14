@@ -18,6 +18,16 @@ for (const entry of inventory.selected.filter(x => x.sourceExists !== false)) {
   const hash = crypto.createHash('sha256').update(await fs.readFile(source)).digest('hex');
   if (record?.status !== 'verified' || record.hash !== hash) throw new Error('Image non synchronisée : ' + entry.path);
   await fs.mkdir(path.dirname(destination), { recursive: true });
+  // Conserve aussi les anciennes versions dans le dossier de sauvegarde existant.
+  try {
+    const previous = await fs.readFile(destination);
+    const oldHash = crypto.createHash('sha256').update(previous).digest('hex');
+    if (oldHash !== hash) {
+      const archive = path.join(backupRoot, '.versions', entry.path, oldHash + path.extname(destination));
+      await fs.mkdir(path.dirname(archive), { recursive: true });
+      await fs.writeFile(archive, previous, { flag: 'wx' }).catch(e => { if (e.code !== 'EEXIST') throw e; });
+    }
+  } catch (e) { if (e.code !== 'ENOENT') throw e; }
   // Remplace la version de même nom, puis vérifie la copie avant de retirer la source.
   await fs.copyFile(source, destination);
   const copiedHash = crypto.createHash('sha256').update(await fs.readFile(destination)).digest('hex');

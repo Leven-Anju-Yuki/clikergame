@@ -24,11 +24,11 @@ document.addEventListener('DOMContentLoaded',async()=>{
     });
     return window.LapinousQuiz.validate(working);
   }
-  accordion.addEventListener('click',event=>{
+  accordion.addEventListener('click',async event=>{
     const target=event.target;const status=accordion.querySelector('#quizEditorStatus');
     try{
       if(target.hasAttribute('data-quiz-save')){window.LapinousQuiz.save(collect());status.textContent='Quiz enregistré. Recharge le jeu pour tester.';}
-      if(target.hasAttribute('data-quiz-export')){const url=URL.createObjectURL(new Blob([JSON.stringify(collect(),null,2)],{type:'application/json'}));const link=document.createElement('a');link.href=url;link.download='lapinous-quiz.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+      if(target.hasAttribute('data-quiz-export')){const mode=await window.LapinousLocalFiles.exportJSON('lapinous-quiz.json',collect());document.getElementById('quizEditorStatus').textContent=mode==='written'?'Quiz enregistré dans le projet.':'Quiz téléchargé.';}
       if(target.hasAttribute('data-quiz-add')){collect();working.questions.push({id:'question_'+Date.now(),category:'Lapins',question:'Nouvelle question',choices:['Réponse 1','Réponse 2','Réponse 3','Réponse 4'],answer:0,explanation:'Explication à compléter.',source:'Source à préciser',enabled:false});render();}
       if(target.dataset.quizRemove!==undefined){collect();working.questions.splice(Number(target.dataset.quizRemove),1);render();}
     }catch(error){status.textContent=error.message;}

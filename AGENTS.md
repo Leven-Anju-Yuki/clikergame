@@ -1,7 +1,4 @@
-# Consignes de suivi du projet
+# Consignes de suivi du projet Lapinous
 
-À la demande de l’utilisateur, regrouper les mises à jour de README (arborescence et poids), A_FAIRE, documentation et Trello dans le bilan quotidien de 21 h, fuseau Europe/Paris. Ne pas les réécrire pendant chaque tâche de la journée, sauf demande explicite.
-
-Lors du bilan : inspecter les modifications effectives, actualiser les documents et poids, mettre à jour les cartes Trello existantes plutôt que multiplier les doublons, et signaler les points restant à valider. Ne pas publier ni pousser le projet. Me dire si les images sont bien envoyer a 20h ou si ca a planter
-
-Cette consigne ne programme pas une exécution : une tâche planifiée doit être activée dans l’application.
+Synchronisation Cloudinary à 20 h Europe/Paris ; bilan global à 21 h Europe/Paris. Le bilan couvre Git, README, A_FAIRE, Trello, Discord et le résultat Cloudinary de 20 h.
+Ne pas créer de doublons de tâches Windows. Ne pas pousser automatiquement GitHub. La sauvegarde locale permanente des images ne doit jamais être purgée par l'agent. Les suppressions Cloudinary passent par une corbeille de 7 jours avec contrôle technique automatique. Ne pas déplacer de cartes Trello sans correspondances de fichiers explicites ; la liste « Réalisé — code et historique » reste sous validation humaine.

@@ -1,15 +1,24 @@
-# Windows lance CE fichier à 20 h : il exécute la synchronisation une seule fois.
+# Lapinous - tache Windows existante de 20 h
 $ErrorActionPreference = 'Stop'
-# Se place dans le projet, même si Windows démarre la tâche depuis un autre dossier.
 $projectRoot = Split-Path -Parent $PSScriptRoot
 Set-Location -LiteralPath $projectRoot
-# Le journal reste local : ce dossier est ignoré par Git.
-New-Item -ItemType Directory -Path '.cloudinary-local' -Force | Out-Null
-# Trouve Node installé sur le poste.
-$nodeExecutable = (Get-Command node -ErrorAction Stop).Source
-# & lance Node. --backup-local demande le déplacement des images après transfert vérifié.
-# *> enregistre la sortie et les erreurs dans le journal du dernier lancement.
-# update-images.mjs n’appelle pas Cloudinary si aucune nouvelle image utilisée n’est présente.
-& $nodeExecutable 'tools/update-images.mjs' '--backup-local' *> '.cloudinary-local/nightly-images.log'
-# Renvoie à Windows le code de résultat de Node : 0 = réussite, autre valeur = échec.
-exit $LASTEXITCODE
+$state = Join-Path $projectRoot '.cloudinary-local'
+New-Item -ItemType Directory -Path $state -Force | Out-Null
+$node = (Get-Command node -ErrorAction Stop).Source
+$log = Join-Path $state 'nightly-images.log'
+$start = (Get-Date).ToString('o')
+"[$start] Debut synchronisation Lapinous" | Set-Content -LiteralPath $log -Encoding UTF8
+try {
+    & $node 'tools/update-images.mjs' '--backup-local' *>> $log
+    $syncExit = $LASTEXITCODE
+    if ($syncExit -ne 0) { throw "Synchronisation echouee (code $syncExit). Corbeille non executee." }
+    "[$((Get-Date).ToString('o'))] Synchronisation terminee ; quarantaine logique" | Add-Content -LiteralPath $log -Encoding UTF8
+    & $node 'tools/cloudinary-corbeille.mjs' 'appliquer' *>> $log
+    $binExit = $LASTEXITCODE
+    if ($binExit -ne 0) { throw "Quarantaine echouee (code $binExit)." }
+    "[$((Get-Date).ToString('o'))] OK" | Add-Content -LiteralPath $log -Encoding UTF8
+    exit 0
+} catch {
+    "[$((Get-Date).ToString('o'))] ERREUR : $($_.Exception.Message)" | Add-Content -LiteralPath $log -Encoding UTF8
+    exit 1
+}

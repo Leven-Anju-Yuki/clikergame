@@ -1,0 +1,14 @@
+import fs from 'node:fs';
+import vm from 'node:vm';
+import assert from 'node:assert/strict';
+const files=new Map(['lapinous-content.json','lapinous-shop.json','lapinous-quiz.json','lapinous-puzzles.json'].map(name=>[name,'ancien']));
+const backups=new Map();const oldName='lapinous-shop-2000-01-01T00-00-00-000Z.json';backups.set(oldName,'old');backups.set('notes.json','keep');const recentName='lapinous-quiz-'+new Date().toISOString().replace(/[:.]/g,'-')+'.json';backups.set(recentName,'recent');
+const handle=(map,name)=>({getFile:async()=>({text:async()=>map.get(name)}),createWritable:async()=>({write:async text=>map.set(name,text),close:async()=>{},abort:async()=>{}})});
+let allowed=true;
+const directory={name:'projet',queryPermission:async()=>allowed?'granted':'denied',requestPermission:async()=>allowed?'granted':'denied',getFileHandle:async name=>{if(!files.has(name))throw new Error('absent');return handle(files,name);},getDirectoryHandle:async()=>({getFileHandle:async name=>handle(backups,name),async *entries(){for(const name of backups.keys())yield [name,{kind:'file'}];},removeEntry:async name=>backups.delete(name)})};
+const context={window:{showDirectoryPicker:async()=>directory},document:{addEventListener(){}},indexedDB:{open(){throw new Error('storage unavailable');}},Blob,URL,setTimeout,Map,Set,Date};
+vm.runInNewContext(fs.readFileSync('assets/js/local-files.js','utf8'),context);
+const api=context.window.LapinousLocalFiles;
+await api.chooseProject();assert.equal(await api.exportJSON('lapinous-shop.json',{items:[]}), 'written');assert.equal(JSON.parse(files.get('lapinous-shop.json')).items.length,0);assert.ok(!backups.has(oldName));assert.equal(backups.get('notes.json'),'keep');assert.equal(backups.get(recentName),'recent');assert.ok([...backups.values()].includes('ancien'));
+allowed=false;await assert.rejects(api.exportJSON('lapinous-shop.json',{bad:1}));assert.equal(backups.size,3);assert.equal(JSON.parse(files.get('lapinous-shop.json')).items.length,0);await assert.rejects(api.exportJSON('../other.json',{}));
+console.log('Exports : ancien JSON sauvegard?, remplacement exact, permission refus?e sans ?criture, nom interdit rejet?.');

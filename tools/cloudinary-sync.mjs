@@ -58,7 +58,7 @@ async function inventory() {
   try { publicMap = readImageMap(); } catch (e) { if (e.code !== 'ENOENT') throw e; }
   try { privateManifest = JSON.parse(await fs.readFile(path.join(stateDir, 'manifest.json'), 'utf8')); } catch (e) { if (e.code !== 'ENOENT') throw e; }
   // Les chemins déjà publiés restent reconnus lorsque leurs originaux ont été retirés.
-  const allPaths = [...new Set([...files, ...Object.keys(publicMap)])];
+  const allPaths = [...new Set([...files, ...Object.keys(publicMap), ...Object.keys(privateManifest.assets || {})])];
   const physicalFiles = new Set(files);
   const existing = new Map(allPaths.map(x => [x.toLowerCase(), x]));
   const reasons = new Map(), missing = new Map();
@@ -98,7 +98,7 @@ async function inventory() {
       if (reasons.has(file)) {
         const record = privateManifest.assets[file];
         selected.push({ path: file, bytes: record?.bytes || 0, hash: record?.hash || null,
-          public_id: record?.public_id || null, url: publicMap[file], sourceExists: false,
+          public_id: record?.public_id || null, url: publicMap[file] || record?.url, sourceExists: false,
           reasons: [...reasons.get(file)] });
       }
       continue;
@@ -178,6 +178,19 @@ async function sync(inv, env, pilot) {
     console.log(`${manifest.assets[entry.path].status}: ${entry.path}`);
     if (failure) throw new Error('Transfert arrêté après échec ; reprise disponible dans le manifeste privé.');
   }
+  // Enregistre chaque version vérifiée, y compris la version qui vient d'être transférée.
+  // Ne supprime jamais l'historique : il sert à détecter les remplacements futurs.
+  const ledgerFile = path.join(stateDir, 'versions-connues.json');
+  let ledger = { assets: {} };
+  try { ledger = JSON.parse(await fs.readFile(ledgerFile, 'utf8')); }
+  catch (e) { if (e.code !== 'ENOENT') throw e; }
+  if (!ledger || typeof ledger.assets !== 'object' || Array.isArray(ledger.assets)) throw new Error('Historique des versions invalide.');
+  for (const [local, record] of Object.entries(manifest.assets)) {
+    if (record?.status === 'verified' && record.public_id?.startsWith('lapinous/') && record.hash && record.url) {
+      ledger.assets[record.public_id] = { path: local, hash: record.hash, url: record.url, public_id: record.public_id, date: record.date };
+    }
+  }
+  await save(ledgerFile, ledger);
   const publicMap = Object.fromEntries(inv.selected.filter(x => manifest.assets[x.path]?.hash === x.hash && manifest.assets[x.path]?.status === 'verified').map(x => [x.path, manifest.assets[x.path].url]));
   await save(manifestFile, manifest);
   writeImageMap(publicMap);

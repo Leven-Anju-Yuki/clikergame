@@ -1,212 +1,210 @@
-# Lapinous — feuille de route
+# Lapinous - suivi des travaux et validations
 
-Mise à jour : 8 octobre 2026. Ce fichier remplace les trois anciennes listes « a faire ».
-Les originaux sont conservés dans `docs/archives/a-faire/`. Les catalogues de personnages
-restent dans `liste de futur création/` : ce sont des idées de contenu, pas une liste de tâches réalisées.
+Mise a jour : 14 octobre 2026.
 
-Statuts : **À faire** = prévu ; **À valider** = code présent, résultat à vérifier en jeu ;
-**Idée** = nouvelle proposition, pas encore développée. Une présence dans le code ne vaut pas validation visuelle.
+- [x] Correspondances des fichiers renseignees pour les cartes existantes qui ont du code.
+- [x] Reperes `[trello:ID]` ajoutes aux taches ci-dessous.
+- [ ] Validation humaine des resultats en jeu : une case technique cochee ne prouve pas le rendu visuel.
 
-## Priorité 1 — fiabiliser la version actuelle
+Les cases principales des cartes restent ouvertes tant que leur validation ou leur travail est incomplet. L’agent peut proposer En cours ou A valider en jeu ; la liste Realise reste sous validation humaine. Pas de nouvelle carte creee ici.
 
-- [ ] **À valider — Placement des lapins et commandes.** Tester Jardin, Cuisine, Chambre et Salle de bain à 1366×768, 1920×1080 et sur mobile. Aucun lapin sous la barre d’amitié, aucun bouton coupé ; vérifier aussi les animations de soin.
-- [ ] **À valider — Préparation du combat.** Équipe de 1, 2 et 3 lapins : puissance du boss toujours visible, statistiques lisibles jusqu’à l’ultime, défilement sans masquer les commandes.
-- [ ] **À faire — Équilibrage des boss.** Mesurer tours nécessaires et taux de victoire avec niveaux 1, 20, 40, 60, 80 et 100 ; inclure équipe mixte et Azazel. Les boss ont déjà des PV et dégâts renforcés, mais l’équilibre n’est pas démontré.
-- [ ] **À faire — Indicateur de difficulté plus fiable.** Actuellement fondé sur le rapport des puissances ; intégrer PV, techniques débloquées, soins et protections avant de promettre qu’un combat est « faisable ».
-- [ ] **À valider — Progression.** Vérifier le plafond 100, les œufs aux niveaux 20/40/60/80/100 et les paliers d’Azazel sans récompense répétée après chargement.
-- [ ] **À valider — Sauvegardes.** Ancienne partie, export/import, fragments, succès récupérés et progression par lapin doivent être conservés.
-- [ ] **À valider — Sons.** Tester les deux sons de game over ensemble, les ambiances saisonnières, volume et coupure. Les fichiers audio sont désormais présents : l’ancien blocage « MP3 manquants » est obsolète.
-- [x] **Fait — README et arborescence actualisés.** Mini-jeux, fragments, magasin, apothicaire, médias et restriction administrateur local documentés le 8 octobre 2026.
+## Travaux recents : code livre et points a verifier
 
-## Priorité 2 — découverte du jeu et confort
+- [x] Cloudinary : chemins locaux resolus par le manifeste, transfert des images utilisees et sauvegarde permanente des originaux.
+- [x] Synchronisation : absence de nouvelles images sans transfert ; conservation des dossiers et remplacement des originaux homonymes dans la sauvegarde.
+- [x] Exports Dashboard : quatre catalogues dans le projet, autorisations, dossier memorise, copie avant remplacement et retention des copies de 7 jours au prochain export.
+- [x] Sauvegardes des parties : noms dates uniques, import controle, dossier memorise et actions Charger / Ecraser / Supprimer avec confirmations.
+- [x] Cuisine : frigo cliquable, ingredients et plats separes, consommation interdite a barre pleine, recettes centralisees dans lapinous-shop.json.
+- [x] Chef : recuperation des ingredients, decoupe pour les salades, wok pour les autres plats et depot sur l’etagere des plats prepares.
+- [x] Magasin : fonds par rayon, quatre evolutions sur l’etabli, paliers d’amitie de 5 et ameliorations payantes croissantes.
+- [x] Fragments : paiement direct, remboursement de la seule competence choisie, GIFs de marche et assemblage raccordes.
+- [x] Dashboard : cartes retournables, recherche, accompagnateurs en accordeons, choix d’images et securite en dernier.
+- [x] Salon : compagnon actif et favoris independants selectionnes par etoiles dans l’encyclopedie.
+- [x] Mini-jeux : placard illustre et quiz des lapins issu du document alimentation, questions supplementaires et editeur Dashboard.
+- [x] Visibilite : magasin, Marche, evolutions, fragments, apothicaire et cuisine publics ; Carottes reserve a l’admin local.
+- [ ] Verifier les trajets complets, tailles, sens de marche et poses finales de la caissiere, du forgeron, du specialiste des fragments et de l’apothicaire.
+- [ ] Verifier les etageres, objets sur les tables et meubles au parquet sur ordinateur, mobile, petite hauteur et zoom.
+- [ ] Tester les exports avec permission refusee, reconnexion, ancien dossier, nouvelle sauvegarde, chargement, ecrasement et suppression.
+- [ ] Verifier stocks, achats, recettes, favoris, fragments et noms des lapins apres export/import d’une ancienne et d’une nouvelle partie.
+- [ ] Equilibrer les prix actuels, la nourriture de base, les ingredients et les plats ; revoir attaques, defenses et soins avant les bonus speciaux.
+- [ ] Verifier le resultat Cloudinary de 20 h et le bilan de 21 h, sans doublon de tache Windows ni purge des images sauvegardees.
+- [ ] Verifier les mises a jour de cartes Trello en simulation avant application ; ne pas valider automatiquement Realise.
+- [ ] Valider le quiz sur mobile, les sources des reponses et la lisibilite des boites des mini-jeux.
 
-- [ ] **À valider — Ambiance du Nouvel An chinois.** Tunetank (`assets/audio/evenements/nouvel_an_chinois/ambience.mp3`) joue seule à 22 %. Silence final de 5 secondes évité avec un fondu croisé de 1,5 seconde entre fin et début. Écouter et ajuster si nécessaire.
-- [x] **Fait — Son de soin de combat.** `assets/audio/combat/soin.mp3` branché sur les soins des techniques et pouvoirs, distinct des sons des besoins.
-- [x] **Fait — Son d’impact sur bouclier.** `assets/audio/combat/impact_bouclier.mp3` joué lorsqu’une protection absorbe une attaque.
+## Priorites et travaux ouverts
 
-- [ ] **À faire — SEO.** Suivre `docs/AUDIT_SEO.md` : présentation HTML, titre principal descriptif, URL canonique, exclusion du Dashboard et contrôle de l’indexation.
-- [ ] **À faire — Guide de démarrage.** Expliquer les besoins, l’amitié, les fragments et les ultimes en quelques étapes, consultables à nouveau.
-- [ ] **À faire — Accessibilité.** Navigation clavier, focus visible, noms accessibles des boutons, contraste des textes et option pour réduire les animations.
-- [ ] **À faire — Performance.** Mesurer le chargement sur mobile ; optimiser les décors volumineux et éviter de charger tous les visuels et sons avant qu’ils soient nécessaires.
-- [ ] **À valider — Puzzle à coupelle et couturière.** Code livré : placement libre, clic et glisser-déposer, coutures dorées en zigzag, déplacement et félicitations. Vérifier les grandes grilles, le mobile et les animations des pièces hautes/basses.
-- [ ] **À faire — Relations des personnages.** Vérifier les relations demandées dans les archives et compléter les données sans contradiction entre fiches.
-- [ ] **À valider — Notifications.** Tester durée, fermeture et survol ; réserver les confirmations persistantes aux choix qui le nécessitent.
+- [ ] Améliorations de soin — ancienne piste à réévaluer [trello:6661a537b3df7e377ba31643] - [Carte](https://trello.com/c/6661a537b3df7e377ba31643)
+  Fichiers : `assets/js/shop.js`, `assets/css/shop.css`, `lapinous-shop.json`
+- [ ] P3 — Techniques uniques [trello:6ac39dc1946e5c8a5488c49b] - [Carte](https://trello.com/c/6ac39dc1946e5c8a5488c49b)
+  Fichiers : idee ou travail futur sans correspondance de code ; aucun deplacement automatique.
+- [ ] P3 — Nouveaux consommables et équilibre des prix [trello:6ac39dc482f20ad66d405a8b] - [Carte](https://trello.com/c/6ac39dc482f20ad66d405a8b)
+  Fichiers : `assets/js/shop.js`, `assets/css/shop.css`, `lapinous-shop.json`
+- [ ] P3 — Décorations plaçables [trello:6ac39e052e962c5a09b17704] - [Carte](https://trello.com/c/6ac39e052e962c5a09b17704)
+  Fichiers : idee ou travail futur sans correspondance de code ; aucun deplacement automatique.
+- [ ] P3 — Branches d’amélioration [trello:6ac39e08cece9041c78cab09] - [Carte](https://trello.com/c/6ac39e08cece9041c78cab09)
+  Fichiers : idee ou travail futur sans correspondance de code ; aucun deplacement automatique.
+- [ ] P3 — Records supplémentaires [trello:6ac39e0b9caa6864a646e480] - [Carte](https://trello.com/c/6ac39e0b9caa6864a646e480)
+  Fichiers : `assets/js/achievements.js`
+- [ ] P3 — Mode pixel art [trello:6ac39e0ec39e56083669ea25] - [Carte](https://trello.com/c/6ac39e0ec39e56083669ea25)
+  Fichiers : idee ou travail futur sans correspondance de code ; aucun deplacement automatique.
+- [ ] P3 — Nouvelles grilles de Lapidoku [trello:6ac39e11e324891dfc4c501a] - [Carte](https://trello.com/c/6ac39e11e324891dfc4c501a)
+  Fichiers : idee ou travail futur sans correspondance de code ; aucun deplacement automatique.
+- [ ] Publication — juridique, droits et paiement [trello:6ac75d44734881469f896152] - [Carte](https://trello.com/c/6ac75d44734881469f896152)
+  Fichiers : `Lapinous_documents_juridiques/`, `docs/INSTALLATION_ET_SECURITE.md`
+- [ ] P1 — Progression et déblocage des équipements [trello:6661a5d73e3f5fce205eae72] - [Carte](https://trello.com/c/6661a5d73e3f5fce205eae72)
+  Fichiers : `assets/js/shop.js`, `assets/css/shop.css`, `lapinous-shop.json`, `assets/js/pantry.js`, `assets/js/script.js`
+- [ ] P1 — Placement des lapins et commandes [trello:6ac39d846f4f8d11b7da6ab0] - [Carte](https://trello.com/c/6ac39d846f4f8d11b7da6ab0)
+  Fichiers : `assets/js/script.js`, `assets/css/style.css`, `index.html`
+- [ ] P1 — Préparation du combat [trello:6ac39d8793f1039486b67a20] - [Carte](https://trello.com/c/6ac39d8793f1039486b67a20)
+  Fichiers : `assets/js/script.js`, `assets/css/style.css`, `index.html`
+- [ ] P1 — Sauvegardes [trello:6ac39d911abc6a7d2a71273e] - [Carte](https://trello.com/c/6ac39d911abc6a7d2a71273e)
+  Fichiers : `assets/js/script.js`, `assets/js/save-validation.js`, `assets/js/local-files.js`, `index.html`
+- [ ] P1 — Sons [trello:6ac39d93be4e45379ca8247f] - [Carte](https://trello.com/c/6ac39d93be4e45379ca8247f)
+  Fichiers : `assets/js/script.js`, `assets/audio/`
+- [ ] P2 — Notifications [trello:6ac39dbef4faf8125adc099b] - [Carte](https://trello.com/c/6ac39dbef4faf8125adc099b)
+  Fichiers : `assets/js/script.js`
+- [ ] Équipes favorites [trello:6ac39e147db15f1edab9c326] - [Carte](https://trello.com/c/6ac39e147db15f1edab9c326)
+  Fichiers : idee ou travail futur sans correspondance de code ; aucun deplacement automatique.
+- [ ] P1 — Équilibrage des boss [trello:6ac39d8a40c2a66ada563abc] - [Carte](https://trello.com/c/6ac39d8a40c2a66ada563abc)
+  Fichiers : `assets/js/script.js`, `assets/css/style.css`, `index.html`
+- [ ] P1 — Indicateur de difficulté plus fiable [trello:6ac39d8ef2a33d8d5e748be8] - [Carte](https://trello.com/c/6ac39d8ef2a33d8d5e748be8)
+  Fichiers : `assets/js/script.js`, `assets/css/style.css`, `index.html`
+- [ ] P2 — SEO [trello:6ac39d99f4eb044b2a42d449] - [Carte](https://trello.com/c/6ac39d99f4eb044b2a42d449)
+  Fichiers : `index.html`, `docs/AUDIT_SEO.md`
+- [ ] P2 — Guide de démarrage [trello:6ac39daf6e132da85a61925d] - [Carte](https://trello.com/c/6ac39daf6e132da85a61925d)
+  Fichiers : `index.html`
+- [ ] P2 — Accessibilité [trello:6ac39db1a134b35f03b17940] - [Carte](https://trello.com/c/6ac39db1a134b35f03b17940)
+  Fichiers : `assets/css/style.css`, `index.html`, `assets/js/dashboard.js`, `assets/js/dashboard-ui.js`, `dashboard.html`
+- [ ] P2 — Performance [trello:6ac39db49bd7456ac00b5038] - [Carte](https://trello.com/c/6ac39db49bd7456ac00b5038)
+  Fichiers : `assets/css/style.css`, `index.html`, `assets/js/dashboard.js`, `assets/js/dashboard-ui.js`, `dashboard.html`
+- [ ] P2 — Relations des personnages [trello:6ac39dbb2c736f2180aee1ec] - [Carte](https://trello.com/c/6ac39dbb2c736f2180aee1ec)
+  Fichiers : `assets/js/species-data.js`, `lapinous-content.json`, `assets/js/script.js`
 
-## Priorité 3 — évolutions de jeu
+## Fonctionnalites existantes : validations
 
-- [ ] **À faire — Techniques uniques.** Remplacer progressivement les techniques génériques par des effets adaptés à chaque lapin, avec des descriptions précises.
-- [ ] **À faire — Nourritures variées.** Boutique avec prix et effets distincts ; afficher clairement les ressources nécessaires.
-- [ ] **À faire — Décorations plaçables.** Inventaire, placement par pièce et limites de bonus ; séparer décoration et amélioration fonctionnelle.
-- [ ] **À faire — Branches d’amélioration.** Proposer des choix utiles par pièce sans rendre une seule option systématiquement meilleure.
-- [ ] **À faire — Records supplémentaires.** Meilleure distance d’agilité, Memory en moins de coups, victoires sans K.O. ; les succès de collection, niveaux, œufs et victoires existent déjà.
-- [ ] **À faire — Mode pixel art.** Définir un vrai mode à partir des images de puzzles, avec niveaux et progression distincts.
-- [ ] **À faire — Mini-jeux plus variés.** Ajouter des grilles de Lapidoku ; les 30 niveaux de Memory avec lapins et boss sont déjà présents et restent à équilibrer.
+- [ ] faire une modal qui souvre avec un bouton image livre pour afficher les regles du jeu [trello:6661a8eefa746159ea2700da] - [Carte](https://trello.com/c/6661a8eefa746159ea2700da)
+  Fichiers : `index.html`
+- [ ] faire le clicker pour lui donner a manger le brosser [trello:6661a4b7b41cd821c331d689] - [Carte](https://trello.com/c/6661a4b7b41cd821c331d689)
+  Fichiers : `assets/js/script.js`, `assets/css/style.css`, `index.html`
+- [ ] Barres de besoins et niveau d’amitié [trello:6661a5ec1e0c59351bd18a52] - [Carte](https://trello.com/c/6661a5ec1e0c59351bd18a52)
+  Fichiers : `assets/js/script.js`, `assets/css/style.css`, `index.html`
+- [ ] trouver un gif de lapin heureux [trello:6661a91283b1bf3c205e457c] - [Carte](https://trello.com/c/6661a91283b1bf3c205e457c)
+  Fichiers : `assets/js/image-manifest.js`, `assets/js/image-assets.js`, `tools/update-images.mjs`, `tools/cloudinary-sync.mjs`, `tools/backup-transferred-images.mjs`
+- [ ] Retour au Salon et informations du lapin [trello:6669758ceb6d2b877ef431fa] - [Carte](https://trello.com/c/6669758ceb6d2b877ef431fa)
+  Fichiers : `assets/js/script.js`, `assets/css/style.css`, `index.html`
+- [ ] trouver les images [trello:6661b309ac71b719ebc63fd7] - [Carte](https://trello.com/c/6661b309ac71b719ebc63fd7)
+  Fichiers : `assets/js/image-manifest.js`, `assets/js/image-assets.js`, `tools/update-images.mjs`, `tools/cloudinary-sync.mjs`, `tools/backup-transferred-images.mjs`
+- [ ] faire une zone soin alimentation sommeil et jeu avec des fond différent [trello:6661a6149952d95e5c048f9a] - [Carte](https://trello.com/c/6661a6149952d95e5c048f9a)
+  Fichiers : `assets/js/species-data.js`, `lapinous-content.json`, `assets/css/style.css`, `index.html`
+- [ ] thème sur les lapins [trello:6661a423f3b0f23f486d3590] - [Carte](https://trello.com/c/6661a423f3b0f23f486d3590)
+  Fichiers : `assets/js/species-data.js`, `lapinous-content.json`, `assets/css/style.css`, `index.html`
+- [ ] faire un salon avec des bouton de base  pour les diffèrent lieu et une fleche pour revenir en arriere [trello:6661b4124754141925b73499] - [Carte](https://trello.com/c/6661b4124754141925b73499)
+  Fichiers : `assets/js/script.js`, `assets/css/style.css`, `index.html`
+- [ ] Adoption, traits, collection et encyclopédie [trello:6ac39e3c28d335cd92c8cc95] - [Carte](https://trello.com/c/6ac39e3c28d335cd92c8cc95)
+  Fichiers : `assets/js/species-data.js`, `lapinous-content.json`, `assets/js/script.js`
+- [ ] Progression indépendante par lapin [trello:6ac39e3f09478ebeda38c92d] - [Carte](https://trello.com/c/6ac39e3f09478ebeda38c92d)
+  Fichiers : `assets/js/script.js`, `assets/css/style.css`, `index.html`
+- [ ] Combat tactique — équipe, mode manuel et automatique [trello:6ac39e4258234f0f6df5def5] - [Carte](https://trello.com/c/6ac39e4258234f0f6df5def5)
+  Fichiers : `assets/js/script.js`, `assets/css/style.css`, `index.html`
+- [ ] Ultimes et barres de charge — lapins et boss [trello:6ac39e452732a48b7581df6e] - [Carte](https://trello.com/c/6ac39e452732a48b7581df6e)
+  Fichiers : `assets/js/script.js`, `assets/css/style.css`, `index.html`
+- [ ] Listes de 1 à 6 attaques selon la rareté [trello:6ac39e5cff0d2d466b27ecbb] - [Carte](https://trello.com/c/6ac39e5cff0d2d466b27ecbb)
+  Fichiers : `assets/js/script.js`, `assets/css/style.css`, `index.html`
+- [ ] Fragments — amélioration de la technique choisie [trello:6ac39e5fd921b05e95245ff0] - [Carte](https://trello.com/c/6ac39e5fd921b05e95245ff0)
+  Fichiers : `assets/js/shop.js`, `assets/css/shop.css`, `lapinous-shop.json`, `assets/js/script.js`
+- [ ] Œufs illustrés — ouverture individuelle et par 10 [trello:6ac39e61cbe7415819b24df8] - [Carte](https://trello.com/c/6ac39e61cbe7415819b24df8)
+  Fichiers : `assets/js/script.js`, `assets/js/dashboard.js`, `assets/js/dashboard-ui.js`, `dashboard.html`
+- [ ] Décors de saisons jour/nuit et événements prioritaires [trello:6ac39efb4988b40cec255170] - [Carte](https://trello.com/c/6ac39efb4988b40cec255170)
+  Fichiers : `assets/js/species-data.js`, `lapinous-content.json`, `assets/css/style.css`, `index.html`
+- [ ] Admin local — tests rapides et Dashboard [trello:6ac39efeb8e60614e640ad49] - [Carte](https://trello.com/c/6ac39efeb8e60614e640ad49)
+  Fichiers : `assets/js/dashboard.js`, `assets/js/dashboard-ui.js`, `dashboard.html`, `assets/js/species-data.js`, `lapinous-content.json`
+- [ ] Dashboard — graphiques de rareté harmonisés [trello:6ac39f0129a42ce3c535a196] - [Carte](https://trello.com/c/6ac39f0129a42ce3c535a196)
+  Fichiers : `assets/js/dashboard.js`, `assets/js/dashboard-ui.js`, `dashboard.html`, `assets/js/species-data.js`, `lapinous-content.json`
+- [ ] Sauvegardes nommées, datées et remplacement confirmé [trello:6ac39f0465d01dcee2c8411d] - [Carte](https://trello.com/c/6ac39f0465d01dcee2c8411d)
+  Fichiers : `assets/js/script.js`, `assets/js/save-validation.js`, `assets/js/local-files.js`, `index.html`
+- [ ] Mini-jeux — Memory 30 niveaux et puzzles cousus [trello:6ac39f1ffd16599635e62ae9] - [Carte](https://trello.com/c/6ac39f1ffd16599635e62ae9)
+  Fichiers : `assets/js/puzzle-data.js`, `lapinous-puzzles.json`, `assets/js/script.js`, `assets/js/quiz.js`, `assets/js/quiz-dashboard.js`, `lapinous-quiz.json`
+- [ ] Défis quotidiens, succès et récompenses [trello:6ac39f233ae89c6d7a24fb0c] - [Carte](https://trello.com/c/6ac39f233ae89c6d7a24fb0c)
+  Fichiers : `assets/js/achievements.js`
+- [ ] Audio — soins courts, volumes et défaite [trello:6ac39f2681968bcd0d9b086d] - [Carte](https://trello.com/c/6ac39f2681968bcd0d9b086d)
+  Fichiers : `assets/js/script.js`, `assets/audio/`
+- [ ] Audio original livré — ambiance et sommeil [trello:6ac39f295fcf0100cf51e1cd] - [Carte](https://trello.com/c/6ac39f295fcf0100cf51e1cd)
+  Fichiers : `assets/js/script.js`, `assets/audio/`
+- [ ] Notifications et combat lisible — corrections livrées [trello:6ac39f2b43bb87374c9f2e22] - [Carte](https://trello.com/c/6ac39f2b43bb87374c9f2e22)
+  Fichiers : `assets/js/script.js`, `assets/css/style.css`, `index.html`
+- [ ] Salon — compagnons ensemble et placement corrigé [trello:6ac39f2fa02c69b499e17ea8] - [Carte](https://trello.com/c/6ac39f2fa02c69b499e17ea8)
+  Fichiers : `assets/js/script.js`, `assets/css/style.css`, `index.html`
+- [ ] Repères — feuille de route du 08-10-2026 [trello:6ac39f30bfe4848ec3eca940] - [Carte](https://trello.com/c/6ac39f30bfe4848ec3eca940)
+  Fichiers : `readme.md`, `A_FAIRE.md`
 
-## Nouvelles idées à sélectionner
+## Tests manuels a effectuer
 
-- [ ] **Idée — Équipes favorites.** Enregistrer trois compositions et les rappeler lors du choix du boss.
-- [ ] **Idée — Boss à comportements distincts.** Attaque annoncée à l’avance, phases et points faibles pour donner une utilité aux protections et aux soins.
-- [ ] **Idée — Défis de combat.** Victoire avec un seul lapin ou sans ultime, récompense unique plutôt que farming illimité.
-- [ ] **Idée — Journal de collection.** Recherche et filtres par rareté, événement, niveau et technique ; montrer les objectifs encore accessibles.
-- [ ] **Idée — Expéditions courtes.** Envoyer un compagnon chercher des matériaux pendant une durée choisie, sans perte punitive en cas d’absence.
-- [ ] **Idée — Albums saisonniers.** Objectifs propres à Halloween, Noël et Pâques avec suivi des récompenses et calendrier visible.
-- [ ] **Idée — Sauvegarde de secours.** Conserver une précédente sauvegarde locale et rappeler périodiquement l’export JSON.
+- [ ] À valider — Puzzle à coupelle et couturière [trello:6ac39db7ff0d2d466b26fe7b] - [Carte](https://trello.com/c/6ac39db7ff0d2d466b26fe7b)
+  Fichiers : `assets/js/puzzle-data.js`, `lapinous-puzzles.json`, `assets/js/script.js`
+- [ ] À valider — Boutique et apothicaire [trello:6ac75d423df6f3af4d7dffa3] - [Carte](https://trello.com/c/6ac75d423df6f3af4d7dffa3)
+  Fichiers : `assets/js/shop.js`, `assets/css/shop.css`, `lapinous-shop.json`
+- [ ] À valider — Memory 30 niveaux [trello:6ac75d4306880ab48923dd1c] - [Carte](https://trello.com/c/6ac75d4306880ab48923dd1c)
+  Fichiers : `assets/js/puzzle-data.js`, `lapinous-puzzles.json`, `assets/js/script.js`
+- [ ] À valider — Besoins admin et jeux adaptés à l’écran [trello:6ac75fbda79c4c777508987e] - [Carte](https://trello.com/c/6ac75fbda79c4c777508987e)
+  Fichiers : `assets/js/dashboard.js`, `assets/js/dashboard-ui.js`, `dashboard.html`, `assets/js/species-data.js`, `lapinous-content.json`
+- [ ] Valider accueil apothicaire, bouclier et visibilité du Dashboard [trello:6ac761f58b664d27cb2e9cd5] - [Carte](https://trello.com/c/6ac761f58b664d27cb2e9cd5)
+  Fichiers : `assets/js/dashboard.js`, `assets/js/dashboard-ui.js`, `dashboard.html`, `assets/js/species-data.js`, `lapinous-content.json`
+- [ ] Valider puzzles verrouillés et Memory compact [trello:6ac763f9346a0a7e6149d7fb] - [Carte](https://trello.com/c/6ac763f9346a0a7e6149d7fb)
+  Fichiers : `assets/js/puzzle-data.js`, `lapinous-puzzles.json`, `assets/js/script.js`
+- [ ] Valider accès Admin aux derniers niveaux et noms après rechargement [trello:6ac7652bc8ce084387e31ecc] - [Carte](https://trello.com/c/6ac7652bc8ce084387e31ecc)
+  Fichiers : `assets/js/dashboard.js`, `assets/js/dashboard-ui.js`, `dashboard.html`, `assets/js/species-data.js`, `lapinous-content.json`
+- [ ] Valider cartes puzzles Dashboard et taux des œufs [trello:6ac76646894f17c16d8646d1] - [Carte](https://trello.com/c/6ac76646894f17c16d8646d1)
+  Fichiers : `assets/js/dashboard.js`, `assets/js/dashboard-ui.js`, `dashboard.html`, `assets/js/species-data.js`, `lapinous-content.json`
+- [ ] Valider Dashboard en accordéons et catalogue magasin [trello:6ac76741ba45b4cc22e9893c] - [Carte](https://trello.com/c/6ac76741ba45b4cc22e9893c)
+  Fichiers : `assets/js/dashboard.js`, `assets/js/dashboard-ui.js`, `dashboard.html`, `assets/js/species-data.js`, `lapinous-content.json`
+- [ ] Valider Dashboard visuel, taux des œufs et poids README [trello:6ac76ac51940e93ee2c2d397] - [Carte](https://trello.com/c/6ac76ac51940e93ee2c2d397)
+  Fichiers : `assets/js/dashboard.js`, `assets/js/dashboard-ui.js`, `dashboard.html`, `assets/js/species-data.js`, `lapinous-content.json`
+- [ ] Valider cuisine, Marché et évolutions progressives [trello:6ac775a5d9cc9195c78cfc47] - [Carte](https://trello.com/c/6ac775a5d9cc9195c78cfc47)
+  Fichiers : `assets/js/shop.js`, `assets/css/shop.css`, `lapinous-shop.json`, `assets/js/pantry.js`, `assets/js/script.js`
+- [ ] Valider frigo cliquable et nouveaux aliments du Marché [trello:6ac7808c657c947629f42e6e] - [Carte](https://trello.com/c/6ac7808c657c947629f42e6e)
+  Fichiers : `assets/js/pantry.js`, `assets/js/shop.js`, `assets/css/shop.css`, `lapinous-shop.json`
 
-## Déjà présent dans le code — ne pas redemander comme nouveauté
+## Idees conservees
 
-- Nouvel An chinois : calendrier variable, fenêtre réglable, fonds jour/nuit, camembert et filtre Dashboard ; six fiches de raretés variées avec lore, relations et techniques. À valider visuellement ; compléter la vue de face de Yuehua et contrôler les dates après 2028.
-- Médias : sons saisonniers rangés dans `assets/audio/evenements/` avec leurs sous-dossiers ; images dans les sous-dossiers Halloween, Noel, Paques, Multi_saisons et Nouvel_An_Chinois de `assets/img/lapins_jouables/lapin_evenement/`.
-- Encyclopédie : fiches ouvertes en haut et position de liste conservée au retour. À valider visuellement sur ordinateur et mobile.
+- [ ] Boss à comportements distincts [trello:6ac39e1702dcc73d8bd079c2] - [Carte](https://trello.com/c/6ac39e1702dcc73d8bd079c2)
+  Fichiers : idee ou travail futur sans correspondance de code ; aucun deplacement automatique.
+- [ ] Défis de combat [trello:6ac39e1aaf413db2ee993e59] - [Carte](https://trello.com/c/6ac39e1aaf413db2ee993e59)
+  Fichiers : idee ou travail futur sans correspondance de code ; aucun deplacement automatique.
+- [ ] Journal de collection [trello:6ac39e2f7f2924d04ff78274] - [Carte](https://trello.com/c/6ac39e2f7f2924d04ff78274)
+  Fichiers : `assets/js/species-data.js`, `lapinous-content.json`, `assets/js/script.js`
+- [ ] Expéditions courtes [trello:6ac39e33093ac1a6041de63f] - [Carte](https://trello.com/c/6ac39e33093ac1a6041de63f)
+  Fichiers : idee ou travail futur sans correspondance de code ; aucun deplacement automatique.
+- [ ] Albums saisonniers [trello:6ac39e3688258482918621e0] - [Carte](https://trello.com/c/6ac39e3688258482918621e0)
+  Fichiers : idee ou travail futur sans correspondance de code ; aucun deplacement automatique.
+- [ ] Sauvegarde de secours [trello:6ac39e3935def311b21d9772] - [Carte](https://trello.com/c/6ac39e3935def311b21d9772)
+  Fichiers : `assets/js/script.js`, `assets/js/save-validation.js`, `assets/js/local-files.js`, `index.html`
 
-- Adoption, traits aléatoires, collection et encyclopédie avec choix du compagnon.
-- Progression indépendante, soins, niveaux, œufs et doublons convertibles en fragments.
-- Combat au tour par tour jusqu’à trois lapins, modes manuel/automatique, techniques et ultime.
-- Aperçu des PV, attaques et puissances ; comparaison de la puissance de l’équipe et du boss.
-- Puzzle, runner d’agilité, Memory et Lapidoku 4×4.
-- Défis quotidiens, grands succès et records avec récompenses récupérables.
-- Événements saisonniers, décors et sons ; deux sons simultanés au game over.
-- Dashboard de contenu et sauvegardes nommées/exportables.
+## Suivi historique et code livre
 
-## Catalogues et historique
+- [ ] README et arborescence — actualisés le 08-10-2026 [trello:6ac39d96335bf1dad3b0d2f2] - [Carte](https://trello.com/c/6ac39d96335bf1dad3b0d2f2)
+  Fichiers : `readme.md`, `A_FAIRE.md`, `tools/agent_lapinous/agent.py`, `tools/agent_lapinous/installer_taches.ps1`, `tools/agent_lapinous/liaisons_trello.json`
+- [x] Magasin et inventaire — code livré [trello:6ac75d3f821f8ecfbfefd1b3] - [Carte](https://trello.com/c/6ac75d3f821f8ecfbfefd1b3)
+  Fichiers : `assets/js/shop.js`, `assets/css/shop.css`, `lapinous-shop.json`
+- [x] Accompagnateurs et lapins — médias centralisés [trello:6ac75d402925f959a3e9afbc] - [Carte](https://trello.com/c/6ac75d402925f959a3e9afbc)
+  Fichiers : `assets/js/image-manifest.js`, `assets/js/image-assets.js`, `tools/update-images.mjs`, `tools/cloudinary-sync.mjs`, `tools/backup-transferred-images.mjs`, `tools/cloudinary-corbeille.mjs`, `tools/run-image-schedule.ps1`
 
-- `liste de futur création/futur_lapin.md` : concepts de futurs lapins.
-- `liste de futur création/future_boss.md` : concepts de futurs boss.
-- `docs/archives/a-faire/` : demandes originales, retours et relations détaillées.
-- `docs/AUDIT_SEO.md` : constats et actions SEO, indépendants des évolutions de gameplay.
+## Criteres de validation conserves
 
-## Magasin du terrier
+- [ ] Combats : equipes de 1/2/3, niveaux 1/20/40/60/80/100, puissance lisible, ultimes, soins, protections et difficulte reelle.
+- [ ] Progression : plafond 100, oeufs 20/40/60/80/100 et fragments d’Azazel sans recompense repetee au chargement.
+- [ ] Memory : 30 niveaux, 36 paires, records et anciennes sauvegardes ; puzzles : verrouillage, evenements, clavier/toucher et couturiere.
+- [ ] Audio : game over double, bouclier, soins courts, volumes et sons saisonniers sans superposition incorrecte.
+- [ ] Evenements : dates du Nouvel An chinois apres 2028, vue de face de Yuehua, calendrier et filtres Dashboard.
+- [ ] Publication : droits des images et musiques, documents juridiques, confidentialite et paiement avant ouverture des packs Carottes.
+- [ ] Randonneur : nouvelles images a integrer si confirmees dans une fonctionnalite ; ne pas supprimer les creations futures.
 
-- [x] Magasin avec caissier en débord, pose de présentation et pose de remerciement.
-- [x] Trois soins achetés en carottes et stockés dans l’inventaire, utilisables sur le lapin actif ; sauvegarde des quantités.
-- [x] Extracteur remboursant les fragments de la seule compétence choisie, avec confirmation et conservation des autres améliorations.
-- [ ] Valider les prix de départ (15 carottes par soin, 30 pour l’extracteur) et ajouter les prochains articles au catalogue.
-- [ ] Définir les packs de carottes et le circuit de paiement réel avant d’activer les achats payants.
+## Bilan quotidien
 
-- [x] Compétences débloquées selon le niveau du lapin : 1, 10, 20, 30, 40, 50 ; fragments indépendants du déblocage.
-
-## Évolutions livrées et validations — 8 octobre 2026
-
-- [x] **Fait — Panier regroupé.** Images, quantités +/−, retrait, validation complète avant débit et total/paiement hors de la zone défilante.
-- [x] **Fait — Rayons séparés.** Consommables illustrés avec détails au survol/focus ; extracteur et liste des lapins côte à côte dans Fragments.
-- [x] **Fait — Inventaire indépendant.** Bouton 🌿, meuble de 12 tiroirs, emplacements fixes répartis entre les rangées, produits absents sans image, fiche de détail claire au survol.
-- [x] **Fait — Apothicaire.** Sept nouvelles poses et GIF intégrés : accueil, attente, marche gauche/miroir droite, récupération basse/moyenne/haute et remise au retour. Déplacement horizontal et annulation du soin à la fermeture.
-- [x] **Fait — Médias rangés.** Accompagnateurs dans `assets/img/accompagnateurs/`, poses centralisées dans `lapinous-shop.json` ; lapins dans `lapins_jouables/sans_evenements/` et `lapins_jouables/lapin_evenement/` ; SVG boss dans `boss/`. Conversion des anciens chemins de portraits du Dashboard.
-- [x] **Fait — Memory étendu.** 30 niveaux de 3 à 36 paires avec lapins et boss et animation de collecte.
-- [x] **Fait — Fragments d’Azazel.** Un fragment obtenu à chaque niveau gagné ; vérifier absence de doublon de récompense après chargement.
-- [ ] **À valider — Boutique et apothicaire en situation réelle.** Ordinateur, mobile, zoom navigateur, longue liste de lapins, survol/clavier/toucher, total visible, pieds au sol, sens du GIF et remise après arrivée. Prix 15/30 à équilibrer.
-- [ ] **À valider — Memory.** Déblocage, records et sauvegardes anciennes ; vérifier les 30 niveaux et le confort des grilles de 36 paires.
-- [ ] **À valider — Migration des images.** Charger une ancienne partie et des portraits personnalisés du Dashboard après le rangement ; vérifier les chemins et la casse sur l’hébergement Linux.
-- [ ] **À faire — Publication.** Garder magasin, inventaire et juridique en administrateur local jusqu’à validation ; terminer les documents, droits des visuels et audio, packs et paiement avant ouverture publique.
-
-## Maintien du suivi
-
-Après chaque changement : actualiser ce fichier, les fonctionnalités et l’arborescence du README, puis les cartes concernées du [Trello](https://trello.com/b/5VmsAFi7/clikergame). Séparer code livré et validation en jeu ; conserver les tâches encore ouvertes. La synchronisation se fait pendant les interventions, sans tâche de fond automatique.
-
-- [x] **Fait — Tests des besoins admin.** Curseurs nourriture/sommeil/propreté du compagnon actif et bouton 25 %, restauration de la partie de test conservée.
-- [x] **Fait — Atelier adapté à la hauteur.** Coupelle horizontale, aperçu refermable et cartes Memory dimensionnées selon les rangées.
-- [ ] **À valider — Jeux sans défilement.** Tester petites fenêtres, mobile et zoom, puzzles à beaucoup de pièces, Memory 36 paires et Lapidoku ; vérifier lisibilité et commandes accessibles.
-
-### Mise à jour du 8 octobre 2026 — accueil et administration
-
-- [x] Afficher Bonjour pendant la pose d’accueil de l’apothicaire.
-- [x] Brancher le son d’activation du bouclier.
-- [x] Accéder au Dashboard depuis le panneau Admin et retirer son cadenas de l’encyclopédie.
-- [x] Configurer la visibilité des fonctions dans le Dashboard et exporter ces choix avec le contenu.
-- [ ] Valider à l’écoute le volume de l’activation du bouclier et vérifier les choix de visibilité sur le site publié après export.
-
-### Puzzles et Memory — 8 octobre 2026
-
-- [x] Déplacer l’aperçu hors du plateau pour laisser toutes les cases accessibles.
-- [x] Verrouiller les pièces correctes, y compris contre un remplacement ou un glisser-déposer.
-- [x] Réduire la hauteur des cartes et commandes du Memory ; prévisualisation à 1250 × 720.
-- [ ] Valider les plus grands niveaux du Memory sur petit écran avec les panneaux du jeu.
-
-### Corrections du 8 octobre 2026 — cartes, tests et sauvegardes
-
-- [x] Empêcher les panneaux de besoins et d’amitié de cacher les cartes pendant les mini-jeux.
-- [x] Donner accès à tous les niveaux Memory et puzzles pendant les tests Admin, événements inclus.
-- [x] Empêcher l’ancien nom global de contaminer un autre lapin au rechargement.
-- [ ] Vérifier en jeu les noms déjà affectés : ne pas réinitialiser automatiquement les noms personnalisés.
-
-### Dashboard et œufs — 8 octobre 2026
-
-- [x] Contenir les curseurs et libellés des besoins dans le panneau Admin.
-- [x] Afficher les taux par rareté dans les ouvertures d’un ou dix œufs, avec actualisation après enregistrement Dashboard.
-- [x] Remplacer le tableau puzzles par des cartes illustrées et conserver leurs actions.
-- [ ] Vérifier visuellement les cartes Dashboard sur mobile et les ouvertures d’œufs avec le son.
-
-### Navigation Dashboard — 8 octobre 2026
-
-- [x] Déplacer l’aperçu des puzzles à gauche en conservant la couturière visible.
-- [x] Ajouter le JSON magasin au Dashboard avec validation, essai local et export.
-- [x] Regrouper les sections dans des accordéons avec un menu d’accès rapide.
-- [ ] Valider l’édition du catalogue et les accordéons sur mobile.
-
-### Présentation Dashboard et œufs — 8 octobre 2026
-
-- [x] Cartes illustrées repliables pour puzzles et produits, filtre puzzles par événement.
-- [x] Accompagnateurs séparés dans un tableau éditable.
-- [x] Menu dans le header fixe et Dashboard élargi, tables contenues horizontalement.
-- [x] Visuels des œufs avant leurs taux et accès aux taux avant ouverture.
-- [x] Sélecteur de compétences lisible ; message explicite lorsqu’aucune attaque ne peut être améliorée.
-- [x] Arborescence README avec poids des fichiers, des dossiers et total.
-- [ ] Valider les cartes et tableaux du Dashboard sur plusieurs tailles d’écran.
-
-### Cuisine et évolutions — 8 octobre 2026
-
-- [x] Cinq étapes par évolution ; déblocages aux niveaux d’amitié 5/10/15/20 puis coûts 25/50/100/200 carottes.
-- [x] Marché, aliments plus efficaces, réserve en caisses et recettes à bonus temporaires.
-- [x] Préserver les stocks existants et les anciennes améliorations.
-- [ ] Fournir le visuel dédié du Chef (visuel cuisine provisoire configuré dans le catalogue).
-- [ ] Valider l’équilibrage des prix, ingrédients et bonus sur une partie longue.
-
-### Frigo et Marché — 8 octobre 2026
-
-- [x] Ouvrir la réserve au clic sur le frigo, laisser le fond de cuisine visible.
-- [x] Remplacer les aliments du Marché par fruits/légumes/fleurs distincts de la nourriture de base.
-- [x] Retirer le panier du Marché et suspendre plats/bonus sans supprimer leurs données.
-- [ ] Revoir attaques, défenses et soins avant de reprendre les plats spéciaux.
-- [ ] Valider la zone du frigo sur tous les fonds saisonniers et écrans étroits.
+- [x] Horaires de reference : Cloudinary a 20 h et bilan global a 21 h Europe/Paris.
+- [ ] Au bilan : Git, README et poids, A_FAIRE, correspondances Trello, Discord et resultat Cloudinary ; aucun push automatique.
 
 <!-- LAPINOUS_AGENT_DEBUT -->
 ### Suivi automatique du projet
 
-_Dernier bilan : 13/10/2026 11:06_
-
-Fichiers modifiés ou non suivis par Git : **34**
-
-- `.gitignore`
-- `AGENTS.md`
-- `A_FAIRE.md`
-- `allimentation.pdf`
-- `arborescence.txt`
-- `assets/css/shop.css`
-- `assets/css/style.css`
-- `assets/img/Boite_Mini_Jeu/LapinouDoku.png`
-- `assets/img/accompagnateurs/Artisan/.gitkeep`
-- `assets/img/accompagnateurs/Fragments/.gitkeep`
-- `assets/img/accompagnateurs/Fragments/assemblage_cristaux.gif`
-- `assets/img/accompagnateurs/Fragments/marche_droite.gif`
-- `assets/img/accompagnateurs/caissier/exec-030757bc-ec79-452d-83d8-00b99494ec7f.png`
-- `assets/js/dashboard-ui.js`
-- `assets/js/dashboard.js`
-- `assets/js/image-manifest.js`
-- `assets/js/pantry.js`
-- `assets/js/quiz-dashboard.js`
-- `assets/js/quiz.js`
-- `assets/js/script.js`
-- `assets/js/shop.js`
-- `assets/js/species-data.js`
-- `dashboard.html`
-- `index.html`
-- `lapinous-content.json`
-- `lapinous-quiz.json`
-- `lapinous-shop.json`
-- `readme.md`
-- `tools/image-manifest-store.mjs`
-- `tools/test-image-browser.mjs`
-- `tools/test-market-layout.mjs`
-- `tools/test-pantry-eating.mjs`
-- `tools/test-pantry-route.mjs`
-- `tools/test-quiz.mjs`
+Prochain bilan : l’agent actualisera cette section sans remplacer les cases de validation.
 <!-- LAPINOUS_AGENT_FIN -->

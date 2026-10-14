@@ -3,7 +3,11 @@
     {
       "card_id": "6661a537b3df7e377ba31643",
       "nom": "Améliorations de soin — ancienne piste à réévaluer",
-      "chemins": []
+      "chemins": [
+        "assets/js/shop.js",
+        "assets/css/shop.css",
+        "lapinous-shop.json"
+      ]
     },
     {
       "card_id": "6ac39dc1946e5c8a5488c49b",
@@ -13,7 +17,11 @@
     {
       "card_id": "6ac39dc482f20ad66d405a8b",
       "nom": "P3 — Nouveaux consommables et équilibre des prix",
-      "chemins": []
+      "chemins": [
+        "assets/js/shop.js",
+        "assets/css/shop.css",
+        "lapinous-shop.json"
+      ]
     },
     {
       "card_id": "6ac39e052e962c5a09b17704",
@@ -28,7 +36,9 @@
     {
       "card_id": "6ac39e0b9caa6864a646e480",
       "nom": "P3 — Records supplémentaires",
-      "chemins": []
+      "chemins": [
+        "assets/js/achievements.js"
+      ]
     },
     {
       "card_id": "6ac39e0ec39e56083669ea25",
@@ -43,37 +53,64 @@
     {
       "card_id": "6ac75d44734881469f896152",
       "nom": "Publication — juridique, droits et paiement",
-      "chemins": []
+      "chemins": [
+        "Lapinous_documents_juridiques/",
+        "docs/INSTALLATION_ET_SECURITE.md"
+      ]
     },
     {
       "card_id": "6661a5d73e3f5fce205eae72",
       "nom": "P1 — Progression et déblocage des équipements",
-      "chemins": []
+      "chemins": [
+        "assets/js/shop.js",
+        "assets/css/shop.css",
+        "lapinous-shop.json",
+        "assets/js/pantry.js",
+        "assets/js/script.js"
+      ]
     },
     {
       "card_id": "6ac39d846f4f8d11b7da6ab0",
       "nom": "P1 — Placement des lapins et commandes",
-      "chemins": []
+      "chemins": [
+        "assets/js/script.js",
+        "assets/css/style.css",
+        "index.html"
+      ]
     },
     {
       "card_id": "6ac39d8793f1039486b67a20",
       "nom": "P1 — Préparation du combat",
-      "chemins": []
+      "chemins": [
+        "assets/js/script.js",
+        "assets/css/style.css",
+        "index.html"
+      ]
     },
     {
       "card_id": "6ac39d911abc6a7d2a71273e",
       "nom": "P1 — Sauvegardes",
-      "chemins": []
+      "chemins": [
+        "assets/js/script.js",
+        "assets/js/save-validation.js",
+        "assets/js/local-files.js",
+        "index.html"
+      ]
     },
     {
       "card_id": "6ac39d93be4e45379ca8247f",
       "nom": "P1 — Sons",
-      "chemins": []
+      "chemins": [
+        "assets/js/script.js",
+        "assets/audio/"
+      ]
     },
     {
       "card_id": "6ac39dbef4faf8125adc099b",
       "nom": "P2 — Notifications",
-      "chemins": []
+      "chemins": [
+        "assets/js/script.js"
+      ]
     },
     {
       "card_id": "6ac39e147db15f1edab9c326",
@@ -83,232 +120,442 @@
     {
       "card_id": "6661a8eefa746159ea2700da",
       "nom": "faire une modal qui souvre avec un bouton image livre pour afficher les regles du jeu",
-      "chemins": []
+      "chemins": [
+        "index.html"
+      ]
     },
     {
       "card_id": "6661a4b7b41cd821c331d689",
       "nom": "faire le clicker pour lui donner a manger le brosser",
-      "chemins": []
+      "chemins": [
+        "assets/js/script.js",
+        "assets/css/style.css",
+        "index.html"
+      ]
     },
     {
       "card_id": "6661a5ec1e0c59351bd18a52",
       "nom": "Barres de besoins et niveau d’amitié",
-      "chemins": []
+      "chemins": [
+        "assets/js/script.js",
+        "assets/css/style.css",
+        "index.html"
+      ]
     },
     {
       "card_id": "6661a91283b1bf3c205e457c",
       "nom": "trouver un gif de lapin heureux",
-      "chemins": []
+      "chemins": [
+        "assets/js/image-manifest.js",
+        "assets/js/image-assets.js",
+        "tools/update-images.mjs",
+        "tools/cloudinary-sync.mjs",
+        "tools/backup-transferred-images.mjs"
+      ]
     },
     {
       "card_id": "6669758ceb6d2b877ef431fa",
       "nom": "Retour au Salon et informations du lapin",
-      "chemins": []
+      "chemins": [
+        "assets/js/script.js",
+        "assets/css/style.css",
+        "index.html"
+      ]
     },
     {
       "card_id": "6661b309ac71b719ebc63fd7",
       "nom": "trouver les images",
-      "chemins": []
+      "chemins": [
+        "assets/js/image-manifest.js",
+        "assets/js/image-assets.js",
+        "tools/update-images.mjs",
+        "tools/cloudinary-sync.mjs",
+        "tools/backup-transferred-images.mjs"
+      ]
     },
     {
       "card_id": "6661a6149952d95e5c048f9a",
       "nom": "faire une zone soin alimentation sommeil et jeu avec des fond différent",
-      "chemins": []
+      "chemins": [
+        "assets/js/species-data.js",
+        "lapinous-content.json",
+        "assets/css/style.css",
+        "index.html"
+      ]
     },
     {
       "card_id": "6661a423f3b0f23f486d3590",
       "nom": "thème sur les lapins",
-      "chemins": []
+      "chemins": [
+        "assets/js/species-data.js",
+        "lapinous-content.json",
+        "assets/css/style.css",
+        "index.html"
+      ]
     },
     {
       "card_id": "6661b4124754141925b73499",
       "nom": "faire un salon avec des bouton de base  pour les diffèrent lieu et une fleche pour revenir en arriere",
-      "chemins": []
+      "chemins": [
+        "assets/js/script.js",
+        "assets/css/style.css",
+        "index.html"
+      ]
     },
     {
       "card_id": "6ac39e3c28d335cd92c8cc95",
       "nom": "Adoption, traits, collection et encyclopédie",
-      "chemins": []
+      "chemins": [
+        "assets/js/species-data.js",
+        "lapinous-content.json",
+        "assets/js/script.js"
+      ]
     },
     {
       "card_id": "6ac39e3f09478ebeda38c92d",
       "nom": "Progression indépendante par lapin",
-      "chemins": []
+      "chemins": [
+        "assets/js/script.js",
+        "assets/css/style.css",
+        "index.html"
+      ]
     },
     {
       "card_id": "6ac39e4258234f0f6df5def5",
       "nom": "Combat tactique — équipe, mode manuel et automatique",
-      "chemins": []
+      "chemins": [
+        "assets/js/script.js",
+        "assets/css/style.css",
+        "index.html"
+      ]
     },
     {
       "card_id": "6ac39e452732a48b7581df6e",
       "nom": "Ultimes et barres de charge — lapins et boss",
-      "chemins": []
+      "chemins": [
+        "assets/js/script.js",
+        "assets/css/style.css",
+        "index.html"
+      ]
     },
     {
       "card_id": "6ac39e5cff0d2d466b27ecbb",
       "nom": "Listes de 1 à 6 attaques selon la rareté",
-      "chemins": []
+      "chemins": [
+        "assets/js/script.js",
+        "assets/css/style.css",
+        "index.html"
+      ]
     },
     {
       "card_id": "6ac39e5fd921b05e95245ff0",
       "nom": "Fragments — amélioration de la technique choisie",
-      "chemins": []
+      "chemins": [
+        "assets/js/shop.js",
+        "assets/css/shop.css",
+        "lapinous-shop.json",
+        "assets/js/script.js"
+      ]
     },
     {
       "card_id": "6ac39e61cbe7415819b24df8",
       "nom": "Œufs illustrés — ouverture individuelle et par 10",
-      "chemins": []
+      "chemins": [
+        "assets/js/script.js",
+        "assets/js/dashboard.js",
+        "assets/js/dashboard-ui.js",
+        "dashboard.html"
+      ]
     },
     {
       "card_id": "6ac39efb4988b40cec255170",
       "nom": "Décors de saisons jour/nuit et événements prioritaires",
-      "chemins": []
+      "chemins": [
+        "assets/js/species-data.js",
+        "lapinous-content.json",
+        "assets/css/style.css",
+        "index.html"
+      ]
     },
     {
       "card_id": "6ac39efeb8e60614e640ad49",
       "nom": "Admin local — tests rapides et Dashboard",
-      "chemins": []
+      "chemins": [
+        "assets/js/dashboard.js",
+        "assets/js/dashboard-ui.js",
+        "dashboard.html",
+        "assets/js/species-data.js",
+        "lapinous-content.json"
+      ]
     },
     {
       "card_id": "6ac39f0129a42ce3c535a196",
       "nom": "Dashboard — graphiques de rareté harmonisés",
-      "chemins": []
+      "chemins": [
+        "assets/js/dashboard.js",
+        "assets/js/dashboard-ui.js",
+        "dashboard.html",
+        "assets/js/species-data.js",
+        "lapinous-content.json"
+      ]
     },
     {
       "card_id": "6ac39f0465d01dcee2c8411d",
       "nom": "Sauvegardes nommées, datées et remplacement confirmé",
-      "chemins": []
+      "chemins": [
+        "assets/js/script.js",
+        "assets/js/save-validation.js",
+        "assets/js/local-files.js",
+        "index.html"
+      ]
     },
     {
       "card_id": "6ac39f1ffd16599635e62ae9",
       "nom": "Mini-jeux — Memory 30 niveaux et puzzles cousus",
-      "chemins": []
+      "chemins": [
+        "assets/js/puzzle-data.js",
+        "lapinous-puzzles.json",
+        "assets/js/script.js",
+        "assets/js/quiz.js",
+        "assets/js/quiz-dashboard.js",
+        "lapinous-quiz.json"
+      ]
     },
     {
       "card_id": "6ac39f233ae89c6d7a24fb0c",
       "nom": "Défis quotidiens, succès et récompenses",
-      "chemins": []
+      "chemins": [
+        "assets/js/achievements.js"
+      ]
     },
     {
       "card_id": "6ac39f2681968bcd0d9b086d",
       "nom": "Audio — soins courts, volumes et défaite",
-      "chemins": []
+      "chemins": [
+        "assets/js/script.js",
+        "assets/audio/"
+      ]
     },
     {
       "card_id": "6ac39f295fcf0100cf51e1cd",
       "nom": "Audio original livré — ambiance et sommeil",
-      "chemins": []
+      "chemins": [
+        "assets/js/script.js",
+        "assets/audio/"
+      ]
     },
     {
       "card_id": "6ac39f2b43bb87374c9f2e22",
       "nom": "Notifications et combat lisible — corrections livrées",
-      "chemins": []
+      "chemins": [
+        "assets/js/script.js",
+        "assets/css/style.css",
+        "index.html"
+      ]
     },
     {
       "card_id": "6ac39f2fa02c69b499e17ea8",
       "nom": "Salon — compagnons ensemble et placement corrigé",
-      "chemins": []
+      "chemins": [
+        "assets/js/script.js",
+        "assets/css/style.css",
+        "index.html"
+      ]
     },
     {
       "card_id": "6ac39f30bfe4848ec3eca940",
       "nom": "Repères — feuille de route du 08-10-2026",
-      "chemins": []
+      "chemins": [
+        "readme.md",
+        "A_FAIRE.md"
+      ]
     },
     {
       "card_id": "6ac39d8a40c2a66ada563abc",
       "nom": "P1 — Équilibrage des boss",
-      "chemins": []
+      "chemins": [
+        "assets/js/script.js",
+        "assets/css/style.css",
+        "index.html"
+      ]
     },
     {
       "card_id": "6ac39d8ef2a33d8d5e748be8",
       "nom": "P1 — Indicateur de difficulté plus fiable",
-      "chemins": []
+      "chemins": [
+        "assets/js/script.js",
+        "assets/css/style.css",
+        "index.html"
+      ]
     },
     {
       "card_id": "6ac39d99f4eb044b2a42d449",
       "nom": "P2 — SEO",
-      "chemins": []
+      "chemins": [
+        "index.html",
+        "docs/AUDIT_SEO.md"
+      ]
     },
     {
       "card_id": "6ac39daf6e132da85a61925d",
       "nom": "P2 — Guide de démarrage",
-      "chemins": []
+      "chemins": [
+        "index.html"
+      ]
     },
     {
       "card_id": "6ac39db1a134b35f03b17940",
       "nom": "P2 — Accessibilité",
-      "chemins": []
+      "chemins": [
+        "assets/css/style.css",
+        "index.html",
+        "assets/js/dashboard.js",
+        "assets/js/dashboard-ui.js",
+        "dashboard.html"
+      ]
     },
     {
       "card_id": "6ac39db49bd7456ac00b5038",
       "nom": "P2 — Performance",
-      "chemins": []
+      "chemins": [
+        "assets/css/style.css",
+        "index.html",
+        "assets/js/dashboard.js",
+        "assets/js/dashboard-ui.js",
+        "dashboard.html"
+      ]
     },
     {
       "card_id": "6ac39dbb2c736f2180aee1ec",
       "nom": "P2 — Relations des personnages",
-      "chemins": []
+      "chemins": [
+        "assets/js/species-data.js",
+        "lapinous-content.json",
+        "assets/js/script.js"
+      ]
     },
     {
       "card_id": "6ac39db7ff0d2d466b26fe7b",
       "nom": "À valider — Puzzle à coupelle et couturière",
-      "chemins": []
+      "chemins": [
+        "assets/js/puzzle-data.js",
+        "lapinous-puzzles.json",
+        "assets/js/script.js"
+      ]
     },
     {
       "card_id": "6ac75d423df6f3af4d7dffa3",
       "nom": "À valider — Boutique et apothicaire",
-      "chemins": []
+      "chemins": [
+        "assets/js/shop.js",
+        "assets/css/shop.css",
+        "lapinous-shop.json"
+      ]
     },
     {
       "card_id": "6ac75d4306880ab48923dd1c",
       "nom": "À valider — Memory 30 niveaux",
-      "chemins": []
+      "chemins": [
+        "assets/js/puzzle-data.js",
+        "lapinous-puzzles.json",
+        "assets/js/script.js"
+      ]
     },
     {
       "card_id": "6ac75fbda79c4c777508987e",
       "nom": "À valider — Besoins admin et jeux adaptés à l’écran",
-      "chemins": []
+      "chemins": [
+        "assets/js/dashboard.js",
+        "assets/js/dashboard-ui.js",
+        "dashboard.html",
+        "assets/js/species-data.js",
+        "lapinous-content.json"
+      ]
     },
     {
       "card_id": "6ac761f58b664d27cb2e9cd5",
       "nom": "Valider accueil apothicaire, bouclier et visibilité du Dashboard",
-      "chemins": []
+      "chemins": [
+        "assets/js/dashboard.js",
+        "assets/js/dashboard-ui.js",
+        "dashboard.html",
+        "assets/js/species-data.js",
+        "lapinous-content.json"
+      ]
     },
     {
       "card_id": "6ac763f9346a0a7e6149d7fb",
       "nom": "Valider puzzles verrouillés et Memory compact",
-      "chemins": []
+      "chemins": [
+        "assets/js/puzzle-data.js",
+        "lapinous-puzzles.json",
+        "assets/js/script.js"
+      ]
     },
     {
       "card_id": "6ac7652bc8ce084387e31ecc",
       "nom": "Valider accès Admin aux derniers niveaux et noms après rechargement",
-      "chemins": []
+      "chemins": [
+        "assets/js/dashboard.js",
+        "assets/js/dashboard-ui.js",
+        "dashboard.html",
+        "assets/js/species-data.js",
+        "lapinous-content.json"
+      ]
     },
     {
       "card_id": "6ac76646894f17c16d8646d1",
       "nom": "Valider cartes puzzles Dashboard et taux des œufs",
-      "chemins": []
+      "chemins": [
+        "assets/js/dashboard.js",
+        "assets/js/dashboard-ui.js",
+        "dashboard.html",
+        "assets/js/species-data.js",
+        "lapinous-content.json"
+      ]
     },
     {
       "card_id": "6ac76741ba45b4cc22e9893c",
       "nom": "Valider Dashboard en accordéons et catalogue magasin",
-      "chemins": []
+      "chemins": [
+        "assets/js/dashboard.js",
+        "assets/js/dashboard-ui.js",
+        "dashboard.html",
+        "assets/js/species-data.js",
+        "lapinous-content.json"
+      ]
     },
     {
       "card_id": "6ac76ac51940e93ee2c2d397",
       "nom": "Valider Dashboard visuel, taux des œufs et poids README",
-      "chemins": []
+      "chemins": [
+        "assets/js/dashboard.js",
+        "assets/js/dashboard-ui.js",
+        "dashboard.html",
+        "assets/js/species-data.js",
+        "lapinous-content.json"
+      ]
     },
     {
       "card_id": "6ac775a5d9cc9195c78cfc47",
       "nom": "Valider cuisine, Marché et évolutions progressives",
-      "chemins": []
+      "chemins": [
+        "assets/js/shop.js",
+        "assets/css/shop.css",
+        "lapinous-shop.json",
+        "assets/js/pantry.js",
+        "assets/js/script.js"
+      ]
     },
     {
       "card_id": "6ac7808c657c947629f42e6e",
       "nom": "Valider frigo cliquable et nouveaux aliments du Marché",
-      "chemins": []
+      "chemins": [
+        "assets/js/pantry.js",
+        "assets/js/shop.js",
+        "assets/css/shop.css",
+        "lapinous-shop.json"
+      ]
     },
     {
       "card_id": "6ac39e1702dcc73d8bd079c2",
@@ -323,7 +570,11 @@
     {
       "card_id": "6ac39e2f7f2924d04ff78274",
       "nom": "Journal de collection",
-      "chemins": []
+      "chemins": [
+        "assets/js/species-data.js",
+        "lapinous-content.json",
+        "assets/js/script.js"
+      ]
     },
     {
       "card_id": "6ac39e33093ac1a6041de63f",
@@ -338,22 +589,45 @@
     {
       "card_id": "6ac39e3935def311b21d9772",
       "nom": "Sauvegarde de secours",
-      "chemins": []
+      "chemins": [
+        "assets/js/script.js",
+        "assets/js/save-validation.js",
+        "assets/js/local-files.js",
+        "index.html"
+      ]
     },
     {
       "card_id": "6ac39d96335bf1dad3b0d2f2",
       "nom": "README et arborescence — actualisés le 08-10-2026",
-      "chemins": []
+      "chemins": [
+        "readme.md",
+        "A_FAIRE.md",
+        "tools/agent_lapinous/agent.py",
+        "tools/agent_lapinous/installer_taches.ps1",
+        "tools/agent_lapinous/liaisons_trello.json"
+      ]
     },
     {
       "card_id": "6ac75d3f821f8ecfbfefd1b3",
       "nom": "Magasin et inventaire — code livré",
-      "chemins": []
+      "chemins": [
+        "assets/js/shop.js",
+        "assets/css/shop.css",
+        "lapinous-shop.json"
+      ]
     },
     {
       "card_id": "6ac75d402925f959a3e9afbc",
       "nom": "Accompagnateurs et lapins — médias centralisés",
-      "chemins": []
+      "chemins": [
+        "assets/js/image-manifest.js",
+        "assets/js/image-assets.js",
+        "tools/update-images.mjs",
+        "tools/cloudinary-sync.mjs",
+        "tools/backup-transferred-images.mjs",
+        "tools/cloudinary-corbeille.mjs",
+        "tools/run-image-schedule.ps1"
+      ]
     }
   ]
 }
