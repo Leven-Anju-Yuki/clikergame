@@ -10,12 +10,14 @@ import os
 import re
 import subprocess
 import sys
+sys.dont_write_bytecode = True
 from pathlib import Path
 from urllib.parse import quote
 
 import requests
 from dotenv import load_dotenv
 from cloudinary_rapport import build as cloudinary_report
+from suivi_trello import collect, dirty_paths, evidence, progress, validate_tasks
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent.parent
@@ -23,7 +25,10 @@ load_dotenv(ROOT / '.env')  # Un seul .env, à la racine du projet
 ROOT = Path(os.getenv('PROJECT_ROOT') or ROOT).expanduser().resolve()
 CONFIG = HERE / 'liaisons_trello.json'
 REPORTS = ROOT.parent / 'clikergame_avec_image' / 'rapports'
-REPORTS.mkdir(parents=True, exist_ok=True)
+STATE_FILE = ROOT / '.cloudinary-local' / 'trello-state.json'
+REMOTE_WRITES = False
+APPLICATION_REQUESTED = False
+ALLOWED_LISTS = set()
 START = '<!-- LAPINOUS_AGENT_DEBUT -->'
 END = '<!-- LAPINOUS_AGENT_FIN -->'
 SKIP = {'.git', '.venv', 'node_modules', '__pycache__', '.cloudinary-local', 'rapports'}
@@ -47,6 +52,13 @@ def safe_error(exc):
 
 
 def api(method, path, params=None):
+    if method != 'GET':
+        if not REMOTE_WRITES:
+            raise RuntimeError('Écriture Trello interdite en simulation.')
+        move = method == 'PUT' and re.fullmatch(r'cards/[a-f0-9]{24}', path) and set(params or {}) == {'idList'} and params['idList'] in ALLOWED_LISTS
+        comment = method == 'POST' and re.fullmatch(r'cards/[a-f0-9]{24}/actions/comments', path)
+        if not (move or comment):
+            raise RuntimeError('Action Trello interdite : aucune création ni passage dans Réalisé.')
     key = os.getenv('TRELLO_API_KEY', '').strip()
     token = os.getenv('TRELLO_TOKEN', '').strip()
     if not key or not token:
@@ -61,7 +73,10 @@ def api(method, path, params=None):
 
 def get_lists():
     lists = api('GET', f'boards/{quote(BOARD, safe="")}/lists', {'filter': 'open', 'fields': 'id,name'})
-    return {item['name'].strip().casefold(): item for item in lists}
+    result = {item['name'].strip().casefold(): item for item in lists}
+    if len(result) != len(lists):
+        raise ValueError('Noms de listes Trello en double : aucune transition autorisée.')
+    return result
 
 
 def list_id(lists, name):
@@ -72,23 +87,15 @@ def list_id(lists, name):
         'bloque': ('bloqué', 'bloque'),
         'idees': ('idées à sélectionner', 'idees a selectionner'),
     }
-    for candidate in aliases.get(name, (name,)):
-        if candidate.casefold() in lists:
-            return lists[candidate.casefold()]['id']
-    return None
+    matches = [lists[candidate.casefold()]['id'] for candidate in aliases.get(name, (name,))
+               if candidate.casefold() in lists]
+    if len(set(matches)) > 1:
+        raise ValueError('Plusieurs listes correspondent à : ' + name)
+    return matches[0] if matches else None
 
 
 def git_changes():
-    p = subprocess.run(['git', '-C', str(ROOT), 'status', '--porcelain=v1', '-uall'],
-                       capture_output=True, text=True, timeout=30, encoding='utf-8', errors='replace')
-    if p.returncode:
-        raise RuntimeError('Git indisponible : ' + p.stderr[:200])
-    paths = []
-    for line in p.stdout.splitlines():
-        path = line[3:].split(' -> ')[-1].strip('"').replace('\\', '/')
-        if path and not path.startswith('tools/agent_lapinous/'):
-            paths.append(path)
-    return sorted(set(paths))
+    return dirty_paths(ROOT)
 
 
 def replace_section(path, title, body):
@@ -128,18 +135,15 @@ def load_mappings():
 
 
 def task_state(todo, card_id):
-    marker = f'[trello:{card_id}]'
-    for line in todo.splitlines():
-        if marker in line:
-            match = re.match(r'^\s*[-*]\s*\[([ xX])\]', line)
-            if match:
-                return 'termine' if match.group(1).lower() == 'x' else 'a_faire'
-    return None
+    state = progress(todo, card_id)
+    if state['ambigu']:
+        return None
+    return 'termine' if state['parent_coche'] and not state['code_restant'] else 'a_faire'
 
 
 def get_cards():
     return api('GET', f'boards/{quote(BOARD, safe="")}/cards',
-               {'filter': 'open', 'fields': 'id,name,idList,shortUrl'})
+               {'filter': 'all', 'fields': 'id,name,idList,closed,idBoard,shortUrl'})
 
 
 def initialise():
@@ -156,41 +160,56 @@ def initialise():
     print('Renseigne les chemins de chaque carte concernée. Aucun déplacement sans correspondance explicite.')
 
 
-def update_card(task, changes, todo, lists, apply):
-    cid = str(task['card_id'])
-    paths = [p.replace('\\', '/') for p in task.get('chemins', []) if isinstance(p, str) and p.strip()]
-    if not paths:
-        return None
-    card = api('GET', f'cards/{quote(cid, safe="")}', {'fields': 'id,name,idList,closed'})
+def plan_card(task, changes, todo, lists, card):
+    """Proposition pure : une correspondance de fichier ne constitue pas une preuve."""
+    cid = task['card_id']
+    state = progress(todo, cid)
+    result = {'id': cid, 'nom': task['nom'], 'depuis': None, 'vers': None,
+              'raison': '', 'preuves': evidence(task, changes), 'suivi': state}
+    if not card:
+        raise ValueError('Carte absente du tableau : ' + cid)
+    result['nom'] = card['name']
+    result['depuis'] = card['idList']
     if card.get('closed'):
-        return None
-    name = card['name']
-    current = card['idList']
-    realised = list_id(lists, 'realise')
-    ideas = list_id(lists, 'idees')
-    validate = list_id(lists, 'a_valider')
-    blocked = list_id(lists, 'bloque')
-    working = list_id(lists, 'en cours')
-    # Ne jamais faire reculer une carte validée, bloquée ou en attente de validation.
-    if current in (realised, ideas, blocked):
-        return None
-    state = task_state(todo, cid)
-    relevant = [p for p in changes if any(p == prefix.rstrip('/') or p.startswith(prefix.rstrip('/') + '/') for prefix in paths)]
-    target = None
-    reason = ''
-    if state == 'termine' and current != realised:
-        target = validate
-        reason = 'tâche cochée dans A_FAIRE.md → À valider en jeu'
-    elif relevant and current != validate:
-        target = working
-        reason = f'{len(relevant)} fichier(s) associé(s) modifié(s) → En cours'
-    if not target or target == current:
+        result['raison'] = 'Carte archivee : protegee.'
+    elif card['idList'] in {list_id(lists, key) for key in ('realise', 'idees', 'bloque', 'a_valider')}:
+        result['raison'] = 'Liste protegee : aucun deplacement automatique.'
+    elif not task.get('chemins') or task.get('automatique') is not True:
+        result['raison'] = 'Suivi manuel : aucune regle automatique explicite.'
+    elif state['ambigu']:
+        result['raison'] = 'Cases ambigues : aucun deplacement.'
+    elif state['parent_coche'] and not state['code_restant']:
+        result['vers'] = list_id(lists, 'a_valider')
+        result['raison'] = 'Case principale explicitement cochee ; code sans sous-tache ouverte. Validation humaine encore requise.'
+    elif result['preuves']:
+        result['vers'] = list_id(lists, 'en cours')
+        result['raison'] = 'Lignes modifiees pertinentes : ' + ', '.join(p['fichier'] for p in result['preuves'])
+    else:
+        result['raison'] = 'Aucune preuve precise dans les nouvelles modifications : aucun deplacement.'
+    if result['vers'] == result['depuis']:
+        result['vers'] = None
+        result['raison'] = 'Deja dans la liste correspondante. ' + result['raison']
+    return result
+
+
+def apply_plan(plan, lists):
+    """Seulement deux listes cibles ; aucune creation de carte ni validation finale."""
+    allowed = {list_id(lists, 'en cours'), list_id(lists, 'a_valider')} - {None}
+    if plan['vers'] not in allowed or plan['vers'] == list_id(lists, 'realise'):
+        raise ValueError('Transition interdite.')
+    api('PUT', 'cards/' + plan['id'], {'idList': plan['vers']})
+    api('POST', 'cards/' + plan['id'] + '/actions/comments',
+        {'text': 'Lapinous Agent : ' + plan['raison']})
+
+
+def update_card(task, changes, todo, lists, apply):
+    card = api('GET', 'cards/' + task['card_id'], {'fields': 'id,name,idList,closed'})
+    plan = plan_card(task, changes, todo, lists, card)
+    if not plan['vers']:
         return None
     if apply:
-        api('PUT', f'cards/{quote(cid, safe="")}', {'idList': target})
-        note = f'Lapinous Agent : {reason}.'
-        api('POST', f'cards/{quote(cid, safe="")}/actions/comments', {'text': note})
-    return f'{name} : {reason}' + ('' if apply else ' [SIMULATION]')
+        apply_plan(plan, lists)
+    return plan['nom'] + ' : ' + plan['raison'] + ('' if apply else ' [SIMULATION]')
 
 
 def webhook(channel):
@@ -224,7 +243,7 @@ def discord(channel, message):
 
 
 def quarantine_discord_summary():
-    """Résumé lisible J-X à 21h. Lecture seule, aucun appel Cloudinary."""
+    """Résumé J-X après la synchronisation. Lecture seule, aucun appel Cloudinary."""
     from datetime import datetime, timedelta, timezone
     state = ROOT / '.cloudinary-local'
     queue_file = state / 'quarantaine.json'
@@ -270,81 +289,189 @@ def quarantine_discord_summary():
         return f'⚠️ Suivi J-X indisponible : {type(exc).__name__} (vérifier quarantaine.json).'
 
 
-def bilan(apply):
-    changes = git_changes()
-    stamp = dt.datetime.now().astimezone().strftime('%d/%m/%Y %H:%M')
-    todo_file, readme_file = ROOT / 'A_FAIRE.md', ROOT / 'readme.md'
-    afaire = ('### Suivi automatique du projet\n\n'
-              f'_Dernier bilan : {stamp}_\n\n'
-              f'Fichiers modifiés ou non suivis par Git : **{len(changes)}**\n\n' +
-              ('\n'.join(f'- `{p}`' for p in changes[:50]) if changes else 'Aucun changement détecté.'))
-    changed_todo = replace_section(todo_file, 'À faire', afaire)
-    changed_readme = replace_section(readme_file, 'Lapinous', inventory())
-    todo = todo_file.read_text(encoding='utf-8')
-    tasks = load_mappings()
-    updates, errors = [], []
-    if any(task.get('chemins') for task in tasks):
+def notify_all(jobs):
+    """Chaque notification est tentee, meme si une precedente echoue."""
+    errors = []
+    for label, operation in jobs:
         try:
-            lists = get_lists()
-            for task in tasks:
-                try:
-                    result = update_card(task, changes, todo, lists, apply)
-                    if result:
-                        updates.append(result)
-                except Exception as exc:
-                    errors.append(f'Carte {task.get("nom", task.get("card_id", "?"))} : {safe_error(exc)}')
+            if operation() is False:
+                raise RuntimeError('Webhook absent ou notification non envoyee.')
         except Exception as exc:
-            errors.append('Chargement Trello : ' + safe_error(exc))
-    mode = 'APPLICATION' if apply else 'SIMULATION'
-    report = '\n'.join([
-        f'# Lapinous — {stamp}', '', f'Trello : {mode}',
-        f'Git : {len(changes)} fichier(s) modifié(s)',
-        f'README : {"mis à jour" if changed_readme else "inchangé"}',
-        f'A_FAIRE : {"mis à jour" if changed_todo else "inchangé"}',
-        '', '## Trello', *(updates or ['Aucune carte déplacée. Vérifie les chemins dans liaisons_trello.json.']),
-        '', '## Erreurs', *(errors or ['Aucune.'])])
-    REPORTS.mkdir(parents=True, exist_ok=True)
-    report_file = REPORTS / (dt.datetime.now().strftime('%Y-%m-%d_%H%M%S') + '_bilan.md')
-    report_file.write_text(report + '\n', encoding='utf-8')
-    cloud_report, cloud_ok = cloudinary_report(ROOT)
-    cloud_file = REPORTS / (dt.datetime.now().strftime('%Y-%m-%d_%H%M%S') + '_images.md')
-    cloud_file.write_text(cloud_report, encoding='utf-8')
+            errors.append(label + ' : ' + safe_error(exc))
+    return errors
+
+
+def save_checkpoint(snapshot):
+    STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
+    pending = STATE_FILE.with_suffix('.pending.json')
+    pending.write_text(json.dumps(snapshot, ensure_ascii=False), encoding='utf-8')
+    pending.replace(STATE_FILE)
+
+
+def bilan(apply, since=None, chain=None):
+    global REMOTE_WRITES, ALLOWED_LISTS
+    REMOTE_WRITES = False
+    tasks = load_mappings()
+    todo_file, readme_file = ROOT / 'A_FAIRE.md', ROOT / 'readme.md'
+    todo = todo_file.read_text(encoding='utf-8')
+    validate_tasks(tasks, todo)
+    changes, snapshot, warnings = collect(ROOT, STATE_FILE, tasks, since=since)
+    stamp = dt.datetime.now().astimezone().strftime('%d/%m/%Y %H:%M')
+    plans, errors = [], []
+    lists = {}
+    try:
+        lists = get_lists()
+        for key in ('en cours', 'a_valider', 'realise', 'bloque', 'idees'):
+            if not list_id(lists, key):
+                raise ValueError('Liste absente ou non reconnue : ' + key)
+        cards = get_cards()
+        cards_by_id = {card['id']: card for card in cards}
+        if len(cards_by_id) != len(cards):
+            raise ValueError('Cartes en double dans la reponse Trello.')
+        for task in tasks:
+            try:
+                plans.append(plan_card(task, changes, todo, lists, cards_by_id.get(task['card_id'])))
+            except Exception as exc:
+                errors.append(safe_error(exc))
+    except Exception as exc:
+        errors.append(safe_error(exc))
+    updates = [plan for plan in plans if plan['vers']]
+    applied = []
+    if apply and not errors:
+        ALLOWED_LISTS = {list_id(lists, 'en cours'), list_id(lists, 'a_valider')}
+        REMOTE_WRITES = True
+        try:
+            for plan in updates:
+                try:
+                    apply_plan(plan, lists)
+                    applied.append(plan['id'])
+                except Exception as exc:
+                    errors.append('Carte ' + plan['id'] + ' : ' + safe_error(exc))
+        finally:
+            REMOTE_WRITES = False
+            ALLOWED_LISTS = set()
+    names = {item['id']: item['name'] for item in lists.values()}
+    cloud_text, cloud_ok = cloudinary_report(ROOT)
+    chain_errors = []
+    if chain is not None:
+        if not isinstance(chain, dict) or type(chain.get('syncExit')) is not int:
+            raise ValueError('Contexte de chaine invalide.')
+        chain_errors = [safe_error(RuntimeError(str(item))) for item in chain.get('errors', [])]
+        if chain['syncExit'] != 0:
+            cloud_ok = False
+            chain_errors.append('La synchronisation de cette execution a echoue : code ' + str(chain['syncExit']))
+        errors.extend(chain_errors)
+    quarantine_text = quarantine_discord_summary()
+    lines = ['# Bilan Lapinous - ' + stamp,
+             'Mode : ' + ('APPLICATION' if apply else 'SIMULATION STRICTE - aucune ecriture ni notification'),
+             'Fichiers nouveaux depuis le point de reprise : ' + str(len(changes)),
+             'Cartes analysees : ' + str(len(plans)),
+             'Deplacements proposes : ' + str(len(updates)), '', '## Deplacements']
+    for plan in updates:
+        lines.append('- ' + plan['nom'] + ' [' + plan['id'] + '] : ' +
+                     names.get(plan['depuis'], '?') + ' -> ' + names.get(plan['vers'], '?') +
+                     ' ; ' + plan['raison'])
+        for proof in plan['preuves']:
+            lines.append('  Preuve : ' + proof['fichier'] + ' ; ' + ', '.join(proof['motifs']))
+    if not updates:
+        lines.append('Aucun deplacement justifie.')
+    lines.extend(['', '## Suivi detaille'])
+    for plan in plans:
+        state = plan['suivi']
+        lines.append('- ' + plan['nom'] + ' [' + plan['id'] + '] : ' + plan['raison'] +
+                     f" Sous-taches : {state['cochees']}/{state['total']}. Parent coche : {state['parent_coche']}.")
+    lines.extend(['', '## Git', *('- ' + name for name in changes), '', '## Points de vigilance',
+                  *(warnings or ['Aucun.']), '', '## Chaine de cette execution',
+                  json.dumps(chain, ensure_ascii=False) if chain else 'Bilan manuel : aucun contexte de chaine fourni.',
+                  '', '## Cloudinary — rapport complet', cloud_text,
+                  '', '## Quarantaine', quarantine_text,
+                  '', '## Notifications prevues'])
+    for channel in ('bilan', 'trello', 'images', 'erreurs'):
+        lines.append('- ' + channel + ' : ' + ('configure' if webhook(channel) else 'absent'))
+    lines.extend(['', '## Erreurs', *(errors or ['Aucune.'])])
+    report = '\n'.join(lines) + '\n'
     print(report)
-    discord('bilan', '🐰 **Bilan Lapinous**\n' + report)
-    # Rapport intégral en pièce jointe, sans troncature, dans le salon dédié.
-    send_report_file('images', cloud_file, cloud_report, cloud_ok)
-    discord('images', quarantine_discord_summary())
-    if not cloud_ok:
-        discord('erreurs', '⚠️ Synchronisation Cloudinary non confirmée à 20 h. Voir le rapport détaillé dans #cloudinary-images.')
+    if not apply:
+        return 1 if errors or not cloud_ok else 0
+    # Tous les effets de bord restent au-dessous de ce garde.
+    afaire = '### Suivi automatique du projet\n\nDernier bilan : ' + stamp + '\n\n' + report
+    REPORTS.mkdir(parents=True, exist_ok=True)
+    filename_stamp = dt.datetime.now().strftime('%Y-%m-%d_%H%M%S')
+    report_file = REPORTS / (filename_stamp + '_bilan.md')
+    cloud_file = REPORTS / (filename_stamp + '_images.md')
+    report_file.write_text(report, encoding='utf-8')
+    cloud_file.write_text(cloud_text, encoding='utf-8')
+    # Une erreur de mise a jour documentaire ne doit pas empecher les notifications.
+    try:
+        replace_section(todo_file, 'A faire', afaire)
+        replace_section(readme_file, 'Lapinous', inventory())
+    except Exception as exc:
+        errors.append('Documentation : ' + safe_error(exc))
+        report += '\n## Erreurs documentaires\n' + errors[-1] + '\n'
+        report_file.write_text(report, encoding='utf-8')
+    # Les echecs Discord ne rejouent pas des transitions Trello deja effectuees.
+    if not errors:
+        import hashlib
+        for path in (todo_file, readme_file):
+            content = path.read_bytes()
+            name = path.relative_to(ROOT).as_posix()
+            snapshot['hashes'][name] = hashlib.sha256(content).hexdigest()
+            if name in snapshot['texts']:
+                snapshot['texts'][name] = content.decode('utf-8')
+        save_checkpoint(snapshot)
+    jobs = [('bilan', lambda: discord('bilan', report[:1600] + '\nRapport complet en piece jointe.')),
+            ('bilan complet', lambda: send_report_file('bilan', report_file, report, not errors and cloud_ok)),
+            ('images', lambda: send_report_file('images', cloud_file, cloud_text, cloud_ok)),
+            ('corbeille', lambda: discord('images', quarantine_text))]
     if updates:
-        discord('trello', '📋 **Actions Trello**\n' + '\n'.join(updates))
+        message = '\n'.join(plan['nom'] + ' : ' + ('applique' if plan['id'] in applied else 'non applique')
+                            for plan in updates)
+        jobs.append(('trello', lambda: discord('trello', message)))
+    if not cloud_ok:
+        jobs.append(('alerte Cloudinary', lambda: discord('erreurs', 'Cloudinary : voir le rapport detaille.')))
     if errors:
-        discord('erreurs', '⚠️ **Erreurs Lapinous**\n' + '\n'.join(errors))
-        return 1
-    return 0 if cloud_ok else 1
+        jobs.append(('erreurs', lambda: discord('erreurs', '\n'.join(errors))))
+    notification_errors = notify_all(jobs)
+    if notification_errors:
+        report_file.write_text(report + '\n## Erreurs de notification\n' + '\n'.join(notification_errors), encoding='utf-8')
+        print('\n'.join(notification_errors))
+        for failure in notify_all([('alerte notifications', lambda: discord('erreurs', '\n'.join(notification_errors)))]):
+            print(failure)
+    return 1 if errors or notification_errors or not cloud_ok else 0
 
 
 def send_report_file(channel, file, text, ok):
     url = webhook(channel)
     if not url:
         print('Webhook images absent ; rapport conservé : ' + str(file))
-        return
+        return False
     with file.open('rb') as stream:
-        response = requests.post(url, data={'payload_json': json.dumps({'content': ('✅' if ok else '⚠️') + ' Rapport Cloudinary complet en pièce jointe.', 'allowed_mentions': {'parse': []}})}, files={'files[0]': (file.name, stream, 'text/markdown')}, timeout=60)
+        label = 'Bilan Lapinous' if channel == 'bilan' else 'Rapport Cloudinary'
+        response = requests.post(url, data={'payload_json': json.dumps({'content': ('✅' if ok else '⚠️') + ' ' + label + ' complet en pièce jointe.', 'allowed_mentions': {'parse': []}})}, files={'files[0]': (file.name, stream, 'text/markdown')}, timeout=60)
     if not response.ok:
         raise RuntimeError(f'Discord {channel} : HTTP {response.status_code}')
+    return True
 
 
 def main():
+    global APPLICATION_REQUESTED
     parser = argparse.ArgumentParser(description='Agent local Lapinous')
     parser.add_argument('commande', choices=('bilan', 'test-discord', 'test-trello', 'listes-trello', 'initialiser-trello'))
     parser.add_argument('--appliquer', action='store_true', help='Déplacer réellement les cartes Trello')
+    parser.add_argument('--depuis-commit', help='Premier passage : inclure les commits depuis cette référence explicite')
+    parser.add_argument('--chaine-base64', help='Contexte de cette synchronisation, transmis par le lanceur unique')
     args = parser.parse_args()
-    if args.commande == 'test-discord':
-        for channel in ('general', 'bilan', 'trello', 'erreurs', 'images'):
-            if webhook(channel):
-                discord(channel, f'🐰 Test Lapinous Agent : salon {channel} opérationnel.')
+    APPLICATION_REQUESTED = args.appliquer
+    if args.commande in ('test-discord', 'initialiser-trello') and not args.appliquer:
+        print('Simulation : aucune notification ni modification. Cette commande exige --appliquer.')
         return 0
+    if args.commande == 'test-discord':
+        jobs = [(channel, lambda channel=channel: discord(channel, 'Test Lapinous Agent : ' + channel))
+                for channel in ('general', 'bilan', 'trello', 'erreurs', 'images') if webhook(channel)]
+        errors = notify_all(jobs)
+        for error in errors:
+            print(error)
+        return 1 if errors else 0
     if args.commande == 'test-trello':
         me = api('GET', 'members/me', {'fields': 'username'})
         print('Connexion Trello :', me['username'])
@@ -356,7 +483,11 @@ def main():
     if args.commande == 'initialiser-trello':
         initialise()
         return 0
-    return bilan(args.appliquer)
+    chain = None
+    if args.chaine_base64:
+        import base64
+        chain = json.loads(base64.b64decode(args.chaine_base64, validate=True).decode('utf-8'))
+    return bilan(args.appliquer, args.depuis_commit, chain)
 
 
 if __name__ == '__main__':
@@ -365,8 +496,7 @@ if __name__ == '__main__':
     except Exception as exc:
         error = safe_error(exc)
         print('ERREUR : ' + error, file=sys.stderr)
-        try:
-            discord('erreurs', '⚠️ Agent Lapinous : ' + error)
-        except Exception:
-            pass
+        if APPLICATION_REQUESTED:
+            for notification_error in notify_all([('erreur fatale', lambda: discord('erreurs', error))]):
+                print(notification_error, file=sys.stderr)
         sys.exit(1)

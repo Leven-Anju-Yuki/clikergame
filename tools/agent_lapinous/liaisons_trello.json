@@ -7,12 +7,18 @@
         "assets/js/shop.js",
         "assets/css/shop.css",
         "lapinous-shop.json"
-      ]
+      ],
+      "preuves": [],
+      "automatique": false,
+      "note_automatisation": "Suivi manuel ou idee : aucun deplacement automatique."
     },
     {
       "card_id": "6ac39dc1946e5c8a5488c49b",
       "nom": "P3 — Techniques uniques",
-      "chemins": []
+      "chemins": [],
+      "preuves": [],
+      "automatique": false,
+      "note_automatisation": "Suivi manuel ou idee : aucun deplacement automatique."
     },
     {
       "card_id": "6ac39dc482f20ad66d405a8b",
@@ -21,42 +27,82 @@
         "assets/js/shop.js",
         "assets/css/shop.css",
         "lapinous-shop.json"
-      ]
+      ],
+      "preuves": [
+        {
+          "chemin": "lapinous-shop.json",
+          "motifs": [
+            "\"price\"|\"restoreAmount\"|\"market_[a-z_]+\""
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac39e052e962c5a09b17704",
       "nom": "P3 — Décorations plaçables",
-      "chemins": []
+      "chemins": [],
+      "preuves": [],
+      "automatique": false,
+      "note_automatisation": "Suivi manuel ou idee : aucun deplacement automatique."
     },
     {
       "card_id": "6ac39e08cece9041c78cab09",
       "nom": "P3 — Branches d’amélioration",
-      "chemins": []
+      "chemins": [],
+      "preuves": [],
+      "automatique": false,
+      "note_automatisation": "Suivi manuel ou idee : aucun deplacement automatique."
     },
     {
       "card_id": "6ac39e0b9caa6864a646e480",
       "nom": "P3 — Records supplémentaires",
       "chemins": [
         "assets/js/achievements.js"
-      ]
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/achievements.js",
+          "motifs": [
+            "record|achievement|reward"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac39e0ec39e56083669ea25",
       "nom": "P3 — Mode pixel art",
-      "chemins": []
+      "chemins": [],
+      "preuves": [],
+      "automatique": false,
+      "note_automatisation": "Suivi manuel ou idee : aucun deplacement automatique."
     },
     {
       "card_id": "6ac39e11e324891dfc4c501a",
       "nom": "P3 — Nouvelles grilles de Lapidoku",
-      "chemins": []
+      "chemins": [],
+      "preuves": [],
+      "automatique": false,
+      "note_automatisation": "Suivi manuel ou idee : aucun deplacement automatique."
     },
     {
       "card_id": "6ac75d44734881469f896152",
       "nom": "Publication — juridique, droits et paiement",
       "chemins": [
         "Lapinous_documents_juridiques/",
-        "docs/INSTALLATION_ET_SECURITE.md"
-      ]
+        "docs/INSTALLATION_ET_SECURITE.md",
+        "INSTALLATION_ET_SECURITE.md"
+      ],
+      "preuves": [
+        {
+          "chemin": "INSTALLATION_ET_SECURITE.md",
+          "motifs": [
+            "juridique|paiement|confidentialit"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6661a5d73e3f5fce205eae72",
@@ -67,7 +113,22 @@
         "lapinous-shop.json",
         "assets/js/pantry.js",
         "assets/js/script.js"
-      ]
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/script.js",
+          "motifs": [
+            "roomStage|roomUpgrade|purchaseUpgrade"
+          ]
+        },
+        {
+          "chemin": "lapinous-shop.json",
+          "motifs": [
+            "\"evolution\""
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac39d846f4f8d11b7da6ab0",
@@ -77,8 +138,25 @@
         "assets/css/style.css",
         "index.html",
         "assets/css/mobile.css",
-        "tools/test-mobile-game.mjs"
-      ]
+        "tools/test-mobile-game.mjs",
+        "assets/js/installer.js",
+        "tools/test-landscape-game.mjs"
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/css/mobile.css",
+          "motifs": [
+            "#gameArea|#mainNav|safe-area|adoption-screen"
+          ]
+        },
+        {
+          "chemin": "assets/js/script.js",
+          "motifs": [
+            "fitSalonFriends|rabbitImage|kitchen-scene"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac39d8793f1039486b67a20",
@@ -89,7 +167,22 @@
         "index.html",
         "assets/css/mobile.css",
         "tools/test-mobile-game.mjs"
-      ]
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/css/mobile.css",
+          "motifs": [
+            "fight-stage|fight-command|fight-team|fight-hud|battlefield|team-battlefield"
+          ]
+        },
+        {
+          "chemin": "assets/js/script.js",
+          "motifs": [
+            "prepareFight|team-preview|fight-preparation"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac39d911abc6a7d2a71273e",
@@ -101,7 +194,28 @@
         "index.html",
         "assets/css/mobile.css",
         "tools/test-mobile-game.mjs"
-      ]
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/script.js",
+          "motifs": [
+            "showOpenFilePicker|saveToFolder|savesDirHandle|serializeGame|applyLoadedGame|loadInsteadBtn|importInput|folderSaves|saveModal"
+          ]
+        },
+        {
+          "chemin": "assets/js/local-files.js",
+          "motifs": [
+            "chooseSaves|Lapinous_Sauvegardes|remember\\(\\x27player\\x27"
+          ]
+        },
+        {
+          "chemin": "assets/css/mobile.css",
+          "motifs": [
+            "save-|modal-"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac39d93be4e45379ca8247f",
@@ -109,26 +223,56 @@
       "chemins": [
         "assets/js/script.js",
         "assets/audio/"
-      ]
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/script.js",
+          "motifs": [
+            "playSfx|playAmbience|Audio\\(|volume|gameOver"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac39dbef4faf8125adc099b",
       "nom": "P2 — Notifications",
       "chemins": [
         "assets/js/script.js"
-      ]
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/script.js",
+          "motifs": [
+            "showToast|notification|toast-"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac39e147db15f1edab9c326",
       "nom": "Équipes favorites",
-      "chemins": []
+      "chemins": [],
+      "preuves": [],
+      "automatique": false,
+      "note_automatisation": "Suivi manuel ou idee : aucun deplacement automatique."
     },
     {
       "card_id": "6661a8eefa746159ea2700da",
       "nom": "faire une modal qui souvre avec un bouton image livre pour afficher les regles du jeu",
       "chemins": [
         "index.html"
-      ]
+      ],
+      "preuves": [
+        {
+          "chemin": "index.html",
+          "motifs": [
+            "rulesModal|regles|R?gles"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6661a4b7b41cd821c331d689",
@@ -137,7 +281,16 @@
         "assets/js/script.js",
         "assets/css/style.css",
         "index.html"
-      ]
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/script.js",
+          "motifs": [
+            "feedRabbit|eatKitchenItem|restoreNeed|brushRabbit"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6661a5ec1e0c59351bd18a52",
@@ -146,7 +299,16 @@
         "assets/js/script.js",
         "assets/css/style.css",
         "index.html"
-      ]
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/script.js",
+          "motifs": [
+            "updateStatusBars|friendship|gainFriendship"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6661a91283b1bf3c205e457c",
@@ -157,7 +319,16 @@
         "tools/update-images.mjs",
         "tools/cloudinary-sync.mjs",
         "tools/backup-transferred-images.mjs"
-      ]
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/image-manifest.js",
+          "motifs": [
+            "heureux|happy"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6669758ceb6d2b877ef431fa",
@@ -166,7 +337,16 @@
         "assets/js/script.js",
         "assets/css/style.css",
         "index.html"
-      ]
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/script.js",
+          "motifs": [
+            "currentRabbitName|salon-friends|brandTitle"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6661b309ac71b719ebc63fd7",
@@ -177,7 +357,14 @@
         "tools/update-images.mjs",
         "tools/cloudinary-sync.mjs",
         "tools/backup-transferred-images.mjs"
-      ]
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/image-manifest.js",
+          "dedie": true
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6661a6149952d95e5c048f9a",
@@ -186,8 +373,24 @@
         "assets/js/species-data.js",
         "lapinous-content.json",
         "assets/css/style.css",
-        "index.html"
-      ]
+        "index.html",
+        "assets/js/script.js"
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/script.js",
+          "motifs": [
+            "updateGameArea|backgroundImage"
+          ]
+        },
+        {
+          "chemin": "lapinous-content.json",
+          "motifs": [
+            "background|fond"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6661a423f3b0f23f486d3590",
@@ -197,7 +400,16 @@
         "lapinous-content.json",
         "assets/css/style.css",
         "index.html"
-      ]
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/css/style.css",
+          "motifs": [
+            "--pink|--gold|--font|background"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6661b4124754141925b73499",
@@ -205,8 +417,24 @@
       "chemins": [
         "assets/js/script.js",
         "assets/css/style.css",
-        "index.html"
-      ]
+        "index.html",
+        "assets/css/mobile.css"
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/css/mobile.css",
+          "motifs": [
+            "#mainNav|room-tab"
+          ]
+        },
+        {
+          "chemin": "assets/js/script.js",
+          "motifs": [
+            "data-zone|salonBtn"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac39e3c28d335cd92c8cc95",
@@ -215,7 +443,22 @@
         "assets/js/species-data.js",
         "lapinous-content.json",
         "assets/js/script.js"
-      ]
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/script.js",
+          "motifs": [
+            "encyclopedia|adoptBtn|ownedSpecies|trait"
+          ]
+        },
+        {
+          "chemin": "lapinous-content.json",
+          "motifs": [
+            "\"personality\"|\"nickname\"|\"relations\""
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac39e3f09478ebeda38c92d",
@@ -224,7 +467,16 @@
         "assets/js/script.js",
         "assets/css/style.css",
         "index.html"
-      ]
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/script.js",
+          "motifs": [
+            "perSpecies|progress\\(\\)|ensureTechniqueProgress"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac39e4258234f0f6df5def5",
@@ -232,8 +484,24 @@
       "chemins": [
         "assets/js/script.js",
         "assets/css/style.css",
-        "index.html"
-      ]
+        "index.html",
+        "assets/css/mobile.css"
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/script.js",
+          "motifs": [
+            "startTacticalFight|fightMode|team-fighters"
+          ]
+        },
+        {
+          "chemin": "assets/css/mobile.css",
+          "motifs": [
+            "fight-stage|fight-command|fight-team|fight-hud|battlefield|team-battlefield"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac39e452732a48b7581df6e",
@@ -242,7 +510,16 @@
         "assets/js/script.js",
         "assets/css/style.css",
         "index.html"
-      ]
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/script.js",
+          "motifs": [
+            "ultimate|chargeGauge|ultime"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac39e5cff0d2d466b27ecbb",
@@ -250,8 +527,24 @@
       "chemins": [
         "assets/js/script.js",
         "assets/css/style.css",
-        "index.html"
-      ]
+        "index.html",
+        "lapinous-content.json"
+      ],
+      "preuves": [
+        {
+          "chemin": "lapinous-content.json",
+          "motifs": [
+            "\"attacks\"|\"techniques\""
+          ]
+        },
+        {
+          "chemin": "assets/js/script.js",
+          "motifs": [
+            "attackLevels|techniqueFor"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac39e5fd921b05e95245ff0",
@@ -261,7 +554,28 @@
         "assets/css/shop.css",
         "lapinous-shop.json",
         "assets/js/script.js"
-      ]
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/shop.js",
+          "motifs": [
+            "resetPlan|transact\\(|attackFragments|kind.*reset"
+          ]
+        },
+        {
+          "chemin": "lapinous-shop.json",
+          "motifs": [
+            "\"kind\": \"reset\""
+          ]
+        },
+        {
+          "chemin": "assets/js/script.js",
+          "motifs": [
+            "attackFragments|attackLevels"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac39e61cbe7415819b24df8",
@@ -271,7 +585,22 @@
         "assets/js/dashboard.js",
         "assets/js/dashboard-ui.js",
         "dashboard.html"
-      ]
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/dashboard.js",
+          "motifs": [
+            "eggRates|egg-rate"
+          ]
+        },
+        {
+          "chemin": "assets/js/script.js",
+          "motifs": [
+            "openTenEggs|openEgg|eggRates"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac39efb4988b40cec255170",
@@ -280,8 +609,24 @@
         "assets/js/species-data.js",
         "lapinous-content.json",
         "assets/css/style.css",
-        "index.html"
-      ]
+        "index.html",
+        "assets/js/script.js"
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/species-data.js",
+          "motifs": [
+            "eventWindows|nouvel_an_chinois|noel|halloween"
+          ]
+        },
+        {
+          "chemin": "assets/js/script.js",
+          "motifs": [
+            "currentActiveEvents|seasonBackground"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac39efeb8e60614e640ad49",
@@ -292,7 +637,18 @@
         "dashboard.html",
         "assets/js/species-data.js",
         "lapinous-content.json"
-      ]
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/dashboard.js",
+          "dedie": true
+        },
+        {
+          "chemin": "assets/js/dashboard-ui.js",
+          "dedie": true
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac39f0129a42ce3c535a196",
@@ -303,7 +659,16 @@
         "dashboard.html",
         "assets/js/species-data.js",
         "lapinous-content.json"
-      ]
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/dashboard.js",
+          "motifs": [
+            "Chart\\(|chart|rarity|difficulty"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac39f0465d01dcee2c8411d",
@@ -313,7 +678,22 @@
         "assets/js/save-validation.js",
         "assets/js/local-files.js",
         "index.html"
-      ]
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/script.js",
+          "motifs": [
+            "showOpenFilePicker|saveToFolder|savesDirHandle|serializeGame|applyLoadedGame|loadInsteadBtn|importInput|folderSaves|saveModal"
+          ]
+        },
+        {
+          "chemin": "assets/js/local-files.js",
+          "motifs": [
+            "chooseSaves|Lapinous_Sauvegardes|remember\\(\\x27player\\x27"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac39f1ffd16599635e62ae9",
@@ -327,14 +707,44 @@
         "lapinous-quiz.json",
         "assets/css/mobile.css",
         "tools/test-mobile-game.mjs"
-      ]
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/script.js",
+          "motifs": [
+            "puzzle|memory|lapidoku|game-cupboard|quiz-"
+          ]
+        },
+        {
+          "chemin": "assets/js/puzzle-data.js",
+          "dedie": true
+        },
+        {
+          "chemin": "assets/js/quiz.js",
+          "dedie": true
+        },
+        {
+          "chemin": "assets/css/mobile.css",
+          "motifs": [
+            "puzzle|memory|lapidoku|game-cupboard|quiz-"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac39f233ae89c6d7a24fb0c",
       "nom": "Défis quotidiens, succès et récompenses",
       "chemins": [
         "assets/js/achievements.js"
-      ]
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/achievements.js",
+          "dedie": true
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac39f2681968bcd0d9b086d",
@@ -342,7 +752,16 @@
       "chemins": [
         "assets/js/script.js",
         "assets/audio/"
-      ]
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/script.js",
+          "motifs": [
+            "playSfx|volume|Audio\\("
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac39f295fcf0100cf51e1cd",
@@ -350,7 +769,16 @@
       "chemins": [
         "assets/js/script.js",
         "assets/audio/"
-      ]
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/script.js",
+          "motifs": [
+            "ambience|sleep.*audio|playAmbience"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac39f2b43bb87374c9f2e22",
@@ -359,7 +787,16 @@
         "assets/js/script.js",
         "assets/css/style.css",
         "index.html"
-      ]
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/script.js",
+          "motifs": [
+            "fight-log|showToast|notification"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac39f2fa02c69b499e17ea8",
@@ -368,15 +805,33 @@
         "assets/js/script.js",
         "assets/css/style.css",
         "index.html"
-      ]
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/script.js",
+          "motifs": [
+            "salonFavorites|fitSalonFriends|salon-friends"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac39f30bfe4848ec3eca940",
       "nom": "Repères — feuille de route du 08-10-2026",
       "chemins": [
         "readme.md",
-        "A_FAIRE.md"
-      ]
+        "A_FAIRE.md",
+        "tools/agent_lapinous/agent.py",
+        "tools/agent_lapinous/suivi_trello.py",
+        "tools/agent_lapinous/installer_taches.ps1",
+        "tools/run-image-schedule.ps1",
+        "tools/agent_lapinous/chaine_20h.ps1",
+        "tools/agent_lapinous/installer_chaine_20h.ps1"
+      ],
+      "preuves": [],
+      "automatique": false,
+      "note_automatisation": "Suivi du projet et agent : correspondances manuelles, aucune transition automatique sur cette carte historique."
     },
     {
       "card_id": "6ac39d8a40c2a66ada563abc",
@@ -385,7 +840,16 @@
         "assets/js/script.js",
         "assets/css/style.css",
         "index.html"
-      ]
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/script.js",
+          "motifs": [
+            "bossPower\\s*=|boss\\.hp\\s*=|boss\\.damage\\s*=|boss\\.attack\\s*="
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac39d8ef2a33d8d5e748be8",
@@ -394,7 +858,16 @@
         "assets/js/script.js",
         "assets/css/style.css",
         "index.html"
-      ]
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/script.js",
+          "motifs": [
+            "difficultyScore|difficultyLabel|bossPower\\s*/|teamPower\\s*/"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac39d99f4eb044b2a42d449",
@@ -402,14 +875,32 @@
       "chemins": [
         "index.html",
         "docs/AUDIT_SEO.md"
-      ]
+      ],
+      "preuves": [
+        {
+          "chemin": "index.html",
+          "motifs": [
+            "<meta[^>]+(?:name=\"(?:description|robots)\"|property=\"og:)|<title>|rel=\"canonical\"|application/ld\\+json"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac39daf6e132da85a61925d",
       "nom": "P2 — Guide de démarrage",
       "chemins": [
         "index.html"
-      ]
+      ],
+      "preuves": [
+        {
+          "chemin": "index.html",
+          "motifs": [
+            "demarrage|guide|Prends soin de ton compagnon|regles du jeu"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac39db1a134b35f03b17940",
@@ -419,8 +910,33 @@
         "index.html",
         "assets/js/dashboard.js",
         "assets/js/dashboard-ui.js",
-        "dashboard.html"
-      ]
+        "dashboard.html",
+        "assets/css/mobile.css",
+        "assets/js/installer.js",
+        "manifest.json",
+        "sw.js",
+        "assets/icons/",
+        "tools/test-pwa.mjs"
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/css/mobile.css",
+          "motifs": [
+            "touch-action|min-height:44px|font-size:16px|safe-area"
+          ]
+        },
+        {
+          "chemin": "index.html",
+          "motifs": [
+            "aria-(label|live|hidden)|role=\""
+          ]
+        },
+        {
+          "chemin": "assets/js/installer.js",
+          "dedie": true
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac39db49bd7456ac00b5038",
@@ -430,8 +946,23 @@
         "index.html",
         "assets/js/dashboard.js",
         "assets/js/dashboard-ui.js",
-        "dashboard.html"
-      ]
+        "dashboard.html",
+        "assets/js/scene-preload.js",
+        "assets/js/script.js"
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/scene-preload.js",
+          "dedie": true
+        },
+        {
+          "chemin": "assets/js/script.js",
+          "motifs": [
+            "LapinousPreloadScene|requestAnimationFrame"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac39dbb2c736f2180aee1ec",
@@ -440,7 +971,22 @@
         "assets/js/species-data.js",
         "lapinous-content.json",
         "assets/js/script.js"
-      ]
+      ],
+      "preuves": [
+        {
+          "chemin": "lapinous-content.json",
+          "motifs": [
+            "\"relations\"|\"lore\""
+          ]
+        },
+        {
+          "chemin": "assets/js/script.js",
+          "motifs": [
+            "relationsHtml|relationship"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac39db7ff0d2d466b26fe7b",
@@ -448,8 +994,24 @@
       "chemins": [
         "assets/js/puzzle-data.js",
         "lapinous-puzzles.json",
-        "assets/js/script.js"
-      ]
+        "assets/js/script.js",
+        "assets/css/mobile.css"
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/script.js",
+          "motifs": [
+            "puzzle-workshop|puzzle-slot|sewing|puzzle-bowl"
+          ]
+        },
+        {
+          "chemin": "assets/css/mobile.css",
+          "motifs": [
+            "puzzle-workshop|puzzle-bowl"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac75d423df6f3af4d7dffa3",
@@ -460,7 +1022,28 @@
         "lapinous-shop.json",
         "assets/css/mobile.css",
         "tools/test-mobile-game.mjs"
-      ]
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/shop.js",
+          "motifs": [
+            "shop-cart|shop-consumable|market-stall|cashier|cart-counter|panier|data-shop"
+          ]
+        },
+        {
+          "chemin": "assets/css/shop.css",
+          "motifs": [
+            "inventory-|herbalist-|shop-cart|cart-counter"
+          ]
+        },
+        {
+          "chemin": "assets/css/mobile.css",
+          "motifs": [
+            "shop-dialog|shop-tabs|shop-cart"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac75d4306880ab48923dd1c",
@@ -468,8 +1051,24 @@
       "chemins": [
         "assets/js/puzzle-data.js",
         "lapinous-puzzles.json",
-        "assets/js/script.js"
-      ]
+        "assets/js/script.js",
+        "assets/css/mobile.css"
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/script.js",
+          "motifs": [
+            "memory-|memoryLevels|startMemory"
+          ]
+        },
+        {
+          "chemin": "assets/css/mobile.css",
+          "motifs": [
+            "memory-"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac75fbda79c4c777508987e",
@@ -482,7 +1081,22 @@
         "lapinous-content.json",
         "assets/css/mobile.css",
         "tools/test-mobile-game.mjs"
-      ]
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/css/mobile.css",
+          "motifs": [
+            "gameArea|console-panel|quiz-panel|modal-|touch-action"
+          ]
+        },
+        {
+          "chemin": "assets/js/dashboard.js",
+          "motifs": [
+            "food|energy|cleanliness"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac761f58b664d27cb2e9cd5",
@@ -492,8 +1106,25 @@
         "assets/js/dashboard-ui.js",
         "dashboard.html",
         "assets/js/species-data.js",
-        "lapinous-content.json"
-      ]
+        "lapinous-content.json",
+        "assets/js/shop.js",
+        "assets/js/script.js"
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/shop.js",
+          "motifs": [
+            "herbalist|inventorySpeech"
+          ]
+        },
+        {
+          "chemin": "assets/js/script.js",
+          "motifs": [
+            "bouclier|shield|visibility"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac763f9346a0a7e6149d7fb",
@@ -501,8 +1132,24 @@
       "chemins": [
         "assets/js/puzzle-data.js",
         "lapinous-puzzles.json",
-        "assets/js/script.js"
-      ]
+        "assets/js/script.js",
+        "assets/css/mobile.css"
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/script.js",
+          "motifs": [
+            "puzzle-slot|memory-card|\\.fixed"
+          ]
+        },
+        {
+          "chemin": "assets/css/mobile.css",
+          "motifs": [
+            "puzzle-workshop|memory-panel"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac7652bc8ce084387e31ecc",
@@ -512,8 +1159,18 @@
         "assets/js/dashboard-ui.js",
         "dashboard.html",
         "assets/js/species-data.js",
-        "lapinous-content.json"
-      ]
+        "lapinous-content.json",
+        "assets/js/script.js"
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/script.js",
+          "motifs": [
+            "speciesNames|currentRabbitName|local-admin|adminTest"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac76646894f17c16d8646d1",
@@ -524,7 +1181,16 @@
         "dashboard.html",
         "assets/js/species-data.js",
         "lapinous-content.json"
-      ]
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/dashboard.js",
+          "motifs": [
+            "puzzle|eggRates"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac76741ba45b4cc22e9893c",
@@ -536,8 +1202,28 @@
         "assets/js/species-data.js",
         "lapinous-content.json",
         "assets/css/mobile.css",
-        "tools/test-mobile-game.mjs"
-      ]
+        "tools/test-mobile-game.mjs",
+        "assets/js/local-files.js"
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/dashboard.js",
+          "motifs": [
+            "collectShopEditor|renderShopEditor|shopData|accordion"
+          ]
+        },
+        {
+          "chemin": "assets/js/dashboard-ui.js",
+          "dedie": true
+        },
+        {
+          "chemin": "assets/js/local-files.js",
+          "motifs": [
+            "exportJSON|chooseProject|cleanBackups|downloadOnly|data-project-folder"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac76ac51940e93ee2c2d397",
@@ -547,8 +1233,24 @@
         "assets/js/dashboard-ui.js",
         "dashboard.html",
         "assets/js/species-data.js",
-        "lapinous-content.json"
-      ]
+        "lapinous-content.json",
+        "readme.md"
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/dashboard.js",
+          "motifs": [
+            "eggRates|puzzle|rarity"
+          ]
+        },
+        {
+          "chemin": "readme.md",
+          "motifs": [
+            "Mo|octets|arborescence"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac775a5d9cc9195c78cfc47",
@@ -561,7 +1263,26 @@
         "assets/js/script.js",
         "assets/css/mobile.css",
         "tools/test-mobile-game.mjs"
-      ]
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/pantry.js",
+          "dedie": true
+        },
+        {
+          "chemin": "assets/js/shop.js",
+          "motifs": [
+            "forgeEvolution|workshop|market-|cashierCollect"
+          ]
+        },
+        {
+          "chemin": "assets/css/mobile.css",
+          "motifs": [
+            "pantry-|zone-evolution|market-stall"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac7808c657c947629f42e6e",
@@ -572,18 +1293,44 @@
         "assets/css/shop.css",
         "lapinous-shop.json",
         "assets/css/mobile.css",
-        "tools/test-mobile-game.mjs"
-      ]
+        "tools/test-mobile-game.mjs",
+        "assets/js/script.js"
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/pantry.js",
+          "dedie": true
+        },
+        {
+          "chemin": "assets/js/script.js",
+          "motifs": [
+            "openKitchenFridge|fridge-hotspot"
+          ]
+        },
+        {
+          "chemin": "assets/css/mobile.css",
+          "motifs": [
+            "pantry-"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac39e1702dcc73d8bd079c2",
       "nom": "Boss à comportements distincts",
-      "chemins": []
+      "chemins": [],
+      "preuves": [],
+      "automatique": false,
+      "note_automatisation": "Suivi manuel ou idee : aucun deplacement automatique."
     },
     {
       "card_id": "6ac39e1aaf413db2ee993e59",
       "nom": "Défis de combat",
-      "chemins": []
+      "chemins": [],
+      "preuves": [],
+      "automatique": false,
+      "note_automatisation": "Suivi manuel ou idee : aucun deplacement automatique."
     },
     {
       "card_id": "6ac39e2f7f2924d04ff78274",
@@ -592,17 +1339,26 @@
         "assets/js/species-data.js",
         "lapinous-content.json",
         "assets/js/script.js"
-      ]
+      ],
+      "preuves": [],
+      "automatique": false,
+      "note_automatisation": "Suivi manuel ou idee : aucun deplacement automatique."
     },
     {
       "card_id": "6ac39e33093ac1a6041de63f",
       "nom": "Expéditions courtes",
-      "chemins": []
+      "chemins": [],
+      "preuves": [],
+      "automatique": false,
+      "note_automatisation": "Suivi manuel ou idee : aucun deplacement automatique."
     },
     {
       "card_id": "6ac39e3688258482918621e0",
       "nom": "Albums saisonniers",
-      "chemins": []
+      "chemins": [],
+      "preuves": [],
+      "automatique": false,
+      "note_automatisation": "Suivi manuel ou idee : aucun deplacement automatique."
     },
     {
       "card_id": "6ac39e3935def311b21d9772",
@@ -612,7 +1368,22 @@
         "assets/js/save-validation.js",
         "assets/js/local-files.js",
         "index.html"
-      ]
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/script.js",
+          "motifs": [
+            "showOpenFilePicker|saveToFolder|savesDirHandle|serializeGame|applyLoadedGame|loadInsteadBtn|importInput|folderSaves|saveModal"
+          ]
+        },
+        {
+          "chemin": "assets/js/local-files.js",
+          "motifs": [
+            "chooseSaves|Lapinous_Sauvegardes|remember\\(\\x27player\\x27"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac39d96335bf1dad3b0d2f2",
@@ -622,8 +1393,18 @@
         "A_FAIRE.md",
         "tools/agent_lapinous/agent.py",
         "tools/agent_lapinous/installer_taches.ps1",
-        "tools/agent_lapinous/liaisons_trello.json"
-      ]
+        "tools/agent_lapinous/liaisons_trello.json",
+        "tools/agent_lapinous/suivi_trello.py"
+      ],
+      "preuves": [
+        {
+          "chemin": "tools/agent_lapinous/agent.py",
+          "motifs": [
+            "def inventory\\(|Inventaire automatique|Fichiers.*Taille"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac75d3f821f8ecfbfefd1b3",
@@ -632,7 +1413,22 @@
         "assets/js/shop.js",
         "assets/css/shop.css",
         "lapinous-shop.json"
-      ]
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/shop.js",
+          "motifs": [
+            "shop-cart|shop-consumable|market-stall|cashier|cart-counter|panier|data-shop"
+          ]
+        },
+        {
+          "chemin": "assets/css/shop.css",
+          "motifs": [
+            "shop-cart|shop-consumable|market-stall|cashier|cart-counter|panier|data-shop"
+          ]
+        }
+      ],
+      "automatique": true
     },
     {
       "card_id": "6ac75d402925f959a3e9afbc",
@@ -645,7 +1441,24 @@
         "tools/backup-transferred-images.mjs",
         "tools/cloudinary-corbeille.mjs",
         "tools/run-image-schedule.ps1"
-      ]
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/image-manifest.js",
+          "dedie": true
+        },
+        {
+          "chemin": "tools/cloudinary-sync.mjs",
+          "dedie": true
+        },
+        {
+          "chemin": "tools/backup-transferred-images.mjs",
+          "dedie": true
+        }
+      ],
+      "automatique": true
     }
-  ]
+  ],
+  "version": 2,
+  "regle": "Les chemins servent au classement ; seuls les motifs des lignes modifiees ou fichiers dedies constituent une preuve. Aucune completion automatique via les sous-taches."
 }

@@ -1,33 +1,36 @@
-# Exécuter depuis PowerShell dans tools/agent_lapinous.
-# Sans option : installe UNIQUEMENT le bilan de 21 h.
-# Avec -InstallerCloudinary : installe aussi la synchronisation de 20 h,
-# uniquement si aucune autre tâche Cloudinary existante n'est détectée.
-param([switch]$InstallerCloudinary)
-$ErrorActionPreference = 'Stop'
-$Python = (Get-Command py -ErrorAction Stop).Source
-$Agent = Join-Path $PSScriptRoot 'agent.py'
-$Action = New-ScheduledTaskAction -Execute $Python -Argument ('"{0}" bilan --appliquer' -f $Agent) -WorkingDirectory $PSScriptRoot
-$Trigger = New-ScheduledTaskTrigger -Daily -At '21:00'
-$Settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -MultipleInstances IgnoreNew
-Register-ScheduledTask -TaskName 'Lapinous - Bilan 21h' -Action $Action -Trigger $Trigger -Settings $Settings -Description 'Bilan Git, Trello, Cloudinary, Discord à 21 h' -Force | Out-Null
-Write-Host 'Bilan 21 h : tâche installée ou actualisée.'
-if ($InstallerCloudinary) {
-  $existing = Get-ScheduledTask | Where-Object {
-    $_.TaskName -ne 'Lapinous - Cloudinary 20h' -and
-    ($_.TaskName -match 'cloudinary|synchronis.*image' -or (($_.Actions | Out-String) -match 'Synchroniser les images|update-images\.mjs|synchronisation_20h'))
-  }
-  if ($existing) {
-    Write-Warning 'Autre tâche de synchronisation détectée. Installation de 20 h refusée pour éviter deux transferts simultanés.'
-    $existing | Select-Object TaskName, State | Format-Table
-    exit 2
-  }
-  $Powershell = (Get-Command powershell.exe -ErrorAction Stop).Source
-  $Script = Join-Path $PSScriptRoot 'synchronisation_20h.ps1'
-  $Action20 = New-ScheduledTaskAction -Execute $Powershell -Argument ('-NoProfile -ExecutionPolicy Bypass -File "{0}"' -f $Script) -WorkingDirectory $PSScriptRoot
-  $Trigger20 = New-ScheduledTaskTrigger -Daily -At '20:00'
-  Register-ScheduledTask -TaskName 'Lapinous - Cloudinary 20h' -Action $Action20 -Trigger $Trigger20 -Settings $Settings -Description 'Cloudinary, sauvegarde et corbeille 7 jours' -Force | Out-Null
-  Write-Host 'Cloudinary 20 h : tâche installée.'
-} else {
-  Write-Host 'Tâche Cloudinary 20 h existante laissée inchangée.'
-  Write-Host 'Attention : si elle lance encore le .cmd avec PAUSE, il faut modifier son action pour utiliser synchronisation_20h.ps1.'
+﻿# Simulation par defaut. Ne cree jamais de tache et ne reactive aucun ancien bilan.
+param([switch]$Appliquer)
+$ErrorActionPreference='Stop'
+if ((Get-TimeZone).Id -ne 'Romance Standard Time') { throw 'Fuseau Windows different de Paris : aucune modification.' }
+$all=@(Get-ScheduledTask)
+$images=@($all | Where-Object {
+ $_.TaskName -match '^Lapinous.*(Cloudinary|Images.*20)' -or
+ (($_.Actions | Out-String) -match 'run-image-schedule|synchronisation_20h|chaine_20h|update-images\.mjs|Synchroniser les images')
+})
+if ($images.Count -ne 1) { throw 'Il faut exactement une tache Cloudinary existante. Aucune creation ni suppression.' }
+$old=@($all | Where-Object { $_.TaskName -match '^Lapinous.*Bilan' -or (($_.Actions | Out-String) -match 'agent\.py.*bilan') })
+$task=$images[0]
+Write-Host ('Tache conservee : '+$task.TaskPath+$task.TaskName+' ; 20:00 Europe/Paris ; synchronisation puis bilan immediat.')
+Write-Host 'Reprise des executions manquees proposee ; anciennes taches de bilan uniquement desactivees.'
+if (-not $Appliquer) { Write-Host 'Simulation : aucune modification du Planificateur.'; return }
+if (@($all | Where-Object { $_.State -eq 'Running' -and ($_.TaskName -eq $task.TaskName -or $_ -in $old) }).Count) { throw 'Une execution est en cours : attendre sa fin avant reconfiguration.' }
+$root=Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
+$script=Join-Path $root 'tools\run-image-schedule.ps1'
+$backup=Join-Path $root '.cloudinary-local\scheduler-backups'
+New-Item -ItemType Directory -Force -Path $backup | Out-Null
+Export-ScheduledTask -TaskName $task.TaskName -TaskPath $task.TaskPath | Set-Content -LiteralPath (Join-Path $backup ((Get-Date -Format 'yyyyMMdd_HHmmss_fff')+'_20h.xml')) -Encoding Unicode
+$exe=(Get-Command powershell.exe -ErrorAction Stop).Source
+$action=New-ScheduledTaskAction -Execute $exe -Argument ('-NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File "{0}" -AppliquerChaine' -f $script) -WorkingDirectory $root
+$trigger=New-ScheduledTaskTrigger -Daily -At '20:00'
+$settings=$task.Settings
+$settings.StartWhenAvailable=$true
+$settings.WakeToRun=$true
+$settings.MultipleInstances='IgnoreNew'
+# L etat active/desactive existant est preserve ; aucun lancement immediat.
+Set-ScheduledTask -TaskName $task.TaskName -TaskPath $task.TaskPath -Action $action -Trigger $trigger -Settings $settings | Out-Null
+foreach ($previous in $old) {
+ if ($previous.TaskName -ne $task.TaskName -or $previous.TaskPath -ne $task.TaskPath) {
+  Disable-ScheduledTask -TaskName $previous.TaskName -TaskPath $previous.TaskPath | Out-Null
+ }
 }
+Write-Host 'Action de la seule tache Cloudinary mise a jour ; aucune tache lancee, creee ou supprimee.'

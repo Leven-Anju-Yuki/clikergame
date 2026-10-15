@@ -1,71 +1,70 @@
-# Agent Lapinous — Trello, A_FAIRE, README, Discord
+# Agent Lapinous - simulation et suivi explicite
 
-## Installation
+Le bilan automatique de 21 h est actuellement suspendu. Ne pas reactiver la tache Windows sans demande explicite. Cloudinary reste prevu a 20 h Europe/Paris.
 
-Décompresser **agent_lapinous** dans `clickergame/tools/`.
-Le script lit **uniquement** `clickergame/.env`, et ne le modifie jamais.
+## Simulation sans effets secondaires
 
-```powershell
-cd tools/agent_lapinous
-py -m pip install -r requirements.txt
-py agent.py test-discord
-py agent.py test-trello
-py agent.py bilan
-```
+Depuis la racine : `py -B tools/agent_lapinous/agent.py bilan`.
 
-Dans `clickergame/.env`, conserver les clés Cloudinary et ajouter :
+Cette commande lit Git, A_FAIRE, les correspondances et Trello. Le rapport reste dans le terminal : aucun fichier, rapport ou point de reprise ecrit, aucune notification Discord, aucune modification Trello. Une erreur de simulation n'envoie rien non plus.
 
-```dotenv
-DISCORD_WEBHOOK_BILAN=https://discord.com/api/webhooks/...
-DISCORD_WEBHOOK_TRELLO=https://discord.com/api/webhooks/...
-DISCORD_WEBHOOK_ALERTES=https://discord.com/api/webhooks/...
-DISCORD_WEBHOOK_CLOUDINARY=https://discord.com/api/webhooks/...
-DISCORD_WEBHOOK_GENERAL=https://discord.com/api/webhooks/...
-TRELLO_API_KEY=...
-TRELLO_TOKEN=...
-```
+Le seul `.env` reste a la racine ; il n'est jamais reecrit et les secrets sont masques dans les erreurs.
 
-**Ne jamais partager ni committer `.env`.** Les Webhooks Discord suffisent pour l'envoi de messages, sans token de bot Discord. Aucun bot interactif n'est démarré.
+## Correspondances
 
-## Lier les tâches aux cartes Trello
+`liaisons_trello.json` contient les identifiants des cartes existantes. `chemins` sert au classement, sans constituer une preuve de travail. `automatique: true` et `preuves` sont necessaires pour analyser une carte automatiquement.
 
-Dans `liaisons_trello.json`, remplacer les valeurs d'exemple par de vrais identifiants :
-- `card_id` : ID de la carte existante Trello.
-- `chemins` : préfixes des chemins de fichiers Git liés à la fonctionnalité.
-- `liste_en_cours` et `liste_termine` : IDs des listes Trello correspondantes.
+Chaque preuve indique un fichier exact et des `motifs` recherches seulement dans ses lignes ajoutees ou retirees. `dedie: true` autorise un fichier entier uniquement s'il est reserve a la fonctionnalite. Sans preuve precise, aucun deplacement. Les pistes manuelles ne sont pas attribuees automatiquement.
 
-Dans `A_FAIRE.md`, associer la carte à une case à cocher explicite :
+## Cases et sous-taches
+
+Une seule case principale par carte, hors section automatique :
 
 ```markdown
-- [ ] Cuisine : préparer les nouvelles recettes [trello:ID_DE_LA_CARTE]
-- [x] Cuisine : préparer les nouvelles recettes [trello:ID_DE_LA_CARTE]
+- [ ] Sauvegardes [trello:IDENTIFIANT_REEL]
+  - [x] Export implemente [trello:IDENTIFIANT_REEL:code:export]
+  - [ ] Essai telephone [trello:IDENTIFIANT_REEL:manuel:mobile]
 ```
 
-La première ligne signifie **non terminée** ; la seconde autorise le déplacement vers **Terminé**. L'agent ne déduit jamais « terminé » d'une simple modification de fichier. Ne placer ces lignes **ni** dans la section automatique, **ni** en double.
+Les sous-taches affichent l'avancement ; elles ne cochent jamais le parent. Une preuve technique permet de proposer En cours. Le parent explicitement coche, sans sous-tache de code ouverte, permet de proposer A valider en jeu. Cela ne constitue jamais une validation finale. Les cartes Realise, Bloque, Idees et deja A valider restent protegees. Des marqueurs ambigus ou dupliques bloquent l'analyse.
 
-Les modifications Git des chemins configurés entraînent le déplacement vers « En cours » et l'ajout d'un commentaire, **si la carte n'est pas cochée terminée**. L'agent vérifie les commentaires récents pour éviter de répéter un commentaire identique. Il n'invente pas de progression chiffrée.
+## Git et point de reprise
 
-## Test et activation
+Les chemins Git sont lus au format NUL, accents et renommages inclus. Les sources de l'agent ne sont plus exclues globalement.
+
+Apres un bilan applique sans erreur Trello, `.cloudinary-local/trello-state.json` conserve les empreintes et textes necessaires aux preuves. Ce dossier est ignore par Git. Les commits suivants sont inclus et un meme contenu n'est pas retraite lors de son commit ulterieur. Une erreur Discord ne rejoue pas les transitions deja traitees.
+
+Au premier passage, l'historique ancien n'est pas arbitrairement attribue. Pour inclure des commits anterieurs, choisir explicitement une reference :
+
+`py -B tools/agent_lapinous/agent.py bilan --depuis-commit REFERENCE_GIT`
+
+La simulation ne cree pas de point de reprise. Une reference de depart ne peut pas ecraser un point existant. Un etat invalide bloque l'analyse sans suppression ni reinitialisation.
+
+## Application future : accord necessaire
+
+`bilan --appliquer` autorise les ecritures locales, transitions permises et notifications. Cette commande n'a pas ete executee sur les services reels pendant les tests. Ne pas l'utiliser avant validation du rapport.
+
+Chaque notification est traitee separement. Les erreurs sont ajoutees au rapport applique ; une panne ne bloque pas les autres canaux. `test-discord` et `initialiser-trello` exigent aussi `--appliquer` pour produire un effet.
+
+Aucun appel ne cree de carte ni ne deplace une carte dans Realise.
+
+## Installateur Windows
+
+`powershell -NoProfile -ExecutionPolicy Bypass -File tools/agent_lapinous/installer_taches.ps1`
+
+Sans `-Appliquer`, lecture seule et affichage du plan. Les taches existantes sont reconnues par leur nom et leurs actions ; leur nom et leur chemin Windows sont reutilises. Les doublons existants sont refuses, sans suppression.
+
+Une nouvelle tache de 21 h est desactivee par defaut ; une tache desactivee le reste. L'option `-ActiverBilan` est reservee a une demande ulterieure explicite. Cloudinary ne change que si `-InstallerCloudinary` est demande. Les horaires restent 20 h / 21 h sur un Windows configure dans le fuseau de Paris.
+
+## Tests isoles
 
 ```powershell
-# Simulation Trello, mais README et A_FAIRE sont réellement mis à jour
-py agent.py bilan
-
-# Appliquer les modifications Trello + notifications Discord
-py agent.py bilan --appliquer
-
-# Installer / remplacer la tâche Windows de 21 h
-.\installer_taches.ps1
+py -B tools/agent_lapinous/test_suivi_trello.py
+powershell -NoProfile -ExecutionPolicy Bypass -File tools/agent_lapinous/test_installateur.ps1
 ```
 
-**Attention** : `bilan` met à jour les sections délimitées du README et de A_FAIRE, même en simulation. Faire une sauvegarde ou un commit avant le premier essai. Le script ne modifie jamais les autres parties de ces fichiers.
+Faux Trello et Discord uniquement. Les tests Git utilisent `.cloudinary-local/tests-agent` et conservent leurs fichiers. Les commandes d'ecriture du Planificateur sont remplacees par des doublures dans le test PowerShell.
 
-La tâche Windows de **20 h Cloudinary n'est pas modifiée**. Cet agent ne téléverse ni ne supprime aucune image, ne lance pas la synchronisation et ne fait aucun push Git.
+## Lanceurs de 20 h
 
-## Limites importantes
-
-- Git `status` montre les modifications **encore visibles dans l'arbre de travail** : les changements déjà commités ne sont pas analysés. Pour un suivi fiable après commit, une comparaison Git avec le dernier bilan sera nécessaire.
-- Les commentaires Trello décrivent les fichiers modifiés, pas une preuve de fonctionnalité achevée.
-- Les noms de dossiers et IDs de cartes ne sont **pas** devinés : configurer les liaisons.
-- Le rapport Discord ne remplace pas une vérification humaine. Les erreurs Trello sont rapportées sans arrêter les mises à jour des autres cartes.
-- L'agent n'écrit pas automatiquement de tâches éditoriales dans A_FAIRE : il ajoute une section de suivi Git et conserve les cases de tâches saisies manuellement.
+`tools/run-image-schedule.ps1` et `chaine_20h.ps1` ne lancent plus le bilan par defaut. Le transfert Cloudinary reste operationnel. L option `-InclureBilan` exige une demande explicite future et n est pas ajoutee aux taches Windows existantes. Aucun lanceur n a ete execute en reel pendant cet audit.

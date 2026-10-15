@@ -621,3 +621,10 @@ Mise à jour cuisine : réserve ouverte uniquement au clic sur le frigo ; March�
 
 _Inventaire local uniquement : les images déjà archivées ne sont pas considérées manquantes._
 <!-- LAPINOUS_AGENT_FIN -->
+
+
+### Installer le jeu sur téléphone
+
+Ouvrir Lapinous en HTTPS dans Chrome et utiliser **Installer le jeu** (accueil ou sauvegardes). Sur Safari : **Partager → Sur l’écran d’accueil**. L’application demande le paysage ; si le navigateur refuse le verrouillage, tourner le téléphone. Les modifications locales doivent être publiées avant d'apparaître sur le site.
+
+Le service worker conserve les fichiers publics du jeu et les 120 dernières images consultées. Les autres images nécessitent Internet. Il ne copie pas les sauvegardes dans le cache et ne remplace pas les exports JSON personnels. Les caches sont isolés par chemin du projet, pour préserver les autres applications du même domaine.

@@ -1,4 +1,8 @@
 /* Ajustements tactiles ; le défilement conserve l'accès aux commandes. */
+#orientationGate{position:fixed;inset:0;width:100vw;height:100dvh;max-width:none;max-height:none;margin:0;border:0;padding:24px;background:#fff6e5;color:#574132;box-sizing:border-box;text-align:center}
+#orientationGate[open]{display:grid;place-items:center}#orientationGate::backdrop{background:#fff6e5}
+#orientationGate span{font-size:3rem}#orientationGate h1{font-size:1.6rem}#orientationGate button,.install-help button{padding:12px 18px;border:1px solid #a88249;border-radius:12px;background:#819c61;color:white;font:inherit;min-height:44px}
+.install-help{max-width:min(520px,calc(100vw - 24px));max-height:calc(100dvh - 24px);overflow:auto;padding:24px;background:#fff6e5;color:#574132;border:2px solid #cbb58b;border-radius:18px}.install-help::backdrop{background:#25180e99}
 @media (max-width:700px), (max-height:500px) and (pointer:coarse) {
   input,select,textarea{font-size:16px}
   button,a,[role=button]{touch-action:manipulation}
@@ -48,4 +52,128 @@
   .adoption-screen{height:auto;min-height:100dvh;overflow-y:auto}
   .quiz-panel,.game-cupboard,.memory-panel{max-height:calc(100dvh - 100px);overflow-y:auto}
   body.game-running #gameArea:has(.fight-stage,.puzzle-workshop,.lapidoku-grid){justify-content:flex-start;overflow-y:auto}
+}
+/* Paysage tactile : la scène occupe l'espace restant, sans hauteur de bureau imposée. */
+@media(orientation:landscape) and (max-height:540px) and (pointer:coarse){
+ html,body{height:100%;overflow:hidden}
+ body.game-running #gameRoot{inset:0 0 48px;height:auto}
+ body.game-running #mainNav{height:48px;min-height:48px;padding:2px 110px 2px 8px;box-sizing:border-box}
+ body.game-running .room-tab{flex-direction:row;gap:5px;font-size:12px;padding:2px;min-height:44px}
+ body.game-running .room-tab .tab-emoji{font-size:22px}
+ body.game-running :is(.rules-btn,.encyclopedia-btn,.save-btn,.shop-trigger){top:5px;width:44px;height:44px;font-size:22px;min-height:44px}
+ body.game-running .rules-btn{left:6px}body.game-running .encyclopedia-btn{left:56px}
+ body.game-running .save-btn{right:6px}body.game-running #shopButton{right:56px}body.game-running #inventoryButton{right:106px}
+ body.game-running #friendshipBarContainer{top:5px;left:calc(50% - 20px);width:200px;padding:4px 8px;box-sizing:border-box}
+ body.game-running #friendshipBarContainer .bar{height:5px}
+ body.game-running .friendship-label,body.game-running #levelDisplay{font-size:11px}
+ body.game-running #statusBars{top:56px;right:6px;width:132px;padding:5px 8px;gap:3px;box-sizing:border-box}
+ body.game-running #statusBars .status-bar span{font-size:10px;margin:0}body.game-running #statusBars .bar{height:4px}
+ body.game-running .scene-label{top:55px;left:8px;transform:none;font-size:11px;padding:3px 8px}
+ body.game-running .brand{bottom:52px;left:6px;padding:2px 5px;gap:3px}
+ body.game-running .brand-title{font-size:11px}body.game-running .rename-btn{width:32px;height:32px;font-size:14px}
+ body.game-running #gameArea{padding:75px 145px 10px 8px!important;box-sizing:border-box;overflow:auto}
+ body.game-running.default #gameArea{padding:0!important}
+ body.game-running:is(.cuisine,.chambre,.sdb,.jardin):not(.battle-scene) #rabbitImage{position:absolute;width:110px;height:calc(100dvh - 165px);max-height:170px;min-height:60px;bottom:16px;left:30%;object-fit:contain}
+ body.game-running:not(.default) .action-row{position:absolute;bottom:12px;right:150px;left:43%;padding:5px;gap:5px;display:flex;flex-wrap:wrap;max-height:calc(100% - 90px);overflow:auto}
+ body.game-running .action-row :is(button,.action-btn){font-size:12px;padding:6px;min-height:44px;min-width:0;width:auto;max-width:140px}
+ body.game-running .action-row img{width:36px;height:36px;object-fit:contain}
+ body.game-running .salon-active-rabbit-spot{height:46%;width:22%;bottom:15%}
+ body.game-running .salon-favorites-button{top:82px;left:8px;font-size:11px;padding:6px}
+ body.game-running .fridge-hotspot{font-size:12px;padding:8px;right:145px;bottom:12px}
+ body.game-running :is(.achievements-btn,.sound-btn){bottom:3px;width:44px;height:44px;top:auto;font-size:22px}
+ .shop-dialog.shop-dialog{width:calc(100vw - 8px);max-width:none;height:calc(100dvh - 8px);max-height:none;margin:4px;overflow:hidden;border-radius:12px}
+ .shop-dialog .shop-layout,.shop-dialog .shop-panel{height:100%;max-height:none;min-height:0;overflow:hidden}
+ .shop-dialog .shop-panel{display:flex;flex-direction:column;border-radius:12px}
+ .shop-dialog .shop-header{flex:none;padding:3px 8px;gap:8px;flex-wrap:nowrap;min-height:44px;box-sizing:border-box}
+ .shop-dialog .shop-header small{display:none}.shop-dialog .shop-header h2{font-size:15px;margin:0;white-space:nowrap}
+ .shop-dialog .shop-tabs{padding:0;margin:0;gap:4px;min-width:0;flex:1;justify-content:flex-end}
+ .shop-dialog .shop-tabs button{padding:5px 9px;font-size:12px;min-height:44px}
+ .shop-dialog .shop-close{width:44px;height:44px;min-height:44px}
+ .shop-dialog .shop-wallet{flex:none;padding:3px 10px;font-size:12px}
+ .shop-dialog .shop-body{height:auto!important;min-height:0!important;max-height:none!important;flex:1 1 0;overflow:auto;position:relative;padding:0}
+ .shop-dialog .shop-cart-summary{flex:none;padding:3px 8px;min-height:40px;font-size:12px;gap:5px;flex-wrap:nowrap;box-sizing:border-box}
+ .shop-dialog .shop-cart-summary button{padding:4px 12px;min-height:36px;font-size:12px}
+ .shop-dialog .shop-message{flex:none;margin:0;padding:0 8px;font-size:11px}.shop-dialog .shop-message:empty{display:none}
+ .shop-dialog .shop-cashier{top:var(--actor-top,70px)!important;bottom:auto!important;right:3%!important;width:19%!important;height:var(--actor-height,180px);margin:0;pointer-events:none;z-index:3;display:block}
+ .shop-dialog .shop-cashier img{position:absolute;bottom:8%;left:0;width:100%;height:65%!important;max-height:100%;object-fit:contain;object-position:center bottom;margin:0}
+ .shop-dialog #shopCashierSpeech{position:absolute;top:auto;bottom:1%;right:0;left:auto;transform:none;width:175px!important;max-width:32vw;padding:5px 8px;margin:0;font-size:11px!important;line-height:1.3;box-sizing:border-box;min-height:0}
+ .shop-dialog .shop-zone-companion{height:72%!important;bottom:3%!important}
+ .shop-dialog.zone-evolution .shop-product-visual{top:35%;height:18%}
+ .shop-dialog.zone-evolution .shop-evolution-grid{margin-top:0}
+ .shop-dialog.zone-evolution .shop-evolution-grid button{font-size:11px;min-height:36px;padding:4px}
+ .shop-dialog.zone-evolution .shop-upgrade-level{font-size:10px}
+ .shop-dialog.zone-fragments .shop-fragment-details{top:2%;width:38%;height:43%;max-height:43%;overflow:auto;padding:6px;font-size:11px}
+ .shop-dialog.zone-fragments .shop-fragment-details :is(h3,p){font-size:11px;margin:3px 0}
+ .shop-dialog.zone-fragments .shop-fragment-details :is(button,select){font-size:12px;min-height:36px;padding:4px}
+ .shop-dialog.zone-fragments .shop-fragment-rabbits{top:48%;bottom:2%;width:38%;padding:5px;overflow:auto}
+ .shop-dialog.zone-fragments .shop-rabbits{grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
+ .shop-dialog.zone-fragments .shop-rabbit{padding:4px;min-height:44px;font-size:11px}
+ .shop-dialog.zone-fragments .shop-rabbit img{height:35px;width:35px}
+ .shop-dialog .herbalist-workshop{height:100%!important;min-height:0;padding:0}
+ .shop-dialog.inventory-dialog .inventory-cabinet{top:7%;bottom:19%;left:4%;height:auto;width:62%;padding:5px 6px 8px;display:flex;flex-direction:column;border-width:4px;border-top-width:9px;border-bottom-width:8px}
+ .shop-dialog .inventory-cabinet-heading{font-size:11px;flex:none;padding:0 0 4px}
+ .shop-dialog .inventory-drawers{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));flex:1;min-height:0;gap:4px}
+ .shop-dialog .inventory-drawer{height:auto;min-height:0;padding:2px 2px 10px;overflow:visible}
+ .shop-dialog .inventory-drawer>img{height:50%;width:auto;max-width:70%;object-fit:contain}
+ .shop-dialog .inventory-drawer strong{font-size:9px}.shop-dialog .inventory-handle{height:5px;bottom:2px}
+ .shop-dialog .inventory-empty{font-size:10px;margin:3px 0 0}
+ .shop-dialog .inventory-cabinet-feet::before,.shop-dialog .inventory-cabinet-feet::after{height:14px;bottom:-21px;width:14px}
+ .shop-dialog.inventory-dialog .inventory-herbalist{bottom:14%;height:72%;right:4%;width:24%}
+ .shop-dialog .inventory-herbalist #inventoryHerbalist{height:100%;width:100%;object-fit:contain;object-position:center bottom}
+ .shop-dialog .inventory-herbalist p{top:auto;bottom:-15%;font-size:11px;padding:4px;margin:0}
+ .shop-dialog .shop-needs{position:absolute;bottom:2px;left:6px;padding:0;gap:5px;font-size:11px}.shop-dialog .shop-needs span{padding:3px 6px}
+ .market-purchase-table{padding:3px 5px 6px;font-size:10px;width:22%}.market-purchase-table>div{min-height:24px}.market-purchase-table img{width:26px;height:26px}
+ .shop-dialog.zone-cart .shop-cart-empty{padding:8px;font-size:12px;max-height:85%;overflow:auto}
+ .shop-dialog.zone-cart .shop-cart-empty h3{font-size:15px;margin:4px}.shop-dialog.zone-cart .shop-cart-empty p{margin:5px}
+ .shop-dialog.zone-cart .shop-cart-empty button{min-height:36px;padding:6px;font-size:12px}
+ .shop-dialog.zone-cart .shop-cart-lines{gap:8px}.shop-dialog .shop-cart-line.cart-counter-item{width:75px;flex-basis:75px}.cart-counter-name{font-size:10px;padding:2px}.cart-counter-count{font-size:11px;bottom:20px}.cart-counter-inspect>img{height:calc(100% - 20px)}
+ .pantry-workshop>.pantry-meals{bottom:4px;padding:4px 8px;max-height:22dvh;font-size:11px}.pantry-workshop>.pantry-meals :is(button,select){font-size:12px;min-height:36px;padding:4px}.pantry-workshop>header{padding:4px 8px;top:4px}.pantry-workshop>header h2{font-size:14px;margin:0}.pantry-workshop>header p{font-size:10px;margin:2px}.pantry-workshop>.ghost-btn{top:4px;padding:5px;font-size:11px}
+}
+@media(orientation:landscape) and (max-height:540px) and (pointer:coarse){
+ .shop-dialog .shop-body{flex:1 1 0!important}
+ .shop-dialog .shop-header{min-height:44px!important;padding:3px 8px!important}
+ .shop-dialog .shop-wallet{padding:3px 10px!important}
+ .shop-dialog.market-illustrated:has([data-shop-tab="market"].active){width:calc(100vw - 8px);height:calc(100dvh - 8px);margin:4px;max-height:none}
+ .shop-dialog.market-illustrated:has([data-shop-tab="market"].active) .shop-panel{max-height:none}
+ body.game-running:is(.cuisine,.chambre,.sdb,.jardin):not(.battle-scene) .action-row .action-btn{font-size:12px!important;width:auto!important;min-width:0!important;min-height:44px!important;max-height:65px!important;padding:5px 10px!important;flex:1 1 auto}
+ body.game-running:is(.cuisine,.chambre,.sdb,.jardin):not(.battle-scene) .action-row .action-btn span{font-size:12px!important}
+ body.game-running .action-row .action-btn img{height:25px!important;width:25px!important}
+}
+@media(orientation:landscape) and (max-height:540px) and (pointer:coarse){
+ .shop-dialog.market-illustrated .shop-body{background-size:100% 360%;background-position:center 48.5%}
+ .shop-dialog.market-illustrated .market-stall{top:22%;height:65%}
+ .shop-dialog.market-illustrated .market-stall>h3{padding:2px!important;margin-bottom:3px!important;font-size:10px!important}
+ .shop-dialog.market-illustrated .market-purchase-table{right:23%;bottom:2%;width:15%}
+ .shop-dialog.zone-evolution .shop-evolution-grid{top:16%;height:24%;gap:8px}
+ .shop-dialog.zone-evolution .shop-evolution-card>strong{padding:3px;font-size:11px}
+ .shop-dialog.zone-evolution .evolution-dots,.shop-dialog.zone-evolution .evolution-max{top:calc(100% + 24px);font-size:10px;gap:3px}
+ .shop-dialog.zone-evolution .shop-evolution-card>button{top:calc(100% + 43px);font-size:10px;min-height:32px;padding:3px;line-height:1.2}
+ .shop-dialog.inventory-dialog .inventory-cabinet{bottom:11%;top:10%}
+ .shop-dialog.inventory-dialog .inventory-herbalist{bottom:6%}
+ .shop-dialog .inventory-herbalist p{right:100%;left:auto;bottom:0;transform:none;width:165px;max-width:24vw}
+ body.game-running:is(.cuisine,.chambre,.sdb,.jardin):not(.battle-scene) .carrot-counter{bottom:10px;left:6px;font-size:11px}
+}
+@media(orientation:landscape) and (max-height:540px) and (pointer:coarse){
+ .shop-dialog .shop-panel{height:100%!important;max-height:none!important}
+ .shop-dialog .shop-header{height:48px;min-height:48px!important}
+ .shop-dialog.zone-evolution .shop-evolution-grid{top:10%;height:25%}
+ .shop-dialog.zone-cart .shop-coming{position:absolute;left:4%;top:5%;width:59%;max-height:86%;overflow:auto;margin:0;padding:6px;font-size:12px;box-sizing:border-box}
+ .shop-dialog.zone-cart .shop-coming>span{font-size:26px}.shop-dialog.zone-cart .shop-coming h3{font-size:15px;margin:4px}.shop-dialog.zone-cart .shop-coming p{margin:4px}.shop-dialog.zone-cart .shop-coming button{font-size:12px;min-height:36px;padding:6px}
+}
+@media(orientation:landscape) and (max-height:540px) and (pointer:coarse){
+ .shop-dialog.zone-evolution .shop-evolution-grid{grid-template-rows:minmax(0,1fr)}
+ .shop-dialog.zone-evolution .shop-evolution-card{min-height:0}
+ .shop-dialog.zone-evolution .shop-evolution-card>img{max-height:100%;height:100%!important}
+}
+.fragment-controls{display:contents}
+@media(orientation:landscape) and (max-height:540px) and (pointer:coarse){
+ .shop-dialog .shop-header h2{font-size:15px!important}
+ .shop-dialog.zone-fragments .fragment-controls{display:block;position:absolute;right:2%;top:2%;bottom:2%;width:38%;overflow-y:auto;overscroll-behavior:contain;border-radius:12px;background:#fffaf0f2;padding:6px;box-sizing:border-box}
+ .shop-dialog.zone-fragments .fragment-controls :is(.shop-fragment-details,.shop-fragment-rabbits){position:static;width:100%;height:auto;max-height:none;overflow:visible;margin:0;padding:4px;box-sizing:border-box;background:transparent}
+ .shop-dialog.zone-fragments .fragment-controls .shop-rabbits{overflow:visible;max-height:none}
+ .shop-dialog.zone-fragments .shop-product-visual{min-height:0}
+}
+@media(orientation:landscape) and (max-height:540px) and (pointer:coarse){
+ .shop-dialog.zone-cart .shop-coming{gap:3px}
+ .shop-dialog.zone-fragments .shop-items{position:absolute;inset:0}
 }

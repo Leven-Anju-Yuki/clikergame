@@ -235,7 +235,18 @@
         }
         // Actualiser uniquement le contenu du rayon ouvert.
         let marketSizingObserver;
+        function actorBounds() {
+            if (!dialog.open) return;
+            const body = content.getBoundingClientRect(), layout = dialog.querySelector('.shop-layout').getBoundingClientRect();
+            dialog.style.setProperty('--actor-top', (body.top - layout.top) + 'px');
+            dialog.style.setProperty('--actor-height', body.height + 'px');
+        }
+        new ResizeObserver(actorBounds).observe(content);
         function render() {
+            renderContents();
+            requestAnimationFrame(actorBounds);
+        }
+        function renderContents() {
             const game=api.game(),keys=owned();
             dialog.classList.toggle('inventory-dialog',tab==='inventory');
             const inventoryBackground=tab==='inventory'?catalog.backgrounds?.inventory:tab==='market'?catalog.backgrounds?.market:null;
@@ -329,9 +340,16 @@
                 marketSizingObserver.disconnect();content.querySelectorAll('.market-stall').forEach(stall=>marketSizingObserver.observe(stall));
             }
             if(tab==='fragments'){
-                const visual=content.querySelector('.shop-fragment-details .shop-product-visual');if(visual)content.querySelector('.shop-fragment-item').append(visual);
+                const visual=content.querySelector('.shop-fragment-details .shop-product-visual');
+                if(visual){content.append(visual);visual.querySelector('img').loading='eager';}
                 const description=content.querySelector('.shop-fragment-details>p');
                 if(description){const details=document.createElement('details');details.className='fragment-description';const summary=document.createElement('summary');summary.textContent='Comment fonctionne l\u2019extracteur ?';details.append(summary,description.cloneNode(true));description.replaceWith(details);}
+                const fragmentDetails=content.querySelector('.shop-fragment-details'),fragmentRabbits=content.querySelector('.shop-fragment-rabbits');
+                if(fragmentDetails&&fragmentRabbits){
+                    const controls=document.createElement('section');controls.className='fragment-controls';
+                    controls.setAttribute('aria-label','Choisir un lapin et utiliser les fragments');
+                    controls.append(fragmentDetails,fragmentRabbits);content.append(controls);
+                }
             }
             appendZoneCompanion();
         }
