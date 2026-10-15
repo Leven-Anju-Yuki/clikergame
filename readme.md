@@ -615,9 +615,9 @@ Mise à jour cuisine : réserve ouverte uniquement au clic sur le frigo ; March�
 
 | Dossier | Fichiers | Taille |
 |---|---:|---:|
-| `assets/` | 213 | 240.98 Mo |
-| `docs/` | 14 | 0.17 Mo |
-| `tools/` | 37 | 0.16 Mo |
+| `assets/` | 224 | 244.59 Mo |
+| `docs/` | 14 | 0.16 Mo |
+| `tools/` | 46 | 0.24 Mo |
 
 _Inventaire local uniquement : les images déjà archivées ne sont pas considérées manquantes._
 <!-- LAPINOUS_AGENT_FIN -->
@@ -628,3 +628,8 @@ _Inventaire local uniquement : les images déjà archivées ne sont pas considé
 Ouvrir Lapinous en HTTPS dans Chrome et utiliser **Installer le jeu** (accueil ou sauvegardes). Sur Safari : **Partager → Sur l’écran d’accueil**. L’application demande le paysage ; si le navigateur refuse le verrouillage, tourner le téléphone. Les modifications locales doivent être publiées avant d'apparaître sur le site.
 
 Le service worker conserve les fichiers publics du jeu et les 120 dernières images consultées. Les autres images nécessitent Internet. Il ne copie pas les sauvegardes dans le cache et ne remplace pas les exports JSON personnels. Les caches sont isolés par chemin du projet, pour préserver les autres applications du même domaine.
+
+
+### Automatisation du soir
+
+Une seule tâche Windows existante à **20 h Europe/Paris** lance Cloudinary puis, dès sa fin, le bilan Python, même si la synchronisation échoue. Le rapport complet couvre Cloudinary, Git, Trello, README, A_FAIRE, quarantaine et erreurs, puis part sur Discord. Aucun bilan indépendant. La chaîne corrigée a passé le test réel autorisé du 15 octobre et est active, avec mises à jour Trello autorisées après validation du 15 octobre, simulation en lecture seule et suppressions Cloudinary bloquées ; consulter `tools/agent_lapinous/README_INSTALLATION.md`.

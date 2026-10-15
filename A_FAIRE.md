@@ -9,6 +9,24 @@ Mise a jour : 15 octobre 2026.
 Les cases principales des cartes restent ouvertes tant que leur validation ou leur travail est incomplet. L’agent peut proposer En cours ou A valider en jeu ; la liste Realise reste sous validation humaine. Pas de nouvelle carte creee ici.
 
 
+## Validations humaines reprises de l’export Trello
+
+Export fourni par l’utilisateur : `5VmsAFi7 - clikergame.json`, intégré le 15 octobre 2026. Les 71 identifiants correspondent aux liaisons locales ; aucune nouvelle carte ni correspondance à inventer.
+
+Neuf cases principales ont été cochées localement d’après la liste « Réalisé — code et historique » :
+
+- Équipes favorites — carte marquée terminée et dans Réalisé.
+- faire une modal qui souvre avec un bouton image livre pour afficher les regles du jeu — carte marquée terminée et dans Réalisé.
+- faire le clicker pour lui donner a manger le brosser — carte marquée terminée et dans Réalisé.
+- Barres de besoins et niveau d’amitié — carte marquée terminée et dans Réalisé.
+- trouver un gif de lapin heureux — carte marquée terminée et dans Réalisé.
+- Retour au Salon et informations du lapin — dans Réalisé, sans marque de fin dueComplete.
+- trouver les images — dans Réalisé, sans marque de fin dueComplete.
+- faire une zone soin alimentation sommeil et jeu avec des fond différent — carte marquée terminée et dans Réalisé.
+- thème sur les lapins — carte marquée terminée et dans Réalisé.
+
+La checklist Trello « niveau » de « Barres de besoins et niveau d’amitié » conserve trois éléments non cochés (niveaux 1, 2 et 3). La validation de la carte ne les coche pas automatiquement. Les validations mobiles et les autres travaux ouverts restent à vérifier. Aucun appel Trello ou Discord, aucune modification du point de reprise Git ni du réglage d’automatisation.
+
 ## Correctifs téléphone et installation — 15 octobre 2026
 
 Les précédents tests avec images de contrôle vérifiaient les débordements des panneaux ; ils ne validaient pas le placement des personnages ni la lisibilité. Les captures téléphone ont révélé ces régressions.
@@ -22,7 +40,34 @@ Les précédents tests avec images de contrôle vérifiaient les débordements d
 - [ ] Vérifier Safari/iOS : installation via Partager, rotation manuelle et sauvegardes conservées après relancement. [trello:6ac39db1a134b35f03b17940:manuel:installation-ios]
 - [ ] Revalider tous les mini-jeux et le combat en paysage sur téléphone ; les captures des scènes ne suffisent pas. [trello:6ac75fbda79c4c777508987e:manuel:jeux-paysage]
 
-L'installation sera disponible sur le site après publication de ces fichiers en HTTPS. Aucun APK n'est produit. L'automatisation du bilan de 21 h reste suspendue.
+L'installation sera disponible sur le site après publication de ces fichiers en HTTPS. Aucun APK n'est produit. Le bilan suit la synchronisation de 20 h sans horaire indépendant ; la chaîne corrigée a passé le test réel autorisé du 15 octobre.
+
+
+## Reprise mobile après captures du 15 octobre
+
+Les précédents contrôles de débordement et les captures avec un panier vide ne suffisaient pas. Les nouveaux contrôles portent sur les vrais médias, les cartes Memory retournées, le panier rempli, les transitions de la caissière et le combat.
+
+- [x] Œufs déplacés dans une fenêtre dédiée sur téléphone, accessible par le bouton Œufs de la navigation ; mêmes fonctions d’achat et d’ouverture, sans duplication. Lapin principal dégagé et favoris répartis au sol. [trello:6ac39d846f4f8d11b7da6ab0:code:salon-modal-oeufs]
+- [x] Bouton Installer accessible pendant la partie ; aide d’installation conservée lorsque le navigateur ne propose pas l’installation native. [trello:6ac39db1a134b35f03b17940:code:installation-accessible]
+- [x] Lapin de cuisine séparé des actions ; Chef au-dessus d’un panneau de recettes distinct du décor ; bulles au-dessus des accompagnateurs. [trello:6ac75d423df6f3af4d7dffa3:code:sols-bulles-mobile]
+- [x] Panier rempli : objets sur le comptoir, panneaux d’options fermés au départ et ouverture d’un seul à la fois. [trello:6ac75d423df6f3af4d7dffa3:code:panier-options-mobile]
+- [x] Plateau puzzle de taille positive en petite hauteur, agrandissement déplaçable pour les nombreuses pièces, coupelle latérale défilante et cartes Memory à proportions fixes avec portraits visibles. [trello:6ac75fbda79c4c777508987e:code:puzzle-memory-mobile]
+- [x] Combat : grille d’adversaires lisible, préparation compacte et détails du terrain dépliables ; zones de jeu dégagées des boutons flottants de la maison. [trello:6ac39d8793f1039486b67a20:code:combat-mobile]
+- [ ] Refaire les essais sur le Z Flip et un petit téléphone : achats/ouverture des œufs, trois favoris, recettes, déplacements animés, puzzle terminé, Memory complet et combat jusqu’à son résultat. [trello:6ac75fbda79c4c777508987e:manuel:telephone-81]
+- [ ] Vérifier le site publié après actualisation : ces changements sont locaux tant qu’ils ne sont pas publiés. [trello:6ac39d846f4f8d11b7da6ab0:manuel:publication-mobile-81]
+
+Fichiers : `assets/css/phone.css`, `assets/js/mobile-ui.js`, `assets/js/shop.js`, `assets/js/installer.js`, `index.html`, `tools/test-landscape-game.mjs`. Correspondances Trello mises à jour localement ; aucune carte déplacée et aucun message envoyé par ce travail.
+
+Contrôles locaux réussis avec médias réels : 844×390, 740×320 et 568×280 ; panier à trois articles, Memory retourné, préparation et début du combat, portrait et rechargement hors connexion. Dernier contrôle 568×280 : trois favoris et puzzle agrandi. La partie complète sur appareil réel reste à vérifier.
+
+## Activation Trello automatique — simulation du 15 octobre
+
+- [x] Vérifier 71 correspondances sur le tableau réel en GET seulement ; simulation : aucun déplacement proposé, aucune erreur Trello. Les cartes déjà dans la liste attendue et les listes protégées restent inchangées. [trello:6ac39f30bfe4848ec3eca940:code:simulation-trello-auto]
+- [x] Journal durable des transitions et commentaire identifié : reprise après échec réseau, contrôle de la liste juste avant déplacement, aucun doublon de commentaire au prochain bilan. [trello:6ac39f30bfe4848ec3eca940:code:reprise-trello-auto]
+- [x] Rapport Discord prévu : déplacements et raisons, cartes ignorées détaillées dans la pièce jointe, erreurs ; point de reprise Git seulement après traitement réussi. Tests isolés : 30 réussis, sans notification réelle. [trello:6ac39f30bfe4848ec3eca940:code:tests-trello-auto]
+- [x] Activation validée par l’utilisateur après simulation le 15 octobre : `tools/agent_lapinous/trello_automatisation.json` contient `actif: true`. Les prochains bilans réels de la chaîne de 20 h peuvent appliquer les transitions Trello autorisées. Aucun lancement immédiat, aucun changement Windows ni Cloudinary. [trello:6ac39f30bfe4848ec3eca940:manuel:activation-trello-auto]
+
+La simulation manuelle complète retourne 1 uniquement car le rapport Cloudinary de ce soir à 20 h n’existe pas encore ; aucun appel de synchronisation n’est lancé. Aucune création de carte autorisée ; Réalisé, Bloqué et Idées à sélectionner protégés. À valider en jeu n’est pas rétrogradé automatiquement. Une case technique seule ne clôture pas une carte.
 
 ## Travaux recents : code livre et points a verifier
 
@@ -43,7 +88,7 @@ L'installation sera disponible sur le site après publication de ces fichiers en
 - [ ] Tester les exports avec permission refusee, reconnexion, ancien dossier, nouvelle sauvegarde, chargement, ecrasement et suppression.
 - [ ] Verifier stocks, achats, recettes, favoris, fragments et noms des lapins apres export/import d’une ancienne et d’une nouvelle partie.
 - [ ] Equilibrer les prix actuels, la nourriture de base, les ingredients et les plats ; revoir attaques, defenses et soins avant les bonus speciaux.
-- [ ] Verifier le resultat Cloudinary de 20 h et le bilan de 21 h, sans doublon de tache Windows ni purge des images sauvegardees.
+- [ ] Verifier le resultat Cloudinary de 20 h et le bilan immédiat après synchronisation, sans doublon de tache Windows ni purge des images sauvegardees.
 - [ ] Verifier les mises a jour de cartes Trello en simulation avant application ; ne pas valider automatiquement Realise.
 - [ ] Valider le quiz sur mobile, les sources des reponses et la lisibilite des boites des mini-jeux.
 
@@ -79,7 +124,7 @@ L'installation sera disponible sur le site après publication de ces fichiers en
   Fichiers : `assets/js/script.js`, `assets/audio/`
 - [ ] P2 — Notifications [trello:6ac39dbef4faf8125adc099b] - [Carte](https://trello.com/c/6ac39dbef4faf8125adc099b)
   Fichiers : `assets/js/script.js`
-- [ ] Équipes favorites [trello:6ac39e147db15f1edab9c326] - [Carte](https://trello.com/c/6ac39e147db15f1edab9c326)
+- [x] Équipes favorites [trello:6ac39e147db15f1edab9c326] - [Carte](https://trello.com/c/6ac39e147db15f1edab9c326)
   Fichiers : idee ou travail futur sans correspondance de code ; aucun deplacement automatique.
 - [ ] P1 — Équilibrage des boss [trello:6ac39d8a40c2a66ada563abc] - [Carte](https://trello.com/c/6ac39d8a40c2a66ada563abc)
   Fichiers : `assets/js/script.js`, `assets/css/style.css`, `index.html`
@@ -98,21 +143,21 @@ L'installation sera disponible sur le site après publication de ces fichiers en
 
 ## Fonctionnalites existantes : validations
 
-- [ ] faire une modal qui souvre avec un bouton image livre pour afficher les regles du jeu [trello:6661a8eefa746159ea2700da] - [Carte](https://trello.com/c/6661a8eefa746159ea2700da)
+- [x] faire une modal qui souvre avec un bouton image livre pour afficher les regles du jeu [trello:6661a8eefa746159ea2700da] - [Carte](https://trello.com/c/6661a8eefa746159ea2700da)
   Fichiers : `index.html`
-- [ ] faire le clicker pour lui donner a manger le brosser [trello:6661a4b7b41cd821c331d689] - [Carte](https://trello.com/c/6661a4b7b41cd821c331d689)
+- [x] faire le clicker pour lui donner a manger le brosser [trello:6661a4b7b41cd821c331d689] - [Carte](https://trello.com/c/6661a4b7b41cd821c331d689)
   Fichiers : `assets/js/script.js`, `assets/css/style.css`, `index.html`
-- [ ] Barres de besoins et niveau d’amitié [trello:6661a5ec1e0c59351bd18a52] - [Carte](https://trello.com/c/6661a5ec1e0c59351bd18a52)
+- [x] Barres de besoins et niveau d’amitié [trello:6661a5ec1e0c59351bd18a52] - [Carte](https://trello.com/c/6661a5ec1e0c59351bd18a52)
   Fichiers : `assets/js/script.js`, `assets/css/style.css`, `index.html`
-- [ ] trouver un gif de lapin heureux [trello:6661a91283b1bf3c205e457c] - [Carte](https://trello.com/c/6661a91283b1bf3c205e457c)
+- [x] trouver un gif de lapin heureux [trello:6661a91283b1bf3c205e457c] - [Carte](https://trello.com/c/6661a91283b1bf3c205e457c)
   Fichiers : `assets/js/image-manifest.js`, `assets/js/image-assets.js`, `tools/update-images.mjs`, `tools/cloudinary-sync.mjs`, `tools/backup-transferred-images.mjs`
-- [ ] Retour au Salon et informations du lapin [trello:6669758ceb6d2b877ef431fa] - [Carte](https://trello.com/c/6669758ceb6d2b877ef431fa)
+- [x] Retour au Salon et informations du lapin [trello:6669758ceb6d2b877ef431fa] - [Carte](https://trello.com/c/6669758ceb6d2b877ef431fa)
   Fichiers : `assets/js/script.js`, `assets/css/style.css`, `index.html`
-- [ ] trouver les images [trello:6661b309ac71b719ebc63fd7] - [Carte](https://trello.com/c/6661b309ac71b719ebc63fd7)
+- [x] trouver les images [trello:6661b309ac71b719ebc63fd7] - [Carte](https://trello.com/c/6661b309ac71b719ebc63fd7)
   Fichiers : `assets/js/image-manifest.js`, `assets/js/image-assets.js`, `tools/update-images.mjs`, `tools/cloudinary-sync.mjs`, `tools/backup-transferred-images.mjs`
-- [ ] faire une zone soin alimentation sommeil et jeu avec des fond différent [trello:6661a6149952d95e5c048f9a] - [Carte](https://trello.com/c/6661a6149952d95e5c048f9a)
+- [x] faire une zone soin alimentation sommeil et jeu avec des fond différent [trello:6661a6149952d95e5c048f9a] - [Carte](https://trello.com/c/6661a6149952d95e5c048f9a)
   Fichiers : `assets/js/species-data.js`, `lapinous-content.json`, `assets/css/style.css`, `index.html`, `assets/js/script.js`
-- [ ] thème sur les lapins [trello:6661a423f3b0f23f486d3590] - [Carte](https://trello.com/c/6661a423f3b0f23f486d3590)
+- [x] thème sur les lapins [trello:6661a423f3b0f23f486d3590] - [Carte](https://trello.com/c/6661a423f3b0f23f486d3590)
   Fichiers : `assets/js/species-data.js`, `lapinous-content.json`, `assets/css/style.css`, `index.html`
 - [x] faire un salon avec des bouton de base  pour les diffèrent lieu et une fleche pour revenir en arriere [trello:6661b4124754141925b73499] - [Carte](https://trello.com/c/6661b4124754141925b73499)
   Fichiers : `assets/js/script.js`, `assets/css/style.css`, `index.html`, `assets/css/mobile.css`
@@ -234,28 +279,647 @@ L'installation sera disponible sur le site après publication de ces fichiers en
 
 ## Bilan quotidien
 
-- [x] Horaires de reference : Cloudinary a 20 h et bilan global a 21 h Europe/Paris.
+- [x] Horaires de reference : Cloudinary à 20 h Europe/Paris, puis bilan global et Discord immédiatement après, même en cas d’échec.
 - [ ] Au bilan : Git, README et poids, A_FAIRE, correspondances Trello, Discord et resultat Cloudinary ; aucun push automatique.
 
 <!-- LAPINOUS_AGENT_DEBUT -->
 ### Suivi automatique du projet
 
-_Dernier bilan : 14/10/2026 13:39_
+Dernier bilan : 15/10/2026 11:09
 
-Fichiers modifiés ou non suivis par Git : **7**
+# Bilan Lapinous - 15/10/2026 11:09
+Mode : APPLICATION
+Trello : LECTURE SEULE ; aucune modification et aucun point de reprise enregistre.
+Fichiers nouveaux depuis le point de reprise : 13
+Cartes analysees : 71
+Deplacements proposes : 0
 
-- `assets/css/shop.css`
-- `assets/js/shop.js`
-- `dashboard.html`
-- `index.html`
-- `tools/run-image-schedule.ps1`
-- `tools/test-cashier-route.mjs`
-- `tools/test-market-layout.mjs`
+## Deplacements
+Aucun deplacement justifie.
+
+## Suivi detaille
+- Améliorations de soin — ancienne piste à réévaluer [6661a537b3df7e377ba31643] : Suivi manuel : aucune regle automatique explicite. Sous-taches : 0/0. Parent coche : False.
+- P3 — Techniques uniques [6ac39dc1946e5c8a5488c49b] : Suivi manuel : aucune regle automatique explicite. Sous-taches : 0/0. Parent coche : False.
+- P3 — Nouveaux consommables et équilibre des prix [6ac39dc482f20ad66d405a8b] : Aucune preuve precise dans les nouvelles modifications : aucun deplacement. Sous-taches : 0/0. Parent coche : False.
+- P3 — Décorations plaçables [6ac39e052e962c5a09b17704] : Suivi manuel : aucune regle automatique explicite. Sous-taches : 0/0. Parent coche : False.
+- P3 — Branches d’amélioration [6ac39e08cece9041c78cab09] : Suivi manuel : aucune regle automatique explicite. Sous-taches : 0/0. Parent coche : False.
+- P3 — Records supplémentaires [6ac39e0b9caa6864a646e480] : Aucune preuve precise dans les nouvelles modifications : aucun deplacement. Sous-taches : 0/0. Parent coche : False.
+- P3 — Mode pixel art [6ac39e0ec39e56083669ea25] : Suivi manuel : aucune regle automatique explicite. Sous-taches : 0/0. Parent coche : False.
+- P3 — Nouvelles grilles de Lapidoku [6ac39e11e324891dfc4c501a] : Suivi manuel : aucune regle automatique explicite. Sous-taches : 0/0. Parent coche : False.
+- Publication — juridique, droits et paiement [6ac75d44734881469f896152] : Aucune preuve precise dans les nouvelles modifications : aucun deplacement. Sous-taches : 0/0. Parent coche : False.
+- P1 — Progression et déblocage des équipements [6661a5d73e3f5fce205eae72] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- P1 — Placement des lapins et commandes [6ac39d846f4f8d11b7da6ab0] : Liste protegee : aucun deplacement automatique. Sous-taches : 2/2. Parent coche : False.
+- P1 — Préparation du combat [6ac39d8793f1039486b67a20] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- P1 — Sauvegardes [6ac39d911abc6a7d2a71273e] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- P1 — Sons [6ac39d93be4e45379ca8247f] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- P2 — Notifications [6ac39dbef4faf8125adc099b] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- Équipes favorites [6ac39e147db15f1edab9c326] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- faire une modal qui souvre avec un bouton image livre pour afficher les regles du jeu [6661a8eefa746159ea2700da] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- faire le clicker pour lui donner a manger le brosser [6661a4b7b41cd821c331d689] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- Barres de besoins et niveau d’amitié [6661a5ec1e0c59351bd18a52] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- trouver un gif de lapin heureux [6661a91283b1bf3c205e457c] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- Retour au Salon et informations du lapin [6669758ceb6d2b877ef431fa] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- trouver les images [6661b309ac71b719ebc63fd7] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- faire une zone soin alimentation sommeil et jeu avec des fond différent [6661a6149952d95e5c048f9a] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- thème sur les lapins [6661a423f3b0f23f486d3590] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- faire un salon avec des bouton de base  pour les diffèrent lieu et une fleche pour revenir en arriere [6661b4124754141925b73499] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Adoption, traits, collection et encyclopédie [6ac39e3c28d335cd92c8cc95] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Progression indépendante par lapin [6ac39e3f09478ebeda38c92d] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Combat tactique — équipe, mode manuel et automatique [6ac39e4258234f0f6df5def5] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Ultimes et barres de charge — lapins et boss [6ac39e452732a48b7581df6e] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Listes de 1 à 6 attaques selon la rareté [6ac39e5cff0d2d466b27ecbb] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Fragments — amélioration de la technique choisie [6ac39e5fd921b05e95245ff0] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Œufs illustrés — ouverture individuelle et par 10 [6ac39e61cbe7415819b24df8] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Décors de saisons jour/nuit et événements prioritaires [6ac39efb4988b40cec255170] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Admin local — tests rapides et Dashboard [6ac39efeb8e60614e640ad49] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Dashboard — graphiques de rareté harmonisés [6ac39f0129a42ce3c535a196] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Sauvegardes nommées, datées et remplacement confirmé [6ac39f0465d01dcee2c8411d] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Mini-jeux — Memory 30 niveaux et puzzles cousus [6ac39f1ffd16599635e62ae9] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Défis quotidiens, succès et récompenses [6ac39f233ae89c6d7a24fb0c] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Audio — soins courts, volumes et défaite [6ac39f2681968bcd0d9b086d] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Audio original livré — ambiance et sommeil [6ac39f295fcf0100cf51e1cd] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Notifications et combat lisible — corrections livrées [6ac39f2b43bb87374c9f2e22] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Salon — compagnons ensemble et placement corrigé [6ac39f2fa02c69b499e17ea8] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Repères — feuille de route du 08-10-2026 [6ac39f30bfe4848ec3eca940] : Suivi manuel : aucune regle automatique explicite. Sous-taches : 10/14. Parent coche : False.
+- P1 — Équilibrage des boss [6ac39d8a40c2a66ada563abc] : Aucune preuve precise dans les nouvelles modifications : aucun deplacement. Sous-taches : 0/0. Parent coche : False.
+- P1 — Indicateur de difficulté plus fiable [6ac39d8ef2a33d8d5e748be8] : Aucune preuve precise dans les nouvelles modifications : aucun deplacement. Sous-taches : 0/0. Parent coche : False.
+- P2 — SEO [6ac39d99f4eb044b2a42d449] : Aucune preuve precise dans les nouvelles modifications : aucun deplacement. Sous-taches : 0/0. Parent coche : False.
+- P2 — Guide de démarrage [6ac39daf6e132da85a61925d] : Aucune preuve precise dans les nouvelles modifications : aucun deplacement. Sous-taches : 0/0. Parent coche : False.
+- P2 — Accessibilité [6ac39db1a134b35f03b17940] : Aucune preuve precise dans les nouvelles modifications : aucun deplacement. Sous-taches : 2/3. Parent coche : False.
+- P2 — Performance [6ac39db49bd7456ac00b5038] : Aucune preuve precise dans les nouvelles modifications : aucun deplacement. Sous-taches : 0/0. Parent coche : False.
+- P2 — Relations des personnages [6ac39dbb2c736f2180aee1ec] : Aucune preuve precise dans les nouvelles modifications : aucun deplacement. Sous-taches : 0/0. Parent coche : False.
+- À valider — Puzzle à coupelle et couturière [6ac39db7ff0d2d466b26fe7b] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- À valider — Boutique et apothicaire [6ac75d423df6f3af4d7dffa3] : Liste protegee : aucun deplacement automatique. Sous-taches : 1/2. Parent coche : False.
+- À valider — Memory 30 niveaux [6ac75d4306880ab48923dd1c] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- À valider — Besoins admin et jeux adaptés à l’écran [6ac75fbda79c4c777508987e] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/1. Parent coche : False.
+- Valider accueil apothicaire, bouclier et visibilité du Dashboard [6ac761f58b664d27cb2e9cd5] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Valider puzzles verrouillés et Memory compact [6ac763f9346a0a7e6149d7fb] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Valider accès Admin aux derniers niveaux et noms après rechargement [6ac7652bc8ce084387e31ecc] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Valider cartes puzzles Dashboard et taux des œufs [6ac76646894f17c16d8646d1] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Valider Dashboard en accordéons et catalogue magasin [6ac76741ba45b4cc22e9893c] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Valider Dashboard visuel, taux des œufs et poids README [6ac76ac51940e93ee2c2d397] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Valider cuisine, Marché et évolutions progressives [6ac775a5d9cc9195c78cfc47] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- Valider frigo cliquable et nouveaux aliments du Marché [6ac7808c657c947629f42e6e] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Boss à comportements distincts [6ac39e1702dcc73d8bd079c2] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- Défis de combat [6ac39e1aaf413db2ee993e59] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- Journal de collection [6ac39e2f7f2924d04ff78274] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- Expéditions courtes [6ac39e33093ac1a6041de63f] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- Albums saisonniers [6ac39e3688258482918621e0] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- Sauvegarde de secours [6ac39e3935def311b21d9772] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- README et arborescence — actualisés le 08-10-2026 [6ac39d96335bf1dad3b0d2f2] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Magasin et inventaire — code livré [6ac75d3f821f8ecfbfefd1b3] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Accompagnateurs et lapins — médias centralisés [6ac75d402925f959a3e9afbc] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+
+## Git
+- AGENTS.md
+- A_FAIRE.md
+- readme.md
+- tools/agent_lapinous/INSTALLATION.md
+- tools/agent_lapinous/README_INSTALLATION.md
+- tools/agent_lapinous/agent.py
+- tools/agent_lapinous/chaine_commune.ps1
+- tools/agent_lapinous/cloudinary_rapport.py
+- tools/agent_lapinous/liaisons_trello.json
+- tools/agent_lapinous/test_chaine.ps1
+- tools/agent_lapinous/test_chaine_agent.py
+- tools/agent_lapinous/test_installateur.ps1
+- tools/cloudinary-corbeille.mjs
+
+## Points de vigilance
+Premier passage : modifications locales analysées ; historique antérieur non attribué. Le premier bilan appliqué établira le point de reprise, jamais la simulation.
+
+## Chaine de cette execution
+{"startedAt": "2026-10-15T11:09:28.3393784+02:00", "syncExit": 0, "bilanExit": 1, "errors": [], "trelloReadOnly": true, "cloudinaryDeleteDisabled": true, "syncFinishedAt": "2026-10-15T11:09:30.5300591+02:00"}
+
+## Cloudinary — rapport complet
+# Cloudinary — RÉUSSITE
+Début : 2026-10-15T11:09:28.993000+02:00
+Fin : 2026-10-15T09:09:30.331Z
+État déclaré : success
+Erreur : aucune
+
+## Étapes exécutées
+- tools/cloudinary-sync.mjs dry-run : code 0 à 2026-10-15T09:09:29.521Z
+- tools/cloudinary-activate.mjs  : code 0 à 2026-10-15T09:09:29.974Z
+- tools/cloudinary-corbeille.mjs appliquer : code 0 à 2026-10-15T09:09:30.330Z
+
+## Inventaire complet
+Sélectionnées : 316
+Exclues : 143
+Introuvables : 0
+
+### Images utilisées
+- assets/img/accompagnateurs/Fragments/marche_droite.gif | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/Fragments/assemblage_cristaux.gif | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/caissier/01_accroupie.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/caissier/02_attraper_haut.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/caissier/03_attraper_hauteur.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/caissier/04_bonjour.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/caissier/05_attente_droite.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/caissier/06_remise_produit.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/caissier/07_marche_lapine_artisane.gif | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/Artisan/Cycle de marche en six poses-7.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/Artisan/Lapin forgeron brun, pose confiante-4.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/Artisan/Lapin forgeron en salut respectueux-1.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/Artisan/Le lapin forgeron présente son engrenage-3.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/Artisan/Sprite sheet d’un lapin forgeron-9.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/Fragments/Artisan lapin mystique en révérence-2.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/Fragments/Lapin mystique blanc, bras croisés-5.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/Fragments/Lapin mystique offrant un cristal d’améthyste-6.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/fond/Magasin/Comptoir.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/fond/Magasin/Atelier de forge mystique au terrier-2.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/fond/Magasin/Petite forge chaleureuse dans un terrier-1.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/fond/Magasin/Boutique chaleureuse aux trois niches vides-1.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/fond/Magasin/Marche.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/Boite_Mini_Jeu/Lapidoku.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/Boite_Mini_Jeu/Memory.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/Boite_Mini_Jeu/puzzles.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/Boite_Mini_Jeu/Quiz-1.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/fond/Magasin/herboristerie.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/fond/Magasin/Garde-manger.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/magasin/produits/surprise_apple.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/magasin/produits/Tartelette.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/Chef/01_accroupie.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/Chef/02_attraper_haut.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/Chef/03_attraper_hauteur.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/Chef/04_bonjour.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/Chef/05_attente_droite.png | présente : False | motif : ['Référence : lapinous-shop.json', 'Référence : assets/js/pantry.js']
+- assets/img/accompagnateurs/Chef/06_remise_produit.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/Chef/07_marche.gif | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/Chef/08_decoupe_legumes.gif | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/Chef/09_wok.gif | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/magasin/aliments/aneth.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/magasin/aliments/bleuet.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/magasin/aliments/camomille.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/magasin/aliments/celeri.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/magasin/aliments/Concombre.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/magasin/aliments/coriandre.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/magasin/aliments/courgette.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/magasin/aliments/fenouil.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/magasin/aliments/foin.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/magasin/aliments/fraise.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/magasin/aliments/herbes.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/magasin/aliments/laitue.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/magasin/aliments/menthe.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/magasin/aliments/myrtilles.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/magasin/aliments/pissenlit.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/magasin/aliments/poire.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/magasin/aliments/rose.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/magasin/aliments/soucis.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/magasin/produits/Boules_de_foin_fleuries.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/magasin/produits/bouquet_gourmand.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/magasin/produits/Brochettes_fruitees_du_verger.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/magasin/produits/Concombre_farci.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/magasin/produits/Cœurs_de_foin_fleuris.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/magasin/produits/delice_fruit_des_bois.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/magasin/produits/Galettes_vegetales_aux_herbes.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/magasin/produits/Melange_gourmand_aux_fruit.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/magasin/produits/Mosaique_du_potager_fleuri.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/magasin/produits/Nid_foin_aux_fleurs.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/magasin/produits/Nid_foin_aux_legumes.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/magasin/produits/salade_concombre.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/magasin/produits/Salade_croquante_du_lapin.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/magasin/produits/Salade_fleurie_du_jardin.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/magasin/produits/salade_fruite_du_verger.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/magasin/produits/salade_verte_printemps.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/Apothicaire/01_accroupie.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/Apothicaire/02_attraper_haut.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/Apothicaire/03_attraper_hauteur.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/Apothicaire/04_bonjour.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/Apothicaire/05_attente_droite.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/Apothicaire/06_remise_produit.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/Apothicaire/07_marche.gif | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/couturiere/couturiere.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/couturiere/couturiere_felicitation.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/couturiere/cout_les_pieces.gif | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/couturiere/deplace_tabouret.gif | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/couturiere/marche_vers.gif | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/az/az_assis_de_face.png | présente : False | motif : ['Référence : index.html', 'Référence : dashboard.html']
+- assets/img/boss/ail_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/boss/ail_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/boss/aubergine_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/boss/aubergine_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/boss/banane.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/boss/carotte_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/boss/carotte_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/boss/choux_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/boss/choux_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/boss/courgette_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/boss/courgette_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/boss/mais_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/boss/mais_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/boss/mystery_boss.svg | présente : False | motif : ['Référence : assets/js/script.js']
+- assets/img/boss/oignon_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/boss/oignon_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/boss/patate_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/boss/patate_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/boss/piment_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/boss/piment_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/boss/tomate_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/boss/tomate_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/fond/chambre.png | présente : False | motif : ['Référence : assets/css/style.css', 'Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/combat.png | présente : False | motif : ['Référence : assets/css/style.css', 'Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/cuisine.png | présente : False | motif : ['Référence : assets/css/style.css', 'Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Halloween/Chambre_halloween.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Halloween/Combat_halloween.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Halloween/Cuisine_halloween.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Halloween/Jardin_halloween.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Halloween/salle_de_bain_halloween.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Halloween/Salon_halloween.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/jardin.png | présente : False | motif : ['Référence : assets/css/style.css', 'Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Noel/Chambre_noel.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Noel/Combat_noel.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Noel/Cuisine_noel.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Noel/Jardin_noel.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Noel/salle_de_bain_noel.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Noel/Salon_noel.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Nouvel_An_Chinois/jour/Chambre_Nouvel_An_Chinois.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Nouvel_An_Chinois/jour/Combat_Nouvel_An_Chinois.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Nouvel_An_Chinois/jour/Cuisine_Nouvel_An_Chinois.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Nouvel_An_Chinois/jour/Jardin_Nouvel_An_Chinois.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Nouvel_An_Chinois/jour/salle_de_bain_Nouvel_An_Chinois.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Nouvel_An_Chinois/jour/Salon_Nouvel_An_Chinois.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Nouvel_An_Chinois/nuit/Chambre_Nouvel_An_Chinois.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Nouvel_An_Chinois/nuit/Combat_Nouvel_An_Chinois.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Nouvel_An_Chinois/nuit/Cuisine_Nouvel_An_Chinois.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Nouvel_An_Chinois/nuit/Jardin_Nouvel_An_Chinois.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Nouvel_An_Chinois/nuit/salle_de_bain_Nouvel_An_Chinois.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Nouvel_An_Chinois/nuit/Salon_Nouvel_An_Chinois.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Paques/Chambre_paques.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Paques/Conbat_paques.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Paques/Cuisine_paques.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Paques/Jardin_paques.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Paques/salle_de_bain_paques.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Paques/Salon_paques.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/jour/chambre_automne.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/jour/chambre_ete.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/jour/chambre_hiver.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/jour/chambre_printemps.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/jour/combat_automne.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/jour/combat_ete.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/jour/combat_hiver.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/jour/combat_printemps.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/jour/cuisine_automne.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/jour/cuisine_ete.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/jour/cuisine_hiver.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/jour/cuisine_printemps.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/jour/jardin_automne.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/jour/jardin_ete.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/jour/jardin_hiver.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/jour/jardin_printemps.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/jour/salle_de_bain_automne.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/jour/salle_de_bain_ete.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/jour/salle_de_bain_hiver.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/jour/salle_de_bain_printemps.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/jour/salon_automne.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/jour/salon_ete.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/jour/salon_hiver.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/jour/salon_printemps.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/nuit/chambre_automne.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/nuit/chambre_ete.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/nuit/chambre_hiver.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/nuit/chambre_printemps.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/nuit/combat_automne.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/nuit/combat_ete.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/nuit/combat_hiver.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/nuit/combat_printemps.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/nuit/cuisine_automne.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/nuit/cuisine_ete.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/nuit/cuisine_hiver.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/nuit/cuisine_printemps.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/nuit/jardin_automne.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/nuit/jardin_ete.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/nuit/jardin_hiver.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/nuit/jardin_printemps.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/nuit/salle_de_bain_automne.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/nuit/salle_de_bain_ete.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/nuit/salle_de_bain_hiver.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/nuit/salle_de_bain_printemps.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/nuit/salon_automne.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/nuit/salon_ete.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/nuit/salon_hiver.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/Saison/nuit/salon_printemps.png | présente : False | motif : ['Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/salle_de_bain.png | présente : False | motif : ['Référence : assets/css/style.css', 'Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/fond/salon.png | présente : False | motif : ['Référence : assets/js/shop.js', 'Référence : assets/css/style.css', 'Décor dynamique : événements/saisons/jour/nuit']
+- assets/img/lapins_jouables/lapin_evenement/Halloween/bete_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Halloween/bete_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Halloween/fantome_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Halloween/fantome_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Halloween/frank_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Halloween/frank_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Halloween/krampus_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Halloween/krampus_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Halloween/peatch_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Halloween/peatch_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Halloween/squelette_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Halloween/squelette_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Halloween/vampi_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Halloween/vampi_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Multi_saisons/fee_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Multi_saisons/fee_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Multi_saisons/frost_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Multi_saisons/frost_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Multi_saisons/reve_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Multi_saisons/reve_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Noel/cerf_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Noel/cerf_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Noel/Klaus_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Noel/Klaus_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Noel/lutin_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Noel/lutin_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Noel/Mnoel_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Noel/Mnoel_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Noel/Pnoel_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Noel/Pnoel_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Nouvel_An_Chinois/chance_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Nouvel_An_Chinois/chance_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Nouvel_An_Chinois/dragon_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Nouvel_An_Chinois/dragon_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Nouvel_An_Chinois/empereur_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Nouvel_An_Chinois/empereur_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Nouvel_An_Chinois/imperatrice_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Nouvel_An_Chinois/imperatrice_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Nouvel_An_Chinois/lanterne_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Nouvel_An_Chinois/lanterne_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Nouvel_An_Chinois/Lapin tigre en costume festif-2.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Nouvel_An_Chinois/Lapin tigre festif au tambour-1.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Paques/oeuf_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Paques/oeuf_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Paques/paques_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/lapin_evenement/Paques/paques_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/sans_evenements/abeille_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/sans_evenements/abeille_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/sans_evenements/archy_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/sans_evenements/archy_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/sans_evenements/azazel_cote.png | présente : False | motif : ['Référence : assets/js/species-data.js']
+- assets/img/lapins_jouables/sans_evenements/azazel_face.png | présente : False | motif : ['Référence : assets/js/species-data.js']
+- assets/img/lapins_jouables/sans_evenements/blanc_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/sans_evenements/blanc_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/sans_evenements/cactus_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/sans_evenements/cactus_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/sans_evenements/caramel_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/sans_evenements/caramel_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/sans_evenements/champi_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/sans_evenements/champi_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/sans_evenements/chocolat_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/sans_evenements/chocolat_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/sans_evenements/eclair_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/sans_evenements/eclair_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/sans_evenements/etoile_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/sans_evenements/etoile_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/sans_evenements/fleur_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/sans_evenements/fleur_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/sans_evenements/lune_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/sans_evenements/lune_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/sans_evenements/mystery.svg | présente : False | motif : ['Référence : assets/js/dashboard.js', 'Référence : assets/js/script.js', 'Référence : assets/js/shop.js']
+- assets/img/lapins_jouables/sans_evenements/panda_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/sans_evenements/panda_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/sans_evenements/pirate_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/sans_evenements/pirate_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/sans_evenements/renard_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/sans_evenements/renard_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/sans_evenements/soleil_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/sans_evenements/soleil_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/sans_evenements/tigre_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/lapins_jouables/sans_evenements/tigre_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/magasin/produits/bain_petales.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/magasin/produits/extracteur_fragments.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/magasin/produits/infusion_douce.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/magasin/produits/panier_gourmand.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/oeuf/commun.png | présente : False | motif : ['Chemin dynamique EGG_IMAGES']
+- assets/img/oeuf/divin.png | présente : False | motif : ['Chemin dynamique EGG_IMAGES']
+- assets/img/oeuf/epique.png | présente : False | motif : ['Chemin dynamique EGG_IMAGES']
+- assets/img/oeuf/legendaire.png | présente : False | motif : ['Chemin dynamique EGG_IMAGES']
+- assets/img/oeuf/mythique.png | présente : False | motif : ['Chemin dynamique EGG_IMAGES']
+- assets/img/oeuf/rare.png | présente : False | motif : ['Chemin dynamique EGG_IMAGES']
+- assets/img/page.jpg | présente : False | motif : ['Référence : assets/css/style.css']
+- assets/img/puzzle/de_base/les_aventuriers.png | présente : False | motif : ['Référence : lapinous-puzzles.json']
+- assets/img/puzzle/de_base/les_communs.png | présente : False | motif : ['Référence : lapinous-puzzles.json']
+- assets/img/puzzle/de_base/les_scientifiques.png | présente : False | motif : ['Référence : lapinous-puzzles.json']
+- assets/img/puzzle/de_base/Nature.png | présente : False | motif : ['Référence : lapinous-puzzles.json']
+- assets/img/puzzle/de_base/voie_lactee.png | présente : False | motif : ['Référence : lapinous-puzzles.json']
+- assets/img/puzzle/Halloween/fantome.png | présente : False | motif : ['Référence : lapinous-puzzles.json']
+- assets/img/puzzle/Halloween/frankenshtein.png | présente : False | motif : ['Référence : lapinous-puzzles.json']
+- assets/img/puzzle/Halloween/lapin_bete.png | présente : False | motif : ['Référence : lapinous-puzzles.json']
+- assets/img/puzzle/Halloween/Squelette.png | présente : False | motif : ['Référence : lapinous-puzzles.json']
+- assets/img/puzzle/Halloween/VampireVSNonne.png | présente : False | motif : ['Référence : lapinous-puzzles.json']
+- assets/img/puzzle/Multi_saisons/reve.png | présente : False | motif : ['Référence : lapinous-puzzles.json']
+- assets/img/puzzle/Noel/Noel.png | présente : False | motif : ['Référence : lapinous-puzzles.json']
+- assets/img/puzzle/Nouvel_An_Chinois/Gardienne lapine au lac des lanternes-3.png | présente : False | motif : ['Référence : lapinous-puzzles.json']
+- assets/img/puzzle/Nouvel_An_Chinois/La grande célébration des lapins-6.png | présente : False | motif : ['Référence : lapinous-puzzles.json']
+- assets/img/puzzle/Nouvel_An_Chinois/Lapin porte-bonheur sous les lanternes-4.png | présente : False | motif : ['Référence : lapinous-puzzles.json']
+- assets/img/puzzle/Nouvel_An_Chinois/Le couple impérial au palais fleuri-1.png | présente : False | motif : ['Référence : lapinous-puzzles.json']
+- assets/img/puzzle/Nouvel_An_Chinois/Le lapin-dragon sur le pont céleste-2.png | présente : False | motif : ['Référence : lapinous-puzzles.json']
+- assets/img/puzzle/Nouvel_An_Chinois/Wushi, le lapin tigre en fête-5.png | présente : False | motif : ['Référence : lapinous-puzzles.json']
+- assets/img/puzzle/Paques/pacques.png | présente : False | motif : ['Référence : lapinous-puzzles.json']
+- assets/img/regle.png | présente : False | motif : ['Référence : index.html']
+- assets/img/Zone_Chambre/dodo.png | présente : False | motif : ['Référence : assets/js/script.js']
+- assets/img/Zone_Chambre/lit.png | présente : False | motif : ['Référence : assets/js/script.js']
+- assets/img/Zone_Chambre/panier.png | présente : False | motif : ['Référence : assets/js/script.js']
+- assets/img/Zone_cuisine/carotte.png | présente : False | motif : ['Référence : lapinous-shop.json', 'Référence : assets/js/script.js']
+- assets/img/Zone_cuisine/pomme.png | présente : False | motif : ['Référence : lapinous-shop.json', 'Référence : assets/js/script.js']
+- assets/img/Zone_jardin/agilite.png | présente : False | motif : ['Référence : assets/js/script.js']
+- assets/img/Zone_jardin/cliker.png | présente : False | motif : ['Référence : assets/js/script.js']
+- assets/img/Zone_jardin/entrenement.png | présente : False | motif : ['Référence : assets/js/script.js']
+- assets/img/Zone_SdB/brosse.png | présente : False | motif : ['Référence : assets/js/script.js']
+- assets/img/Zone_SdB/lapin_SdB.png | présente : False | motif : ['Référence : assets/js/script.js']
+- assets/img/Zone_SdB/pommeau.png | présente : False | motif : ['Référence : assets/js/script.js']
+- assets/img/Zone_cuisine/lapin_cuisine.png | présente : False | motif : ['Référence : assets/js/script.js']
+
+### Images exclues
+- assets/img/accompagnateurs/caissier/exec-030757bc-ec79-452d-83d8-00b99494ec7f.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/accompagnateurs/Randonneur/07_marche_lapin_randonneur.gif | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/accompagnateurs/Randonneur/Lapin randonneur aux jumelles-4.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/accompagnateurs/Randonneur/Lapin randonneur debout avec sac à dos-3.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/accompagnateurs/Randonneur/Lapin randonneur saluant joyeusement-5.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/accompagnateurs/Randonneur/Lapin randonneur, carte et boussole-1.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/az/Azazel.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/az/az_assis_de_cote.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/az/az_cote.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/az/az_face.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/Boite_Mini_Jeu/LapinouDoku.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/boss/carotte_choux_oignon.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/boss/Gemini_Generated_Image_joczczjoczczjocz.jpg | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/boss/poivron_courgette_banane.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/boss/tomate_ail_mais_aubergine_patate.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/breeds/glouton.svg | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/breeds/grand_sportif.svg | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/breeds/gros_dormeur.svg | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/breeds/maladroit.svg | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/breeds/normal.svg | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/breeds/petit_dormeur.svg | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/breeds/petit_mangeur.svg | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/Discord/Alertes_erreur.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/Discord/Badges de lapins enchantés au clair de lune.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/Discord/Bilan_quotidien.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/Discord/cloudinary_images.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/Discord/Serveur.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/Discord/Trello_taches.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/fond/Nuit/Image ChatGPT 30 sept. 2026, 00_29_30-4.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/fond/Nuit/Image ChatGPT 30 sept. 2026, 00_29_33-8.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/fond/Nuit/Image ChatGPT 30 sept. 2026, 00_29_36-11.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/fond/Nuit/Image ChatGPT 30 sept. 2026, 00_29_41-16.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/fond/Nuit/Image ChatGPT 30 sept. 2026, 00_29_44-20.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/fond/Nuit/Image ChatGPT 30 sept. 2026, 00_29_48-24.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/images des futur création/boss/ananas.jpg | présente : ? | motif : Création future
+- assets/img/images des futur création/boss/betterave.png | présente : ? | motif : Création future
+- assets/img/images des futur création/boss/celeri.png | présente : ? | motif : Création future
+- assets/img/images des futur création/boss/cornichon.png | présente : ? | motif : Création future
+- assets/img/images des futur création/boss/fraise.png | présente : ? | motif : Création future
+- assets/img/images des futur création/boss/pissenlit.png | présente : ? | motif : Création future
+- assets/img/images des futur création/boss/poire.png | présente : ? | motif : Création future
+- assets/img/images des futur création/boss/pomme.png | présente : ? | motif : Création future
+- assets/img/images des futur création/boss/raisin.png | présente : ? | motif : Création future
+- assets/img/images des futur création/boss/taupinenbour.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/banshee_cote.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/banshee_face.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/commun/cafe_cote.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/commun/cafe_face.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/commun/cendre_cote.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/commun/cendre_face.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/commun/champi.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/commun/champi_cote.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/commun/champi_face.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/commun/fraise_cote.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/commun/fraise_cote1.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/commun/fraise_face.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/commun/fraise_face1.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/commun/hibou_cote.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/commun/hibou_face.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/commun/noisette_cote.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/commun/noisette_face.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/commun/Premium fantasy rabbit collectible sheet._Display 4 rabbit characters._Each rabbit appears EXACTLY T (1).png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/commun/Premium fantasy rabbit collectible sheet._Display 4 rabbit characters._Each rabbit appears EXACTLY T.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/commun/tournesol_cote.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/commun/tournesol_face.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/commun/trefle_cote.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/commun/trefle_face.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/deesse_des_ames_cote.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/deesse_des_ames_face.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/elements/eclipse_cote.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/elements/eclipse_face.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/elements/elements.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/elements/gaia_cote.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/elements/gaia_face.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/elements/ignis_cote.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/elements/ignis_face.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/elements/storm_cote.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/elements/storm_face.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/haloween_2027/areignée_cote.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/haloween_2027/areignée_face.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/haloween_2027/chauve_souris_cote.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/haloween_2027/chauve_souris_face.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/haloween_2027/citrouille_cote.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/haloween_2027/citrouille_face.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/haloween_2027/faucheur_cote.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/haloween_2027/faucheur_face.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/haloween_2027/haloween_2027.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/haloween_2027/harley_cote.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/haloween_2027/harley_face.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/haloween_2027/joker_cote.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/haloween_2027/joker_face.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/haloween_2027/lanterne_cote.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/haloween_2027/lanterne_face.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/haloween_2027/marionett_cote.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/haloween_2027/marionett_face.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/haloween_2027/necromencien_cote.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/haloween_2027/necromencien_face.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/haloween_2027/sans_visage_cote.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/haloween_2027/sans_visage_face.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/noce_funebre_abimé_cote.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/noce_funebre_abimé_face.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/noce_funebre_bien_cote.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/noce_funebre_bien_face.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/saison/automne_cote.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/saison/automne_face.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/saison/ete_cote.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/saison/ete_face.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/saison/hiver_cote.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/saison/hiver_face.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/saison/pringtemps_cote.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/saison/pringtemps_face.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/saison/saison.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/sirene_cote.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/sirene_face.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/ssmmdt.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/succube_cote.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/succube_face.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/triton_cote.png | présente : ? | motif : Création future
+- assets/img/images des futur création/lapin/triton_face.png | présente : ? | motif : Création future
+- assets/img/lapins_jouables/lapin_evenement/Halloween/bete.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/lapins_jouables/lapin_evenement/Halloween/fantome.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/lapins_jouables/lapin_evenement/Halloween/frank.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/lapins_jouables/lapin_evenement/Halloween/haloween.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/lapins_jouables/lapin_evenement/Halloween/krampus.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/lapins_jouables/lapin_evenement/Multi_saisons/5_legendes.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/lapins_jouables/lapin_evenement/Noel/noel.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/lapins_jouables/lapin_evenement/Nouvel_An_Chinois/Feuille de lapins fantastiques et dragon doré.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/lapins_jouables/lapin_evenement/Nouvel_An_Chinois/Wushi, lapin guerrier mythique.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/lapins_jouables/lapin_evenement/Paques/paques_cote1.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/lapins_jouables/lapin_evenement/Paques/paques_face1.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/lapins_jouables/sans_evenements/bceprt.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/lapins_jouables/sans_evenements/Designer (1).png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/lapins_jouables/sans_evenements/Designer.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/lapins_jouables/sans_evenements/fleur.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/lapin_soin.gif | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/magasin/aliments/Cinq bouquets floraux fantastiques colorés.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/magasin/aliments/Planche botanique d’herbes et fleurs remarquables (1).png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/magasin/aliments/Planche d’icônes culinaires fleuries et colorées.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/magasin/aliments/Planche d’icônes gourmandes et fleuries.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/Zone_Chambre/dodo.gif | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/Zone_cuisine/lapin_cuisine.gif | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/Zone_jardin/entrenement.gif | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/Zone_SdB/lapin_SdB.gif | présente : ? | motif : Aucune référence active ou dynamique identifiée
+
+### Références manquantes
+
+### Entrées en corbeille : 0
+
+### En attente : 6
+- assets/img/accompagnateurs/caissier/caissier_merci.png | ID : lapinous/accompagnateurs/caissier/caissier_merci__png_3a50d99790389868 | date : 2026-10-13T13:17:01.304Z | jours restants : 6 | motif :
+- assets/img/accompagnateurs/caissier/caissier_presentation.png | ID : lapinous/accompagnateurs/caissier/caissier_presentation__png_16a7d977d327ee7e | date : 2026-10-13T13:17:01.304Z | jours restants : 6 | motif :
+- assets/img/magasin/produits/Pomme_surprise_au_foin.png | ID : lapinous/magasin/produits/Pomme_surprise_au_foin__png_34f8c52883e83a77 | date : 2026-10-13T13:17:01.304Z | jours restants : 6 | motif :
+- assets/img/fond/Magasin/Comptoir vide dans un terrier chaleureux-4.png | ID : lapinous/fond/Magasin/Comptoir vide dans un terrier chaleureux-4__png_e43304e1c5dfb3f0 | date : 2026-10-13T13:17:01.304Z | jours restants : 6 | motif :
+- assets/img/accompagnateurs/Fragments/Cycle de marche à droite-8.png | ID : lapinous/accompagnateurs/Fragments/Cycle de marche à droite-8__png_d94c0b915f3d201c | date : 2026-10-13T13:17:01.304Z | jours restants : 6 | motif :
+- assets/img/accompagnateurs/Fragments/Lapin assemblant des cristaux violets-10.png | ID : lapinous/accompagnateurs/Fragments/Lapin assemblant des cristaux violets-10__png_b67bd11a69b2f15f | date : 2026-10-13T13:17:01.304Z | jours restants : 6 | motif :
+
+### Réactivées : 0
+
+### Supprimées définitivement : 0
+
+### Suppressions bloquées : 1
+- assets/img/accompagnateurs/Chef/chef.svg | ID : lapinous/accompagnateurs/Chef/chef__svg_999aae9fe436d669 | date : ? | jours restants : ? | motif : Version exacte absente de la sauvegarde permanente
+
+### Erreurs corbeille : 0
+
+
+## Quarantaine
+📦 **Corbeille Cloudinary — suivi quotidien J-X**
+Images en attente : **6**
+Quarantaine logique : URL et public_id inchangés.
+• **caissier_merci.png** — **J-6** — échéance : 20/10/2026 15:17
+• **caissier_presentation.png** — **J-6** — échéance : 20/10/2026 15:17
+• **Pomme_surprise_au_foin.png** — **J-6** — échéance : 20/10/2026 15:17
+• **Comptoir vide dans un terrier chaleureux-4.png** — **J-6** — échéance : 20/10/2026 15:17
+• **Cycle de marche à droite-8.png** — **J-6** — échéance : 20/10/2026 15:17
+• **Lapin assemblant des cristaux violets-10.png** — **J-6** — échéance : 20/10/2026 15:17
+Images bloquées : **1** ; erreurs : **0**.
+🔒 chef.svg : Version exacte absente de la sauvegarde permanente
+J-0 ne signifie pas supprimée : la suppression doit être autorisée et confirmée.
+
+## Notifications prevues
+- bilan : configure
+- trello : configure
+- images : configure
+- erreurs : configure
+
+## Erreurs
+Aucune.
 <!-- LAPINOUS_AGENT_FIN -->
 
 ## Audit Trello et agent - 15 octobre 2026
 
-L'automatisation du bilan de 21 h est suspendue. L'horaire reste une configuration pour une reprise explicitement autorisee. Aucun deplacement Trello ni message Discord reel pendant les tests.
+Le bilan indépendant est abandonné. La chaîne unique de 20 h a passé le test réel autorisé du 15 octobre ; Trello est activé pour les prochains bilans réels après validation du 15 octobre ; les suppressions définitives restent bloquées. Aucun deplacement Trello ni message Discord reel pendant les tests.
 
 - [x] Simulation sans ecriture de fichiers, rapports ou point de reprise, et sans notification. [trello:6ac39f30bfe4848ec3eca940:code:simulation-agent]
 - [x] Preuves ciblees dans les lignes modifiees ; un fichier partage ne suffit plus. [trello:6ac39f30bfe4848ec3eca940:code:preuves-agent]
@@ -265,12 +929,32 @@ L'automatisation du bilan de 21 h est suspendue. L'horaire reste une configurati
 - [x] Notifications independantes : une erreur ne bloque pas les autres canaux. [trello:6ac39f30bfe4848ec3eca940:code:discord-agent]
 - [ ] Examiner humainement le rapport de simulation avant toute application Trello. [trello:6ac39f30bfe4848ec3eca940:manuel:accord-agent]
 - [ ] Choisir une reference Git explicite si des commits anterieurs au premier point de reprise doivent etre attribues. [trello:6ac39f30bfe4848ec3eca940:manuel:baseline-agent]
-- [ ] Toute reactivation future de 21 h exige une nouvelle demande explicite ; ne pas l'activer actuellement. [trello:6ac39f30bfe4848ec3eca940:manuel:reprise-agent]
+- [ ] Valider la simulation avant remise en service de la seule chaîne de 20 h ; aucun bilan indépendant. [trello:6ac39f30bfe4848ec3eca940:manuel:reprise-agent]
 
 ### Tests de l audit agent
 
 - [x] Tests Python de surete, Git, sous-taches et transitions avec faux services ; tests PowerShell sans commande reelle du Planificateur.
 - [x] Simulation complete en lecture seule : 71 cartes analysees, aucun deplacement propose, aucune notification et aucun point de reprise cree.
-- [x] Tache Windows de 21 h conservee desactivee ; Cloudinary 20 h laisse inchange.
+- [x] Ancienne tâche de bilan conservée désactivée ; seule la tâche Cloudinary de 20 h sert de point d’entrée.
 
-- [x] Enchainement cache identifie dans le lanceur actif de 20 h : bilan desormais optionnel et desactive par defaut, Cloudinary conserve.
+- [x] Ancien enchaînement optionnel remplacé : le mode réel de la chaîne appelle systématiquement le bilan après la synchronisation ; simulation par défaut avant validation.
+
+## Chaîne unique de 20 h — diagnostic du 15 octobre 2026
+
+- [x] Tâche existante inspectée en lecture seule : dernier essai le 14/10 à 20:37:02, résultat 0x800710E0 (requête refusée par l’opérateur ou l’administrateur). Dernier journal Cloudinary : 13/10. Journal opérationnel Windows désactivé : aucun événement détaillé disponible pour prouver la raison exacte du refus. [trello:6ac39f30bfe4848ec3eca940:code:diagnostic-chaine]
+- [x] Orchestrateur unique : sync puis bilan dans finally ; pas de seconde exécution de la corbeille déjà incluse dans update-images.mjs. Journaux UTF-8, code d’échec remonté et verrou anti-chevauchement en mode réel. [trello:6ac39f30bfe4848ec3eca940:code:chaine-20h]
+- [x] Rapport complet Cloudinary, Git, Trello, documentation, quarantaine et erreurs joint au bilan Discord ; les notifications suivantes restent tentées en cas d’échec d’un canal. [trello:6ac39f30bfe4848ec3eca940:code:rapport-chaine]
+- [x] Résultats des simulations acceptés et actualisation de l’action existante avec -AppliquerChaine autorisée pour le test réel du 15 octobre. Aucune réactivation d’un bilan indépendant. [trello:6ac39f30bfe4848ec3eca940:manuel:remise-service-chaine]
+
+- [x] Tests du 15/10 : 24 tests Python, 7 scénarios de chaîne et 5 scénarios d’installateur isolés réussis. Simulation réelle du lanceur : 71 cartes, 0 déplacement, aucun envoi ; code 1 attendu car dernier rapport Cloudinary périmé. [trello:6ac39f30bfe4848ec3eca940:code:tests-chaine-20h]
+
+## Test réel Windows et Discord — 15 octobre 2026
+
+- [x] Une seule exécution manuelle de la tâche existante, de 11:09:22 à 11:09:50 ; retour Windows 0, synchronisation 0 et bilan 0. Déclencheur quotidien inchangé, prochain passage à 20 h Europe/Paris. [trello:6ac39f30bfe4848ec3eca940:code:test-reel-windows]
+- [x] Utilisateur flori/session interactive/droits standards, chemins valides, batterie autorisée et arrêt sur batterie désactivé. Action corrigée et rattrapage des démarrages manqués activé ; ancien bilan indépendant désactivé. [trello:6ac39f30bfe4848ec3eca940:code:parametres-windows]
+- [x] Discord a confirmé quatre messages HTTP 200 : résumé, bilan complet joint, rapport Cloudinary joint et quarantaine. [trello:6ac39f30bfe4848ec3eca940:code:discord-reel]
+- [x] 71 cartes Trello identiques avant/après ; aucun point de reprise consommé. Aucune suppression Cloudinary, six quarantaines à J-6 (arrondi supérieur), échéance commune 20/10/2026 15:17 Paris. [trello:6ac39f30bfe4848ec3eca940:code:securite-test-reel]
+- [ ] Historique opérationnel Windows : activation tentée, refusée avec « Accès refusé ». À activer ultérieurement depuis une session administrateur autorisée ; aucun contournement effectué. [trello:6ac39f30bfe4848ec3eca940:manuel:historique-windows]
+- [ ] Confirmer dans Discord la lisibilité des deux pièces jointes reçues. [trello:6ac39f30bfe4848ec3eca940:manuel:lecture-discord]
+
+Après validation du 15 octobre, Trello peut appliquer les transitions autorisées lors des prochains bilans réels. La simulation reste en lecture seule et Cloudinary reste sans suppression définitive. L’ancien refus 0x800710E0 n’a pas été reproduit ; sa cause historique précise reste inconnue faute de journal opérationnel activé. `chef.svg` demeure bloqué faute de copie exacte dans la sauvegarde permanente ; aucune protection n’a été assouplie.

@@ -124,6 +124,52 @@ class Decisions(unittest.TestCase):
         self.assertEqual(len(errors), 2)
 
 
+class TransitionRecovery(unittest.TestCase):
+    def test_failed_comment_retries_without_second_move(self):
+        root = scratch()
+        state = root / 'state.json'
+        plan = {'id': CID, 'depuis': 'todo', 'vers': 'working', 'raison': 'saveGame modifie'}
+        calls = []
+        current = {'idList': 'todo'}
+        def fake(method, path, params=None):
+            calls.append((method, path))
+            if method == 'GET':
+                return current if path == 'cards/' + CID else []
+            if method == 'PUT':
+                current['idList'] = params['idList']
+                return {}
+            raise RuntimeError('Commentaire indisponible')
+        with patch.object(agent, 'STATE_FILE', state), patch.object(agent, 'api', side_effect=fake):
+            with self.assertRaises(RuntimeError):
+                agent.apply_plan(plan, LISTS)
+            self.assertTrue(agent.read_transitions())
+            def restored(method, path, params=None):
+                if method == 'POST':
+                    calls.append((method, path))
+                    return {}
+                return fake(method, path, params)
+            with patch.object(agent, 'api', side_effect=restored):
+                self.assertEqual(agent.recover_transitions(LISTS), [CID])
+                self.assertFalse(agent.read_transitions())
+        self.assertEqual(sum(method == 'PUT' for method, _ in calls), 1)
+
+    def test_protected_card_cannot_move_after_analysis(self):
+        with patch.object(agent, 'api', return_value={'idList': 'blocked'}), \
+             patch.object(agent, 'write_transitions', side_effect=AssertionError('Journal interdit')):
+            with self.assertRaises(RuntimeError):
+                agent.apply_plan({'id': CID, 'depuis': 'todo', 'vers': 'working'}, LISTS)
+
+    def test_existing_comment_marker_is_not_repeated(self):
+        root = scratch()
+        plan = {'id': CID, 'depuis': 'todo', 'vers': 'working', 'raison': 'Preuve'}
+        import hashlib
+        marker = '[lapinous:' + hashlib.sha256(json.dumps(plan, sort_keys=True, ensure_ascii=False).encode()).hexdigest()[:24] + ']'
+        with patch.object(agent, 'STATE_FILE', root/'state.json'), \
+             patch.object(agent, 'api', return_value=[{'data': {'text': marker}}]) as mocked:
+            agent.finish_comment(plan)
+            self.assertEqual([c.args[0] for c in mocked.call_args_list], ['GET'])
+
+
 class GitHistory(unittest.TestCase):
     def test_accents_and_renames(self):
         root = repo()
@@ -177,6 +223,23 @@ class GitHistory(unittest.TestCase):
 
 
 class FullSimulation(unittest.TestCase):
+    def test_trello_failure_does_not_advance_checkpoint(self):
+        root = repo()
+        state = root / '.cloudinary-local/state.json'
+        (root / 'shared.js').write_text('saveGame = 2;\n', encoding='utf-8')
+        with patch.object(agent, 'ROOT', root), patch.object(agent, 'STATE_FILE', state), \
+             patch.object(agent, 'REPORTS', root/'reports'), \
+             patch.object(agent, 'load_mappings', return_value=[TASK]), \
+             patch.object(agent, 'get_lists', return_value=LISTS), \
+             patch.object(agent, 'get_cards', return_value=[{'id':CID,'name':'Fictif','idList':'todo'}]), \
+             patch.object(agent, 'apply_plan', side_effect=RuntimeError('Trello fictif indisponible')), \
+             patch.object(agent, 'cloudinary_report', return_value=('Fictif',True)), \
+             patch.object(agent, 'discord', return_value=True), \
+             patch.object(agent, 'send_report_file', return_value=True), \
+             contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(agent.bilan(True), 1)
+        self.assertFalse(state.exists())
+
     def test_applied_fake_bilan_records_checkpoint_despite_discord_failure(self):
         root = repo()
         state_file = root / '.cloudinary-local/state.json'
@@ -193,7 +256,7 @@ class FullSimulation(unittest.TestCase):
              patch.object(agent, 'REPORTS', reports), patch.object(agent, 'load_mappings', return_value=[TASK]), \
              patch.object(agent, 'get_lists', return_value=LISTS), \
              patch.object(agent, 'get_cards', return_value=[{'id': CID, 'name': 'Sauvegardes', 'idList': 'todo'}]), \
-             patch.object(agent, 'api', side_effect=lambda *args: calls.append(args) or {}), \
+             patch.object(agent, 'api', side_effect=lambda *args: calls.append(args) or ({'idList': 'todo'} if args[1] == 'cards/' + CID else [])), \
              patch.object(agent, 'cloudinary_report', return_value=('Fictif', True)), \
              patch.object(agent, 'discord', side_effect=notification), \
              patch.object(agent, 'send_report_file', return_value=True), \
@@ -203,7 +266,7 @@ class FullSimulation(unittest.TestCase):
         self.assertTrue(state_file.exists())
         self.assertIn('trello', notifications)
         self.assertIn('images', notifications)
-        self.assertEqual([c[0] for c in calls], ['PUT', 'POST'])
+        self.assertEqual([c[0] for c in calls], ['GET', 'PUT', 'GET', 'POST'])
         self.assertFalse(agent.REMOTE_WRITES)
         self.assertFalse(suivi.collect(root, state_file, [TASK])[0].get('shared.js'))
 

@@ -140,7 +140,9 @@
         "assets/css/mobile.css",
         "tools/test-mobile-game.mjs",
         "assets/js/installer.js",
-        "tools/test-landscape-game.mjs"
+        "tools/test-landscape-game.mjs",
+        "assets/css/phone.css",
+        "assets/js/mobile-ui.js"
       ],
       "preuves": [
         {
@@ -154,6 +156,24 @@
           "motifs": [
             "fitSalonFriends|rabbitImage|kitchen-scene"
           ]
+        },
+        {
+          "chemin": "assets/css/phone.css",
+          "motifs": [
+            "salon",
+            "phoneEgg",
+            "egg-shop",
+            "kitchen"
+          ]
+        },
+        {
+          "chemin": "assets/js/mobile-ui.js",
+          "motifs": [
+            "salon",
+            "phoneEgg",
+            "egg-shop",
+            "kitchen"
+          ]
         }
       ],
       "automatique": true
@@ -166,7 +186,10 @@
         "assets/css/style.css",
         "index.html",
         "assets/css/mobile.css",
-        "tools/test-mobile-game.mjs"
+        "tools/test-mobile-game.mjs",
+        "assets/css/phone.css",
+        "assets/js/mobile-ui.js",
+        "tools/test-landscape-game.mjs"
       ],
       "preuves": [
         {
@@ -179,6 +202,20 @@
           "chemin": "assets/js/script.js",
           "motifs": [
             "prepareFight|team-preview|fight-preparation"
+          ]
+        },
+        {
+          "chemin": "assets/css/phone.css",
+          "motifs": [
+            "fight",
+            "boss-grid"
+          ]
+        },
+        {
+          "chemin": "assets/js/mobile-ui.js",
+          "motifs": [
+            "fight",
+            "boss-grid"
           ]
         }
       ],
@@ -827,7 +864,16 @@
         "tools/agent_lapinous/installer_taches.ps1",
         "tools/run-image-schedule.ps1",
         "tools/agent_lapinous/chaine_20h.ps1",
-        "tools/agent_lapinous/installer_chaine_20h.ps1"
+        "tools/agent_lapinous/installer_chaine_20h.ps1",
+        "tools/agent_lapinous/chaine_commune.ps1",
+        "tools/agent_lapinous/synchronisation_20h.ps1",
+        "tools/agent_lapinous/cloudinary_rapport.py",
+        "tools/agent_lapinous/test_chaine.ps1",
+        "tools/agent_lapinous/test_chaine_agent.py",
+        "tools/agent_lapinous/test_installateur.ps1",
+        "tools/agent_lapinous/README_INSTALLATION.md",
+        "docs/INSTALLATION_ET_SECURITE.md",
+        "AGENTS.md"
       ],
       "preuves": [],
       "automatique": false,
@@ -1021,7 +1067,10 @@
         "assets/css/shop.css",
         "lapinous-shop.json",
         "assets/css/mobile.css",
-        "tools/test-mobile-game.mjs"
+        "tools/test-mobile-game.mjs",
+        "assets/css/phone.css",
+        "assets/js/mobile-ui.js",
+        "tools/test-landscape-game.mjs"
       ],
       "preuves": [
         {
@@ -1040,6 +1089,24 @@
           "chemin": "assets/css/mobile.css",
           "motifs": [
             "shop-dialog|shop-tabs|shop-cart"
+          ]
+        },
+        {
+          "chemin": "assets/css/phone.css",
+          "motifs": [
+            "shop-dialog",
+            "pantry",
+            "cart-counter",
+            "bubble"
+          ]
+        },
+        {
+          "chemin": "assets/js/mobile-ui.js",
+          "motifs": [
+            "shop-dialog",
+            "pantry",
+            "cart-counter",
+            "bubble"
           ]
         }
       ],
@@ -1080,7 +1147,10 @@
         "assets/js/species-data.js",
         "lapinous-content.json",
         "assets/css/mobile.css",
-        "tools/test-mobile-game.mjs"
+        "tools/test-mobile-game.mjs",
+        "assets/css/phone.css",
+        "assets/js/mobile-ui.js",
+        "tools/test-landscape-game.mjs"
       ],
       "preuves": [
         {
@@ -1093,6 +1163,20 @@
           "chemin": "assets/js/dashboard.js",
           "motifs": [
             "food|energy|cleanliness"
+          ]
+        },
+        {
+          "chemin": "assets/css/phone.css",
+          "motifs": [
+            "puzzle",
+            "memory"
+          ]
+        },
+        {
+          "chemin": "assets/js/mobile-ui.js",
+          "motifs": [
+            "puzzle",
+            "memory"
           ]
         }
       ],

@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 
 
-def build(root: Path):
+def build(root: Path, expected_start=None):
     base = root / '.cloudinary-local'
     source = base / 'nightly-report.json'
     if not source.exists():
@@ -13,10 +13,16 @@ def build(root: Path):
     try:
         run = json.loads(source.read_text(encoding='utf-8'))
         when = dt.datetime.fromisoformat(run['startedAt'].replace('Z', '+00:00')).astimezone()
-    except (ValueError, KeyError, TypeError) as exc:
+    except (OSError, ValueError, KeyError, TypeError) as exc:
         return f'ÉCHEC : journal Cloudinary illisible ({type(exc).__name__}).', False
     today = dt.datetime.now().astimezone().date()
     fresh = when.date() == today and when.hour >= 19
+    if expected_start:
+        try:
+            expected = dt.datetime.fromisoformat(expected_start.replace('Z', '+00:00')).astimezone()
+            fresh = expected <= when <= dt.datetime.now().astimezone() + dt.timedelta(minutes=5)
+        except (ValueError, TypeError):
+            fresh = False
     ok = fresh and run.get('status') == 'success'
     status = 'RÉUSSITE' if ok else ('ÉCHEC' if fresh else 'JOURNAL ABSENT POUR CE SOIR')
     lines = [f'# Cloudinary — {status}', f'Début : {when.isoformat()}',
@@ -40,4 +46,4 @@ def build(root: Path):
             lines.append(f'- {item.get("path", "?")} | ID : {item.get("id", "?")} | date : {item.get("since", "?")} | jours restants : {item.get("daysRemaining", "?")} | motif : {item.get("reason", "")}')
     # Le journal seul ne peut pas prouver l'exécution de 20 h s'il est ancien.
     if not fresh: lines.append('\nALERTE : aucun résultat valide de la synchronisation prévue ce soir à 20 h.')
-    return '\n'.join(lines) + '\n', ok
+    return '\n'.join(line.rstrip() for line in lines) + '\n', ok

@@ -1,52 +1,40 @@
-# Doublures uniquement : aucune commande réelle du Planificateur n'est appelée.
-$ErrorActionPreference = 'Stop'
-$global:LapinousTestWrites = [System.Collections.Generic.List[object]]::new()
-$global:LapinousTestFixtures = @(
-    [pscustomobject]@{TaskName='Lapinous - Bilan quotidien 21h';TaskPath='\';Actions='agent.py bilan --appliquer';Settings=[pscustomobject]@{Enabled=$false}},
-    [pscustomobject]@{TaskName='Lapinous - Images Cloudinary 20h';TaskPath='\';Actions='run-image-schedule.ps1';Settings=[pscustomobject]@{Enabled=$true}}
+﻿# Toutes les commandes Windows sont remplacees ; aucun service reel.
+$ErrorActionPreference='Stop'
+$global:writes=[Collections.Generic.List[object]]::new()
+$settings=[pscustomobject]@{Enabled=$true;StartWhenAvailable=$false;WakeToRun=$false;MultipleInstances='IgnoreNew'}
+$global:fixtures=@(
+ [pscustomobject]@{TaskName='Lapinous - Images Cloudinary 20h';TaskPath='\';State='Ready';Actions='run-image-schedule.ps1';Settings=$settings},
+ [pscustomobject]@{TaskName='Lapinous - Bilan quotidien 21h';TaskPath='\';State='Disabled';Actions='agent.py bilan';Settings=[pscustomobject]@{Enabled=$false}}
 )
-function Get-TimeZone { [pscustomobject]@{Id='Romance Standard Time'} }
-function Get-ScheduledTask { $global:LapinousTestFixtures }
-function New-ScheduledTaskAction { param($Execute,$Argument,$WorkingDirectory) [pscustomobject]@{Execute=$Execute;Arguments=$Argument} }
-function New-ScheduledTaskTrigger { param([switch]$Daily,$At) [pscustomobject]@{At=$At} }
-function New-ScheduledTaskSettingsSet { param([switch]$StartWhenAvailable,$MultipleInstances) [pscustomobject]@{Enabled=$true} }
-function Set-ScheduledTask { param($TaskName,$TaskPath,$Action,$Trigger,$Settings) $global:LapinousTestWrites.Add([pscustomobject]@{Type='Set';Name=$TaskName;Enabled=$Settings.Enabled;Hour=$Trigger.At}) }
-function Register-ScheduledTask { param($TaskName,$Action,$Trigger,$Settings,$Description) $global:LapinousTestWrites.Add([pscustomobject]@{Type='Register';Name=$TaskName;Enabled=$Settings.Enabled;Hour=$Trigger.At}) }
-$installer = Join-Path $PSScriptRoot 'installer_taches.ps1'
+function Get-TimeZone {[pscustomobject]@{Id='Romance Standard Time'}}
+function Get-ScheduledTask {$global:fixtures}
+function New-ScheduledTaskAction {param($Execute,$Argument,$WorkingDirectory) [pscustomobject]@{Arguments=$Argument}}
+function New-ScheduledTaskTrigger {param([switch]$Daily,$At) [pscustomobject]@{At=$At}}
+function Set-ScheduledTask {param($TaskName,$TaskPath,$Action,$Trigger,$Settings) $global:writes.Add([pscustomobject]@{Type='Set';Name=$TaskName;Args=$Action.Arguments;Hour=$Trigger.At;Enabled=$Settings.Enabled;Catchup=$Settings.StartWhenAvailable})}
+function Disable-ScheduledTask {param($TaskName,$TaskPath) $global:writes.Add([pscustomobject]@{Type='Disable';Name=$TaskName})}
+function Export-ScheduledTask {param($TaskName,$TaskPath) '<Task>TEST ISOLATED</Task>'}
+function Register-ScheduledTask {throw 'Creation de tache interdite'}
+function Start-ScheduledTask {throw 'Execution reelle interdite'}
+function Enable-ScheduledTask {throw 'Reactivation interdite'}
+$installer=Join-Path $PSScriptRoot 'installer_taches.ps1'
 & $installer
-if ($global:LapinousTestWrites.Count -ne 0) { throw 'La simulation a écrit.' }
+if ($global:writes.Count) {throw 'Simulation avec effets secondaires'}
 & $installer -Appliquer
-if ($global:LapinousTestWrites.Count -ne 1 -or $global:LapinousTestWrites[0].Type -ne 'Set' -or $global:LapinousTestWrites[0].Enabled -or $global:LapinousTestWrites[0].Name -ne 'Lapinous - Bilan quotidien 21h') { throw 'Tâche existante non réutilisée ou réactivée.' }
-$global:LapinousTestWrites.Clear()
-& $installer -Appliquer -InstallerCloudinary
-if ($global:LapinousTestWrites.Count -ne 2 -or @($global:LapinousTestWrites | Where-Object Type -eq 'Register').Count -ne 0) { throw 'Doublon créé.' }
-if ($global:LapinousTestWrites[0].Hour -ne '21:00' -or $global:LapinousTestWrites[1].Hour -ne '20:00') { throw 'Horaires incorrects.' }
-$global:LapinousTestWrites.Clear()
-$global:LapinousTestFixtures += [pscustomobject]@{TaskName='Lapinous - Bilan 21h';Actions='agent.py bilan';Settings=[pscustomobject]@{Enabled=$false}}
-$refused = $false
-try { & $installer -Appliquer } catch { $refused = $true }
-if (-not $refused -or $global:LapinousTestWrites.Count) { throw 'Doublons existants non bloqués.' }
-$global:LapinousTestFixtures = @()
+if ($global:writes.Count -ne 2) {throw 'Nombre de modifications incorrect'}
+$change=$global:writes[0]
+if ($change.Type -ne 'Set' -or $change.Name -ne $fixtures[0].TaskName -or $change.Hour -ne '20:00' -or $change.Args -notmatch '-AppliquerChaine' -or -not $change.Catchup) {throw 'Action ou horaire incorrect'}
+if ($global:writes[1].Type -ne 'Disable') {throw 'Ancien bilan non desactive'}
+$global:writes.Clear()
+$fixtures[0].Settings.Enabled=$false
 & $installer -Appliquer
-if ($global:LapinousTestWrites.Count -ne 1 -or $global:LapinousTestWrites[0].Type -ne 'Register' -or $global:LapinousTestWrites[0].Enabled) { throw 'Nouvelle tâche activée sans accord.' }
-Write-Host '5 scénarios validés : aucune commande réelle du Planificateur appelée.'
-$launchers = @((Join-Path $PSScriptRoot '..\run-image-schedule.ps1'), (Join-Path $PSScriptRoot 'chaine_20h.ps1'))
-foreach ($launcher in $launchers) {
-    $tokens = $null; $errors = $null
-    $ast = [System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path $launcher), [ref]$tokens, [ref]$errors)
-    if ($errors.Count) { throw 'Erreur de syntaxe dans le lanceur.' }
-    $calls = $ast.FindAll({param($node)
-        $node -is [System.Management.Automation.Language.CommandAst] -and
-        (($node.CommandElements | ForEach-Object {$_.Extent.Text}) -join ' ') -match 'agent.py|bilan.*--appliquer'
-    }, $true)
-    if (-not $calls.Count) { throw 'Appel du bilan non retrouve pour verifier son garde.' }
-    foreach ($call in $calls) {
-        $parent = $call.Parent; $guarded = $false
-        while ($null -ne $parent) {
-            if ($parent -is [System.Management.Automation.Language.IfStatementAst] -and $parent.Clauses[0].Item1.Extent.Text -eq '$InclureBilan') { $guarded = $true; break }
-            $parent = $parent.Parent
-        }
-        if (-not $guarded) { throw 'Bilan automatique non protege dans le lanceur de 20 h.' }
-    }
-}
-Write-Host '2 lanceurs verifies par analyse syntaxique : aucun bilan sans option explicite.'
+if ($global:writes[0].Enabled) {throw 'Tache desactivee reactivee'}
+$global:writes.Clear()
+$global:fixtures+= $fixtures[0]
+$rejected=$false
+try {& $installer -Appliquer} catch {$rejected=$true}
+if (-not $rejected -or $global:writes.Count) {throw 'Doublons non refuses'}
+$global:fixtures=@()
+$rejected=$false
+try {& $installer -Appliquer} catch {$rejected=$true}
+if (-not $rejected -or $global:writes.Count) {throw 'Creation sans tache existante'}
+Write-Host '5 scenarios installateur OK : simulation, reutilisation, etat preserve, doublons et absence refuses.'

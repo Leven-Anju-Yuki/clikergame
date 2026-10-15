@@ -52,6 +52,8 @@ def safe_error(exc):
 
 
 def api(method, path, params=None):
+    if method != 'GET' and os.getenv('LAPINOUS_TRELLO_READ_ONLY') == 'true':
+        raise RuntimeError('Trello en lecture seule : ecriture interdite pour cette execution.')
     if method != 'GET':
         if not REMOTE_WRITES:
             raise RuntimeError('Écriture Trello interdite en simulation.')
@@ -173,7 +175,8 @@ def plan_card(task, changes, todo, lists, card):
     if card.get('closed'):
         result['raison'] = 'Carte archivee : protegee.'
     elif card['idList'] in {list_id(lists, key) for key in ('realise', 'idees', 'bloque', 'a_valider')}:
-        result['raison'] = 'Liste protegee : aucun deplacement automatique.'
+        list_name = next((item['name'] for item in lists.values() if item['id'] == card['idList']), '?')
+        result['raison'] = 'Liste protegee (' + list_name + ') : aucun deplacement automatique.'
     elif not task.get('chemins') or task.get('automatique') is not True:
         result['raison'] = 'Suivi manuel : aucune regle automatique explicite.'
     elif state['ambigu']:
@@ -192,14 +195,65 @@ def plan_card(task, changes, todo, lists, card):
     return result
 
 
+def transition_journal():
+    return STATE_FILE.with_name('trello-transitions.json')
+
+
+def read_transitions():
+    file = transition_journal()
+    return json.loads(file.read_text(encoding='utf-8')) if file.exists() else {}
+
+
+def write_transitions(items):
+    file = transition_journal()
+    file.parent.mkdir(parents=True, exist_ok=True)
+    pending = file.with_suffix('.pending.json')
+    pending.write_text(json.dumps(items, ensure_ascii=False), encoding='utf-8')
+    pending.replace(file)
+
+
+def finish_comment(plan):
+    import hashlib
+    marker = '[lapinous:' + hashlib.sha256(json.dumps(plan, sort_keys=True, ensure_ascii=False).encode()).hexdigest()[:24] + ']'
+    actions = api('GET', 'cards/' + plan['id'] + '/actions', {'filter': 'commentCard', 'limit': 1000})
+    if not any(marker in item.get('data', {}).get('text', '') for item in (actions or [])):
+        api('POST', 'cards/' + plan['id'] + '/actions/comments',
+            {'text': 'Lapinous Agent : ' + plan['raison'] + '\n' + marker})
+    items = read_transitions()
+    items.pop(plan['id'], None)
+    write_transitions(items)
+
+
+def recover_transitions(lists):
+    recovered = []
+    for plan in list(read_transitions().values()):
+        card = api('GET', 'cards/' + plan['id'], {'fields': 'idList,closed'})
+        protected = {list_id(lists, key) for key in ('realise', 'idees', 'bloque')}
+        if card.get('closed') or card['idList'] in protected:
+            raise RuntimeError('Reprise suspendue : carte protegee ' + plan['id'])
+        if card['idList'] == plan['vers']:
+            finish_comment(plan)
+        elif card['idList'] == plan['depuis']:
+            apply_plan(plan, lists)
+        else:
+            raise RuntimeError('Reprise suspendue : carte deplacee manuellement ' + plan['id'])
+        recovered.append(plan['id'])
+    return recovered
+
+
 def apply_plan(plan, lists):
     """Seulement deux listes cibles ; aucune creation de carte ni validation finale."""
     allowed = {list_id(lists, 'en cours'), list_id(lists, 'a_valider')} - {None}
     if plan['vers'] not in allowed or plan['vers'] == list_id(lists, 'realise'):
         raise ValueError('Transition interdite.')
+    current = api('GET', 'cards/' + plan['id'], {'fields': 'idList,closed'})
+    if current.get('closed') or current['idList'] != plan['depuis']:
+        raise RuntimeError('Carte modifiee depuis analyse : aucune ecriture.')
+    items = read_transitions()
+    items[plan['id']] = plan
+    write_transitions(items)
     api('PUT', 'cards/' + plan['id'], {'idList': plan['vers']})
-    api('POST', 'cards/' + plan['id'] + '/actions/comments',
-        {'text': 'Lapinous Agent : ' + plan['raison']})
+    finish_comment(plan)
 
 
 def update_card(task, changes, todo, lists, apply):
@@ -233,10 +287,12 @@ def discord(channel, message):
         print(f'Discord {channel} : URL de webhook absente du .env racine')
         return False
     for offset in range(0, len(message), 1800):
-        response = requests.post(url, json={'content': message[offset:offset + 1800],
+        response = requests.post(url, params={'wait':'true'}, json={'content': message[offset:offset + 1800],
                                             'allowed_mentions': {'parse': []}}, timeout=25)
         if not response.ok:
             raise RuntimeError(f'Discord {channel} : HTTP {response.status_code}')
+        result = response.json()
+        print(f'Discord {channel} : HTTP {response.status_code} ; message {result.get("id", "inconnu")} confirme.')
     return True
 
 
@@ -311,6 +367,7 @@ def save_checkpoint(snapshot):
 def bilan(apply, since=None, chain=None):
     global REMOTE_WRITES, ALLOWED_LISTS
     REMOTE_WRITES = False
+    trello_read_only = os.getenv('LAPINOUS_TRELLO_READ_ONLY') == 'true'
     tasks = load_mappings()
     todo_file, readme_file = ROOT / 'A_FAIRE.md', ROOT / 'readme.md'
     todo = todo_file.read_text(encoding='utf-8')
@@ -337,21 +394,27 @@ def bilan(apply, since=None, chain=None):
         errors.append(safe_error(exc))
     updates = [plan for plan in plans if plan['vers']]
     applied = []
-    if apply and not errors:
+    if apply and not trello_read_only and not errors:
         ALLOWED_LISTS = {list_id(lists, 'en cours'), list_id(lists, 'a_valider')}
         REMOTE_WRITES = True
         try:
+            recovered = recover_transitions(lists)
+            applied.extend(recovered)
             for plan in updates:
+                if plan['id'] in recovered:
+                    continue
                 try:
                     apply_plan(plan, lists)
                     applied.append(plan['id'])
                 except Exception as exc:
                     errors.append('Carte ' + plan['id'] + ' : ' + safe_error(exc))
+        except Exception as exc:
+            errors.append('Reprise Trello : ' + safe_error(exc))
         finally:
             REMOTE_WRITES = False
             ALLOWED_LISTS = set()
     names = {item['id']: item['name'] for item in lists.values()}
-    cloud_text, cloud_ok = cloudinary_report(ROOT)
+    cloud_text, cloud_ok = cloudinary_report(ROOT, expected_start=chain.get('startedAt')) if isinstance(chain, dict) else cloudinary_report(ROOT)
     chain_errors = []
     if chain is not None:
         if not isinstance(chain, dict) or type(chain.get('syncExit')) is not int:
@@ -367,6 +430,10 @@ def bilan(apply, since=None, chain=None):
              'Fichiers nouveaux depuis le point de reprise : ' + str(len(changes)),
              'Cartes analysees : ' + str(len(plans)),
              'Deplacements proposes : ' + str(len(updates)), '', '## Deplacements']
+    if apply:
+        lines.insert(5, 'Transitions traitees avec succes (reprises comprises) : ' + str(len(applied)))
+    if trello_read_only:
+        lines.insert(2, 'Trello : LECTURE SEULE ; aucune modification et aucun point de reprise enregistre.')
     for plan in updates:
         lines.append('- ' + plan['nom'] + ' [' + plan['id'] + '] : ' +
                      names.get(plan['depuis'], '?') + ' -> ' + names.get(plan['vers'], '?') +
@@ -410,7 +477,7 @@ def bilan(apply, since=None, chain=None):
         report += '\n## Erreurs documentaires\n' + errors[-1] + '\n'
         report_file.write_text(report, encoding='utf-8')
     # Les echecs Discord ne rejouent pas des transitions Trello deja effectuees.
-    if not errors:
+    if not errors and not trello_read_only:
         import hashlib
         for path in (todo_file, readme_file):
             content = path.read_bytes()
@@ -423,10 +490,10 @@ def bilan(apply, since=None, chain=None):
             ('bilan complet', lambda: send_report_file('bilan', report_file, report, not errors and cloud_ok)),
             ('images', lambda: send_report_file('images', cloud_file, cloud_text, cloud_ok)),
             ('corbeille', lambda: discord('images', quarantine_text))]
-    if updates:
-        message = '\n'.join(plan['nom'] + ' : ' + ('applique' if plan['id'] in applied else 'non applique')
-                            for plan in updates)
-        jobs.append(('trello', lambda: discord('trello', message)))
+    message = '\n'.join(plan['nom'] + ' : ' + ('applique' if plan['id'] in applied else 'non applique')
+                        + ' ; ' + plan['raison'] for plan in updates)
+    message += f'\nCartes ignorees : {len(plans) - len(updates)} (motifs dans le rapport complet). Erreurs : {len(errors)}.'
+    jobs.append(('trello', lambda: discord('trello', message)))
     if not cloud_ok:
         jobs.append(('alerte Cloudinary', lambda: discord('erreurs', 'Cloudinary : voir le rapport detaille.')))
     if errors:
@@ -447,9 +514,11 @@ def send_report_file(channel, file, text, ok):
         return False
     with file.open('rb') as stream:
         label = 'Bilan Lapinous' if channel == 'bilan' else 'Rapport Cloudinary'
-        response = requests.post(url, data={'payload_json': json.dumps({'content': ('✅' if ok else '⚠️') + ' ' + label + ' complet en pièce jointe.', 'allowed_mentions': {'parse': []}})}, files={'files[0]': (file.name, stream, 'text/markdown')}, timeout=60)
+        response = requests.post(url, params={'wait':'true'}, data={'payload_json': json.dumps({'content': ('✅' if ok else '⚠️') + ' ' + label + ' complet en pièce jointe.', 'allowed_mentions': {'parse': []}})}, files={'files[0]': (file.name, stream, 'text/markdown')}, timeout=60)
     if not response.ok:
         raise RuntimeError(f'Discord {channel} : HTTP {response.status_code}')
+    result = response.json()
+    print(f'Discord {channel} : HTTP {response.status_code} ; message {result.get("id", "inconnu")} ; fichier {file.name} ; pieces jointes {len(result.get("attachments", []))}.')
     return True
 
 
@@ -491,6 +560,9 @@ def main():
 
 
 if __name__ == '__main__':
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, 'reconfigure'):
+            stream.reconfigure(encoding='utf-8', errors='replace')
     try:
         sys.exit(main())
     except Exception as exc:

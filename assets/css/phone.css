@@ -1,0 +1,190 @@
+/* Mise en page tactile : dimensions CSS réelles, panneaux lisibles et scènes au sol. */
+#installInGame{display:none}
+body.game-running #installInGame:not([hidden]){display:block;position:fixed;left:148px;top:16px;z-index:1210;padding:8px 12px;border:1px solid #b99a67;border-radius:12px;background:#fff9ec;color:#574132;min-height:44px}
+#phoneEggDialog{width:min(650px,calc(100vw - 20px));max-height:calc(100dvh - 20px);padding:12px;border:2px solid #cbb58b;border-radius:18px;background:#fff8e8;color:#574132;overflow:auto}
+#phoneEggDialog::backdrop{background:#25180e99}#phoneEggDialog>header{display:flex;align-items:center;justify-content:space-between;gap:12px}#phoneEggDialog h2{font-size:18px;margin:0}#phoneEggDialog>header button{width:44px;height:44px;border:1px solid #b99a67;border-radius:50%;background:#fffaf0;font-size:25px}
+#phoneEggDialog .egg-shop{position:static!important;transform:none!important;translate:none!important;width:100%!important;max-width:none!important;margin:8px 0!important;box-sizing:border-box}
+#phoneEggDialog .action-row{display:flex;flex-wrap:wrap;gap:8px}#phoneEggDialog .action-btn{flex:1;min-width:110px;padding:10px;font-size:13px;min-height:44px}#phoneEggDialog .action-icon-emoji{font-size:22px}#phoneEggDialog .carrot-counter{font-size:16px;margin:10px auto}#phoneEggDialog .egg-rate-guide{font-size:14px}#phoneEggDialog .upgrade-locked-note{font-size:12px}
+.cart-counter-options[hidden]{display:none!important}
+@media(pointer:coarse) and (orientation:landscape) and (max-height:700px){
+ html.phone-ui body{background-size:100% 100%!important;background-position:center!important}
+ html.phone-ui body.game-running #gameRoot{bottom:46px!important}
+ html.phone-ui body.game-running #mainNav{height:46px!important;min-height:46px!important}
+ html.phone-ui body.game-running #installInGame{left:106px;top:5px;min-height:40px;padding:5px;font-size:11px;width:76px;box-sizing:border-box}
+ html.phone-ui body.game-running #friendshipBarContainer{width:min(180px,24vw)!important}
+ html.phone-ui body.game-running.default #gameArea{overflow:hidden!important}
+ html.phone-ui body.game-running.default .salon-active-rabbit-spot{position:absolute!important;left:50%!important;bottom:13%!important;width:26%!important;height:58%!important;z-index:20!important;transform:translateX(-50%)!important}
+ html.phone-ui body.game-running.default .salon-active-rabbit-spot #rabbitImage{position:static!important;width:100%!important;height:100%!important;max-height:100%!important;object-fit:contain!important;transform:none!important;translate:none!important}
+ html.phone-ui body.game-running.default .salon-friends{inset:auto 8% 13%!important;height:43%!important}
+ html.phone-ui body.game-running.default .salon-rabbit-friend{height:100%!important;max-height:100%!important;width:19%!important}
+ html.phone-ui body.game-running.default .salon-rabbit-friend img{height:calc(100% - 20px)!important;width:100%!important;object-fit:contain!important}
+ #phoneEggButton{position:absolute;left:22%;bottom:4%;z-index:30;padding:8px 14px;min-height:44px;border:1px solid #b99a67;border-radius:15px;background:#fff8e8;color:#574132;font-size:14px}
+ html.phone-ui .salon-console{max-width:140px!important;max-height:85px!important;font-size:13px!important}
+ html.phone-ui body.game-running:is(.cuisine,.chambre,.sdb,.jardin):not(.battle-scene) #rabbitImage{left:28%!important;bottom:12%!important;width:23%!important;height:48%!important;max-height:none!important;object-fit:contain!important}
+ html.phone-ui body.game-running .kitchen-scene-actions{position:absolute!important;left:49%!important;right:19%!important;bottom:7%!important;display:flex!important;gap:6px!important;flex-wrap:wrap!important;width:auto!important;max-height:52%;overflow:auto;padding:5px!important}
+ html.phone-ui .kitchen-scene-actions .action-btn{font-size:12px!important;min-height:44px!important;max-height:72px!important;min-width:0!important;padding:5px!important;flex:1!important}
+ html.phone-ui .kitchen-scene-actions .action-icon{height:28px!important;width:28px!important}
+ html.phone-ui .fridge-hotspot{right:4%!important;bottom:10%!important;padding:7px!important;font-size:12px!important}
+ /* Jeux et combats : les commandes de la maison ne recouvrent pas la partie. */
+ html.phone-ui body:has(.puzzle-workshop,.memory-panel,.fight-stage,.boss-grid) :is(#friendshipBarContainer,#statusBars,.brand,.scene-label,.rules-btn,.encyclopedia-btn,.save-btn,.shop-trigger,#installInGame){display:none!important}
+ html.phone-ui body.game-running #gameArea:has(.puzzle-workshop,.memory-panel,.fight-stage,.boss-grid){padding:8px!important;display:block!important;overflow:auto!important;box-sizing:border-box!important}
+ html.phone-ui .puzzle-workshop{width:100%!important;height:calc(100dvh - 62px)!important;max-height:none!important;padding:8px!important;gap:5px!important;overflow:hidden;box-sizing:border-box;display:flex!important;flex-direction:column!important}
+ html.phone-ui .puzzle-play-head{flex:none;font-size:12px!important;display:flex;justify-content:space-between;gap:6px;margin:0!important}
+ html.phone-ui .puzzle-workshop .puzzle-workspace{flex:1;min-height:0!important;display:grid!important;grid-template-columns:90px minmax(0,1fr) 85px!important;grid-template-rows:minmax(0,1fr)!important;gap:8px!important}
+ html.phone-ui .puzzle-workspace>.puzzle-preview-area{display:none!important}
+ html.phone-ui .puzzle-workspace>.puzzle-board{grid-column:2!important;grid-row:1!important;width:min(100%,calc((100dvh - 155px)*1.6))!important;height:auto!important;max-height:100%!important;min-height:0!important;aspect-ratio:1.6!important;align-self:center;justify-self:center;padding:2px!important;border-width:3px!important}
+ html.phone-ui .puzzle-workspace>.puzzle-bowl{grid-column:1!important;grid-row:1!important;padding:4px!important;overflow:auto!important;height:100%!important;max-height:100%!important;box-sizing:border-box;border-width:2px!important;border-radius:12px!important}
+ html.phone-ui .puzzle-bowl h3{font-size:12px!important}.phone-ui .puzzle-bowl p{font-size:10px!important}
+ html.phone-ui .puzzle-workspace>.puzzle-bowl .puzzle-bowl-pieces{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-auto-rows:38px!important;height:auto!important;max-height:none!important;gap:5px!important;padding:4px!important;overflow:visible!important}
+ html.phone-ui .puzzle-bowl .puzzle-loose{width:100%!important;height:38px!important;min-height:38px!important;aspect-ratio:auto!important}
+ html.phone-ui .puzzle-workspace>.puzzle-side{grid-column:3!important;grid-row:1!important;height:100%;min-height:0!important;align-content:end}
+ html.phone-ui .puzzle-tailor>img{height:min(110px,30dvh)!important;width:100%!important;object-fit:contain}.phone-ui .puzzle-tailor small{display:block;font-size:10px!important;line-height:1.2}
+ html.phone-ui .puzzle-workshop .agility-hint{display:block!important;flex:none;font-size:10px!important;line-height:1.2;max-height:25px;overflow:auto}
+ html.phone-ui .puzzle-actions{flex:none}.phone-ui .puzzle-actions button{min-height:34px!important;padding:5px 10px!important;font-size:12px!important}
+ html.phone-ui .memory-panel{padding:8px!important;width:100%!important;max-height:none!important;height:auto!important;gap:5px!important;box-sizing:border-box}
+ html.phone-ui .memory-panel .console-title{font-size:16px!important}.phone-ui .memory-panel>.agility-hint{font-size:11px!important;line-height:1.3!important;display:block!important}
+ html.phone-ui .memory-panel .memory-play{padding:6px!important;grid-template-columns:minmax(0,1fr) 64px!important;gap:8px!important}
+ html.phone-ui .memory-panel .memory-grid{width:100%!important;height:auto!important;grid-template-columns:repeat(var(--memory-columns),minmax(44px,68px))!important;grid-template-rows:none!important;grid-auto-rows:clamp(52px,18dvh,78px)!important;gap:6px!important;justify-content:center}
+ html.phone-ui .memory-panel .memory-card{position:relative!important;width:100%!important;height:100%!important;min-height:0!important;aspect-ratio:auto!important;padding:3px!important;font-size:22px!important}
+ html.phone-ui .memory-panel .memory-card img{position:absolute!important;inset:4px!important;width:calc(100% - 8px)!important;height:calc(100% - 8px)!important;max-height:none!important;object-fit:contain!important}
+ html.phone-ui .memory-collection{min-height:0!important;font-size:10px!important;padding:5px!important;gap:4px!important}.phone-ui .memory-pile{width:38px!important;height:48px!important}.phone-ui .memory-pile img{width:30px!important;height:40px!important}
+ html.phone-ui .memory-score{font-size:11px!important;padding:3px!important;margin:3px!important}.phone-ui .memory-actions{padding:0!important;gap:5px!important}.phone-ui .memory-actions button{font-size:12px!important;min-height:34px!important;padding:5px 10px!important}
+ html.phone-ui body.battle-scene #rabbitImage{display:none!important}
+ html.phone-ui body.battle-scene .action-row:has(.boss-grid){position:static!important;display:flex!important;flex-direction:column!important;width:100%!important;max-width:none!important;max-height:none!important;box-sizing:border-box;padding:8px!important}
+ html.phone-ui .boss-grid{display:grid!important;grid-template-columns:repeat(3,minmax(120px,1fr))!important;width:100%!important;gap:8px!important;overflow:visible!important}
+ html.phone-ui .boss-card{width:auto!important;min-width:0!important;padding:8px!important;min-height:130px!important;font-size:12px!important}.phone-ui .boss-card img{width:54px!important;height:54px!important;object-fit:contain!important}.phone-ui .boss-card :is(.boss-name,.boss-power,.boss-diff){font-size:12px!important;white-space:normal!important}
+ html.phone-ui body.game-running.battle-scene .fight-stage.fight-preparation{display:grid!important;grid-template-columns:minmax(130px,28%) minmax(0,1fr)!important;grid-template-rows:auto auto minmax(135px,auto) auto!important;width:100%!important;max-height:none!important;height:auto!important;min-height:100%!important;gap:8px!important;padding:8px!important;overflow:visible!important}
+ html.phone-ui .fight-preparation>.console-title{grid-column:2!important;grid-row:1!important;font-size:16px!important;padding:5px!important}
+ html.phone-ui .fight-preparation>.fight-power-comparison{grid-column:2!important;grid-row:2!important;display:flex!important;flex-wrap:wrap!important;font-size:12px!important;gap:4px!important;padding:4px!important}
+ html.phone-ui .fight-power-comparison *{font-size:12px!important}
+ html.phone-ui .fight-preparation>.fight-team-select{grid-column:1!important;grid-row:1/5!important;max-height:calc(100dvh - 86px)!important;overflow:auto!important;height:auto!important}
+ html.phone-ui .fight-team-card{padding:5px!important;gap:5px!important;font-size:11px!important;min-height:68px!important}.phone-ui .fight-team-card img{width:36px!important;height:46px!important}.phone-ui .fight-team-card *{font-size:11px!important}
+ html.phone-ui .fight-preparation>.battlefield-preview{grid-column:2!important;grid-row:3!important;min-height:135px!important;height:auto!important;overflow:visible!important;gap:5px!important;padding:5px!important}.phone-ui .battlefield-preview img{height:65px!important;max-height:65px!important;width:auto!important}.phone-ui .battlefield-preview :is(strong,p,small,span){font-size:11px!important}
+ html.phone-ui .fight-preparation>.action-row{grid-column:2!important;grid-row:4!important;position:static!important;display:flex!important;flex-wrap:wrap!important;width:auto!important;max-height:none!important;gap:5px!important;padding:5px!important}
+ html.phone-ui .fight-preparation>.action-row :is(button,select,label){font-size:12px!important;min-height:34px!important;padding:4px!important}
+ html.phone-ui body.game-running.battle-scene .fight-stage.tactical{height:auto!important;max-height:none!important;min-height:100%!important;display:grid!important;grid-template-columns:1fr 1fr!important;grid-template-rows:auto 150px auto auto!important;padding:6px!important;gap:6px!important;overflow:visible!important}
+ html.phone-ui .fight-stage.tactical .team-battlefield{grid-column:1/3!important;grid-row:2!important;height:150px!important;min-height:150px!important}.phone-ui .fight-stage.tactical .fight-log{grid-column:1/3!important;grid-row:3!important;height:auto!important;max-height:none!important;font-size:12px!important}.phone-ui .fight-stage.tactical .fight-command-grid{grid-column:1/3!important;grid-row:4!important;display:flex!important;flex-wrap:wrap!important}.phone-ui .fight-command-grid>*{font-size:12px!important;min-height:38px!important;flex:1 1 120px}.phone-ui .fight-hud-side{position:static!important;min-height:0!important;font-size:11px!important}.phone-ui .fight-hud-side *{font-size:11px!important}
+ /* Un panneau d'options à la fois, jamais les trois fiches superposées. */
+ html.phone-ui .cart-counter-options{width:260px!important;max-height:calc(100dvh - 16px)!important;overflow:auto!important;font-size:12px!important;padding:10px!important;z-index:100}.phone-ui .cart-counter-options strong{font-size:15px!important}
+ html.phone-ui .shop-dialog .shop-cashier img{height:55%!important;bottom:5%!important}
+ html.phone-ui .shop-dialog #shopCashierSpeech{bottom:62%!important;left:50%!important;right:auto!important;transform:translateX(-50%)!important;max-width:180px!important;width:24vw!important;font-size:11px!important;padding:6px!important;line-height:1.25!important}
+ html.phone-ui .shop-dialog.market-illustrated .shop-body{background-size:100% 100%!important;background-position:center!important}
+ html.phone-ui .shop-dialog.market-illustrated .market-stall{top:39%!important;height:32%!important;min-height:70px!important}
+ html.phone-ui .shop-dialog.market-illustrated .market-purchase-table{right:23%!important;bottom:3%!important;width:17%!important}
+ html.phone-ui .inventory-dialog{background-size:100% 100%!important}
+ html.phone-ui .shop-dialog.inventory-dialog .inventory-cabinet{top:15%!important;bottom:16%!important}
+ html.phone-ui .shop-dialog.inventory-dialog .inventory-herbalist{bottom:12%!important;height:58%!important}
+ html.phone-ui .shop-dialog .inventory-herbalist p{bottom:calc(100% + 4px)!important;top:auto!important;left:50%!important;right:auto!important;transform:translateX(-50%)!important;width:170px!important;max-width:24vw!important;font-size:11px!important;line-height:1.2!important}
+ html.phone-ui .pantry-stage.pantry-illustrated{bottom:66px!important;height:auto!important;inset:0 0 66px!important;background-size:100% 100%!important}
+ html.phone-ui .pantry-workshop>.pantry-meals{height:62px!important;max-height:62px!important;bottom:0!important;padding:4px 8px!important;grid-template-columns:minmax(150px,1fr) minmax(0,1.6fr) auto!important;gap:6px!important;box-sizing:border-box;overflow:auto!important;font-size:11px!important}
+ html.phone-ui .pantry-illustrated .pantry-chef{bottom:3%!important;height:53%!important;left:39%!important;width:22%!important}
+ html.phone-ui .pantry-illustrated .pantry-chef>p{bottom:calc(100% + 4px)!important;top:auto!important;font-size:11px!important;width:150px!important;left:50%;transform:translateX(-50%);padding:5px!important;line-height:1.2!important}
+ html.phone-ui .pantry-workshop>header{max-width:48%!important;padding:4px!important}.phone-ui .pantry-workshop>header h2{font-size:13px!important}.phone-ui .pantry-workshop>header p{font-size:10px!important}
+}
+@media(pointer:coarse) and (orientation:landscape) and (max-height:700px){
+ html.phone-ui body.game-running.default .salon-console-object.board-game-object{right:3%!important;bottom:4%!important;width:115px!important;height:62px!important;padding:5px!important;font-size:12px!important}
+ html.phone-ui .salon-console-object .board-top{display:none!important}.phone-ui .salon-console-object .console-object-label{font-size:13px!important}.phone-ui .salon-console-object .board-sub{font-size:12px!important;padding:4px!important}
+ html.phone-ui .salon-alone-note{display:none!important}
+ html.phone-ui body:has(.puzzle-workshop,.memory-panel,.fight-stage,.boss-grid) :is(.admin-test-toggle,.achievements-btn,.achievements-trigger,.sound-controls,.sound-toggle,.legal-trigger){display:none!important}
+ html.phone-ui .memory-panel{position:relative!important}
+ html.phone-ui .memory-panel .console-title{margin:0!important;padding:0 75px!important;line-height:1.25!important}
+ html.phone-ui .memory-panel .memory-score{position:absolute!important;top:4px!important;right:8px!important;line-height:1.2!important}
+ html.phone-ui .memory-panel .memory-actions{margin:0!important;flex:none!important}
+ html.phone-ui .fight-preparation>.phone-fight-preview{grid-column:2;grid-row:3;min-width:0;border:1px solid #cbb58b;border-radius:12px;background:#fff8e8;padding:5px;font-size:12px}
+ html.phone-ui .phone-fight-preview>summary{min-height:34px;display:flex;align-items:center;cursor:pointer;font-weight:700}
+ html.phone-ui .phone-fight-preview>summary::before{content:'▸';padding-right:6px}.phone-ui .phone-fight-preview[open]>summary::before{content:'▾'}
+ html.phone-ui body.game-running.battle-scene .fight-stage.fight-preparation{grid-template-rows:auto auto auto auto!important;min-height:0!important}
+ html.phone-ui .phone-fight-preview .battlefield-preview{min-height:135px!important;max-height:220px;overflow:auto!important}
+}
+@media(pointer:coarse) and (orientation:landscape) and (max-height:700px){
+ html.phone-ui body:has(.puzzle-workshop,.memory-panel,.fight-stage,.boss-grid) :is(#lapinousRecordsBtn,.audio-toggle){display:none!important}
+ html.phone-ui .fight-power-comparison .fight-power-values{display:flex!important;flex-wrap:wrap;justify-content:space-between;gap:4px;padding:0!important}
+ html.phone-ui .fight-power-comparison .fight-power-values>span{padding:4px!important}.phone-ui .fight-power-comparison .fight-power-meter{width:100%;height:5px!important;margin:2px 0!important}
+ html.phone-ui .phone-fight-preview>small{display:block;font-size:11px;line-height:1.3;margin:6px 0}
+ html.phone-ui .shop-dialog.zone-cart .shop-cart-lines{height:36%!important;top:22%!important;gap:10px!important}
+ html.phone-ui .cart-counter-inspect{background:transparent!important;box-shadow:none!important;border:0!important}
+}
+@media(pointer:coarse) and (orientation:landscape) and (max-height:700px){
+ /* Gros plan sur les casiers et bande de parquet issue du même décor. */
+ html.phone-ui .shop-dialog.market-illustrated .shop-body{background-size:100% 360%!important;background-position:center 48.5%!important}
+ html.phone-ui .shop-dialog.market-illustrated .shop-body::after{content:'';position:absolute;left:0;right:0;bottom:0;height:15%;background-image:inherit;background-size:100% 900%;background-position:center bottom;pointer-events:none;z-index:0}
+ html.phone-ui .shop-dialog.market-illustrated .shop-items{z-index:1}
+ html.phone-ui .shop-dialog.market-illustrated .market-stall{top:22%!important;height:60%!important;min-height:0!important}
+ html.phone-ui .inventory-dialog .shop-body{padding:0!important}
+ html.phone-ui .shop-dialog.inventory-dialog .inventory-herbalist{bottom:6%!important;height:64%!important}
+ html.phone-ui .shop-dialog.inventory-dialog .inventory-cabinet{bottom:12%!important}
+}
+@media(pointer:coarse) and (orientation:landscape) and (max-height:700px){
+ html.phone-ui body.game-running #friendshipBarContainer{left:50%!important;transform:translateX(-50%)!important;height:44px!important;max-height:44px!important;padding:4px 6px!important;box-sizing:border-box}
+ html.phone-ui #friendshipBarContainer .friendship-top{display:flex!important;flex-wrap:nowrap!important;align-items:center;gap:3px;margin:0 0 3px!important}.phone-ui .friendship-label,.phone-ui #levelDisplay{white-space:nowrap!important;font-size:10px!important}.phone-ui #levelDisplay{padding:2px 4px!important}
+ html.phone-ui .shop-dialog #shopCashierSpeech.phone-bubble,html.phone-ui .shop-dialog #inventorySpeech.phone-bubble{position:absolute!important;left:var(--bubble-x,6px)!important;top:var(--bubble-y,6px)!important;right:auto!important;bottom:auto!important;transform:none!important;translate:none!important;width:170px!important;max-width:calc(100% - 12px)!important;margin:0!important;padding:6px!important;border:1px solid #cbb58b;border-radius:12px;background:#fffaf0;color:#574132;font-size:11px!important;line-height:1.25!important;box-sizing:border-box;z-index:8;pointer-events:none}
+ html.phone-ui .phone-bubble[hidden]{display:none!important}
+}
+@media(pointer:coarse) and (orientation:landscape) and (max-height:700px){
+ html.phone-ui .pantry-illustrated .pantry-ready h3{top:0!important;bottom:auto!important;margin:0!important;font-size:11px!important;line-height:1.2!important;padding:2px!important;z-index:2}
+ html.phone-ui #pantryIngredients{display:flex!important;flex-wrap:wrap!important;gap:3px!important;margin:0!important;line-height:1.2!important;font-size:10px!important;align-content:center}
+ html.phone-ui .pantry-ingredient{padding:3px 5px!important;font-size:10px!important;line-height:1.2!important;margin:0!important;white-space:nowrap}
+}
+@media(pointer:coarse) and (orientation:landscape) and (max-height:700px){
+ html.phone-ui .shop-dialog.zone-cart .shop-cart-lines{top:auto!important;bottom:44%!important;height:clamp(52px,18dvh,78px)!important}
+ html.phone-ui .shop-dialog .shop-cart-line.cart-counter-item{flex-basis:86px!important;width:86px!important;min-height:0!important}
+ html.phone-ui .cart-counter-inspect{display:flex!important;flex-direction:column!important;align-items:center;justify-content:flex-end;height:100%!important;min-height:0!important;padding:0!important;line-height:1.1!important}
+ html.phone-ui .cart-counter-inspect>img{display:block!important;height:calc(100% - 18px)!important;min-height:0!important;max-height:none!important;width:100%!important;object-fit:contain!important;flex:1 1 0!important}
+ html.phone-ui .cart-counter-name{flex:none;width:100%;box-sizing:border-box;font-size:10px!important;line-height:1.2!important;padding:2px!important}
+ html.phone-ui .cart-counter-count{top:0!important;bottom:auto!important;font-size:11px!important}
+ html.phone-ui .shop-dialog.zone-cart .shop-cart-summary .shop-cart-payment{display:flex!important;align-items:center;justify-content:space-between;flex-wrap:wrap;width:100%!important;padding:3px!important;margin:0!important;gap:6px!important}
+ html.phone-ui .shop-dialog.zone-cart .shop-cart-payment p{margin:0!important;font-size:12px!important}
+ html.phone-ui .shop-dialog.zone-cart .shop-confirm-actions{gap:5px!important;margin:0!important;flex-wrap:nowrap!important}
+}
+@media(pointer:coarse) and (orientation:landscape) and (max-height:700px){
+ html.phone-ui #mainNav #phoneEggButton{position:static!important;left:auto!important;bottom:auto!important;z-index:auto!important;min-height:40px!important;min-width:0!important;padding:2px!important;border:0!important;border-radius:14px!important;background:#fff8e8!important;font-size:12px!important;flex:1}
+ html.phone-ui body.game-running .brand{top:54px!important;left:105px!important;bottom:auto!important}
+ html.phone-ui body.game-running.default .salon-favorites-button{top:96px!important;font-size:10px!important;padding:4px 6px!important}
+ html.phone-ui body.game-running.default .salon-friends{height:30%!important}
+ html.phone-ui body.game-running.default .salon-rabbit-friend{width:16%!important}
+ html.phone-ui body.game-running.default .salon-rabbit-friend:nth-child(1){left:0!important}
+ html.phone-ui body.game-running.default .salon-rabbit-friend:nth-child(2){left:82%!important}
+ html.phone-ui body.game-running.default .salon-rabbit-friend:nth-child(3){left:18%!important}
+}
+@media(pointer:coarse) and (orientation:landscape) and (max-height:700px){
+ html.phone-ui .pantry-workshop>.pantry-meals>label{grid-column:1!important;grid-row:1!important}
+ html.phone-ui .pantry-workshop>.pantry-meals>#pantryIngredients{grid-column:2!important;grid-row:1!important}
+ html.phone-ui .pantry-workshop>.pantry-meals>#pantryCook{grid-column:3!important;grid-row:1!important}
+ html.phone-ui .fight-preparation>.action-row{flex-wrap:nowrap!important;align-items:center!important}
+ html.phone-ui .fight-preparation>.action-row label{display:flex!important;flex-direction:column!important;gap:2px!important;align-items:center!important;font-size:10px!important;padding:0!important;min-height:0!important}
+ html.phone-ui .fight-preparation>.action-row select{font-size:12px!important;height:30px!important;min-height:30px!important;max-width:94px!important;padding:2px!important}
+ html.phone-ui .fight-stage.tactical .fight-hud-side.player{grid-column:1!important;grid-row:1!important}.phone-ui .fight-stage.tactical .fight-hud-side.boss{grid-column:2!important;grid-row:1!important}
+}
+@media(pointer:coarse) and (orientation:landscape) and (max-height:700px){
+ html.phone-ui body.game-running.battle-scene .fight-stage.tactical{grid-template-columns:minmax(0,1.6fr) minmax(160px,1fr)!important;grid-template-rows:auto clamp(100px,30dvh,150px) auto!important;min-height:0!important;height:auto!important}
+ html.phone-ui .fight-stage.tactical .fight-hud-side{padding:5px!important;gap:2px!important;min-height:0!important}
+ html.phone-ui .fight-stage.tactical .fight-hp,html.phone-ui .fight-stage.tactical .fight-crit{height:6px!important;min-height:6px!important;margin:2px 0!important}
+ html.phone-ui .fight-stage.tactical .team-battlefield{grid-column:1!important;grid-row:2!important;height:clamp(100px,30dvh,150px)!important;min-height:100px!important;overflow:hidden}
+ html.phone-ui .fight-stage.tactical .team-fighters{left:2%!important;bottom:0!important;width:58%!important;height:100%!important}
+ html.phone-ui .fight-stage.tactical .team-fighter{bottom:0!important;transform:none!important}
+ html.phone-ui .fight-stage.tactical .team-fighter img{height:60px!important;width:100%!important;max-width:68px!important;object-fit:contain!important}
+ html.phone-ui .fight-stage.tactical .team-fighter :is(strong,small){font-size:10px!important;line-height:1.1!important;padding:1px!important}
+ html.phone-ui .fight-stage.tactical .turn-marker{font-size:9px!important;height:13px!important;line-height:13px!important}
+ html.phone-ui .fight-stage.tactical .boss-battle-slot{right:2%!important;bottom:0!important;width:32%!important}
+ html.phone-ui .fight-stage.tactical .boss-battle-slot img{height:75px!important;width:100%!important;object-fit:contain!important}.phone-ui .fight-stage.tactical .boss-battle-slot strong{font-size:10px!important;line-height:1.1}
+ html.phone-ui .fight-stage.tactical .vs-mark{left:60%!important;bottom:40px!important;font-size:18px!important}
+ html.phone-ui .fight-stage.tactical .fight-log{grid-column:1!important;grid-row:3!important;max-height:50px!important;overflow:auto!important;font-size:11px!important;line-height:1.2!important;padding:4px!important}
+ html.phone-ui .fight-stage.tactical .fight-command-grid{grid-column:2!important;grid-row:2/4!important;display:flex!important;flex-direction:column!important;flex-wrap:nowrap!important;align-items:stretch!important;justify-content:flex-start!important;gap:4px!important;padding:4px!important;max-height:calc(100dvh - 130px)!important;overflow:auto!important;box-sizing:border-box}
+ html.phone-ui .fight-stage.tactical .fight-command-grid>*{flex:none!important;width:100%!important;min-height:34px!important;font-size:11px!important;padding:5px!important;box-sizing:border-box}
+}
+@media(pointer:coarse) and (orientation:landscape) and (max-height:700px){
+ html.phone-ui .puzzle-workshop.phone-puzzle-zoom .puzzle-workspace{grid-template-columns:90px max-content 85px!important;overflow:auto!important;overscroll-behavior:contain;align-items:start!important;touch-action:pan-x pan-y}
+ html.phone-ui .puzzle-workshop.phone-puzzle-zoom .puzzle-board{width:calc(var(--puzzle-cols) * 48px)!important;height:calc(var(--puzzle-rows) * 48px)!important;max-height:none!important;max-width:none!important;aspect-ratio:auto!important}
+ html.phone-ui .puzzle-workshop.phone-puzzle-zoom .puzzle-bowl{position:sticky!important;left:0;z-index:2}
+ html.phone-ui .puzzle-bowl .puzzle-loose{height:44px!important;min-height:44px!important}.phone-ui .puzzle-workspace>.puzzle-bowl .puzzle-bowl-pieces{grid-auto-rows:44px!important}
+}
+#phoneEggDialog>header{position:sticky;top:-12px;background:#fff8e8;z-index:2}
+[data-phone-puzzle-zoom]{display:none}
+@media(pointer:coarse) and (orientation:landscape) and (max-height:700px){
+ html.phone-ui [data-phone-puzzle-zoom]{display:block}
+ html.phone-ui .puzzle-workshop.phone-puzzle-zoom .puzzle-board{width:calc(var(--puzzle-cols) * var(--phone-puzzle-cell,48px))!important;height:calc(var(--puzzle-rows) * var(--phone-puzzle-cell,48px))!important}
+}
+@media(pointer:coarse) and (orientation:landscape) and (max-height:700px){
+ html.phone-ui .memory-panel .memory-play{max-height:calc(100dvh - 142px)!important;overflow:auto!important;overscroll-behavior:contain;align-items:start!important}
+ html.phone-ui .memory-panel .memory-collection{position:sticky;top:0}
+}

@@ -171,7 +171,14 @@
         let forging=false;
         function inspectCartItem(trigger){
             const panel=content.querySelector('#cartOptions'+trigger.dataset.cartInspect);if(!panel)return;
-            if(!panel.matches(':popover-open'))panel.showPopover();
+            content.querySelectorAll('.cart-counter-options').forEach(other=>{
+                if(other===panel)return;
+                if(other.matches(':popover-open'))other.hidePopover();
+                other.hidden=true;
+            });
+            panel.ontoggle=event=>{if(event.newState==='closed')panel.hidden=true;};
+            panel.hidden=false;
+            if(panel.showPopover&&!panel.matches(':popover-open'))panel.showPopover();
             const rect=trigger.getBoundingClientRect(),box=panel.getBoundingClientRect();
             panel.style.left=Math.max(8,Math.min(rect.left,window.innerWidth-box.width-8))+'px';
             panel.style.top=Math.max(8,rect.top-box.height-8)+'px';
@@ -183,7 +190,7 @@
             image.src=catalog.cashier.walkingLeft||catalog.cashier.presentation;
             image.style.transform=to<from?'':'scaleX(-1)';
             const movement=image.parentElement.animate([{transform:`translateX(${from}px)`},{transform:`translateX(${to}px)`}],{duration:window.matchMedia('(prefers-reduced-motion: reduce)').matches?1:Math.max(700,Math.abs(to-from)*3),fill:'forwards',easing:'linear'});
-            cashierMovement=movement;try{await movement.finished;}catch(error){if(error.name!=='AbortError')throw error;}finally{if(version===cashierTrip){cashierX=to;image.parentElement.style.transform=`translateX(${to}px)`;}movement.cancel();}
+            cashierMovement=movement;requestAnimationFrame(actorBounds);try{await movement.finished;}catch(error){if(error.name!=='AbortError')throw error;}finally{if(version===cashierTrip){cashierX=to;image.parentElement.style.transform=`translateX(${to}px)`;}movement.cancel();}
         }
         async function cashierCollect(button){
             if(tab!=='market'||cashierMoving)return;
@@ -235,13 +242,29 @@
         }
         // Actualiser uniquement le contenu du rayon ouvert.
         let marketSizingObserver;
+        let actorFrame;
         function actorBounds() {
+            cancelAnimationFrame(actorFrame);
             if (!dialog.open) return;
             const body = content.getBoundingClientRect(), layout = dialog.querySelector('.shop-layout').getBoundingClientRect();
             dialog.style.setProperty('--actor-top', (body.top - layout.top) + 'px');
             dialog.style.setProperty('--actor-height', body.height + 'px');
+            const phone=matchMedia('(pointer:coarse)').matches&&Math.min(innerWidth,innerHeight)<=900;
+            for(const [actor,bubble,parent] of [[image,speech,dialog.querySelector('.shop-layout')],[content.querySelector('#inventoryHerbalist'),content.querySelector('#inventorySpeech'),content]]){
+                if(!actor||!bubble)continue;
+                if(!phone){actor.parentElement.append(bubble);bubble.classList.remove('phone-bubble');bubble.hidden=false;continue;}
+                parent.append(bubble);bubble.classList.add('phone-bubble');
+                const bounds=actor.getBoundingClientRect(),frame=parent.getBoundingClientRect();
+                bubble.hidden=!bounds.width||!bounds.height;
+                if(bubble.hidden)continue;
+                const box=bubble.getBoundingClientRect();
+                bubble.style.setProperty('--bubble-x',Math.max(6,Math.min(frame.width-box.width-6,bounds.left-frame.left+(bounds.width-box.width)/2))+'px');
+                bubble.style.setProperty('--bubble-y',Math.max(2,bounds.top-frame.top-box.height-4)+'px');
+            }
+            if(cashierMoving||retrieving)actorFrame=requestAnimationFrame(actorBounds);
         }
         new ResizeObserver(actorBounds).observe(content);
+        new ResizeObserver(()=>requestAnimationFrame(actorBounds)).observe(speech);
         function render() {
             renderContents();
             requestAnimationFrame(actorBounds);
@@ -298,7 +321,7 @@
                     const index=line.cartIndex;
                     const item=getItem(line.id);let detail='Ajouté à l’inventaire · à utiliser sur le lapin actif de ton choix';
                     if(item.kind==='reset'){const pr=api.progress(line.target);detail=`${api.technique(line.target,line.index).name} : ${resetPlan(pr,line.index).refund} fragments récupérés, compétence à 0/5. Les autres restent intactes.`;}
-                    return `<article class="shop-cart-line cart-counter-item"><button type="button" class="cart-counter-inspect" data-cart-inspect="${index}" aria-label="Options de ${escape(item.name)}, quantité ${line.quantity}" aria-haspopup="true"><img src="${escape(item.image||'./assets/img/lapins_jouables/sans_evenements/mystery.svg')}" alt=""><b class="cart-counter-count">×${line.quantity}</b><span class="cart-counter-name">${escape(item.name)}</span></button><div class="cart-counter-options" id="cartOptions${index}" popover="auto"><strong>${escape(item.name)}</strong><span>${item.price*line.quantity} carottes au total</span><div class="shop-cart-controls">${item.kind==='restore'?`<div class="shop-quantity"><button type="button" data-shop-minus="${index}" aria-label="Retirer une unité de ${escape(item.name)}">− 1</button><span aria-label="Quantité">${line.quantity}</span><button type="button" data-shop-plus="${index}" aria-label="Ajouter une unité de ${escape(item.name)}">+ 1</button></div><small>${item.price} carottes par unité</small>`:''}<button type="button" data-shop-remove="${index}" aria-label="Supprimer ${escape(item.name)} du panier">Supprimer du panier</button></div></div></article>`;
+                    return `<article class="shop-cart-line cart-counter-item"><button type="button" class="cart-counter-inspect" data-cart-inspect="${index}" aria-label="Options de ${escape(item.name)}, quantité ${line.quantity}" aria-haspopup="true"><img src="${escape(item.image||'./assets/img/lapins_jouables/sans_evenements/mystery.svg')}" alt=""><b class="cart-counter-count">×${line.quantity}</b><span class="cart-counter-name">${escape(item.name)}</span></button><div class="cart-counter-options" id="cartOptions${index}" popover="auto" hidden><strong>${escape(item.name)}</strong><span>${item.price*line.quantity} carottes au total</span><div class="shop-cart-controls">${item.kind==='restore'?`<div class="shop-quantity"><button type="button" data-shop-minus="${index}" aria-label="Retirer une unité de ${escape(item.name)}">− 1</button><span aria-label="Quantité">${line.quantity}</span><button type="button" data-shop-plus="${index}" aria-label="Ajouter une unité de ${escape(item.name)}">+ 1</button></div><small>${item.price} carottes par unité</small>`:''}<button type="button" data-shop-remove="${index}" aria-label="Supprimer ${escape(item.name)} du panier">Supprimer du panier</button></div></div></article>`;
                 }).join('')}</div><section class="shop-cart-payment"><p>Total : <b>${total()} 🥕</b></p>${total()>game.carrots?'<p class="shop-cart-note">Tu n’as pas assez de carottes pour ce panier.</p>':''}<div class="shop-confirm-actions"><button type="button" data-shop-pay ${total()>game.carrots?'disabled':''}>Confirmer et payer ${total()} 🥕</button><button type="button" data-shop-tab="items">Continuer mes achats</button></div></section>`;
                 // Le total et la confirmation restent hors de la zone qui défile.
                 content.querySelectorAll('[data-cart-inspect]').forEach(trigger=>trigger.addEventListener('pointerenter',()=>inspectCartItem(trigger)));
@@ -432,7 +455,7 @@
                 try {
                     if(api.inCombat()||cartGame!==currentGame||!owned().includes(active))throw new Error('Rouvre l’inventaire avec ton compagnon actif après le combat.');
                     if(!item||!(currentGame.inventory?.[item.id]>0)||api.progress(active)[item.stat]>=100)return;
-                    clearTimeout(apothecaryTimer);retrieving=true;render();
+                    clearTimeout(apothecaryTimer);retrieving=true;requestAnimationFrame(actorBounds);render();
                     const version=++retrieveVersion;
                     const valid=()=>version===retrieveVersion&&dialog.open&&tab==='inventory'&&api.game()===currentGame&&api.game().species===active&&!api.inCombat();
                     const herbalist=content.querySelector('#inventoryHerbalist');

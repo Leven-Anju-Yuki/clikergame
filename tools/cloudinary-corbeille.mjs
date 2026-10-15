@@ -100,7 +100,7 @@ async function api(method, id) {
   if (!response.ok) throw Error(`Cloudinary HTTP ${response.status} (${method})`);
   return json;
 }
-const deletionEnabled = mode === 'appliquer' && (await credentials()).LAPINOUS_CLOUDINARY_DELETE_ENABLED === 'true';
+const deletionEnabled = mode === 'appliquer' && process.env.LAPINOUS_CLOUDINARY_DELETE_DISABLED !== 'true' && (await credentials()).LAPINOUS_CLOUDINARY_DELETE_ENABLED === 'true';
 const nextQueue = structuredClone(queue);
 const nextLedger = structuredClone(ledger);
 for (const [id, item] of known) {

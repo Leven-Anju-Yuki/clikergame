@@ -41,9 +41,12 @@
   document.getElementById('adoptBtn')?.parentElement.append(button);
   const savedButton = button.cloneNode(true); savedButton.id = 'installFromSave';
   document.querySelector('#saveModal .modal-body')?.prepend(savedButton);
+  const gameButton = button.cloneNode(true); gameButton.id = 'installInGame';
+  gameButton.textContent = '↓ Installer';
+  document.body.append(gameButton);
   function visibility() {
     const installed = matchMedia('(display-mode:standalone)').matches || navigator.standalone;
-    [button, savedButton].forEach(item => { item.hidden = !!installed; });
+    [button, savedButton, gameButton].forEach(item => { item.hidden = !!installed; });
   }
   async function install() {
     if (installPrompt) {
@@ -51,7 +54,7 @@
       await prompt.prompt(); await prompt.userChoice;
     } else help.showModal();
   }
-  [button, savedButton].forEach(item => item.addEventListener('click', install));
+  [button, savedButton, gameButton].forEach(item => item.addEventListener('click', install));
   addEventListener('beforeinstallprompt', event => { event.preventDefault(); installPrompt = event; });
   addEventListener('appinstalled', visibility);
   visibility();
