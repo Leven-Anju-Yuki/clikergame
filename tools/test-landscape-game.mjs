@@ -24,6 +24,11 @@ const tabs=await (await fetch('http://127.0.0.1:'+port+'/json')).json();const so
 
 await send('Emulation.setDeviceMetricsOverride',{width:size[0],height:size[1],deviceScaleFactor:1,mobile:!desktop});await send('Emulation.setTouchEmulationEnabled',{enabled:!desktop});await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'}]});await send('Page.navigate',{url:'http://127.0.0.1:'+server.address().port+'/'+(process.argv.includes('--family')?'?family=1'+(process.argv.includes('--brand')?'&brand=1':''):'')});
 
+if(process.argv.includes('--startup')){
+ await new Promise(r=>setTimeout(r,950));
+ const shot=await send('Page.captureScreenshot',{format:'png'});await fs.writeFile(path.join(profile,'startup.png'),Buffer.from(shot.result.data,'base64'));
+ console.log('Ouverture : '+path.join(profile,'startup.png'));
+}
 for(let i=0;i<150;i++){const response=await send('Runtime.evaluate',{expression:"window.visualReady",returnByValue:true});if(response.result?.result?.value)break;await new Promise(r=>setTimeout(r,200));}
 
 for(const [name,expression] of (polishAudit?[

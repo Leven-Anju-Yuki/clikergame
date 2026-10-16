@@ -22,7 +22,7 @@ self.addEventListener('activate', event => event.waitUntil((async () => {
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
   if (event.request.method !== 'GET') return;
-  const image = url.hostname === 'res.cloudinary.com' && event.request.destination === 'image';
+  const image = event.request.destination === 'image' && (url.hostname === 'res.cloudinary.com' || (url.origin === self.location.origin && url.pathname.startsWith(new URL('assets/img/Ouverture_du_jeu/', self.registration.scope).pathname)));
   const local = url.origin === self.location.origin && url.href.startsWith(self.registration.scope);
   const relative = url.pathname.slice(new URL(self.registration.scope).pathname.length);
   const allowed = local && (relative === '' || relative === 'index.html' || /^assets\/(?:js|css|icons)\//.test(relative) || /^lapinous-(?:content|shop|puzzles|quiz)\.json$/.test(relative));

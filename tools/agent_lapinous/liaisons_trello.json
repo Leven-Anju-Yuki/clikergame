@@ -1065,7 +1065,10 @@
         "assets/js/dashboard-ui.js",
         "dashboard.html",
         "assets/js/scene-preload.js",
-        "assets/js/script.js"
+        "assets/js/script.js",
+        "assets/js/startup.js",
+        "assets/css/startup.css",
+        "assets/img/Ouverture_du_jeu/"
       ],
       "preuves": [
         {

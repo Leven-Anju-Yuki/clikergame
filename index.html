@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="fr">
     <head>
+        <meta charset="UTF-8">
+        <link rel="preload" as="image" href="./assets/img/Ouverture_du_jeu/fonds_4K/05_chargement_3840x2160.jpg">
+        <style>#startupScreen{position:fixed;inset:0;z-index:2147483646;background:#23172b;color:#fff6df}#startupScreen[hidden]{display:none!important}</style>
         <script src="./assets/js/image-manifest.js?v=companion-motion-69"></script>
         <script src="./assets/js/image-assets.js"></script>
 <style>html:not(.local-admin) .encyclopedia-lock-row, html:not(.local-admin) .admin-test-toggle, html:not(.local-admin) #adminTestPanel { display:none !important; }</style>
@@ -53,8 +56,21 @@
 <meta name="theme-color" content="#80613d">
 <link rel="stylesheet" href="./assets/css/lapidoku.css?v=mistakes-87">
 <link rel="stylesheet" href="./assets/css/shop-polish.css?v=counter-85">
+<link rel="stylesheet" href="./assets/css/startup.css?v=opening-91">
 </head>
     <body class="default">
+        <section id="startupScreen" aria-label="Ouverture de Warrenfall" aria-busy="true">
+            <img id="startupArtwork" src="./assets/img/Ouverture_du_jeu/fonds_4K/05_chargement_3840x2160.jpg" alt="">
+            <img id="startupLogo" src="./assets/img/Ouverture_du_jeu/logo/Warrenfall_logo_transparent.png" alt="Warrenfall : Les Chroniques de Garenne">
+            <div class="startup-panel">
+                <div class="startup-race" aria-hidden="true"><span class="startup-chase"><picture><source media="(prefers-reduced-motion: reduce)" srcset="./assets/img/Ouverture_du_jeu/poses/azazel_course/01.png"><img class="startup-rabbit" src="./assets/img/Ouverture_du_jeu/animations/azazel_course.gif" alt=""></picture><picture><source media="(prefers-reduced-motion: reduce)" srcset="./assets/img/Ouverture_du_jeu/poses/carotte_course/01.png"><img class="startup-carrot" src="./assets/img/Ouverture_du_jeu/animations/carotte_course.gif" alt=""></picture></span></div>
+                <label for="startupProgress">Préparation du terrier… <span id="startupPercent">0 %</span></label>
+                <progress id="startupProgress" max="100" value="0">0 %</progress>
+                <p id="startupStatus" role="status">Chargement des images d’ouverture…</p>
+            </div>
+        </section>
+        <script src="./assets/js/startup.js?v=opening-91"></script>
+        <noscript><style>#startupScreen{display:none}</style>Active JavaScript pour jouer à Warrenfall.</noscript>
         <!-- ===================== ÉCRAN D'ADOPTION ===================== -->
         <div id="adoptionScreen" class="adoption-screen">
             <div class="adoption-halo"></div>

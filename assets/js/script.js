@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     Promise.all([
+        window.LapinousStartupReady || Promise.resolve(),
         window.LapinousContentReady || Promise.resolve(),
         window.LapinousPuzzlesReady || Promise.resolve(),
         window.LapinousShopReady || Promise.resolve(),
@@ -4854,5 +4855,6 @@ document.addEventListener("DOMContentLoaded", () => {
             { passive: true },
         );
         document.addEventListener("pointerdown", () => updateAmbience(), { once: true });
+        window.LapinousStartupFinish?.();
     });
 });

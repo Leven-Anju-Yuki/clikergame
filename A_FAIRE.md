@@ -1,6 +1,6 @@
 # Warrenfall - suivi des travaux et validations
 
-Mise a jour : 15 octobre 2026.
+Mise a jour : 16 octobre 2026.
 
 - [x] Correspondances des fichiers renseignees pour les cartes existantes qui ont du code.
 - [x] Reperes `[trello:ID]` ajoutes aux taches ci-dessous.
@@ -1028,3 +1028,15 @@ Le bilan indépendant est abandonné. La chaîne unique de 20 h a passé le test
 - [ ] Confirmer dans Discord la lisibilité des deux pièces jointes reçues. [trello:6ac39f30bfe4848ec3eca940:manuel:lecture-discord]
 
 Après validation du 15 octobre, Trello peut appliquer les transitions autorisées lors des prochains bilans réels. La simulation reste en lecture seule et Cloudinary reste sans suppression définitive. L’ancien refus 0x800710E0 n’a pas été reproduit ; sa cause historique précise reste inconnue faute de journal opérationnel activé. `chef.svg` demeure bloqué faute de copie exacte dans la sauvegarde permanente ; aucune protection n’a été assouplie.
+
+
+### Ouverture du jeu — 16 octobre 2026
+
+- [x] Écran initial avec les cinq images, progression des ressources et lapin poursuivant une carotte, avant adoption ou reprise. [trello:6ac39db49bd7456ac00b5038:code:startup-89]
+- [ ] Valider sur téléphone réel la séquence et la reprise hors connexion. [trello:6ac39db49bd7456ac00b5038:manuel:startup-phone-89]
+
+Suivi du 16 octobre : tableau [Warrenfall](https://trello.com/b/5VmsAFi7/warrenfall) vérifié ; description de la carte [P2 — Performance](https://trello.com/c/vEMkqMbD) actualisée avec les fichiers, les tests réussis et les validations restantes. Carte non marquée terminée.
+
+- [x] Visuels fournis intégrés : logo transparent, fonds 4K et GIF de course Azazel/carotte ; poses fixes si animations réduites. GIF complet de 14 Mo conservé sans chargement automatique. [trello:6ac39db49bd7456ac00b5038:code:startup-art-90]
+
+- [x] Chargement immédiat sur le fond dédié avec logo et course lapin/carotte ; suppression du passage obligatoire par les quatre images d’introduction, préchargement prioritaire du fond. Visuels originaux conservés. [trello:6ac39db49bd7456ac00b5038:code:startup-direct-91]
