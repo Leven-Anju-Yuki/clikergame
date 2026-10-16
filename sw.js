@@ -1,6 +1,6 @@
 /* Les caches sont propres à ce projet, y compris sur un domaine GitHub Pages partagé. */
 const PREFIX = 'lapinous-' + new URL(self.registration.scope).pathname + '-';
-const SHELL = PREFIX + 'shell-v1', IMAGES = PREFIX + 'images-v1';
+const SHELL = PREFIX + 'shell-v2', IMAGES = PREFIX + 'images-v1';
 const HOME = new URL('index.html', self.registration.scope).href;
 self.addEventListener('install', event => {
   event.waitUntil((async () => {
@@ -11,7 +11,7 @@ self.addEventListener('install', event => {
     const assets = [...html.matchAll(/(?:src|href)=["']([^"']+\.(?:js|css)(?:\?[^"']*)?)["']/g)]
       .map(match => new URL(match[1], HOME).href).filter(url => new URL(url).origin === self.location.origin);
     await cache.put(HOME, response);
-    await cache.addAll([...new Set([...assets, 'manifest.json', 'lapinous-content.json', 'lapinous-shop.json', 'lapinous-puzzles.json', 'lapinous-quiz.json'].map(url => new URL(url, HOME).href))]);
+    await cache.addAll([...new Set([...assets, 'assets/icons/warrenfall-48.png', 'assets/icons/warrenfall-192.png', 'assets/icons/warrenfall-512.png', 'manifest.json', 'lapinous-content.json', 'lapinous-shop.json', 'lapinous-puzzles.json', 'lapinous-quiz.json'].map(url => new URL(url, HOME).href))]);
   })());
 });
 self.addEventListener('activate', event => event.waitUntil((async () => {

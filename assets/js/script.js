@@ -1132,7 +1132,7 @@ document.addEventListener("DOMContentLoaded", () => {
             .getElementById("loadInsteadBtn")
              .addEventListener("click", async () => {
                 if(!window.showOpenFilePicker){document.getElementById('importInput').click();return;}
-                try{const folder=await window.LapinousLocalFiles.recall('player')||await window.LapinousLocalFiles.chooseSaves();const [handle]=await window.showOpenFilePicker({startIn:folder,id:'lapinous-load-save',types:[{description:'Sauvegarde Warrenfall',accept:{'application/json':['.json']}}],multiple:false});applyLoadedGame(JSON.parse(await (await handle.getFile()).text()));}catch(error){if(error.name!=='AbortError')showToast('Impossible de charger cette sauvegarde.','warn');}
+                try{applyLoadedGame(await window.LapinousLocalFiles.openSaveFile());}catch(error){if(error.name!=='AbortError')showToast('Impossible de charger cette sauvegarde.','warn');}
             });
 
         // ============================================================

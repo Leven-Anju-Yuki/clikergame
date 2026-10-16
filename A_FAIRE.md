@@ -1042,3 +1042,7 @@ Suivi du 16 octobre : tableau [Warrenfall](https://trello.com/b/5VmsAFi7/warrenf
 - [x] Chargement immédiat sur le fond dédié avec logo et course lapin/carotte ; suppression du passage obligatoire par les quatre images d’introduction, préchargement prioritaire du fond. Visuels originaux conservés. [trello:6ac39db49bd7456ac00b5038:code:startup-direct-91]
 
 - [x] Demande corrigée : introduction via le GIF fourni (une lecture de 3 secondes), puis fond spécial 05_chargement fixe avec progression et course ; aucun défilement des images 4K. Introduction ignorée si animations réduites ou GIF indisponible. Remplace le choix précédent de ne pas charger le GIF. [trello:6ac39db49bd7456ac00b5038:code:startup-gif-92]
+
+- [x] Import au lancement : ouverture directe du sélecteur JSON dans le dossier mémorisé, sinon Téléchargements ; aucune demande préalable de dossier ni création de dossier pendant un import. Le navigateur conserve également le dernier emplacement du sélecteur. [trello:6ac39db1a134b35f03b17940:code:save-picker-93]
+
+- [x] Nouveau logo fourni : favicon 48 px, icônes PWA 192/512 px, icône Apple et aperçu de partage ; icônes incluses dans le cache hors connexion. Anciennes images conservées. [trello:6ac39db1a134b35f03b17940:code:brand-icons-94]

@@ -19,6 +19,14 @@
     if(!handle)handle=await parent.getDirectoryHandle('Lapinous_Sauvegardes',{create:true});
     await remember('player',handle);return handle;
   }
+  // Restore the handle before the click, keeping the file picker in the user gesture.
+  recall('player');
+  async function openSaveFile(){
+    const folder=memory.get('player');
+    const options={id:'lapinous-load-save',startIn:folder||'downloads',types:[{description:'Sauvegarde Warrenfall',accept:{'application/json':['.json']}}],multiple:false};
+    const [handle]=await window.showOpenFilePicker(options);
+    return JSON.parse(await (await handle.getFile()).text());
+  }
   function download(name,text){const url=URL.createObjectURL(new Blob([text],{type:'application/json'}));const link=document.createElement('a');link.href=url;link.download=name;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
   async function write(handle,text){const stream=await handle.createWritable();try{await stream.write(text);await stream.close();}catch(error){await stream.abort().catch(()=>{});throw error;}}
   let exporting=false;
@@ -34,7 +42,7 @@
   }
   async function exportJSON(name,data){if(!filenames.has(name))throw new Error('Nom de catalogue incorrect.');const text=JSON.stringify(data,null,2);JSON.parse(text);if(!supported()){download(name,text);return 'download';}if(exporting)throw new Error('Un export est deja en cours.');exporting=true;try{const folder=await recall('project')||await chooseProject();if(!await permission(folder))throw new Error('Autorisation refusee. Reconnecte le dossier ou utilise le telechargement.');const file=await folder.getFileHandle(name);const old=await file.getFile();const backup=await folder.getDirectoryHandle('Sauvegardes JSON',{create:true});const stamp=new Date().toISOString().replace(/[:.]/g,'-');await write(await backup.getFileHandle(name.replace('.json','')+'-'+stamp+'.json',{create:true}),await old.text());await write(file,text);try{await cleanBackups(backup);}catch(error){console.warn('Export enregistre ; nettoyage des anciennes copies impossible.',error.name);}return 'written';}finally{exporting=false;}}
   const exportWithFallback=(name,data)=>{if(downloadOnly){download(name,JSON.stringify(data,null,2));return Promise.resolve('download');}return exportJSON(name,data);};
-  window.LapinousLocalFiles={supported,recall,permission,chooseProject,chooseSaves,exportJSON:exportWithFallback,download};
+  window.LapinousLocalFiles={supported,recall,permission,chooseProject,chooseSaves,openSaveFile,exportJSON:exportWithFallback,download};
   document.addEventListener('DOMContentLoaded',()=>{
     const exportButton=document.getElementById('exportContentBtn');if(!exportButton)return;
     const panel=document.createElement('section');panel.className='dash-section';
