@@ -1,7 +1,7 @@
-# Audit SEO — Lapinous
+# Audit SEO — Warrenfall
 
 Date : 5 octobre 2026. Audit du code local (`index.html`, `dashboard.html`, scripts).
-L’URL déclarée dans Open Graph est https://leven-anju-yuki.github.io/clikergame/ ;
+L’URL déclarée dans Open Graph est https://leven-anju-yuki.github.io/warrenfall/ ;
 la tentative de lecture distante a échoué. L’état déployé et l’indexation Google ne sont donc pas vérifiés.
 Aucun score Lighthouse ou Core Web Vitals n’a été mesuré.
 
@@ -15,7 +15,7 @@ Il n’est pas possible de garantir un classement ou une indexation à partir du
 ## Points présents
 
 - Langue française déclarée et viewport mobile.
-- Titre explicite : « Lapinous - Jeu de collection de lapins virtuels ».
+- Titre explicite : « Warrenfall - Jeu de collection de lapins virtuels ».
 - Meta description décrivant le jeu.
 - Favicon et balises Open Graph pour les aperçus de partage.
 - Un titre H1 dans le HTML initial, mais « Choisis ton compagnon » décrit surtout une action.
@@ -23,7 +23,7 @@ Il n’est pas possible de garantir un classement ou une indexation à partir du
 ## Actions par priorité
 
 1. **Présentation publique en HTML.** Ajouter un texte utile visible : principe du jeu,
-   collection, soins, mini-jeux et combats. Prévoir un H1 incluant Lapinous et des H2
+   collection, soins, mini-jeux et combats. Prévoir un H1 incluant Warrenfall et des H2
    explicatifs ; ne pas cacher artificiellement du texte aux joueurs.
 2. **Pages de découverte.** Un guide pour débutants et une présentation des mécaniques,
    reliés par de vrais liens HTML. Les fiches créées uniquement après interaction dans le

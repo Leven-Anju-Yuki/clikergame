@@ -1,4 +1,4 @@
-# Repérage des risques visibles — lapins de Lapinous / Google Play
+# Repérage des risques visibles — lapins de Warrenfall / Google Play
 
 Date : 6 octobre 2026. **Analyse préparatoire, pas un avis juridique, une garantie de droits ou une garantie d’acceptation Google Play.** Aucun fichier existant du jeu n’a été modifié, renommé ou supprimé pour cet audit. Seul ce rapport est ajouté.
 

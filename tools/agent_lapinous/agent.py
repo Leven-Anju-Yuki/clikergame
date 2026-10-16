@@ -1,4 +1,4 @@
-"""Agent Lapinous : bilan local, suivi Trello explicite et notifications Discord.
+"""Agent Warrenfall : bilan local, suivi Trello explicite et notifications Discord.
 Aucun push, aucune modification Cloudinary, aucun effacement de tâches.
 """
 from __future__ import annotations
@@ -218,7 +218,7 @@ def finish_comment(plan):
     actions = api('GET', 'cards/' + plan['id'] + '/actions', {'filter': 'commentCard', 'limit': 1000})
     if not any(marker in item.get('data', {}).get('text', '') for item in (actions or [])):
         api('POST', 'cards/' + plan['id'] + '/actions/comments',
-            {'text': 'Lapinous Agent : ' + plan['raison'] + '\n' + marker})
+            {'text': 'Warrenfall Agent : ' + plan['raison'] + '\n' + marker})
     items = read_transitions()
     items.pop(plan['id'], None)
     write_transitions(items)
@@ -425,7 +425,7 @@ def bilan(apply, since=None, chain=None):
             chain_errors.append('La synchronisation de cette execution a echoue : code ' + str(chain['syncExit']))
         errors.extend(chain_errors)
     quarantine_text = quarantine_discord_summary()
-    lines = ['# Bilan Lapinous - ' + stamp,
+    lines = ['# Bilan Warrenfall - ' + stamp,
              'Mode : ' + ('APPLICATION' if apply else 'SIMULATION STRICTE - aucune ecriture ni notification'),
              'Fichiers nouveaux depuis le point de reprise : ' + str(len(changes)),
              'Cartes analysees : ' + str(len(plans)),
@@ -471,7 +471,7 @@ def bilan(apply, since=None, chain=None):
     # Une erreur de mise a jour documentaire ne doit pas empecher les notifications.
     try:
         replace_section(todo_file, 'A faire', afaire)
-        replace_section(readme_file, 'Lapinous', inventory())
+        replace_section(readme_file, 'Warrenfall', inventory())
     except Exception as exc:
         errors.append('Documentation : ' + safe_error(exc))
         report += '\n## Erreurs documentaires\n' + errors[-1] + '\n'
@@ -513,7 +513,7 @@ def send_report_file(channel, file, text, ok):
         print('Webhook images absent ; rapport conservé : ' + str(file))
         return False
     with file.open('rb') as stream:
-        label = 'Bilan Lapinous' if channel == 'bilan' else 'Rapport Cloudinary'
+        label = 'Bilan Warrenfall' if channel == 'bilan' else 'Rapport Cloudinary'
         response = requests.post(url, params={'wait':'true'}, data={'payload_json': json.dumps({'content': ('✅' if ok else '⚠️') + ' ' + label + ' complet en pièce jointe.', 'allowed_mentions': {'parse': []}})}, files={'files[0]': (file.name, stream, 'text/markdown')}, timeout=60)
     if not response.ok:
         raise RuntimeError(f'Discord {channel} : HTTP {response.status_code}')
@@ -524,7 +524,7 @@ def send_report_file(channel, file, text, ok):
 
 def main():
     global APPLICATION_REQUESTED
-    parser = argparse.ArgumentParser(description='Agent local Lapinous')
+    parser = argparse.ArgumentParser(description='Agent local Warrenfall')
     parser.add_argument('commande', choices=('bilan', 'test-discord', 'test-trello', 'listes-trello', 'initialiser-trello'))
     parser.add_argument('--appliquer', action='store_true', help='Déplacer réellement les cartes Trello')
     parser.add_argument('--depuis-commit', help='Premier passage : inclure les commits depuis cette référence explicite')
@@ -535,7 +535,7 @@ def main():
         print('Simulation : aucune notification ni modification. Cette commande exige --appliquer.')
         return 0
     if args.commande == 'test-discord':
-        jobs = [(channel, lambda channel=channel: discord(channel, 'Test Lapinous Agent : ' + channel))
+        jobs = [(channel, lambda channel=channel: discord(channel, 'Test Warrenfall Agent : ' + channel))
                 for channel in ('general', 'bilan', 'trello', 'erreurs', 'images') if webhook(channel)]
         errors = notify_all(jobs)
         for error in errors:

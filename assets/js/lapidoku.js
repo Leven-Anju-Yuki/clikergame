@@ -1,7 +1,9 @@
 /* Grilles déterministes à solution unique ; aucune donnée de partie dans ce module. */
 (() => {
+  const givenPercentages = [65,60,55,50,45,40];
   const levels = [6,8,10,8,12,16,28,32,36,40,44,48].map((holes,index)=>({
-    index, size:index<3?4:index<6?6:9, rows:index<6?2:3, cols:index<3?2:3, holes,
+    index, size:index<3?4:index<6?6:9, rows:index<6?2:3, cols:index<3?2:3, holes:index<6?holes:81-Math.round(81*givenPercentages[index-6]/100),
+    givenPercent:index<6?null:givenPercentages[index-6],
     label:index<3?'Découverte':index<6?'Intermédiaire':index<9?'Classique':'Défi'
   }));
   function candidates(board,i,size,rows,cols) {
@@ -46,5 +48,16 @@
   function conflicts(board,level){
     return board.map((value,i)=>{if(!value)return false;const copy=board.slice();copy[i]=0;return !candidates(copy,i,level.size,level.rows,level.cols).includes(value);});
   }
-  globalThis.LapinousSudoku={levels,create,solutions,conflicts};
+  const mistakeLimit=3;
+  function enter(state,index,value){
+    if(state.finished||!Number.isInteger(index)||index<0||index>=state.board.length||state.given[index]||!Number.isInteger(value)||value<0||value>state.size)return false;
+    const previous=state.board[index];
+    state.board[index]=value;
+    if(value!==0&&value!==previous&&value!==state.solution[index]){
+      state.mistakes++;
+      if(state.mistakes>=state.mistakeLimit){state.lost=true;state.finished=true;}
+    }
+    return true;
+  }
+  globalThis.LapinousSudoku={levels,create,solutions,conflicts,enter,mistakeLimit};
 })();

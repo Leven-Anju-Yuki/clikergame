@@ -32,7 +32,7 @@
   orient();
   const help = document.createElement('dialog');
   help.className = 'install-help';
-  help.innerHTML = '<h2>Installer Lapinous</h2><p>Sur Android, ouvre le jeu dans Chrome puis choisis « Installer l’application » ou « Ajouter à l’écran d’accueil » dans le menu ⋮.</p><p>Sur iPhone ou iPad : Safari → Partager → Sur l’écran d’accueil.</p><p>Après une première visite, les écrans et images déjà chargés restent disponibles hors connexion. Les images encore jamais ouvertes demandent Internet.</p><button type="button">Fermer</button>';
+  help.innerHTML = '<h2>Installer Warrenfall</h2><p>Sur Android, ouvre le jeu dans Chrome puis choisis « Installer l’application » ou « Ajouter à l’écran d’accueil » dans le menu ⋮.</p><p>Sur iPhone ou iPad : Safari → Partager → Sur l’écran d’accueil.</p><p>Après une première visite, les écrans et images déjà chargés restent disponibles hors connexion. Les images encore jamais ouvertes demandent Internet.</p><button type="button">Fermer</button>';
   document.body.append(help);
   help.querySelector('button').onclick = () => help.close();
   const button = document.createElement('button');
@@ -58,7 +58,7 @@
     [button, savedButton, gameButton].forEach(item => { item.hidden = !!installed; });
     navButton.hidden = !!installed;
     navButton.disabled = !!installed;
-    navButton.setAttribute('aria-label', installed ? 'Lapinous est déjà installé' : 'Installer Lapinous');
+    navButton.setAttribute('aria-label', installed ? 'Warrenfall est déjà installé' : 'Installer Warrenfall');
     navButton.lastElementChild.textContent = installed ? 'Installé' : 'Installer';
   }
   async function install() {

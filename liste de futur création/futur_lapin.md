@@ -1,4 +1,4 @@
-# 🐰 Extensions & Boss Originaux - Lapinous
+# 🐰 Extensions & Boss Originaux - Warrenfall
 
 ## 🌑 Eclipse — Le Gardien des Éclipses
 Rareté : Légendaire (ou Divin)

@@ -185,6 +185,9 @@
         }
         let cashierMoving=false,cashierX=0,cashierTrip=0,cashierMovement;
         async function cashierWalk(to){
+            const frame=content.getBoundingClientRect(),actor=image.getBoundingClientRect();
+            const origin=actor.left-cashierX;
+            to=Math.max(frame.left+8-origin,Math.min(frame.right-actor.width-8-origin,to));
             const from=cashierX,version=cashierTrip;
             if(Math.abs(to-from)<3)return;
             image.src=catalog.cashier.walkingLeft||catalog.cashier.presentation;

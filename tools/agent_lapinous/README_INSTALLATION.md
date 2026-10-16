@@ -1,4 +1,4 @@
-# Agent Lapinous - simulation et suivi explicite
+# Agent Warrenfall - simulation et suivi explicite
 
 Une seule tâche Windows existante à 20 h Europe/Paris lance Cloudinary, puis le bilan global immédiatement après, même en cas d’échec. Le rapport complet part sur Discord après le bilan. Aucun bilan indépendant. La chaîne a passé le test réel autorisé du 15 octobre : synchronisation, bilan et Windows retournent 0 ; les rapports Discord sont confirmés. Trello est activé pour les prochains bilans réels après validation du 15 octobre ; les suppressions définitives restent bloquées.
 

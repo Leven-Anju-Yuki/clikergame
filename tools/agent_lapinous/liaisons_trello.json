@@ -926,7 +926,11 @@
         "tools/agent_lapinous/test_installateur.ps1",
         "tools/agent_lapinous/README_INSTALLATION.md",
         "docs/INSTALLATION_ET_SECURITE.md",
-        "AGENTS.md"
+        "AGENTS.md",
+        "docs/RENOMMAGE_WARRENFALL.md",
+        "manifest.json",
+        "assets/js/installer.js",
+        "tools/agent_lapinous/surveillance_batterie.py"
       ],
       "preuves": [],
       "automatique": false,

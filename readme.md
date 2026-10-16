@@ -1,6 +1,6 @@
-# 🐰 Lapinous
+# 🐰 Warrenfall : Les Chroniques de Garenne
 
-Lapinous est un jeu de collection et de gestion de lapins virtuels. Le joueur adopte un compagnon, s'occupe de ses besoins, développe son amitié, collectionne de nouveaux lapins grâce aux œufs, joue à des mini-jeux et affronte les boss légumes du jardin.
+Warrenfall est un jeu de collection et de gestion de lapins virtuels. Le joueur adopte un compagnon, s'occupe de ses besoins, développe son amitié, collectionne de nouveaux lapins grâce aux œufs, joue à des mini-jeux et affronte les boss légumes du jardin.
 
 Le projet fonctionne comme un petit jeu web responsive, avec un univers visuel composé de plusieurs pièces, une encyclopédie, des événements saisonniers et un Dashboard permettant de gérer le contenu sans modifier directement tout le code.
 
@@ -108,7 +108,7 @@ Le Dashboard permet de rechercher et filtrer les lapins par événement.
 
 Les **245 images utilisées** sont hébergées sur Cloudinary, dans le cloud `dgrszi9wf`, sous `lapinous/`. Le jeu et le Dashboard utilisent les URL de `assets/js/image-manifest.js`, chargées par le résolveur commun. Les originaux transférés ont été retirés de `assets/img/` ; les dossiers restent disponibles grâce aux `.gitkeep`. Les futures créations et les images non transférées sont conservées.
 
-Une tâche Windows, **« Lapinous - Images Cloudinary 23h »**, vérifie chaque soir à **23 h, Europe/Paris**, les nouvelles images utilisées ou modifiées. Elle transfère les nouvelles versions, puis déplace les fichiers locaux vérifiés dans `secours-images/`. Ce dossier est ignoré par Git et utilisable en secours uniquement en local. Sans nouvelle image utilisée, aucun appel Cloudinary n’est effectué. Le PC doit être allumé, éveillé et la session ouverte. Les anciennes images déjà supprimées n’ont pas été retéléchargées dans ce dossier.
+La tâche Windows existante **« Lapinous - Images Cloudinary 20h »** lance la synchronisation chaque jour à **20 h, Europe/Paris**, puis le bilan global et Discord dès sa fin. Son nom technique historique est conservé. Elle transfère les nouvelles versions, puis déplace les fichiers locaux vérifiés dans `secours-images/`. Ce dossier est ignoré par Git et utilisable en secours uniquement en local. Sans nouvelle image utilisée, aucun appel Cloudinary n’est effectué. Le PC doit être allumé, éveillé et la session ouverte. Les anciennes images déjà supprimées n’ont pas été retéléchargées dans ce dossier.
 
 Pour lancer la même opération manuellement : double-cliquer sur `Synchroniser les images.cmd`, ou exécuter `node tools/update-images.mjs --backup-local`. Les images doivent être référencées dans le jeu ou un catalogue JSON. Le contrôle du quota gratuit reste actif avant tout nouvel envoi. La tâche des images est distincte du bilan documentaire de 23 h.
 
@@ -147,7 +147,7 @@ Les fichiers de Git gardent encore l’historique des anciennes images. Les jour
 Chaque fichier et chaque sous-dossier du périmètre comparable est indiqué ci-dessous. Les dossiers vides pèsent zéro octet hors métadonnées du système de fichiers. Les détails des caches, secrets et sauvegardes privées sont omis ; leurs dossiers figurent dans le tableau précédent.
 
 ```text
-Lapinous/ — 219,22 Mio
+Warrenfall/ — 219,22 Mio
 ├── _a_verifier_avant_suppression/ — 173,4 Kio
 │   └── assets/ — 173,4 Kio
 │       ├── img/ — 162,1 Kio
@@ -625,7 +625,7 @@ _Inventaire local uniquement : les images déjà archivées ne sont pas considé
 
 ### Installer le jeu sur téléphone
 
-Ouvrir Lapinous en HTTPS dans Chrome et utiliser **Installer le jeu** (accueil ou sauvegardes). Sur Safari : **Partager → Sur l’écran d’accueil**. L’application demande le paysage ; si le navigateur refuse le verrouillage, tourner le téléphone. Les modifications locales doivent être publiées avant d'apparaître sur le site.
+Ouvrir Warrenfall en HTTPS dans Chrome et utiliser **Installer le jeu** (accueil ou sauvegardes). Sur Safari : **Partager → Sur l’écran d’accueil**. L’application demande le paysage ; si le navigateur refuse le verrouillage, tourner le téléphone. Les modifications locales doivent être publiées avant d'apparaître sur le site.
 
 Le service worker conserve les fichiers publics du jeu et les 120 dernières images consultées. Les autres images nécessitent Internet. Il ne copie pas les sauvegardes dans le cache et ne remplace pas les exports JSON personnels. Les caches sont isolés par chemin du projet, pour préserver les autres applications du même domaine.
 

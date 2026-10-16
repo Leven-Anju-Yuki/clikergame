@@ -1,4 +1,4 @@
-"""Bot interactif facultatif Lapinous (slash commands).
+"""Bot interactif facultatif Warrenfall (slash commands).
 
 Le bot n'exécute aucune synchronisation ni commande système depuis Discord.
 Les bilans planifiés sont envoyés séparément par les webhooks de agent.py.
@@ -29,11 +29,11 @@ bot = LapinousBot()
 
 @bot.event
 async def on_ready():
-    print(f'Bot Lapinous connecté : {bot.user}')
+    print(f'Bot Warrenfall connecté : {bot.user}')
 
-@bot.tree.command(name='statut', description='Vérifier que le bot Lapinous est connecté')
+@bot.tree.command(name='statut', description='Vérifier que le bot Warrenfall est connecté')
 async def statut(interaction: discord.Interaction):
-    await interaction.response.send_message('🐰 Le bot Lapinous est connecté.', ephemeral=True)
+    await interaction.response.send_message('🐰 Le bot Warrenfall est connecté.', ephemeral=True)
 
 @bot.tree.command(name='bilan', description='Lire le dernier bilan enregistré')
 async def bilan(interaction: discord.Interaction):

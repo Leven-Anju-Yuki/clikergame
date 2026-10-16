@@ -39,7 +39,7 @@ const date = new Intl.DateTimeFormat('fr-FR', { dateStyle: 'long', timeZone: 'Eu
 
 /** Produit l’arborescence complète des fichiers du projet avec les poids cumulés des dossiers. */
 function tree(node) {
-  const lines = ['Lapinous/ — ' + weight(node.bytes)];
+  const lines = ['Warrenfall/ — ' + weight(node.bytes)];
   function visit(parent, prefix) {
     parent.children.forEach((child, i) => {
       const last = i === parent.children.length - 1;

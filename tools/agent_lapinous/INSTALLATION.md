@@ -1,4 +1,4 @@
-# Installation de l’agent Lapinous
+# Installation de l’agent Warrenfall
 
 Voir [README_INSTALLATION.md](README_INSTALLATION.md) pour la procédure actuelle et les tests.
 

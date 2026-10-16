@@ -4,7 +4,8 @@
 !.env.example
 .cloudinary-local/
 secours-images/
-docs/
+docs/*
+!docs/RENOMMAGE_WARRENFALL.md
 
 # Copies locales des catalogues et sauvegardes des joueurs
 /Sauvegardes JSON/

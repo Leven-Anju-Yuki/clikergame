@@ -1,10 +1,10 @@
-# Lapinous — dossier juridique de travail
+# Warrenfall — dossier juridique de travail
 Version du 06-10-2026. Cadre envisagé : éditeur établi en France, distribution France/UE, jeu Android et éventuellement web. Adapter si l'établissement ou les pays de diffusion diffèrent.
 
 IMPORTANT : modèles à compléter et à faire relire avant publication. Ils ne constituent pas une validation juridique du jeu. Aucun document ne doit être publié avec un champ [À COMPLÉTER], une alternative ou une note interne. Les documents n'implémentent ni paiement, ni sécurité, ni consentement.
 
 ## Ce qui est connu
-Lapinous est un jeu de collection, de soins et de combats de lapins, avec des œufs et des événements. Certaines illustrations ont été créées avec une IA. Des sons proviennent de bibliothèques externes. Des achats facultatifs de carottes sont envisagés. Le public souhaité est large et peut inclure des enfants.
+Warrenfall est un jeu de collection, de soins et de combats de lapins, avec des œufs et des événements. Certaines illustrations ont été créées avec une IA. Des sons proviennent de bibliothèques externes. Des achats facultatifs de carottes sont envisagés. Le public souhaité est large et peut inclure des enfants.
 
 ## Ce qui reste à décider
 Identité et statut de l'éditeur ; pays de diffusion ; création de compte ; sauvegardes locales ou serveur ; hébergeurs et SDK ; publicité et statistiques ; vendeur contractuel des achats ; prix, packs et probabilités ; conservation des données ; interlocuteur et médiateur de la consommation.

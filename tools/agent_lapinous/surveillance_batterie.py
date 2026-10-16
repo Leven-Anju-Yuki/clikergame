@@ -1,4 +1,4 @@
-"""Surveillance discrète de la batterie Lapinous (Windows, sans dépendance externe)."""
+"""Surveillance discrète de la batterie Warrenfall (Windows, sans dépendance externe)."""
 import ctypes
 import datetime as dt
 import json
@@ -80,7 +80,7 @@ def main():
         crossed = [threshold for threshold in (30, 25, 20, 15) if pct <= threshold and threshold not in sent]
         if crossed:
             severity = '🚨 CRITIQUE' if pct <= 15 else '🔋 Batterie faible'
-            envoyer(f'{severity} — Lapinous : batterie à **{pct} %**, chargeur débranché. '
+            envoyer(f'{severity} — Warrenfall : batterie à **{pct} %**, chargeur débranché. '
                     f'Seuil(s) atteint(s) : {", ".join(map(str, crossed))} %. '
                     'Branche le PC dès que possible pour protéger la synchronisation Cloudinary.')
             sent.update(crossed)  # Enregistrer seulement après envoi réussi

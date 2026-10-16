@@ -32,3 +32,9 @@ body.game-running:has(.sudoku-panel) :is(#friendshipBarContainer,#statusBars,.br
  .puzzle-workshop .puzzle-tailor>img{height:min(135px,40dvh)!important;width:100%!important}
 }
 @media(max-width:500px) and (orientation:portrait){.sudoku-layout{grid-template-columns:1fr}.sudoku-levels{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.sudoku-victory{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 14px;margin:4px 0 10px;border:2px solid #78924c;border-radius:12px;background:#eaf4d5;color:#36501e}.sudoku-victory strong{font-size:18px}.sudoku-victory span{font-size:13px}
+@media(pointer:coarse) and (orientation:landscape) and (max-height:700px){.sudoku-victory{padding:4px 8px;margin:2px 0 4px}.sudoku-victory strong{font-size:14px}.sudoku-victory span{font-size:10px}.sudoku-won .sudoku-board{width:min(100%,calc(100dvh - 130px))}.sudoku-won .sudoku-controls{max-height:calc(100dvh - 125px)}}
+
+.sudoku-defeat{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:10px 14px;margin:4px 0 10px;border:2px solid #ac5252;border-radius:12px;background:#ffe9e4;color:#842d2d}.sudoku-defeat strong{font-size:18px}.sudoku-defeat span{font-size:13px}
+@media(pointer:coarse) and (orientation:landscape) and (max-height:700px){.sudoku-defeat{padding:4px 8px;margin:2px 0 4px}.sudoku-defeat strong{font-size:14px}.sudoku-defeat span{font-size:10px}.sudoku-lost .sudoku-board{width:min(100%,calc(100dvh - 130px))}.sudoku-lost .sudoku-controls{max-height:calc(100dvh - 125px)}}

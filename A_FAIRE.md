@@ -1,4 +1,4 @@
-# Lapinous - suivi des travaux et validations
+# Warrenfall - suivi des travaux et validations
 
 Mise a jour : 15 octobre 2026.
 
@@ -107,7 +107,36 @@ Tests de logique : les 12 grilles ont une solution unique, chiffres fixes et con
 - [ ] Contrôler le lit avec les différents lapins et GIF, la table avec plusieurs articles, les trajets de caissière, les rayons et le panier sur PC et téléphone réel. [trello:6ac75d423df6f3af4d7dffa3:manuel:comptoir-lit-85]
 - [ ] Vérifier l’installation réelle Chrome/Safari, puis la disparition des propositions après lancement de l’application installée. Les essais automatisés utilisent un événement simulé, sans installer réellement l’application. [trello:6ac39db1a134b35f03b17940:manuel:installation-unique-85]
 
+Contrôles réussis dans Chrome isolé en 1920×1080 et 568×280 : dimensions communes des cinq scènes, table avec un article, suppression du doublon Installer, confirmation simulée d’installation puis rechargement sans nouvelle proposition. Syntaxe JavaScript et cache PWA vérifiés. Captures du lit et de la table contrôlées visuellement.
+
 Fichiers : `assets/css/shop-polish.css`, `assets/js/shop.js`, `assets/js/installer.js`, `index.html`, `tools/test-landscape-game.mjs`. Correspondances Trello locales actualisées ; aucune carte déplacée ni publication effectuée.
+
+## Progression et victoire Sudoku — 16 octobre 2026
+
+- [x] Niveaux 9×9 : pourcentage cible de chiffres préremplis abaissé à environ 65 %, 60 %, 55 %, 50 %, 45 % puis 40 % ; pourcentage réel affiché en partie. Tests : nombre d’indices strictement décroissant et solution unique pour chaque niveau. [trello:6ac39e11e324891dfc4c501a:code:indices-sudoku-86]
+- [x] Victoire détectée dès la dernière bonne saisie, sans cliquer Vérifier : bandeau de réussite visible, récompense, sauvegarde et niveau suivant. Le verrou de fin empêche de compter la même grille deux fois ; le bouton Vérifier reste disponible pour une grille incomplète ou incorrecte. [trello:6ac39e11e324891dfc4c501a:code:victoire-sudoku-86]
+- [ ] Vérifier en jeu après publication : dernière saisie au tactile et au clavier, bandeau de victoire et passage au niveau suivant, puis reprise de la progression. [trello:6ac39e11e324891dfc4c501a:manuel:victoire-sudoku-86]
+
+Fichiers : `assets/js/lapidoku.js`, `assets/js/script.js`, `assets/css/lapidoku.css`, `index.html`, `tools/test-lapidoku.mjs`, `tools/test-landscape-game.mjs`. Liaisons Trello existantes conservées ; aucun déplacement distant et aucune publication.
+
+## Limite d’erreurs Sudoku — 16 octobre 2026
+
+- [x] Limite commune de 3 erreurs, réglable via `LapinousSudoku.mistakeLimit` dans `assets/js/lapidoku.js`. Compteur affiché ; chiffre différent de la solution compté et signalé en rouge. Effacement gratuit et même valeur répétée sans modification non recomptée. [trello:6ac39e11e324891dfc4c501a:code:limite-erreurs-87]
+- [x] À la troisième erreur : grille perdue et bloquée, bandeau de défaite, bouton Recommencer ce niveau. Aucune récompense ni déverrouillage après défaite ; recommencer remet les chiffres et le compteur à zéro. Anciennes victoires conservées. [trello:6ac39e11e324891dfc4c501a:code:defaite-sudoku-87]
+- [ ] Vérifier en jeu après publication : erreurs au tactile et au clavier, perte à 3 erreurs, compteur à zéro après redémarrage et victoire ensuite. [trello:6ac39e11e324891dfc4c501a:manuel:erreurs-sudoku-87]
+
+Tests de logique : solution unique, seuil d’erreurs, verrouillage, bonnes saisies, effacement et redémarrage. Fichiers : `assets/js/lapidoku.js`, `assets/js/script.js`, `assets/css/lapidoku.css`, `index.html`, `tools/test-lapidoku.mjs`, `tools/test-landscape-game.mjs`. Correspondances Trello existantes conservées. La mission de renommage jointe n’est pas exécutée dans cette correction Sudoku. Aucune modification distante ni publication.
+
+## Identité Warrenfall — 16 octobre 2026
+
+- [x] Nom officiel « Warrenfall : Les Chroniques de Garenne » à l’accueil, dans le titre et le manifest PWA ; nom court Warrenfall pour l’interface, le Dashboard, les messages et documents courants. [trello:6ac39f30bfe4848ec3eca940:code:identite-warrenfall-88]
+- [x] Futurs rapports, alertes batterie et messages du bot libellés Warrenfall ; logique Python inchangée. Anciens rapports, PDF et journaux conservés. [trello:6ac39f30bfe4848ec3eca940:code:rapports-warrenfall-88]
+- [x] GitHub contrôlé : dépôt déjà renommé en `Leven-Anju-Yuki/warrenfall`, avant cette intervention. Remote origin corrigé vers l’URL officielle et branche main accessible. GitHub Pages indique `https://leven-anju-yuki.github.io/warrenfall/` ; métadonnées actualisées. Aucun push effectué. [trello:6ac39f30bfe4848ec3eca940:code:github-warrenfall-88]
+- [x] Conserver les clés lapinous, catalogues JSON, API JavaScript, chemins Cloudinary, sauvegardes, dossiers physiques et noms des tâches Windows. Seuls les noms visibles changent ; aucun appel réel Cloudinary, Trello ou Discord pour tester. [trello:6ac39f30bfe4848ec3eca940:code:compatibilite-warrenfall-88]
+- [x] Tests de compatibilité et identité : 30 tests Python, chaîne et installateur simulés, PWA, exports, images, Sudoku, succès, ancienne sauvegarde et parcours quiz sur téléphone. Ancien test quiz archivé expiré ; parcours équivalent actuel réussi. [trello:6ac39f30bfe4848ec3eca940:code:tests-warrenfall-88]
+- [ ] Publier les changements puis contrôler le nom de l’application installée, les aperçus sociaux et les futures alertes automatisées. Les caches d’aperçu et les noms des installations existantes peuvent nécessiter une actualisation par leur plateforme. [trello:6ac39f30bfe4848ec3eca940:manuel:publication-warrenfall-88]
+
+Inventaire et compte rendu détaillé : `docs/RENOMMAGE_WARRENFALL.md`. Les noms de fichiers historiques restent volontairement compatibles ; les documents HTML/Markdown actuels portent le nouveau nom. Les PDF historiques ne sont pas réécrits.
 
 ## Travaux recents : code livre et points a verifier
 
