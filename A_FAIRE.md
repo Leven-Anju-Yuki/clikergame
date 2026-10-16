@@ -1040,3 +1040,5 @@ Suivi du 16 octobre : tableau [Warrenfall](https://trello.com/b/5VmsAFi7/warrenf
 - [x] Visuels fournis intégrés : logo transparent, fonds 4K et GIF de course Azazel/carotte ; poses fixes si animations réduites. GIF complet de 14 Mo conservé sans chargement automatique. [trello:6ac39db49bd7456ac00b5038:code:startup-art-90]
 
 - [x] Chargement immédiat sur le fond dédié avec logo et course lapin/carotte ; suppression du passage obligatoire par les quatre images d’introduction, préchargement prioritaire du fond. Visuels originaux conservés. [trello:6ac39db49bd7456ac00b5038:code:startup-direct-91]
+
+- [x] Demande corrigée : introduction via le GIF fourni (une lecture de 3 secondes), puis fond spécial 05_chargement fixe avec progression et course ; aucun défilement des images 4K. Introduction ignorée si animations réduites ou GIF indisponible. Remplace le choix précédent de ne pas charger le GIF. [trello:6ac39db49bd7456ac00b5038:code:startup-gif-92]

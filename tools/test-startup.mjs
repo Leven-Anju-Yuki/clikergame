@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import assert from 'node:assert/strict';
 const source=fs.readFileSync('assets/js/startup.js','utf8');
 for(const failure of [false,true]){
- const nodes=Object.fromEntries(['startupScreen','startupArtwork','startupProgress','startupPercent','startupStatus'].map(id=>[id,{hidden:false,setAttribute(){},contains(){return false;}}]));
+ const nodes=Object.fromEntries(['startupScreen','startupIntro','startupArtwork','startupProgress','startupPercent','startupStatus'].map(id=>[id,{hidden:false,setAttribute(){},contains(){return false;}}]));
  const values=[];
  Object.defineProperty(nodes.startupProgress,'value',{set(v){values.push(v);},get(){return values.at(-1);}});
  let events=0;
@@ -13,6 +13,8 @@ for(const failure of [false,true]){
  assert.equal(nodes.startupScreen.hidden,false,'Game remains covered until initialized');
  await context.window.LapinousStartupFinish();
  assert.equal(nodes.startupScreen.hidden,true);
+ assert.ok(failure || nodes.startupIntro.src.endsWith('ouverture_Warrenfall_3s.gif'));
+ assert.ok(failure || nodes.startupIntro.hidden, 'Introduction stops before loading background is revealed');
  assert.equal(values.at(-1),100);
  assert.ok(values.every((v,i)=>!i||v>=values[i-1]),'Progress never goes backwards');
  assert.equal(events,1);

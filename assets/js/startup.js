@@ -5,11 +5,14 @@
     const progress = document.getElementById('startupProgress');
     const percent = document.getElementById('startupPercent');
     const status = document.getElementById('startupStatus');
+    const intro = document.getElementById('startupIntro');
+    const introSource = './assets/img/Ouverture_du_jeu/animations/ouverture_Warrenfall_3s.gif';
+    const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches || false;
     const sources = ['./assets/img/Ouverture_du_jeu/fonds_4K/05_chargement_3840x2160.jpg'];
     let completed = 0;
     let failures = 0;
     const decorations = ['./assets/img/Ouverture_du_jeu/logo/Warrenfall_logo_transparent.png', './assets/img/Ouverture_du_jeu/animations/azazel_course.gif', './assets/img/Ouverture_du_jeu/animations/carotte_course.gif'];
-    const openingCount = sources.length + decorations.length;
+    const openingCount = sources.length + decorations.length + (reducedMotion ? 0 : 1);
     let total = openingCount;
     let sceneStage = false;
     const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -38,7 +41,15 @@
     }
     const opening = sources.map(load);
     const decorationLoads = decorations.map(load);
+    const introLoad = reducedMotion ? Promise.resolve(false) : load(introSource);
     window.LapinousStartupReady = (async () => {
+        // One GIF playback for the introduction; the loading background never cycles.
+        if (await introLoad) {
+            intro.src = window.LapinousImages?.url(introSource) || introSource;
+            intro.hidden = false;
+            await pause(3000);
+            intro.hidden = true;
+        }
         await Promise.all(opening);
         await Promise.all(decorationLoads);
         status.textContent = 'Préparation de ta partie…';
