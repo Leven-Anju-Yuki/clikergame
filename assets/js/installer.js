@@ -44,9 +44,22 @@
   const gameButton = button.cloneNode(true); gameButton.id = 'installInGame';
   gameButton.textContent = '↓ Installer';
   document.body.append(gameButton);
+  // Un seul accès pendant la partie : celui de la navigation.
+  gameButton.remove();
+  const navButton = document.createElement('button');
+  navButton.id = 'installInNav'; navButton.type = 'button'; navButton.className = 'room-tab';
+  navButton.innerHTML = '<span class="tab-emoji">📲</span><span>Installer</span>';
+  document.getElementById('mainNav')?.append(navButton);
+  let installationConfirmed = false;
+  try { installationConfirmed = localStorage.getItem('lapinous_installed') === 'true'; } catch {}
   function visibility() {
-    const installed = matchMedia('(display-mode:standalone)').matches || navigator.standalone;
+    const installed = installationConfirmed || matchMedia('(display-mode:standalone)').matches || navigator.standalone;
+    if (installed) { installationConfirmed = true; try { localStorage.setItem('lapinous_installed','true'); } catch {} }
     [button, savedButton, gameButton].forEach(item => { item.hidden = !!installed; });
+    navButton.hidden = !!installed;
+    navButton.disabled = !!installed;
+    navButton.setAttribute('aria-label', installed ? 'Lapinous est déjà installé' : 'Installer Lapinous');
+    navButton.lastElementChild.textContent = installed ? 'Installé' : 'Installer';
   }
   async function install() {
     if (installPrompt) {
@@ -54,10 +67,12 @@
       await prompt.prompt(); await prompt.userChoice;
     } else help.showModal();
   }
-  [button, savedButton, gameButton].forEach(item => item.addEventListener('click', install));
+  [button, savedButton, gameButton, navButton].forEach(item => item.addEventListener('click', install));
   addEventListener('beforeinstallprompt', event => { event.preventDefault(); installPrompt = event; });
-  addEventListener('appinstalled', visibility);
+  addEventListener('appinstalled', () => { installationConfirmed = true; visibility(); if (help.open) help.close(); });
+  matchMedia('(display-mode:standalone)').addEventListener?.('change', visibility);
   visibility();
+  addEventListener('resize', visibility);
   if ('serviceWorker' in navigator && isSecureContext) {
     addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {
       button.title = savedButton.title = 'Installation indisponible pour le moment ; recharge le jeu avec Internet.';

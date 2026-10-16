@@ -4,6 +4,7 @@ import datetime as dt
 import json
 import os
 import urllib.request
+import urllib.error
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]  # tools/agent_lapinous/surveillance_batterie.py
@@ -36,14 +37,29 @@ def lire_env():
 
 def envoyer(message):
     lire_env()
-    url = os.getenv('DISCORD_WEBHOOK_ALERTES') or os.getenv('DISCORD_WEBHOOK_ERREURS')
+    url = os.getenv('DISCORD_WEBHOOK_ERREURS')
     if not url:
         raise RuntimeError('Webhook alertes absent du .env racine')
     data = json.dumps({'content': message, 'allowed_mentions': {'parse': []}}).encode('utf-8')
-    request = urllib.request.Request(url, data=data, headers={'Content-Type': 'application/json'}, method='POST')
-    with urllib.request.urlopen(request, timeout=20) as response:
-        if response.status not in (200, 204):
-            raise RuntimeError(f'Discord HTTP {response.status}')
+    request = urllib.request.Request(
+        url,
+        data=data,
+        headers={
+            'Content-Type': 'application/json',
+            'User-Agent': 'Lapinous-Agent/1.0 (+Windows; Python)'
+        },
+        method='POST'
+    )   
+    try:
+        with urllib.request.urlopen(request, timeout=20) as response:
+            if response.status not in (200, 204):
+                raise RuntimeError(f'Discord HTTP {response.status}')
+
+    except urllib.error.HTTPError as erreur:
+        contenu = erreur.read().decode("utf-8", errors="replace")
+        print(f"Erreur Discord HTTP {erreur.code}")
+        print(f"Réponse Discord : {contenu[:500]}")
+        raise RuntimeError("Envoi de l'alerte batterie impossible") from None
 
 def main():
     now = dt.datetime.now().astimezone()
@@ -55,18 +71,11 @@ def main():
         state = json.loads(STATE.read_text(encoding='utf-8'))
     except (FileNotFoundError, ValueError):
         state = {}
-    # Une tâche Windows réveille éventuellement le script toutes les 30 min.
-    # Ce script espace les lectures utiles à 3 h tant que la charge est suffisante.
-    due = state.get('next_check')
-    if due:
-        try:
-            if now < dt.datetime.fromisoformat(due):
-                return
-        except ValueError:
-            pass
+    # Toujours examiner les seuils : un ancien next_check ne doit jamais bloquer
+    # une alerte si la batterie a baissé rapidement.
     sent = set(state.get('sent', []))
-    if plugged or pct >= 50:
-        sent.clear()  # Nouveau cycle après recharge/retour secteur
+    if pct >= 50:
+        sent.clear()  # Réinitialiser uniquement après une recharge suffisante
     elif pct <= 30:
         crossed = [threshold for threshold in (30, 25, 20, 15) if pct <= threshold and threshold not in sent]
         if crossed:
@@ -75,14 +84,15 @@ def main():
                     f'Seuil(s) atteint(s) : {", ".join(map(str, crossed))} %. '
                     'Branche le PC dès que possible pour protéger la synchronisation Cloudinary.')
             sent.update(crossed)  # Enregistrer seulement après envoi réussi
-    interval = 180 if plugged or pct >= 50 else 30
+    # Information indicative : le rythme réel dépend de la tâche Windows.
+    interval = 180 if pct >= 50 else 30
     state = {'sent': sorted(sent), 'last_check': now.isoformat(),
              'next_check': (now + dt.timedelta(minutes=interval)).isoformat(),
              'last_percent': pct, 'plugged': plugged}
     temp = STATE.with_suffix('.tmp')
     temp.write_text(json.dumps(state, indent=2), encoding='utf-8')
     temp.replace(STATE)
-    print(f'Batterie {pct} %, secteur={plugged}, prochain contrôle dans {interval} min')
+    print(f'Batterie {pct} %, secteur={plugged}, seuils déjà signalés={sorted(sent)}; contrôle Windows à sa prochaine échéance')
 
 if __name__ == '__main__':
     main()

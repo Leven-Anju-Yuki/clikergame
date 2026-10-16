@@ -244,7 +244,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     .join("");
             return `<section class="achievement-section" data-records-panel="daily"><h3>☀️ Défis du jour</h3><p>Renouvelés à minuit, selon l’heure de ton appareil. Les récompenses acquises restent récupérables.</p>${rows(entries.today)}
                 ${entries.pending.length ? `<h3>🎁 Récompenses des jours précédents</h3>${rows(entries.pending)}` : ""}</section>
-                <section class="achievement-section" data-records-panel="longterm"><h3>🌟 Grands succès</h3><p>Récupère ta récompense pour révéler le palier suivant. Les jeux du Salon et l’agilité du Jardin comptent.</p>${rows(entries.permanent)}</section>`;
+                <section class="achievement-section" data-records-panel="longterm"><h3>🌟 Grands succès</h3><p>Récupère ta récompense pour révéler le palier suivant. Memory, puzzles cousus, Lapidoku, quiz et agilité ont leurs objectifs. Les récompenses déjà récupérées restent acquises.</p>${rows(entries.permanent)}</section>`;
         }
 
         function attachAchievementPanel(overlay) {
@@ -1836,6 +1836,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     const mg = ensureMinigameProgress();
                     mg.quiz ||= { completed: 0, bestScore: 0 };
                     mg.quiz.completed++;
+                    recordAchievement("quizCompleted");
                     mg.quiz.bestScore = Math.max(mg.quiz.bestScore, score / total);
                     if (score > 0) gainFriendship(score);
                     progress().energy = Math.max(0, progress().energy - 2);
@@ -2043,6 +2044,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 home = gameArea.querySelector(".puzzle-tailor");
             const target = gameArea.querySelector(`[data-puzzle-slot="${st.sewSlot}"]`);
             if (!workspace || !home || !target) return;
+            if (matchMedia("(pointer:coarse)").matches && Math.min(innerWidth,innerHeight)<900) {
+                home.classList.remove("tailor-away");
+                return;
+            }
             const bounds = workspace.getBoundingClientRect(),
                 start = home.getBoundingClientRect(),
                 piece = target.getBoundingClientRect();
@@ -2239,7 +2244,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     Math.floor(slot / puzzleLevels()[st.levelIndex].cols) <
                     puzzleLevels()[st.levelIndex].rows / 2;
                 const approach = st.sewHigh ? 1080 : 600;
-                st.sewUntil = st.sewStarted + approach + 1200 + 600;
+                const sewingTime = matchMedia("(pointer:coarse)").matches && Math.min(innerWidth,innerHeight)<900 ? 3000 : 1200;
+                st.sewUntil = st.sewStarted + approach + sewingTime + 600;
                 const stamp = st.sewStarted;
                 const redraw = () => {
                     if (
@@ -2250,8 +2256,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         renderActivePuzzle();
                 };
                 setTimeout(redraw, approach);
-                setTimeout(redraw, approach + 1200);
-                setTimeout(redraw, approach + 1800);
+                setTimeout(redraw, approach + sewingTime);
+                setTimeout(redraw, approach + sewingTime + 600);
             }
             st.notice = sewing
                 ? "🪡 La couturière relie les pièces bien placées !"
@@ -2279,6 +2285,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const wasCompleted = st.completed;
             st.completed = true;
             recordAchievement("gamesWon");
+            recordAchievement("puzzleCompleted");
             if (!wasCompleted) {
                 ensureNewSystems();
                 game.records.puzzlesCompleted += 1;
@@ -2847,6 +2854,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     mg.level = Math.max(mg.level, Math.min(MEMORY_LEVELS.length - 1, st.level + 1));
                     mg.bestMoves[st.level] = Math.min(mg.bestMoves[st.level] || Infinity, st.moves);
                     recordAchievement("gamesWon");
+                    recordAchievement("memoryCompleted");
                     gainFriendship(6);
                     game.records.puzzlesCompleted += 1;
                     showToast(`Memory niveau ${st.level + 1} terminé !`, "success");
@@ -2862,40 +2870,53 @@ document.addEventListener("DOMContentLoaded", () => {
             renderMemory();
         };
 
-        // ---- Lapidoku 4x4 ----
+        // ---- Lapidoku : progression 4×4, 6×6 puis 9×9 ----
         let lapidokuState = null;
-        const LAPIDOKU_SOLVED = [1, 2, 3, 4, 3, 4, 1, 2, 2, 1, 4, 3, 4, 3, 2, 1];
         window.openLapidoku = function () {
             if (!window.LapinousVisibility.allowed("lapidoku")) return;
-            const holes = [1, 3, 4, 6, 9, 11, 12, 14];
-            const board = LAPIDOKU_SOLVED.slice();
-            holes.forEach((i) => (board[i] = 0));
-            lapidokuState = { board, holes: new Set(holes), selected: 1 };
+            lapidokuState = null;
+            const mg = ensureMinigameProgress().lapidoku;
+            const unlocked = Math.max(0, Math.min(11, Number(mg.level) || 0));
+            gameArea.innerHTML = `<section class="sudoku-panel"><h2>🔢 Lapidoku</h2><p>Un chiffre par case, sans répétition dans chaque ligne, colonne et bloc encadré.</p><div class="sudoku-levels">${LapinousSudoku.levels.map(l => `<button type="button" onclick="startLapidoku(${l.index})" ${l.index > unlocked ? "disabled" : ""}><strong>${l.index > unlocked ? "🔒 " : ""}Niveau ${l.index+1}</strong><span>${l.size}×${l.size} · ${l.label}</span></button>`).join("")}</div><button class="ghost-btn" onclick="openGameConsole()">← Mini-jeux</button></section>`;
+        };
+        window.startLapidoku = function(index) {
+            const mg = ensureMinigameProgress().lapidoku;
+            if (!Number.isInteger(index) || index < 0 || index > Math.min(11, Number(mg.level) || 0)) return;
+            const level = LapinousSudoku.create(index);
+            lapidokuState = {...level, given:level.board.map(Boolean), selected:level.board.indexOf(0), finished:false, notice:"Choisis une case vide, puis un chiffre."};
             renderLapidoku();
         };
         function renderLapidoku() {
-            if (!lapidokuState) return;
-            gameArea.innerHTML = `<div class="console-panel"><div class="console-title">🔢 Lapidoku</div><p class="agility-hint">Complète la grille 4×4 : chaque ligne, colonne et bloc 2×2 doit contenir 1, 2, 3 et 4.</p><div class="lapidoku-grid">${lapidokuState.board.map((v, i) => `<button class="lapidoku-cell ${lapidokuState.holes.has(i) ? "editable" : "fixed"}" ${lapidokuState.holes.has(i) ? `onclick="cycleLapidoku(${i})"` : "disabled"}>${v || "·"}</button>`).join("")}</div><button class="action-btn" onclick="checkLapidoku()">✓ Vérifier</button><button class="ghost-btn" onclick="openGameConsole()">← Console</button></div>`;
+            const st=lapidokuState;if(!st)return;
+            const errors=LapinousSudoku.conflicts(st.board,st);
+            gameArea.innerHTML=`<section class="sudoku-panel sudoku-play"><header><h2>🔢 Lapidoku · Niveau ${st.index+1}</h2><span>${st.size}×${st.size} · blocs ${st.rows}×${st.cols}</span></header><div class="sudoku-layout"><div class="sudoku-board" role="group" aria-label="Grille de Sudoku" style="--sudoku-size:${st.size}">${st.board.map((v,i)=>`<button type="button" class="sudoku-cell ${st.given[i]?'given':''} ${st.selected===i?'selected':''} ${errors[i]?'conflict':''}" style="${i%st.size%st.cols===st.cols-1&&i%st.size!==st.size-1?'border-right:3px solid #72563c;':''}${Math.floor(i/st.size)%st.rows===st.rows-1&&Math.floor(i/st.size)!==st.size-1?'border-bottom:3px solid #72563c;':''}" onclick="selectLapidoku(${i})" ${st.given[i]||st.finished?'disabled':''} aria-label="Ligne ${Math.floor(i/st.size)+1}, colonne ${i%st.size+1}, ${v||'vide'}">${v||''}</button>`).join('')}</div><aside class="sudoku-controls"><p>Chaque ligne, colonne et bloc doit contenir les chiffres de 1 à ${st.size} une seule fois.</p><div class="sudoku-pad">${Array.from({length:st.size},(_,i)=>`<button type="button" onclick="enterLapidoku(${i+1})" ${st.finished?'disabled':''}>${i+1}</button>`).join('')}</div><button class="ghost-btn" onclick="enterLapidoku(0)" ${st.finished?'disabled':''}>Effacer</button><p class="sudoku-notice" role="status">${st.notice}</p><div class="sudoku-actions">${st.finished&&st.index<11?`<button onclick="startLapidoku(${st.index+1})">Niveau suivant →</button>`:st.finished?'':`<button onclick="checkLapidoku()">Vérifier</button><button onclick="startLapidoku(${st.index})">Recommencer</button>`}<button onclick="openLapidoku()">← Niveaux</button></div></aside></div></section>`;
         }
-        window.cycleLapidoku = function (i) {
-            if (!lapidokuState?.holes.has(i)) return;
-            lapidokuState.board[i] = (lapidokuState.board[i] % 4) + 1;
-            renderLapidoku();
+        window.selectLapidoku = function(i) {
+            if(!lapidokuState||lapidokuState.finished||lapidokuState.given[i]||!Number.isInteger(i)||i<0||i>=lapidokuState.board.length)return;
+            lapidokuState.selected=i;renderLapidoku();
+        };
+        window.enterLapidoku = function(value) {
+            const st=lapidokuState;if(!st||st.finished||st.selected<0||st.given[st.selected]||!Number.isInteger(value)||value<0||value>st.size)return;
+            st.board[st.selected]=value;st.notice="Les cases en rouge signalent une répétition.";renderLapidoku();
         };
         window.checkLapidoku = function () {
-            if (!lapidokuState) return;
-            const ok = lapidokuState.board.every((v, i) => v === LAPIDOKU_SOLVED[i]);
-            if (ok) {
-                ensureMinigameProgress().lapidoku.completed++;
-                lapidokuState = null;
-                recordAchievement("gamesWon");
-                gainFriendship(8);
-                showToast("Lapidoku réussi : +8 💛", "success");
-                spawnParticles("💛", 6);
-                autoSave();
-                openGameConsole();
-            } else showToast("Il reste des erreurs dans la grille 🐰", "warn");
+            const st=lapidokuState;if(!st||st.finished)return;
+            if(st.board.some(v=>!v)||LapinousSudoku.conflicts(st.board,st).some(Boolean)){
+                st.notice="Il reste des cases vides ou des chiffres répétés.";renderLapidoku();return;
+            }
+            st.finished=true;
+            const mg=ensureMinigameProgress().lapidoku;
+            mg.completed=(Number(mg.completed)||0)+1;
+            mg.level=Math.max(Number(mg.level)||0,Math.min(11,st.index+1));
+            recordAchievement("gamesWon");gainFriendship(8);
+            st.notice="Grille réussie ! +8 💛 — progression enregistrée.";
+            autoSave();renderLapidoku();
         };
+        document.addEventListener("keydown", event=>{
+            if(!gameArea.querySelector('.sudoku-play')||event.target.matches('input,textarea,select')||document.querySelector('dialog[open],.records-overlay'))return;
+            if(/^[1-9]$/.test(event.key)){event.preventDefault();enterLapidoku(Number(event.key));}
+            else if(['Backspace','Delete','0'].includes(event.key)){event.preventDefault();enterLapidoku(0);}
+        });
 
         // ---- Mini-jeu d'agilité : mini-runner ----
         let agilityRAF = null;

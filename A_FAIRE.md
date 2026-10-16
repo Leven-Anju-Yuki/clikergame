@@ -69,6 +69,46 @@ Contrôles locaux réussis avec médias réels : 844×390, 740×320 et 568×280 
 
 La simulation manuelle complète retourne 1 uniquement car le rapport Cloudinary de ce soir à 20 h n’existe pas encore ; aucun appel de synchronisation n’est lancé. Aucune création de carte autorisée ; Réalisé, Bloqué et Idées à sélectionner protégés. À valider en jeu n’est pas rétrogradé automatiquement. Une case technique seule ne clôture pas une carte.
 
+## Échelle des lapins sur grand écran
+
+- [x] Retirer les plafonds fixes trop petits du lapin actif et des favoris sur PC : leur taille suit maintenant le décor via la hauteur disponible. Les favoris ont une taille proche du lapin actif, avec un léger décalage de profondeur. [trello:6ac39d846f4f8d11b7da6ab0:code:echelle-terrier-pc]
+- [x] Séparer les commandes de cuisine du lapin et stabiliser ses pieds au repos ; mêmes proportions pour les pièces de soin. Règles limitées aux grands écrans avec pointeur précis, sans remplacer les règles téléphone. [trello:6ac39d846f4f8d11b7da6ab0:code:sol-terrier-pc]
+- [ ] Vérifier à l’œil les proportions avec les meubles sur son écran et avec ses favoris, y compris les lapins événementiels et les GIF de soin. [trello:6ac39d846f4f8d11b7da6ab0:manuel:echelle-terrier-pc]
+
+Contrôles réussis dans Chrome avec les vrais médias : salon avec trois favoris, cuisine, chambre et bain en 1920×1080, 2560×1440 et 3440×1440 ; aucune erreur JavaScript ni débordement détecté. Capture Full HD contrôlée visuellement ; vérifications PWA réussies.
+
+Fichiers : `assets/css/desktop-scene.css`, `index.html`, `tools/test-landscape-game.mjs` (option `--desktop --family`). Correspondance Trello explicite conservée ; aucune carte déplacée par ce correctif. Les fichiers restent locaux jusqu’à publication.
+
+## Succès téléphone et accès à l’installation
+
+- [x] Succès en lignes compactes sur téléphone : titre, objectif, progression et bouton de récompense côte à côte ; en-tête et onglets réduits, liste défilante. [trello:6ac39f233ae89c6d7a24fb0c:code:succes-mobile-83]
+- [x] Défis quotidiens et paliers propres au Memory, aux puzzles cousus et au quiz ; premier lapin adopté récompensé. Anciens identifiants et gains conservés, pas de double récompense. Les compteurs Memory et quiz déjà connus alimentent les paliers permanents ; ils ne valident pas les défis du jour rétroactivement. Les anciens puzzles ne sont pas déduits du compteur historique mélangé aux autres jeux. [trello:6ac39f233ae89c6d7a24fb0c:code:objectifs-actuels-83]
+- [x] Bouton Installer dans la navigation téléphone ; invitation native si disponible, aide Chrome/Safari sinon ; indication Installé si l’application est déjà installée. Versions des ressources renouvelées. [trello:6ac39db1a134b35f03b17940:code:installer-navigation-83]
+- [ ] Vérifier sur téléphone réel après publication : plusieurs succès visibles, défilement, récompenses, bouton Installer et installation depuis Chrome/Safari. [trello:6ac39f233ae89c6d7a24fb0c:manuel:succes-installation-83]
+
+Tests de logique des succès et du cache PWA réussis. Dernier parcours visuel 568×280 réussi : onglets des succès, bouton Installer et déclenchement simulé de l’invitation ; capture 844×390 vérifiée avec plusieurs lignes visibles. Un parcours élargi de rechargement hors connexion a bloqué après le premier format : il n’est pas déclaré entièrement validé par ce correctif. Les tests d’installation utilisent une invite simulée et n’installent pas réellement l’application. Fichiers : `assets/js/achievements.js`, `assets/js/script.js`, `assets/js/installer.js`, `assets/css/phone.css`, `index.html`, `tools/test-achievements.mjs`, `tools/test-landscape-game.mjs`. Correspondances Trello locales mises à jour ; aucune carte déplacée. Modifications locales à publier.
+
+## Lapidoku, couture et installation — 16 octobre 2026
+
+- [x] Refaire le Lapidoku en vraie grille carrée avec blocs encadrés et chiffres fixes ; pavé numérique tactile, saisie clavier, effacement et répétitions signalées. [trello:6ac39e11e324891dfc4c501a:code:grille-sudoku-84]
+- [x] Ajouter 12 niveaux à solution unique : découverte 4×4, intermédiaire 6×6, classique et défis 9×9. Déverrouillage sauvegardé par lapin, ancien nombre de victoires conservé, récompense une seule fois par grille en cours. [trello:6ac39e11e324891dfc4c501a:code:niveaux-sudoku-84]
+- [x] Sur téléphone, garder la couturière visible dans son panneau pendant la couture au lieu de masquer son image pour un déplacement hors du plateau ; agrandir son panneau et laisser le GIF de couture jouer trois secondes. Trajet PC conservé. [trello:6ac39db7ff0d2d466b26fe7b:code:couture-mobile-84]
+- [x] Garder l’accès Installer dans la navigation même quand le navigateur annonce un pointeur différent de celui d’un téléphone ; label Installé si l’application est déjà installée, aide si l’invite native manque. Ressources versionnées pour publication. [trello:6ac39db1a134b35f03b17940:code:installation-visible-84]
+- [ ] Vérifier sur téléphone réel après publication : bouton Installer, GIF de couture avec plusieurs pièces voisines, lisibilité et saisie des trois tailles de Sudoku, reprise des niveaux après fermeture. [trello:6ac39e11e324891dfc4c501a:manuel:telephone-sudoku-84]
+
+Tests de logique : les 12 grilles ont une solution unique, chiffres fixes et conflits vérifiés ; anciens succès préservés. Dernier parcours Chrome isolé 568×280 réussi : niveaux, victoire sans double comptage, déverrouillage jusqu’au 9×9 et couture ; capture du GIF « Je couds ces pièces ! » vérifiée. Captures PC contrôlées jusqu’au format 3440×1440. Cache PWA vérifié avec les nouveaux fichiers. Fichiers principaux : `assets/js/lapidoku.js`, `assets/css/lapidoku.css`, `assets/js/script.js`, `assets/js/installer.js`, `index.html`, `tools/test-lapidoku.mjs`. Aucune publication ni modification distante Trello effectuée.
+
+## Comptoirs, installation et lit — 16 octobre 2026
+
+- [x] Cadre identique pour les rayons du magasin, l’apothicaire et le garde-manger : dimensions selon la fenêtre, contenu interne adapté sans réduire la modale. [trello:6ac75d423df6f3af4d7dffa3:code:cadre-magasin-85]
+- [x] Caissière agrandie sur PC ; table des achats avec plateau en bois, tranche et pieds, séparée de la caissière et objets posés sur le dessus. Boucle ResizeObserver des bulles corrigée. [trello:6ac75d423df6f3af4d7dffa3:code:table-caissiere-85]
+- [x] Bouton de nourriture agrandi et lapin de chambre placé sur le matelas, avec règles séparées PC et téléphone. [trello:6ac39d846f4f8d11b7da6ab0:code:pomme-lit-85]
+- [x] Un seul accès Installer pendant la partie ; suppression du bouton du haut. Après confirmation appinstalled ou lancement en application installée, tous les accès sont masqués et l’état est mémorisé localement. [trello:6ac39db1a134b35f03b17940:code:installation-unique-85]
+- [ ] Contrôler le lit avec les différents lapins et GIF, la table avec plusieurs articles, les trajets de caissière, les rayons et le panier sur PC et téléphone réel. [trello:6ac75d423df6f3af4d7dffa3:manuel:comptoir-lit-85]
+- [ ] Vérifier l’installation réelle Chrome/Safari, puis la disparition des propositions après lancement de l’application installée. Les essais automatisés utilisent un événement simulé, sans installer réellement l’application. [trello:6ac39db1a134b35f03b17940:manuel:installation-unique-85]
+
+Fichiers : `assets/css/shop-polish.css`, `assets/js/shop.js`, `assets/js/installer.js`, `index.html`, `tools/test-landscape-game.mjs`. Correspondances Trello locales actualisées ; aucune carte déplacée ni publication effectuée.
+
 ## Travaux recents : code livre et points a verifier
 
 - [x] Cloudinary : chemins locaux resolus par le manifeste, transfert des images utilisees et sauvegarde permanente des originaux.
@@ -285,17 +325,18 @@ La simulation manuelle complète retourne 1 uniquement car le rapport Cloudinary
 <!-- LAPINOUS_AGENT_DEBUT -->
 ### Suivi automatique du projet
 
-Dernier bilan : 15/10/2026 11:09
+Dernier bilan : 15/10/2026 20:00
 
-# Bilan Lapinous - 15/10/2026 11:09
+# Bilan Lapinous - 15/10/2026 20:00
 Mode : APPLICATION
-Trello : LECTURE SEULE ; aucune modification et aucun point de reprise enregistre.
 Fichiers nouveaux depuis le point de reprise : 13
 Cartes analysees : 71
-Deplacements proposes : 0
+Deplacements proposes : 1
+Transitions traitees avec succes (reprises comprises) : 1
 
 ## Deplacements
-Aucun deplacement justifie.
+- P3 — Records supplémentaires [6ac39e0b9caa6864a646e480] : P3 — Évolutions -> En cours ; Lignes modifiees pertinentes : assets/js/achievements.js
+  Preuve : assets/js/achievements.js ; record|achievement|reward
 
 ## Suivi detaille
 - Améliorations de soin — ancienne piste à réévaluer [6661a537b3df7e377ba31643] : Suivi manuel : aucune regle automatique explicite. Sous-taches : 0/0. Parent coche : False.
@@ -303,105 +344,105 @@ Aucun deplacement justifie.
 - P3 — Nouveaux consommables et équilibre des prix [6ac39dc482f20ad66d405a8b] : Aucune preuve precise dans les nouvelles modifications : aucun deplacement. Sous-taches : 0/0. Parent coche : False.
 - P3 — Décorations plaçables [6ac39e052e962c5a09b17704] : Suivi manuel : aucune regle automatique explicite. Sous-taches : 0/0. Parent coche : False.
 - P3 — Branches d’amélioration [6ac39e08cece9041c78cab09] : Suivi manuel : aucune regle automatique explicite. Sous-taches : 0/0. Parent coche : False.
-- P3 — Records supplémentaires [6ac39e0b9caa6864a646e480] : Aucune preuve precise dans les nouvelles modifications : aucun deplacement. Sous-taches : 0/0. Parent coche : False.
+- P3 — Records supplémentaires [6ac39e0b9caa6864a646e480] : Lignes modifiees pertinentes : assets/js/achievements.js Sous-taches : 0/0. Parent coche : False.
 - P3 — Mode pixel art [6ac39e0ec39e56083669ea25] : Suivi manuel : aucune regle automatique explicite. Sous-taches : 0/0. Parent coche : False.
 - P3 — Nouvelles grilles de Lapidoku [6ac39e11e324891dfc4c501a] : Suivi manuel : aucune regle automatique explicite. Sous-taches : 0/0. Parent coche : False.
 - Publication — juridique, droits et paiement [6ac75d44734881469f896152] : Aucune preuve precise dans les nouvelles modifications : aucun deplacement. Sous-taches : 0/0. Parent coche : False.
-- P1 — Progression et déblocage des équipements [6661a5d73e3f5fce205eae72] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
-- P1 — Placement des lapins et commandes [6ac39d846f4f8d11b7da6ab0] : Liste protegee : aucun deplacement automatique. Sous-taches : 2/2. Parent coche : False.
-- P1 — Préparation du combat [6ac39d8793f1039486b67a20] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
-- P1 — Sauvegardes [6ac39d911abc6a7d2a71273e] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
-- P1 — Sons [6ac39d93be4e45379ca8247f] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
-- P2 — Notifications [6ac39dbef4faf8125adc099b] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
-- Équipes favorites [6ac39e147db15f1edab9c326] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
-- faire une modal qui souvre avec un bouton image livre pour afficher les regles du jeu [6661a8eefa746159ea2700da] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
-- faire le clicker pour lui donner a manger le brosser [6661a4b7b41cd821c331d689] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
-- Barres de besoins et niveau d’amitié [6661a5ec1e0c59351bd18a52] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
-- trouver un gif de lapin heureux [6661a91283b1bf3c205e457c] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
-- Retour au Salon et informations du lapin [6669758ceb6d2b877ef431fa] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
-- trouver les images [6661b309ac71b719ebc63fd7] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
-- faire une zone soin alimentation sommeil et jeu avec des fond différent [6661a6149952d95e5c048f9a] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
-- thème sur les lapins [6661a423f3b0f23f486d3590] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
-- faire un salon avec des bouton de base  pour les diffèrent lieu et une fleche pour revenir en arriere [6661b4124754141925b73499] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
-- Adoption, traits, collection et encyclopédie [6ac39e3c28d335cd92c8cc95] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
-- Progression indépendante par lapin [6ac39e3f09478ebeda38c92d] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
-- Combat tactique — équipe, mode manuel et automatique [6ac39e4258234f0f6df5def5] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
-- Ultimes et barres de charge — lapins et boss [6ac39e452732a48b7581df6e] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
-- Listes de 1 à 6 attaques selon la rareté [6ac39e5cff0d2d466b27ecbb] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
-- Fragments — amélioration de la technique choisie [6ac39e5fd921b05e95245ff0] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
-- Œufs illustrés — ouverture individuelle et par 10 [6ac39e61cbe7415819b24df8] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
-- Décors de saisons jour/nuit et événements prioritaires [6ac39efb4988b40cec255170] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
-- Admin local — tests rapides et Dashboard [6ac39efeb8e60614e640ad49] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
-- Dashboard — graphiques de rareté harmonisés [6ac39f0129a42ce3c535a196] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
-- Sauvegardes nommées, datées et remplacement confirmé [6ac39f0465d01dcee2c8411d] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
-- Mini-jeux — Memory 30 niveaux et puzzles cousus [6ac39f1ffd16599635e62ae9] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
-- Défis quotidiens, succès et récompenses [6ac39f233ae89c6d7a24fb0c] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
-- Audio — soins courts, volumes et défaite [6ac39f2681968bcd0d9b086d] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
-- Audio original livré — ambiance et sommeil [6ac39f295fcf0100cf51e1cd] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
-- Notifications et combat lisible — corrections livrées [6ac39f2b43bb87374c9f2e22] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
-- Salon — compagnons ensemble et placement corrigé [6ac39f2fa02c69b499e17ea8] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
-- Repères — feuille de route du 08-10-2026 [6ac39f30bfe4848ec3eca940] : Suivi manuel : aucune regle automatique explicite. Sous-taches : 10/14. Parent coche : False.
+- P1 — Progression et déblocage des équipements [6661a5d73e3f5fce205eae72] : Liste protegee (À valider en jeu) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- P1 — Placement des lapins et commandes [6ac39d846f4f8d11b7da6ab0] : Liste protegee (À valider en jeu) : aucun deplacement automatique. Sous-taches : 5/7. Parent coche : False.
+- P1 — Préparation du combat [6ac39d8793f1039486b67a20] : Liste protegee (À valider en jeu) : aucun deplacement automatique. Sous-taches : 1/1. Parent coche : False.
+- P1 — Sauvegardes [6ac39d911abc6a7d2a71273e] : Liste protegee (À valider en jeu) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- P1 — Sons [6ac39d93be4e45379ca8247f] : Liste protegee (À valider en jeu) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- P2 — Notifications [6ac39dbef4faf8125adc099b] : Liste protegee (À valider en jeu) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- Équipes favorites [6ac39e147db15f1edab9c326] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- faire une modal qui souvre avec un bouton image livre pour afficher les regles du jeu [6661a8eefa746159ea2700da] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- faire le clicker pour lui donner a manger le brosser [6661a4b7b41cd821c331d689] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Barres de besoins et niveau d’amitié [6661a5ec1e0c59351bd18a52] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- trouver un gif de lapin heureux [6661a91283b1bf3c205e457c] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Retour au Salon et informations du lapin [6669758ceb6d2b877ef431fa] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- trouver les images [6661b309ac71b719ebc63fd7] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- faire une zone soin alimentation sommeil et jeu avec des fond différent [6661a6149952d95e5c048f9a] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- thème sur les lapins [6661a423f3b0f23f486d3590] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- faire un salon avec des bouton de base  pour les diffèrent lieu et une fleche pour revenir en arriere [6661b4124754141925b73499] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Adoption, traits, collection et encyclopédie [6ac39e3c28d335cd92c8cc95] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Progression indépendante par lapin [6ac39e3f09478ebeda38c92d] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Combat tactique — équipe, mode manuel et automatique [6ac39e4258234f0f6df5def5] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Ultimes et barres de charge — lapins et boss [6ac39e452732a48b7581df6e] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Listes de 1 à 6 attaques selon la rareté [6ac39e5cff0d2d466b27ecbb] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Fragments — amélioration de la technique choisie [6ac39e5fd921b05e95245ff0] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Œufs illustrés — ouverture individuelle et par 10 [6ac39e61cbe7415819b24df8] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Décors de saisons jour/nuit et événements prioritaires [6ac39efb4988b40cec255170] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Admin local — tests rapides et Dashboard [6ac39efeb8e60614e640ad49] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Dashboard — graphiques de rareté harmonisés [6ac39f0129a42ce3c535a196] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Sauvegardes nommées, datées et remplacement confirmé [6ac39f0465d01dcee2c8411d] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Mini-jeux — Memory 30 niveaux et puzzles cousus [6ac39f1ffd16599635e62ae9] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Défis quotidiens, succès et récompenses [6ac39f233ae89c6d7a24fb0c] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 2/3. Parent coche : True.
+- Audio — soins courts, volumes et défaite [6ac39f2681968bcd0d9b086d] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Audio original livré — ambiance et sommeil [6ac39f295fcf0100cf51e1cd] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Notifications et combat lisible — corrections livrées [6ac39f2b43bb87374c9f2e22] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Salon — compagnons ensemble et placement corrigé [6ac39f2fa02c69b499e17ea8] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Repères — feuille de route du 08-10-2026 [6ac39f30bfe4848ec3eca940] : Suivi manuel : aucune regle automatique explicite. Sous-taches : 19/24. Parent coche : False.
 - P1 — Équilibrage des boss [6ac39d8a40c2a66ada563abc] : Aucune preuve precise dans les nouvelles modifications : aucun deplacement. Sous-taches : 0/0. Parent coche : False.
 - P1 — Indicateur de difficulté plus fiable [6ac39d8ef2a33d8d5e748be8] : Aucune preuve precise dans les nouvelles modifications : aucun deplacement. Sous-taches : 0/0. Parent coche : False.
 - P2 — SEO [6ac39d99f4eb044b2a42d449] : Aucune preuve precise dans les nouvelles modifications : aucun deplacement. Sous-taches : 0/0. Parent coche : False.
 - P2 — Guide de démarrage [6ac39daf6e132da85a61925d] : Aucune preuve precise dans les nouvelles modifications : aucun deplacement. Sous-taches : 0/0. Parent coche : False.
-- P2 — Accessibilité [6ac39db1a134b35f03b17940] : Aucune preuve precise dans les nouvelles modifications : aucun deplacement. Sous-taches : 2/3. Parent coche : False.
+- P2 — Accessibilité [6ac39db1a134b35f03b17940] : Deja dans la liste correspondante. Lignes modifiees pertinentes : assets/js/installer.js, assets/css/phone.css Sous-taches : 4/5. Parent coche : False.
 - P2 — Performance [6ac39db49bd7456ac00b5038] : Aucune preuve precise dans les nouvelles modifications : aucun deplacement. Sous-taches : 0/0. Parent coche : False.
 - P2 — Relations des personnages [6ac39dbb2c736f2180aee1ec] : Aucune preuve precise dans les nouvelles modifications : aucun deplacement. Sous-taches : 0/0. Parent coche : False.
-- À valider — Puzzle à coupelle et couturière [6ac39db7ff0d2d466b26fe7b] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
-- À valider — Boutique et apothicaire [6ac75d423df6f3af4d7dffa3] : Liste protegee : aucun deplacement automatique. Sous-taches : 1/2. Parent coche : False.
-- À valider — Memory 30 niveaux [6ac75d4306880ab48923dd1c] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
-- À valider — Besoins admin et jeux adaptés à l’écran [6ac75fbda79c4c777508987e] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/1. Parent coche : False.
-- Valider accueil apothicaire, bouclier et visibilité du Dashboard [6ac761f58b664d27cb2e9cd5] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
-- Valider puzzles verrouillés et Memory compact [6ac763f9346a0a7e6149d7fb] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
-- Valider accès Admin aux derniers niveaux et noms après rechargement [6ac7652bc8ce084387e31ecc] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
-- Valider cartes puzzles Dashboard et taux des œufs [6ac76646894f17c16d8646d1] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
-- Valider Dashboard en accordéons et catalogue magasin [6ac76741ba45b4cc22e9893c] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
-- Valider Dashboard visuel, taux des œufs et poids README [6ac76ac51940e93ee2c2d397] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
-- Valider cuisine, Marché et évolutions progressives [6ac775a5d9cc9195c78cfc47] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
-- Valider frigo cliquable et nouveaux aliments du Marché [6ac7808c657c947629f42e6e] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
-- Boss à comportements distincts [6ac39e1702dcc73d8bd079c2] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
-- Défis de combat [6ac39e1aaf413db2ee993e59] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
-- Journal de collection [6ac39e2f7f2924d04ff78274] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
-- Expéditions courtes [6ac39e33093ac1a6041de63f] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
-- Albums saisonniers [6ac39e3688258482918621e0] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
-- Sauvegarde de secours [6ac39e3935def311b21d9772] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
-- README et arborescence — actualisés le 08-10-2026 [6ac39d96335bf1dad3b0d2f2] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
-- Magasin et inventaire — code livré [6ac75d3f821f8ecfbfefd1b3] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
-- Accompagnateurs et lapins — médias centralisés [6ac75d402925f959a3e9afbc] : Liste protegee : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- À valider — Puzzle à coupelle et couturière [6ac39db7ff0d2d466b26fe7b] : Liste protegee (À valider en jeu) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- À valider — Boutique et apothicaire [6ac75d423df6f3af4d7dffa3] : Liste protegee (À valider en jeu) : aucun deplacement automatique. Sous-taches : 3/4. Parent coche : False.
+- À valider — Memory 30 niveaux [6ac75d4306880ab48923dd1c] : Liste protegee (À valider en jeu) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- À valider — Besoins admin et jeux adaptés à l’écran [6ac75fbda79c4c777508987e] : Liste protegee (À valider en jeu) : aucun deplacement automatique. Sous-taches : 1/3. Parent coche : False.
+- Valider accueil apothicaire, bouclier et visibilité du Dashboard [6ac761f58b664d27cb2e9cd5] : Liste protegee (À valider en jeu) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Valider puzzles verrouillés et Memory compact [6ac763f9346a0a7e6149d7fb] : Liste protegee (À valider en jeu) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Valider accès Admin aux derniers niveaux et noms après rechargement [6ac7652bc8ce084387e31ecc] : Liste protegee (À valider en jeu) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Valider cartes puzzles Dashboard et taux des œufs [6ac76646894f17c16d8646d1] : Liste protegee (À valider en jeu) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Valider Dashboard en accordéons et catalogue magasin [6ac76741ba45b4cc22e9893c] : Liste protegee (À valider en jeu) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Valider Dashboard visuel, taux des œufs et poids README [6ac76ac51940e93ee2c2d397] : Liste protegee (À valider en jeu) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Valider cuisine, Marché et évolutions progressives [6ac775a5d9cc9195c78cfc47] : Liste protegee (À valider en jeu) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- Valider frigo cliquable et nouveaux aliments du Marché [6ac7808c657c947629f42e6e] : Liste protegee (À valider en jeu) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Boss à comportements distincts [6ac39e1702dcc73d8bd079c2] : Liste protegee (Idées à sélectionner) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- Défis de combat [6ac39e1aaf413db2ee993e59] : Liste protegee (Idées à sélectionner) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- Journal de collection [6ac39e2f7f2924d04ff78274] : Liste protegee (Idées à sélectionner) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- Expéditions courtes [6ac39e33093ac1a6041de63f] : Liste protegee (Idées à sélectionner) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- Albums saisonniers [6ac39e3688258482918621e0] : Liste protegee (Idées à sélectionner) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- Sauvegarde de secours [6ac39e3935def311b21d9772] : Liste protegee (Idées à sélectionner) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- README et arborescence — actualisés le 08-10-2026 [6ac39d96335bf1dad3b0d2f2] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Magasin et inventaire — code livré [6ac75d3f821f8ecfbfefd1b3] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Accompagnateurs et lapins — médias centralisés [6ac75d402925f959a3e9afbc] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
 
 ## Git
-- AGENTS.md
 - A_FAIRE.md
-- readme.md
-- tools/agent_lapinous/INSTALLATION.md
-- tools/agent_lapinous/README_INSTALLATION.md
-- tools/agent_lapinous/agent.py
-- tools/agent_lapinous/chaine_commune.ps1
-- tools/agent_lapinous/cloudinary_rapport.py
+- assets/css/desktop-scene.css
+- assets/css/phone.css
+- assets/js/achievements.js
+- assets/js/installer.js
+- assets/js/script.js
+- index.html
+- tools/agent_lapinous/etat_batterie.json
 - tools/agent_lapinous/liaisons_trello.json
-- tools/agent_lapinous/test_chaine.ps1
-- tools/agent_lapinous/test_chaine_agent.py
-- tools/agent_lapinous/test_installateur.ps1
-- tools/cloudinary-corbeille.mjs
+- tools/agent_lapinous/surveillance_batterie.py
+- tools/test-achievements.mjs
+- tools/test-landscape-game.mjs
+- tools/test-pwa.mjs
 
 ## Points de vigilance
 Premier passage : modifications locales analysées ; historique antérieur non attribué. Le premier bilan appliqué établira le point de reprise, jamais la simulation.
 
 ## Chaine de cette execution
-{"startedAt": "2026-10-15T11:09:28.3393784+02:00", "syncExit": 0, "bilanExit": 1, "errors": [], "trelloReadOnly": true, "cloudinaryDeleteDisabled": true, "syncFinishedAt": "2026-10-15T11:09:30.5300591+02:00"}
+{"startedAt": "2026-10-15T20:00:20.4442993+02:00", "syncExit": 0, "bilanExit": 1, "errors": [], "trelloReadOnly": false, "cloudinaryDeleteDisabled": true, "syncFinishedAt": "2026-10-15T20:00:32.0861015+02:00"}
 
 ## Cloudinary — rapport complet
 # Cloudinary — RÉUSSITE
-Début : 2026-10-15T11:09:28.993000+02:00
-Fin : 2026-10-15T09:09:30.331Z
+Début : 2026-10-15T20:00:27.694000+02:00
+Fin : 2026-10-15T18:00:31.892Z
 État déclaré : success
 Erreur : aucune
 
 ## Étapes exécutées
-- tools/cloudinary-sync.mjs dry-run : code 0 à 2026-10-15T09:09:29.521Z
-- tools/cloudinary-activate.mjs  : code 0 à 2026-10-15T09:09:29.974Z
-- tools/cloudinary-corbeille.mjs appliquer : code 0 à 2026-10-15T09:09:30.330Z
+- tools/cloudinary-sync.mjs dry-run : code 0 à 2026-10-15T18:00:30.421Z
+- tools/cloudinary-activate.mjs  : code 0 à 2026-10-15T18:00:31.021Z
+- tools/cloudinary-corbeille.mjs appliquer : code 0 à 2026-10-15T18:00:31.892Z
 
 ## Inventaire complet
 Sélectionnées : 316
@@ -876,12 +917,12 @@ Introuvables : 0
 ### Entrées en corbeille : 0
 
 ### En attente : 6
-- assets/img/accompagnateurs/caissier/caissier_merci.png | ID : lapinous/accompagnateurs/caissier/caissier_merci__png_3a50d99790389868 | date : 2026-10-13T13:17:01.304Z | jours restants : 6 | motif :
-- assets/img/accompagnateurs/caissier/caissier_presentation.png | ID : lapinous/accompagnateurs/caissier/caissier_presentation__png_16a7d977d327ee7e | date : 2026-10-13T13:17:01.304Z | jours restants : 6 | motif :
-- assets/img/magasin/produits/Pomme_surprise_au_foin.png | ID : lapinous/magasin/produits/Pomme_surprise_au_foin__png_34f8c52883e83a77 | date : 2026-10-13T13:17:01.304Z | jours restants : 6 | motif :
-- assets/img/fond/Magasin/Comptoir vide dans un terrier chaleureux-4.png | ID : lapinous/fond/Magasin/Comptoir vide dans un terrier chaleureux-4__png_e43304e1c5dfb3f0 | date : 2026-10-13T13:17:01.304Z | jours restants : 6 | motif :
-- assets/img/accompagnateurs/Fragments/Cycle de marche à droite-8.png | ID : lapinous/accompagnateurs/Fragments/Cycle de marche à droite-8__png_d94c0b915f3d201c | date : 2026-10-13T13:17:01.304Z | jours restants : 6 | motif :
-- assets/img/accompagnateurs/Fragments/Lapin assemblant des cristaux violets-10.png | ID : lapinous/accompagnateurs/Fragments/Lapin assemblant des cristaux violets-10__png_b67bd11a69b2f15f | date : 2026-10-13T13:17:01.304Z | jours restants : 6 | motif :
+- assets/img/accompagnateurs/caissier/caissier_merci.png | ID : lapinous/accompagnateurs/caissier/caissier_merci__png_3a50d99790389868 | date : 2026-10-13T13:17:01.304Z | jours restants : 5 | motif :
+- assets/img/accompagnateurs/caissier/caissier_presentation.png | ID : lapinous/accompagnateurs/caissier/caissier_presentation__png_16a7d977d327ee7e | date : 2026-10-13T13:17:01.304Z | jours restants : 5 | motif :
+- assets/img/magasin/produits/Pomme_surprise_au_foin.png | ID : lapinous/magasin/produits/Pomme_surprise_au_foin__png_34f8c52883e83a77 | date : 2026-10-13T13:17:01.304Z | jours restants : 5 | motif :
+- assets/img/fond/Magasin/Comptoir vide dans un terrier chaleureux-4.png | ID : lapinous/fond/Magasin/Comptoir vide dans un terrier chaleureux-4__png_e43304e1c5dfb3f0 | date : 2026-10-13T13:17:01.304Z | jours restants : 5 | motif :
+- assets/img/accompagnateurs/Fragments/Cycle de marche à droite-8.png | ID : lapinous/accompagnateurs/Fragments/Cycle de marche à droite-8__png_d94c0b915f3d201c | date : 2026-10-13T13:17:01.304Z | jours restants : 5 | motif :
+- assets/img/accompagnateurs/Fragments/Lapin assemblant des cristaux violets-10.png | ID : lapinous/accompagnateurs/Fragments/Lapin assemblant des cristaux violets-10__png_b67bd11a69b2f15f | date : 2026-10-13T13:17:01.304Z | jours restants : 5 | motif :
 
 ### Réactivées : 0
 
@@ -897,12 +938,12 @@ Introuvables : 0
 📦 **Corbeille Cloudinary — suivi quotidien J-X**
 Images en attente : **6**
 Quarantaine logique : URL et public_id inchangés.
-• **caissier_merci.png** — **J-6** — échéance : 20/10/2026 15:17
-• **caissier_presentation.png** — **J-6** — échéance : 20/10/2026 15:17
-• **Pomme_surprise_au_foin.png** — **J-6** — échéance : 20/10/2026 15:17
-• **Comptoir vide dans un terrier chaleureux-4.png** — **J-6** — échéance : 20/10/2026 15:17
-• **Cycle de marche à droite-8.png** — **J-6** — échéance : 20/10/2026 15:17
-• **Lapin assemblant des cristaux violets-10.png** — **J-6** — échéance : 20/10/2026 15:17
+• **caissier_merci.png** — **J-5** — échéance : 20/10/2026 15:17
+• **caissier_presentation.png** — **J-5** — échéance : 20/10/2026 15:17
+• **Pomme_surprise_au_foin.png** — **J-5** — échéance : 20/10/2026 15:17
+• **Comptoir vide dans un terrier chaleureux-4.png** — **J-5** — échéance : 20/10/2026 15:17
+• **Cycle de marche à droite-8.png** — **J-5** — échéance : 20/10/2026 15:17
+• **Lapin assemblant des cristaux violets-10.png** — **J-5** — échéance : 20/10/2026 15:17
 Images bloquées : **1** ; erreurs : **0**.
 🔒 chef.svg : Version exacte absente de la sauvegarde permanente
 J-0 ne signifie pas supprimée : la suppression doit être autorisée et confirmée.

@@ -81,8 +81,31 @@
     {
       "card_id": "6ac39e11e324891dfc4c501a",
       "nom": "P3 — Nouvelles grilles de Lapidoku",
-      "chemins": [],
-      "preuves": [],
+      "chemins": [
+        "assets/js/lapidoku.js",
+        "assets/css/lapidoku.css",
+        "assets/js/script.js",
+        "tools/test-lapidoku.mjs",
+        "tools/test-landscape-game.mjs"
+      ],
+      "preuves": [
+        {
+          "chemin": "assets/js/lapidoku.js",
+          "dedie": true
+        },
+        {
+          "chemin": "assets/css/lapidoku.css",
+          "motifs": [
+            "sudoku-"
+          ]
+        },
+        {
+          "chemin": "assets/js/script.js",
+          "motifs": [
+            "startLapidoku|renderLapidoku|checkLapidoku|LapinousSudoku"
+          ]
+        }
+      ],
       "automatique": false,
       "note_automatisation": "Suivi manuel ou idee : aucun deplacement automatique."
     },
@@ -142,7 +165,9 @@
         "assets/js/installer.js",
         "tools/test-landscape-game.mjs",
         "assets/css/phone.css",
-        "assets/js/mobile-ui.js"
+        "assets/js/mobile-ui.js",
+        "assets/css/desktop-scene.css",
+        "assets/css/shop-polish.css"
       ],
       "preuves": [
         {
@@ -173,6 +198,18 @@
             "phoneEgg",
             "egg-shop",
             "kitchen"
+          ]
+        },
+        {
+          "chemin": "assets/css/desktop-scene.css",
+          "motifs": [
+            "salon-active-rabbit-spot|salon-rabbit-friend|rabbitImage"
+          ]
+        },
+        {
+          "chemin": "assets/css/shop-polish.css",
+          "motifs": [
+            "chambre|kitchen-scene-actions"
           ]
         }
       ],
@@ -773,12 +810,28 @@
       "card_id": "6ac39f233ae89c6d7a24fb0c",
       "nom": "Défis quotidiens, succès et récompenses",
       "chemins": [
-        "assets/js/achievements.js"
+        "assets/js/achievements.js",
+        "assets/js/script.js",
+        "assets/css/phone.css",
+        "tools/test-achievements.mjs",
+        "tools/test-landscape-game.mjs"
       ],
       "preuves": [
         {
           "chemin": "assets/js/achievements.js",
           "dedie": true
+        },
+        {
+          "chemin": "assets/js/script.js",
+          "motifs": [
+            "recordAchievement\\(\"(?:memoryCompleted|puzzleCompleted|quizCompleted)\""
+          ]
+        },
+        {
+          "chemin": "assets/css/phone.css",
+          "motifs": [
+            "achievement-row|achievement-section|records-card"
+          ]
         }
       ],
       "automatique": true
@@ -962,7 +1015,9 @@
         "manifest.json",
         "sw.js",
         "assets/icons/",
-        "tools/test-pwa.mjs"
+        "tools/test-pwa.mjs",
+        "assets/css/phone.css",
+        "assets/css/shop-polish.css"
       ],
       "preuves": [
         {
@@ -980,6 +1035,18 @@
         {
           "chemin": "assets/js/installer.js",
           "dedie": true
+        },
+        {
+          "chemin": "assets/css/phone.css",
+          "motifs": [
+            "installInNav"
+          ]
+        },
+        {
+          "chemin": "assets/css/shop-polish.css",
+          "motifs": [
+            "installInNav|installButton"
+          ]
         }
       ],
       "automatique": true
@@ -1041,7 +1108,8 @@
         "assets/js/puzzle-data.js",
         "lapinous-puzzles.json",
         "assets/js/script.js",
-        "assets/css/mobile.css"
+        "assets/css/mobile.css",
+        "assets/css/lapidoku.css"
       ],
       "preuves": [
         {
@@ -1054,6 +1122,12 @@
           "chemin": "assets/css/mobile.css",
           "motifs": [
             "puzzle-workshop|puzzle-bowl"
+          ]
+        },
+        {
+          "chemin": "assets/css/lapidoku.css",
+          "motifs": [
+            "puzzle-tailor|puzzle-side|is-sewing"
           ]
         }
       ],
@@ -1070,7 +1144,8 @@
         "tools/test-mobile-game.mjs",
         "assets/css/phone.css",
         "assets/js/mobile-ui.js",
-        "tools/test-landscape-game.mjs"
+        "tools/test-landscape-game.mjs",
+        "assets/css/shop-polish.css"
       ],
       "preuves": [
         {
@@ -1107,6 +1182,12 @@
             "pantry",
             "cart-counter",
             "bubble"
+          ]
+        },
+        {
+          "chemin": "assets/css/shop-polish.css",
+          "motifs": [
+            "shop-dialog|market-purchase-table|shop-cashier"
           ]
         }
       ],

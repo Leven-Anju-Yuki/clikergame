@@ -1,0 +1,32 @@
+/* Un cadre stable pour tous les comptoirs et la réserve du Chef. */
+#installButton[hidden],#installFromSave[hidden],#installInNav[hidden]{display:none!important}
+dialog.shop-dialog,dialog#kitchenFridgeDialog{width:calc(100vw - 24px)!important;height:calc(100dvh - 24px)!important;max-width:none!important;max-height:calc(100dvh - 24px)!important;margin:auto!important;padding:0!important;box-sizing:border-box}
+.shop-dialog .shop-layout,.shop-dialog .shop-panel{height:100%;min-height:0;box-sizing:border-box}
+.shop-dialog .shop-panel{display:flex;flex-direction:column}
+.shop-dialog .shop-body{flex:1!important;min-height:0!important;box-sizing:border-box}
+.shop-dialog .shop-header,.shop-dialog .shop-wallet,.shop-dialog .shop-tabs,.shop-dialog .shop-cart-summary{flex-shrink:0}
+.shop-dialog.inventory-dialog .herbalist-workshop{height:100%!important;min-height:0!important;max-height:none!important}
+/* Plateau en bois, tranche et deux pieds : les articles reposent sur la table. */
+.shop-dialog .market-purchase-table{right:24%;bottom:7%;width:24%;height:22%;padding:0;border:0;background:none;box-shadow:none;z-index:5;isolation:isolate;color:#624831}
+.market-purchase-table::before{content:'';position:absolute;inset:20% 0 40%;z-index:-1;background:repeating-linear-gradient(3deg,#c48a49 0 8px,#b47a3c 9px 11px,#d29c5b 12px 22px);border:3px solid #75451f;border-radius:45% 45% 15% 15% / 25% 25% 15% 15%;box-shadow:0 8px 0 #875326,0 13px 6px #44260c55;transform:perspective(500px) rotateX(12deg)}
+.market-purchase-table::after{content:'';position:absolute;left:13%;top:56%;width:9%;height:43%;z-index:-2;background:linear-gradient(90deg,#76431e,#c18b48,#895225);border:2px solid #75451f;border-radius:0 0 5px 5px;box-shadow:calc(100vw * .17) 0 0 #8c592c}
+.market-purchase-table>strong{position:absolute;left:5%;top:-10%;font-size:clamp(11px,1vw,16px);padding:3px 8px;border:1px solid #b58a54;border-radius:8px;background:#fff7e8}
+.market-purchase-table>div{position:absolute;inset:0 4% 40%;display:flex;align-items:end;gap:8px;min-height:0;overflow-x:auto;overflow-y:hidden;padding:0 4px 5px}
+.market-purchase-table img{width:clamp(40px,4vw,80px);height:clamp(40px,4vw,80px);object-fit:contain}.market-purchase-table b{font-size:12px}
+@media(min-width:1000px) and (pointer:fine){
+ .shop-dialog.market-illustrated .shop-cashier{width:27%;right:3%;bottom:5%}
+ .shop-dialog.market-illustrated .shop-cashier img{height:clamp(280px,48dvh,700px)!important;max-height:none!important;width:100%;object-fit:contain;object-position:center bottom}
+ .shop-dialog.market-illustrated #shopCashierSpeech{position:absolute;bottom:calc(100% + 8px);top:auto;left:50%;right:auto;transform:translateX(-50%);width:min(280px,24vw)}
+ body.game-running.cuisine .kitchen-scene-actions .action-btn{min-width:150px;min-height:125px;max-height:none;font-size:20px;padding:12px 20px}
+ body.game-running.cuisine .kitchen-scene-actions .action-icon{width:76px;height:76px}
+ body.game-running.chambre #gameArea #rabbitImage{left:23%;bottom:38%;width:32%;height:36dvh;translate:-50% 0;transform:none;object-fit:contain;object-position:center bottom}
+}
+@media(pointer:coarse) and (orientation:landscape) and (max-height:700px){
+ dialog.shop-dialog,dialog#kitchenFridgeDialog{width:calc(100vw - 8px)!important;height:calc(100dvh - 8px)!important;max-height:calc(100dvh - 8px)!important}
+ .market-purchase-table::after{box-shadow:calc(100vw * .15) 0 0 #8c592c}
+ .shop-dialog .market-purchase-table{height:32%;right:27%;width:27%;bottom:5%}
+ .market-purchase-table>div{top:-25%}
+ html.phone-ui body.game-running.chambre #gameArea #rabbitImage{left:24%!important;bottom:38%!important;width:29%!important;height:38%!important;translate:-50% 0!important;transform:none!important}
+ html.phone-ui body.game-running.cuisine .kitchen-scene-actions .action-btn{min-width:84px;min-height:65px;font-size:13px}
+ html.phone-ui body.game-running.cuisine .kitchen-scene-actions .action-icon{width:38px;height:38px}
+}

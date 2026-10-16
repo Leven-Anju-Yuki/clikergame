@@ -252,8 +252,8 @@
             const phone=matchMedia('(pointer:coarse)').matches&&Math.min(innerWidth,innerHeight)<=900;
             for(const [actor,bubble,parent] of [[image,speech,dialog.querySelector('.shop-layout')],[content.querySelector('#inventoryHerbalist'),content.querySelector('#inventorySpeech'),content]]){
                 if(!actor||!bubble)continue;
-                if(!phone){actor.parentElement.append(bubble);bubble.classList.remove('phone-bubble');bubble.hidden=false;continue;}
-                parent.append(bubble);bubble.classList.add('phone-bubble');
+                if(!phone){if(bubble.parentElement!==actor.parentElement)actor.parentElement.append(bubble);bubble.classList.remove('phone-bubble');bubble.hidden=false;continue;}
+                if(bubble.parentElement!==parent)parent.append(bubble);bubble.classList.add('phone-bubble');
                 const bounds=actor.getBoundingClientRect(),frame=parent.getBoundingClientRect();
                 bubble.hidden=!bounds.width||!bounds.height;
                 if(bubble.hidden)continue;
@@ -263,7 +263,7 @@
             }
             if(cashierMoving||retrieving)actorFrame=requestAnimationFrame(actorBounds);
         }
-        new ResizeObserver(actorBounds).observe(content);
+        new ResizeObserver(()=>requestAnimationFrame(actorBounds)).observe(content);
         new ResizeObserver(()=>requestAnimationFrame(actorBounds)).observe(speech);
         function render() {
             renderContents();

@@ -2,17 +2,24 @@
 (function (root) {
     const daily = [
         { id: 'visit', title: 'Bonjour les lapins !', metric: 'visit', target: 1, reward: 3, text: 'Revenir jouer aujourd’hui' },
-        { id: 'play', title: 'Un esprit joueur', metric: 'gamesFinished', target: 1, reward: 5, text: 'Réussir un jeu du Salon ou parcourir 20 m en agilité au Jardin' },
+        { id: 'play', title: 'Un esprit joueur', metric: 'gamesFinished', target: 1, reward: 5, text: 'Réussir un Memory, puzzle ou Lapidoku, ou parcourir 20 m au Jardin' },
         { id: 'boss', title: 'Le jardin est à nous', metric: 'bossesDefeated', target: 1, reward: 8, text: 'Vaincre un boss' },
         { id: 'run', title: 'On se dégourdit les pattes', metric: 'agilityPlayed', target: 1, reward: 4, text: 'Terminer un parcours d’agilité d’au moins 20 m' },
         { id: 'egg', title: 'Une nouvelle surprise', metric: 'eggsOpened', target: 1, reward: 5, text: 'Ouvrir un œuf' },
+        { id: 'memory', title: 'Une bonne mémoire', metric: 'memoryCompleted', target: 1, reward: 5, text: 'Réussir un niveau de Memory' },
+        { id: 'puzzle', title: 'Pièce après pièce', metric: 'puzzleCompleted', target: 1, reward: 5, text: 'Terminer un puzzle cousu' },
+        { id: 'quiz', title: 'Mieux connaître ses lapins', metric: 'quizCompleted', target: 1, reward: 4, text: 'Terminer un quiz, quel que soit le score' },
     ];
     const milestones = [
+        {id:'collection-1',title:'Bienvenue au terrier',metric:'collection',target:1,reward:5,text:'Adopter son premier lapin'},
         ...[3, 10, 20, 30].map((n,i) => ({id:`collection-${n}`, title:`Une famille de ${n} lapins`, metric:'collection', target:n, reward:[15,40,90,150][i]})),
         ...[10, 25, 50, 100].map((n,i) => ({id:`level-${n}`, title:`Un compagnon au niveau ${n}`, metric:'level', target:n, reward:[15,40,90,200][i]})),
         ...[10, 50, 100].map((n,i) => ({id:`boss-${n}`, title:`${n} boss vaincus`, metric:'bossesDefeated', target:n, reward:[20,70,150][i]})),
         ...[10, 50, 100].map((n,i) => ({id:`games-${n}`, title:`${n} jeux terminés`, metric:'gamesFinished', target:n, reward:[15,50,100][i]})),
         ...[10, 50, 100].map((n,i) => ({id:`eggs-${n}`, title:`${n} œufs ouverts`, metric:'eggsOpened', target:n, reward:[15,50,100][i]})),
+        ...[1, 10, 30].map((n,i) => ({id:`memory-${n}`,title:`${n} niveau(x) de Memory réussi(s)`,metric:'memoryCompleted',target:n,reward:[5,20,50][i],text:'Les niveaux rejoués comptent aussi'})),
+        ...[1, 5, 20].map((n,i) => ({id:`puzzle-${n}`,title:`${n} puzzle(s) cousu(s) terminé(s)`,metric:'puzzleCompleted',target:n,reward:[5,15,40][i],text:'Terminer le plateau, y compris en rejouant'})),
+        ...[1, 5, 20].map((n,i) => ({id:`quiz-${n}`,title:`${n} quiz terminé(s)`,metric:'quizCompleted',target:n,reward:[4,15,40][i],text:'Chaque quiz terminé compte, quel que soit le score'})),
     ];
     function dayKey(date = new Date()) {
         return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
@@ -32,7 +39,11 @@
         for (const entry of Object.values(state.days)) {
             entry.counts.gamesFinished = (entry.counts.gamesWon || 0) + (entry.counts.agilityPlayed || 0);
         }
-        const values = { ...game.records, collection: (game.ownedSpecies || []).length,
+        const completed = key => Object.values(game.progress || {}).reduce((sum,p) => sum + (Number(p.minigames?.[key]?.completed) || 0), 0);
+        const values = { ...game.records,
+            memoryCompleted: Math.max(Number(game.records.memoryCompleted) || 0, completed('memory')),
+            quizCompleted: Math.max(Number(game.records.quizCompleted) || 0, completed('quiz')),
+            collection: new Set(game.ownedSpecies || []).size,
             gamesFinished: (Number(game.records.gamesWon) || 0) + (Number(game.records.agilityPlayed) || 0),
             level: Math.max(1, ...Object.values(game.progress || {}).map(p => Number(p.currentLevel) || 1)) };
         for (const [metric,value] of Object.entries(values)) state.peaks[metric] = Math.max(Number(state.peaks[metric]) || 0, Number(value) || 0);
