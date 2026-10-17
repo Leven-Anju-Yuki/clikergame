@@ -516,13 +516,13 @@ Le jeu charge ses données avec `fetch()`. Il faut donc utiliser un petit serveu
 Depuis la racine du projet :
 
 ```bash
-python -m http.server 8000
+python tools/serve-game.py --port 8001
 ```
 
 Puis ouvrir :
 
 ```text
-http://localhost:8000/
+http://localhost:8001/
 ```
 
 ## 🌐 Mise en ligne
@@ -615,9 +615,9 @@ Mise à jour cuisine : réserve ouverte uniquement au clic sur le frigo ; March�
 
 | Dossier | Fichiers | Taille |
 |---|---:|---:|
-| `assets/` | 227 | 244.63 Mo |
-| `docs/` | 14 | 0.16 Mo |
-| `tools/` | 48 | 0.25 Mo |
+| `assets/` | 279 | 319.84 Mo |
+| `docs/` | 15 | 0.17 Mo |
+| `tools/` | 53 | 0.27 Mo |
 
 _Inventaire local uniquement : les images déjà archivées ne sont pas considérées manquantes._
 <!-- LAPINOUS_AGENT_FIN -->
@@ -633,3 +633,5 @@ Le service worker conserve les fichiers publics du jeu et les 120 dernières ima
 ### Automatisation du soir
 
 Une seule tâche Windows existante à **20 h Europe/Paris** lance Cloudinary puis, dès sa fin, le bilan Python, même si la synchronisation échoue. Le rapport complet couvre Cloudinary, Git, Trello, README, A_FAIRE, quarantaine et erreurs, puis part sur Discord. Aucun bilan indépendant. La chaîne corrigée a passé le test réel autorisé du 15 octobre et est active, avec mises à jour Trello autorisées après validation du 15 octobre, simulation en lecture seule et suppressions Cloudinary bloquées ; consulter `tools/agent_lapinous/README_INSTALLATION.md`.
+
+Le serveur `tools/serve-game.py` renvoie les illustrations Warrenfall avec les vrais codes HTTP 403/404, même sans service worker installé. Après remplacement d’un ancien serveur `python -m http.server`, arrêter celui-ci (Ctrl+C dans son terminal), puis lancer la commande ci-dessus. GitHub Pages utilise le fichier racine `404.html` après publication.

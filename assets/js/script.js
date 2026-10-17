@@ -2467,7 +2467,7 @@ document.addEventListener("DOMContentLoaded", () => {
             },
             cuisine: {
                 label: "🍳 Cuisine",
-                image: () => "./assets/img/Zone_cuisine/lapin_cuisine.png",
+                image: () => "./assets/img/Zone_cuisine/faim.png",
                 content: () =>
                     '<button class="fridge-hotspot" onclick="openKitchenFridge()" aria-label="Ouvrir le frigo"><span>🧊 Ouvrir le frigo</span></button><div class="kitchen-scene-actions"><button class="action-btn" onclick="feedRabbit()"><img class="action-icon" src="' +
                     (roomStage("cuisine") > 0
@@ -2481,7 +2481,7 @@ document.addEventListener("DOMContentLoaded", () => {
             },
             chambre: {
                 label: "🛏️ Chambre",
-                image: () => `./assets/img/Zone_Chambre/dodo.png`,
+                image: () => `./assets/img/Zone_Chambre/sommeil.png`,
                 content: () =>
                     progress().improvements.chambre
                         ? `<div class="action-row"><button class="action-btn upgraded" onclick="putRabbitToSleep()"><img class="action-icon" src="./assets/img/Zone_Chambre/lit.png" alt=""><span>Dodo</span></button>${upgradeButtonHtml("chambre", "", "improvePutRabbitToSleep()")}</div>`
@@ -2492,7 +2492,7 @@ document.addEventListener("DOMContentLoaded", () => {
             },
             sdb: {
                 label: "🛁 Salle de bain",
-                image: () => `./assets/img/Zone_SdB/lapin_SdB.png`,
+                image: () => `./assets/img/Zone_SdB/toilette_oreilles.png`,
                 content: () =>
                     progress().improvements.sdb
                         ? `<div class="action-row"><button class="action-btn upgraded" onclick="cleanRabbit()"><img class="action-icon" src="./assets/img/Zone_SdB/pommeau.png" alt=""><span>Nettoyer</span></button>${upgradeButtonHtml("sdb", "", "improveCleanRabbit()")}</div>`
@@ -2503,7 +2503,7 @@ document.addEventListener("DOMContentLoaded", () => {
             },
             jardin: {
                 label: "🌿 Jardin",
-                image: () => `./assets/img/Zone_jardin/entrenement.png`,
+                image: () => `./assets/img/Zone_jardin/entrainement.png`,
                 content: () => {
                     const icon = progress().improvements.jardin
                         ? "./assets/img/Zone_jardin/agilite.png"
@@ -2521,7 +2521,23 @@ document.addEventListener("DOMContentLoaded", () => {
             },
         };
 
+        let zoneAnimationTimer;
+        const zoneAnimations = {
+            cuisine: './assets/img/Zone_cuisine/faim.gif',
+            chambre: './assets/img/Zone_Chambre/sommeil.gif',
+            sdb: './assets/img/Zone_SdB/toilette_oreilles.gif',
+            jardin: './assets/img/Zone_jardin/entrainement.gif',
+        };
+        function animateZoneRabbit(zone) {
+            if (currentZone !== zone || !zoneAnimations[zone]) return;
+            clearTimeout(zoneAnimationTimer);
+            rabbitImage.src = zoneAnimations[zone];
+            zoneAnimationTimer = setTimeout(() => {
+                if (currentZone === zone && body.classList.contains(zone)) rabbitImage.src = zones[zone].image();
+            }, 4000);
+        }
         function updateGameArea(zone) {
+            clearTimeout(zoneAnimationTimer);
             currentZone = zone;
             gameArea.innerHTML = zones[zone].content();
             ["default", "cuisine", "chambre", "sdb", "jardin", "battle-scene"].forEach((c) =>
@@ -2636,6 +2652,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // ACTIONS
         // ============================================================
         window.feedRabbit = function () {
+            animateZoneRabbit("cuisine");
             playSfx("feed");
             if (progress().food >= 100) {
                 showToast("Le lapin est déjà rassasié !");
@@ -2649,6 +2666,7 @@ document.addEventListener("DOMContentLoaded", () => {
             autoSave();
         };
         window.putRabbitToSleep = function () {
+            animateZoneRabbit("chambre");
             playSfx("sleep");
             if (progress().energy >= 100) {
                 showToast("Le lapin est déjà bien reposé !");
@@ -2665,6 +2683,7 @@ document.addEventListener("DOMContentLoaded", () => {
             autoSave();
         };
         window.cleanRabbit = function () {
+            animateZoneRabbit("sdb");
             playSfx("clean");
             if (progress().cleanliness >= 100) {
                 showToast("Le lapin est déjà tout propre !");
@@ -2927,6 +2946,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let agilityRun = null;
 
         window.startAgility = function () {
+            animateZoneRabbit("jardin");
             if (!window.LapinousVisibility.allowed("agility")) return;
             if (progress().food <= 5 || progress().energy <= 5 || progress().cleanliness <= 5) {
                 showToast("Votre lapin n'est pas en état de jouer maintenant !", "warn");

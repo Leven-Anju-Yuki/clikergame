@@ -6,7 +6,7 @@
     const percent = document.getElementById('startupPercent');
     const status = document.getElementById('startupStatus');
     const intro = document.getElementById('startupIntro');
-    const introSource = './assets/img/Ouverture_du_jeu/animations/ouverture_Warrenfall_3s.gif';
+    const introSource = './assets/img/Ouverture_du_jeu/animations/Warrenfall_ouverture_8_secondes.gif';
     const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches || false;
     const sources = ['./assets/img/Ouverture_du_jeu/fonds_4K/05_chargement_3840x2160.jpg'];
     let completed = 0;
@@ -47,7 +47,7 @@
         if (await introLoad) {
             intro.src = window.LapinousImages?.url(introSource) || introSource;
             intro.hidden = false;
-            await pause(3000);
+            await pause(8000);
             intro.hidden = true;
         }
         await Promise.all(opening);
